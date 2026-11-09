@@ -144,3 +144,4 @@ b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8:scripts/check-staging-proxy.mjs:generic
 
 # Verified SHA-256 of the public authentication specification, not a credential.
 3182b822e03500066dd23aba38caf7be6b784121:kanban/board.json:generic-api-key:976
+43c6e4af2c315eba6067d4d3e21780b7786cfd09:kanban/board.json:generic-api-key:976

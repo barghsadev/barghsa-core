@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T17:24:37+00:00",
+  "updated": "2026-11-09T17:36:12+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -973,7 +973,7 @@
   },
   "specification_sources": {
     "kanban/epics/01-platform-infrastructure.md": "218fc5ee7b31ba3d5d2c6e0b31e9da15a5357b67318cbc11a517194471f42429",
-    "kanban/epics/02-auth-users-admin.md": "ee90c32d274fcfb3e115edf5edc7e45bcab2112aebb41ce90d8fe4d09894fda5",
+    "kanban/epics/02-auth-users-admin.md": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774",
     "kanban/epics/03-core-business.md": "3d1306e5a9443b63e23c9a2b50e646549a88b0ba8d3e7385452f43b49e42c8f8",
     "kanban/epics/04-invoices-wallet-contracts.md": "bc76f87142cad06f9d0feb3ab8d42728403a3bfa9f3f931a8636393cf1f85fb0",
     "kanban/epics/05-notifications-documents-ai.md": "0d9f6223219f3fb1bb8311d0ca3294bc09dcd77886822cb6f980f3cee53984ee",
@@ -5521,7 +5521,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-nightly-browser-shard-capacity",
           "release-0.6-nightly-navigation-and-chromium",
-          "release-0.6-nightly-version-and-smoke-contracts"
+          "release-0.6-nightly-version-and-smoke-contracts",
+          "release-0.6-nightly-auth-and-finance-browser-fixtures"
         ],
         "current_acceptance": null
       }
@@ -5758,7 +5759,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-nightly-browser-shard-capacity",
           "release-0.6-nightly-navigation-and-chromium",
-          "release-0.6-nightly-version-and-smoke-contracts"
+          "release-0.6-nightly-version-and-smoke-contracts",
+          "release-0.6-nightly-auth-and-finance-browser-fixtures"
         ],
         "current_acceptance": null
       }
@@ -12435,7 +12437,8 @@
           "release-0.6-nightly-browser-shard-capacity",
           "release-0.6-nightly-advisory-and-schema-gate",
           "release-0.6-nightly-navigation-and-chromium",
-          "release-0.6-nightly-version-and-smoke-contracts"
+          "release-0.6-nightly-version-and-smoke-contracts",
+          "release-0.6-nightly-auth-and-finance-browser-fixtures"
         ],
         "current_acceptance": null
       }
@@ -16136,7 +16139,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -16269,7 +16272,8 @@
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
-            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed."
+            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
           "limitations": [
@@ -16752,7 +16756,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -16885,7 +16889,8 @@
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
-            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed."
+            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
           "limitations": [
@@ -17236,7 +17241,7 @@
         "line": 27,
         "story": "02-auth-users-admin.md#spec-ddb393a818c7"
       },
-      "requirement": "**T-01.01.03 — Password field with visibility toggle and strength meter**\n\n- Description: Password input with eye toggle (show/hide). Strength meter hidden by default; appears on focus and stays visible until blur or submit. Password minimum 8 chars, must include uppercase, lowercase, digit.\n- Technical notes: Strength meter uses zxcvbn or similar client-side library with Persian/EN feedback. Strength levels: Weak, Fair, Good, Strong. Password is never sent to third-party strength APIs. Field uses `autocomplete=\"new-password\"`.\n- UI/UX: Toggle icon changes between eye/eye-off. Strength bar with color coding: red → yellow → green. On submit, validate server-side with Argon2id hashing.\n- Dependencies: T-01.01.02\n- Complexity: M",
+      "requirement": "**T-01.01.03 — Password field with visibility toggle and strength meter**\n\n- Description: Password input with eye toggle (show/hide). The strength meter appears on focus and stays visible after blur while the field has a value. An empty unfocused field and a field disabled during submission hide the meter. Password minimum 8 chars, must include uppercase, lowercase, digit.\n- Technical notes: Strength meter uses zxcvbn or similar client-side library with Persian/EN feedback. Strength levels: Weak, Fair, Good, Strong. Password is never sent to third-party strength APIs. Field uses `autocomplete=\"new-password\"`.\n- UI/UX: Toggle icon changes between eye/eye-off. Strength bar with color coding: red → yellow → green. On submit, validate server-side with Argon2id hashing.\n- Dependencies: T-01.01.02\n- Complexity: M",
       "status": "done",
       "release": "0.2.0",
       "launch_required": true,
@@ -17284,7 +17289,8 @@
         },
         "changed_paths": [],
         "batches": [
-          "release-0.5-critical-accessibility-renewal"
+          "release-0.5-critical-accessibility-renewal",
+          "release-0.6-nightly-auth-and-finance-browser-fixtures"
         ],
         "current_acceptance": {
           "kind": "unchanged-audit-bindings",
@@ -17494,7 +17500,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -17627,7 +17633,8 @@
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
-            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed."
+            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
           "limitations": [
@@ -18101,7 +18108,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -18234,7 +18241,8 @@
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
-            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed."
+            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
           "limitations": [
@@ -18722,7 +18730,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -18855,7 +18863,8 @@
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
-            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed."
+            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
           "limitations": [
@@ -19344,7 +19353,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -19477,7 +19486,8 @@
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
-            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed."
+            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
           "limitations": [
@@ -19965,7 +19975,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -20098,7 +20108,8 @@
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
-            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed."
+            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
           "limitations": [
@@ -20590,7 +20601,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -20723,7 +20734,8 @@
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-candidate-acceptance: 92 affected units, 70 native correction, authority, solar and saving cases, 24 public authentication and terms cases, and 97 unchanged bundle limits. Ownership, monetary commands and confirmation assertions remain covered.",
-            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed."
+            "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/registration-acceptance",
           "limitations": [
@@ -46113,7 +46125,7 @@
             },
             {
               "path": "kanban/epics/02-auth-users-admin.md",
-              "sha256": "ee90c32d274fcfb3e115edf5edc7e45bcab2112aebb41ce90d8fe4d09894fda5"
+              "sha256": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774"
             },
             {
               "path": "packages/i18n/src/crm.ts",
@@ -46411,7 +46423,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "Renewed the auth specification binding after reconciling the older meter visibility wording with the documented v0.5 display policy. Other auth requirements remain unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/crm-acceptance",
           "limitations": [
@@ -49663,7 +49676,7 @@
             },
             {
               "path": "kanban/epics/02-auth-users-admin.md",
-              "sha256": "ee90c32d274fcfb3e115edf5edc7e45bcab2112aebb41ce90d8fe4d09894fda5"
+              "sha256": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774"
             },
             {
               "path": "packages/i18n/src/crm.ts",
@@ -49702,7 +49715,8 @@
             "Bindings renewed by release-0.5-protected-contract-and-finance: protected fixtures retain all financial, privacy and replay assertions; dynamic password focus is verified on both engines, with unchanged initial focus and gates. Related units and original budgets pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
-            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json"
+            "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
+            "Renewed the auth specification binding after reconciling the older meter visibility wording with the documented v0.5 display policy. Other auth requirements remain unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
           "limitations": [
@@ -50284,7 +50298,7 @@
             },
             {
               "path": "kanban/epics/02-auth-users-admin.md",
-              "sha256": "ee90c32d274fcfb3e115edf5edc7e45bcab2112aebb41ce90d8fe4d09894fda5"
+              "sha256": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774"
             },
             {
               "path": "packages/db/drizzle/production/0264_saving_cancellation_notifications.sql",
@@ -50410,7 +50424,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-workspace-route-census: a lazy i18n export serves two existing routes; direct browser, bundle and cold-transfer checks pass.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain."
+            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
+            "Renewed the auth specification binding after reconciling the older meter visibility wording with the documented v0.5 display policy. Other auth requirements remain unchanged."
           ],
           "criterion_result": "Guarded soft archival, current staff permission/step-up, ownership/contract/order/invoice/wallet constraints, audit, rollback and duplicate recovery accepted. Owner-approved launch scope performs no physical purge or retention-compliance claim; financial/contractual bytes remain permanent.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-closure",
@@ -64194,7 +64209,7 @@
             },
             {
               "path": "kanban/epics/02-auth-users-admin.md",
-              "sha256": "ee90c32d274fcfb3e115edf5edc7e45bcab2112aebb41ce90d8fe4d09894fda5"
+              "sha256": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -64223,7 +64238,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the auth specification binding after reconciling the older meter visibility wording with the documented v0.5 display policy. Other auth requirements remain unchanged."
           ],
           "criterion_result": "Complete editor verified including logo/favicon native uploads, localized titles/colors, light/dark preview, versioned save/activate and owner-approved same-origin no-store assets. Fresh and upgrade history repaired; original privacy, integrity and concurrency checks retained.",
           "limitations": [
@@ -97969,7 +97985,7 @@
             },
             {
               "path": "apps/web/e2e/reconciliation.spec.ts",
-              "sha256": "af6c535c637f87c2cd4bd1f2ad61e5301f7117d11b8d7b103b5cc758129574fa"
+              "sha256": "8dfdc4c63927d297178638d80d1c4f21c87e3ba6c46c890e4f33e28c9d03546d"
             },
             {
               "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
@@ -98129,7 +98145,7 @@
             },
             {
               "path": "kanban/epics/02-auth-users-admin.md",
-              "sha256": "ee90c32d274fcfb3e115edf5edc7e45bcab2112aebb41ce90d8fe4d09894fda5"
+              "sha256": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774"
             },
             {
               "path": "packages/db/drizzle/production/0261_invoice_payment_lookup.sql",
@@ -98303,7 +98319,9 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures.",
+            "Renewed the auth specification binding after reconciling the older meter visibility wording with the documented v0.5 display policy. Other auth requirements remain unchanged."
           ],
           "criterion_result": "Wallet/invoice/provider/refund exception producers and protected filter/detail/assignee/investigate/resolve/close/audit flows accepted with current native and production-browser recovery checks. Owner-approved refund inequality preserves legacy residuals and uses the ordinary paid original as the sole refund budget. All89 original budgets pass. Historical development-only bootstrap failure retained; no recurrence in current production-built cases and no claim to its old root cause or to the later operational launch rehearsal.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-closure",
@@ -108975,7 +108993,7 @@
             },
             {
               "path": "apps/web/e2e/reconciliation.spec.ts",
-              "sha256": "af6c535c637f87c2cd4bd1f2ad61e5301f7117d11b8d7b103b5cc758129574fa"
+              "sha256": "8dfdc4c63927d297178638d80d1c4f21c87e3ba6c46c890e4f33e28c9d03546d"
             },
             {
               "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
@@ -109244,7 +109262,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
           ],
           "limitations": [],
           "order_submission_scoped_renewal": {
@@ -111176,7 +111195,7 @@
             },
             {
               "path": "kanban/epics/02-auth-users-admin.md",
-              "sha256": "ee90c32d274fcfb3e115edf5edc7e45bcab2112aebb41ce90d8fe4d09894fda5"
+              "sha256": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774"
             },
             {
               "path": "packages/i18n/src/admin-ui-messages.ts",
@@ -111208,7 +111227,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-closure/closure-budgets.json",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-closure/final-financial-review.json",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-closure/final-financial-binding.json",
-            "Scoped v0.3.0 SMS renewal: 404 current related cases, 16 production browser cases, types/lint/format and 89 original budgets pass. Mapped delivery remains unchanged; direct text is used only for unmapped events with approved local body. Immutable recipient/provider payload, access/preferences recheck, quota/breaker, durable receipts and unknown-outcome hold remain. Financial policy sections unchanged. Root package differs only in version. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.3-sms-direct"
+            "Scoped v0.3.0 SMS renewal: 404 current related cases, 16 production browser cases, types/lint/format and 89 original budgets pass. Mapped delivery remains unchanged; direct text is used only for unmapped events with approved local body. Immutable recipient/provider payload, access/preferences recheck, quota/breaker, durable receipts and unknown-outcome hold remain. Financial policy sections unchanged. Root package differs only in version. Evidence: /Users/majid/.local/state/barghsa-manual-batches/release-0.3-sms-direct",
+            "Renewed the auth specification binding after reconciling the older meter visibility wording with the documented v0.5 display policy. Other auth requirements remain unchanged."
           ],
           "criterion_result": "Versioned guarded settings/defaults/validation/audit, advanced duration/lead-time snapshots, current request/approval cap checks and bilingual accessible UI/captured-command save/reload verified. Canonical requirement reconciled with current-cap approval safeguard; existing submitted snapshots remain immutable.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-closure",
@@ -497760,7 +497780,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -497945,7 +497965,8 @@
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
           ],
           "limitations": [
             "No query-key/read/mutation page adoption, all-page cancellation, complete milestone, live providers, deployment or production acceptance is certified."
@@ -502659,7 +502680,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "de4dde7758b9d6e312f69e825df4aabbedc6fbd778b1e7c7f36022dfc6a12408"
+              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -502844,7 +502865,8 @@
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
           ],
           "limitations": [
             "No query-key/read/mutation page adoption, all-page cancellation, complete milestone, live providers, deployment or production acceptance is certified."
@@ -522123,7 +522145,7 @@
             },
             {
               "path": "apps/web/e2e/saving-change-address-form-fixture.ts",
-              "sha256": "cb6481eeec981a79fc67eca356844782a6dc156f824ea6ccab188970016fa873"
+              "sha256": "7cfee998c11335c1dd4b9808679f5b6b8463a909235d6606dce373cdd734e70d"
             },
             {
               "path": "apps/web/e2e/saving-change-address-forms.spec.ts",
@@ -523230,7 +523252,8 @@
             "Twenty-eight final production browser cases, 18 instrumented Chromium cases, 100 related unit cases, eight coverage groups and 98 gzip budgets passed. Web typecheck, changed-file lint and formatting passed. Six cold-auth checks carry forward against byte-identical auth assets.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "Reproduced the existing localized correction test failure. The test now requires every one of the 18 concrete keys (including the existing loading message), preserves English/Persian parity and content assertions, and passes."
+            "Reproduced the existing localized correction test failure. The test now requires every one of the 18 concrete keys (including the existing loading message), preserves English/Persian parity and content assertions, and passes.",
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
           "scope_dispositions": [
@@ -576308,7 +576331,7 @@
             },
             {
               "path": "apps/web/e2e/saving-change-address-form-fixture.ts",
-              "sha256": "cb6481eeec981a79fc67eca356844782a6dc156f824ea6ccab188970016fa873"
+              "sha256": "7cfee998c11335c1dd4b9808679f5b6b8463a909235d6606dce373cdd734e70d"
             },
             {
               "path": "apps/web/e2e/saving-change-address-forms.spec.ts",
@@ -578644,7 +578667,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -712086,7 +712110,7 @@
             },
             {
               "path": "kanban/epics/02-auth-users-admin.md",
-              "sha256": "ee90c32d274fcfb3e115edf5edc7e45bcab2112aebb41ce90d8fe4d09894fda5"
+              "sha256": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -712115,7 +712139,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes."
+            "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
+            "Renewed the auth specification binding after reconciling the older meter visibility wording with the documented v0.5 display policy. Other auth requirements remain unchanged."
           ],
           "criterion_result": "Complete editor verified including logo/favicon native uploads, localized titles/colors, light/dark preview, versioned save/activate and owner-approved same-origin no-store assets. Fresh and upgrade history repaired; original privacy, integrity and concurrency checks retained.",
           "limitations": [
@@ -716114,7 +716139,7 @@
             },
             {
               "path": "kanban/epics/02-auth-users-admin.md",
-              "sha256": "ee90c32d274fcfb3e115edf5edc7e45bcab2112aebb41ce90d8fe4d09894fda5"
+              "sha256": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -716425,7 +716450,8 @@
             "Bindings renewed by release-0.5-contract-finance-coverage: eight native wallet and eight native CRM cases preserve current review, timeout, denial and recovery assertions. Product code is unchanged.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
-            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain."
+            "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
+            "Renewed the auth specification binding after reconciling the older meter visibility wording with the documented v0.5 display policy. Other auth requirements remain unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/four-service-rehearsal",
           "limitations": [
@@ -739713,7 +739739,8 @@
           "release-0.6-nightly-browser-shard-capacity",
           "release-0.6-nightly-advisory-and-schema-gate",
           "release-0.6-nightly-navigation-and-chromium",
-          "release-0.6-nightly-version-and-smoke-contracts"
+          "release-0.6-nightly-version-and-smoke-contracts",
+          "release-0.6-nightly-auth-and-finance-browser-fixtures"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -828917,6 +828944,72 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-version-smoke",
       "source_scope_proof": "receipt.json",
       "source_scope_proof_sha256": "71659b54be86337f7cb538ea95a7a88f066dc8e5a72afbb93ab5bc4eb2601f59"
+    },
+    "release-0.6-nightly-auth-and-finance-browser-fixtures": {
+      "batch": "release-0.6-nightly-auth-and-finance-browser-fixtures",
+      "base_commit": "0c12c7b3ed01104e5b34f5d74ddcc3c93096f48d",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02",
+        "02-auth-users-admin.md#T-01.01.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/registration-feature.spec.ts",
+          "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+        },
+        {
+          "path": "apps/web/e2e/reconciliation.spec.ts",
+          "sha256": "8dfdc4c63927d297178638d80d1c4f21c87e3ba6c46c890e4f33e28c9d03546d"
+        },
+        {
+          "path": "apps/web/e2e/saving-change-address-form-fixture.ts",
+          "sha256": "7cfee998c11335c1dd4b9808679f5b6b8463a909235d6606dce373cdd734e70d"
+        },
+        {
+          "path": "kanban/epics/02-auth-users-admin.md",
+          "sha256": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "7de3e8ba6b6766d50cb8275048bd117a7c1eb41d2b7714251775cf6c22e380c1"
+        },
+        {
+          "path": "docs/decisions/authentication-workspaces.md",
+          "sha256": "9ce211d5f886a74545f81c089049d817bb8232d31f2ba9e352b918db77f428e8"
+        },
+        {
+          "path": "apps/web/src/lib/reconciliation-form.ts",
+          "sha256": "87531468dd966c9022e11b878ece6f793326d102b7c719799d1ead5f5845cfed"
+        },
+        {
+          "path": "apps/web/e2e/saving-change-address-forms.spec.ts",
+          "sha256": "ca259c3765593d3a03aa159bc98c3c29691a51834f669229942261f939847d52"
+        },
+        {
+          "path": "apps/web/e2e/saving-hardware-forms.spec.ts",
+          "sha256": "4f7aacd16a0f6516f166d765218100d065b2b64b660ee7eaa542cd94a9da4a5a"
+        },
+        {
+          "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
+          "sha256": "7dbfe6da75106e6d19ea9df14615ff5469d5c53dcd0381dd4b235534835fcb2e"
+        },
+        {
+          "path": "apps/web/src/lib/csrf.ts",
+          "sha256": "9ae9d43859271c9fcf38aa560cc4369e5a9930a679fccb54b6b754f6f43ef209"
+        }
+      ],
+      "checks": [
+        "The current documented v0.5 behavior keeps strength feedback visible while a password value remains. The older auth wording and browser assertion now agree with it. The browser still verifies an empty unfocused field hides feedback, actual blur, hidden feedback during submit, draft retention and independent visibility toggling. Four targeted registration cases passed in desktop WebKit and iPhone Safari.",
+        "The reconciliation fixture supplies the real DTO’s nullable resolver field. Four targeted bilingual WebKit cases passed through retry, paging, DST validation, conflict and authority denial. No financial behavior or assertion changed.",
+        "The WebKit traces showed missing headers after mocked step-up while the test was rotating the cookie. The fixture now applies the exact rotated test cookie in the document before releasing the mocked response. All 12 targeted saving address, hardware and decision cases passed in desktop WebKit and iPhone Safari with the unchanged CSRF, captured command, idempotency, receipt, retry and ledger assertions.",
+        "The combined intermediate run still had four saving failures; the distinct final saving run is the evidence for those corrected cases. The complete hosted nightly matrix and actual scheduled receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-journey-repair",
+      "source_scope_proof": "receipt.json",
+      "source_scope_proof_sha256": "0fe2938491f19b90136ee4e949d3ef87afc16b582ca3f58709fe5c4ebb057cb7"
     }
   },
   "historical_improvements": [

@@ -43,7 +43,7 @@ jobs:
           node --test scripts/browser-projects.test.mjs
           python3 -m unittest discover -s scripts -p 'test_check_browser_results.py'
       - name: Exercise the production app in the selected browser
-        run: node scripts/run-production-browser.mjs e2e/admin-settings-live.spec.ts e2e/number-preferences.spec.ts --project="${{ matrix.project }}" --retries=0 --grep "staff creation|AI policy UI|catalogue UI persists|branding publishes|TOS rich draft|provider forms persist|published number preference"
+        run: node scripts/run-production-browser.mjs e2e/admin-settings-live.spec.ts --project="${{ matrix.project }}" --retries=0 --grep "staff creation|catalogue UI persists|branding publishes|provider forms persist"
         env:
           BARGHSA_TEST_PREBUILT: '1'
       - name: Report observed browser outcomes

@@ -312,13 +312,10 @@ export async function setupSavingChangeAddressForms(
     stepUp.requests.push(body);
     stepUp.verified = body.password === 'Saving-form-proof-42!';
     if (!stepUp.verified) return route.fulfill({ status: 422, json: {} });
-    await page.context().addCookies([
-      {
-        name: 'barghsa_csrf',
-        value: 'rotated-saving-password-proof',
-        url: new URL(route.request().url()).origin,
-      },
-    ]);
+    // Apply the fixture's rotation in the document before the resumed write reads the cookie.
+    await page.evaluate(() => {
+      document.cookie = 'barghsa_csrf=rotated-saving-password-proof; Path=/; SameSite=Lax';
+    });
     return route.fulfill({
       json: {
         message: 'Step-up authentication successful.',

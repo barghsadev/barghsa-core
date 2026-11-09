@@ -325,6 +325,7 @@ for (const locale of ['en', 'fa'])
               .headersArray()
               .filter((header) => header.name.toLowerCase() === 'set-cookie')
               .map((header) => header.value.split(';', 1)[0]!.split('=', 2))
+              .filter(([, value]) => value)
           );
           if (!cookies.barghsa_session || !cookies.barghsa_csrf)
             throw new Error('Verified step-up did not rotate the fixture session');
@@ -2415,7 +2416,7 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Deactivate', exact: true })
       .click();
     await expect(page.getByRole('dialog')).toContainText(fa ? 'قاعده برق سبز' : 'green rule');
-    await confirm();
+    await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await page
       .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} Green UI`, exact: true })
       .click();
@@ -2554,7 +2555,9 @@ for (const locale of ['en', 'fa'] as const) {
     const style = page.getByLabel(fa ? 'نمایش اعداد' : 'Number display', { exact: true });
     await style.selectOption(numberStyle);
     await expect(
-      page.getByLabel(fa ? 'پیش‌نمایش نمایش اعداد' : 'Number display preview', { exact: true })
+      page
+        .getByRole('group', { name: brandingText('title', locale), exact: true })
+        .getByLabel(brandingText('numberPreview', locale), { exact: true })
     ).toContainText(fa ? '123,456,789' : '۱۲۳٬۴۵۶٬۷۸۹');
     await page
       .getByLabel(fa ? 'کد هگز رنگ اصلی' : 'Primary hex value', { exact: true })
@@ -3014,7 +3017,7 @@ for (const locale of ['en', 'fa'] as const)
     await page.locator('#sms-sender').fill('3000');
     await page.getByRole('combobox', { name: `${text('event')} 1`, exact: true }).fill(eventKey);
     await page.getByRole('textbox', { name: `${text('template')} 1`, exact: true }).fill('42');
-    await page.getByRole('textbox', { name: `${text('variable')} 1.1`, exact: true }).fill('code');
+    await page.getByRole('combobox', { name: `${text('variable')} 1.1`, exact: true }).fill('code');
     await page.getByRole('textbox', { name: `${text('parameter')} 1.1`, exact: true }).fill('CODE');
     await page.locator('form button[type=submit]').click();
     await expect(page.locator('#sms-key')).toHaveCount(0);

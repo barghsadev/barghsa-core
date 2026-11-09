@@ -33,7 +33,7 @@ async function openRegistration(page: Page, locale: string, verify = false) {
 }
 
 for (const locale of ['fa', 'en']) {
-  test(`registration stages input, hides strength after blur/submit and preserves a failed draft (${locale})`, async ({
+  test(`registration stages input, retains filled feedback until submit and preserves a failed draft (${locale})`, async ({
     page,
   }) => {
     await openRegistration(page, locale);
@@ -71,7 +71,8 @@ for (const locale of ['fa', 'en']) {
     await secret.fill(password);
     await expect(page.getByRole('progressbar')).toBeVisible();
     await secret.press('Tab');
-    await expect(page.locator('#password-strength')).toBeHidden();
+    await expect(secret).not.toBeFocused();
+    await expect(page.getByRole('progressbar')).toBeVisible();
     const toggle = page.locator('button[aria-pressed]');
     await toggle.click();
     await expect(secret).toHaveAttribute('type', 'text');

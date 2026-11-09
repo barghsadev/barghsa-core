@@ -43,6 +43,7 @@ for (const locale of ['en', 'fa'])
           createdAt: '2026-09-01T00:00:00Z',
           details: { ledger: '9007199254740993' },
           assignedToUsername: null,
+          resolvedByUsername: null,
           resolutionNote: null,
         })),
       });
