@@ -26,7 +26,7 @@
 
 **T-01.01.03 — Password field with visibility toggle and strength meter**
 
-- Description: Password input with eye toggle (show/hide). Strength meter hidden by default; appears on focus and stays visible until blur or submit. Password minimum 8 chars, must include uppercase, lowercase, digit.
+- Description: Password input with eye toggle (show/hide). The strength meter appears on focus and stays visible after blur while the field has a value. An empty unfocused field and a field disabled during submission hide the meter. Password minimum 8 chars, must include uppercase, lowercase, digit.
 - Technical notes: Strength meter uses zxcvbn or similar client-side library with Persian/EN feedback. Strength levels: Weak, Fair, Good, Strong. Password is never sent to third-party strength APIs. Field uses `autocomplete="new-password"`.
 - UI/UX: Toggle icon changes between eye/eye-off. Strength bar with color coding: red → yellow → green. On submit, validate server-side with Argon2id hashing.
 - Dependencies: T-01.01.02
