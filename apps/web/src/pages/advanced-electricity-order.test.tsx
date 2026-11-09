@@ -80,6 +80,7 @@ let orderConflict: boolean;
 let giftCode: string;
 let addresses: Array<{
   id: string;
+  profileId: string;
   provinceId: string;
   cityId: string;
   fullAddress: string;
@@ -231,6 +232,7 @@ it('retains the selected native address radio across form rerenders', async () =
   step = 4;
   addresses = ['address-1', 'address-2'].map((id, index) => ({
     id,
+    profileId,
     provinceId: 'province-1',
     cityId: 'city-1',
     fullAddress: `Saved Street ${index}`,
@@ -320,6 +322,159 @@ it('retries initial order context before opening the wizard', async () => {
   );
 });
 
+it.each([
+  ['/api/profiles/verification-status', {}, 200],
+  ['/api/profiles/verification-status', {}, 401],
+  ['/api/products/electricity', {}, 200],
+  ['/api/products/electricity', [], 200],
+  ['/api/electricity/periods/advanced', {}, 200],
+  ['/api/electricity/periods/advanced', {}, 503],
+] as const)('blocks malformed or failed advanced setup at %s (%#)', async (path, body, status) => {
+  const fallback = fetchMock.getMockImplementation()!;
+  let invalid = true;
+  fetchMock.mockImplementation((url, init) =>
+    invalid && String(url) === path ? Promise.resolve(reply(body, status)) : fallback(url, init)
+  );
+  await mount();
+  const error = container.querySelector('[role="alert"]');
+  expect(error?.textContent).toContain(t('electricity.order.draftLoadFailed', 'en'));
+  expect(container.querySelector('nav')).toBeNull();
+  invalid = false;
+  await act(async () => error!.querySelector('button')!.click());
+  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
+    t('electricity.advanced.stepProducts', 'en')
+  );
+  expect(fetchMock.mock.calls.some(([, init]) => init?.method === 'PUT')).toBe(false);
+});
+
+it.each([
+  ['missing draft', null],
+  ['invalid step', { currentStep: 6, data: null }],
+  ['missing saved fields', { currentStep: 4, data: null }],
+  ['invalid field container', { currentStep: 2, data: [] }],
+  ['invalid quantities', { currentStep: 2, data: { quantities: [] } }],
+  ['unknown product', { currentStep: 2, data: { quantities: { foreign: '10' } } }],
+  ['non-numeric quantity', { currentStep: 2, data: { quantities: { thermal: 'bad' } } }],
+  ['invalid start date', { currentStep: 2, data: { quantities: {}, startAt: 'invalid' } }],
+  ['invalid gift code', { currentStep: 2, data: { quantities: {}, giftCode: 12 } }],
+  ['invalid address ID', { currentStep: 2, data: { quantities: {}, addressId: 34 } }],
+] as const)('requires a fresh valid advanced draft after %s', async (_case, value) => {
+  const fallback = fetchMock.getMockImplementation()!;
+  let invalid = true;
+  fetchMock.mockImplementation((url, init) =>
+    invalid && String(url).includes('/drafts/advanced/guarded?')
+      ? Promise.resolve(reply(value))
+      : fallback(url, init)
+  );
+  await mount();
+  const error = container.querySelector('[role="alert"]');
+  expect(error?.textContent).toContain(t('electricity.order.draftLoadFailed', 'en'));
+  expect(container.querySelector('nav')).toBeNull();
+  invalid = false;
+  await act(async () => error!.querySelector('button')!.click());
+  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
+    t('electricity.advanced.stepProducts', 'en')
+  );
+  expect(fetchMock.mock.calls.some(([, init]) => init?.method === 'PUT')).toBe(false);
+});
+
+it('keeps mixed-profile addresses out of advanced checkout and recovers with an authorized list', async () => {
+  step = 4;
+  const owned = {
+    id: 'address-1',
+    profileId,
+    provinceId: 'province-1',
+    cityId: 'city-1',
+    fullAddress: 'Owned advanced address',
+    postalCode: '1234567890',
+    mainAddress: true,
+  };
+  addresses = [
+    owned,
+    {
+      ...owned,
+      id: 'foreign',
+      profileId: 'another-profile',
+      fullAddress: 'Private foreign street',
+    },
+  ];
+  await mount();
+
+  const error = container.querySelector('[role="alert"]');
+  expect(error?.textContent).toContain(t('electricity.order.draftLoadFailed', 'en'));
+  expect(container.querySelector('nav')).toBeNull();
+  expect(container.textContent).not.toContain('Private foreign street');
+  expect(container.textContent).not.toContain(owned.fullAddress);
+  addresses = [owned];
+  await act(async () => error!.querySelector('button')!.click());
+  expect(container.textContent).toContain(owned.fullAddress);
+  expect(container.textContent).not.toContain('Private foreign street');
+  expect(
+    fetchMock.mock.calls.filter(
+      ([url, init]) =>
+        init?.method === 'PUT' ||
+        (init?.method === 'POST' && /\/(?:orders\/advanced|addresses)$/.test(String(url)))
+    )
+  ).toEqual([]);
+});
+
+it('explains an empty saved-address list before adding a delivery address', async () => {
+  step = 4;
+  await mount();
+  expect(container.querySelector('[role="status"]')?.textContent).toBe(
+    t('electricity.order.noAddresses', 'en')
+  );
+  expect([...container.querySelectorAll('button')].map((button) => button.textContent)).toContain(
+    t('electricity.order.addAddress', 'en')
+  );
+  expect(container.querySelector('[role="radiogroup"]')).toBeNull();
+});
+
+it('opens a new advanced checkout without inventing a saved period or quantity', async () => {
+  const fallback = fetchMock.getMockImplementation()!;
+  fetchMock.mockImplementation((url, init) =>
+    String(url).includes('/drafts/advanced/guarded?')
+      ? Promise.resolve(reply({ currentStep: 1, data: null, revision: null }))
+      : fallback(url, init)
+  );
+  await mount();
+  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
+    t('electricity.advanced.stepDates', 'en')
+  );
+  expect(container.querySelector('[role="alert"]')).toBeNull();
+  expect(fetchMock.mock.calls.some(([url]) => String(url).includes('/preview/advanced'))).toBe(
+    false
+  );
+});
+
+it.each(['DRAFT', 'SUSPENDED', 'ACTIVE'] as const)(
+  'keeps the advanced checkout closed for an ineligible %s profile',
+  async (profileStatus) => {
+    const fallback = fetchMock.getMockImplementation()!;
+    fetchMock.mockImplementation((url, init) =>
+      String(url) === '/api/profiles/verification-status'
+        ? Promise.resolve(
+            reply({
+              activeProfileId: profileId,
+              activeProfileName: 'Verified owner',
+              profileStatus,
+              verificationRequired: true,
+              isVerified: false,
+            })
+          )
+        : fallback(url, init)
+    );
+    await mount();
+    expect(container.querySelector('[role="alert"]')?.textContent).toBe(
+      t('electricity.order.verificationRequired', 'en')
+    );
+    expect(container.querySelector('nav')).toBeNull();
+    expect(
+      fetchMock.mock.calls.some(([, init]) => init?.method === 'POST' || init?.method === 'PUT')
+    ).toBe(false);
+  }
+);
+
 async function retryReviewedDraft() {
   const action = (label: string) =>
     [...container.querySelectorAll('button')].find((button) => button.textContent === label)!;
@@ -403,6 +558,7 @@ it.each(['en', 'fa'] as const)(
     addresses = [
       {
         id: 'address-1',
+        profileId,
         provinceId: 'province-1',
         cityId: 'city-1',
         fullAddress: 'Example Street 4',
@@ -437,6 +593,7 @@ it('refreshes the advanced contract terms after a submission conflict', async ()
   addresses = [
     {
       id: 'address-1',
+      profileId,
       provinceId: 'province-1',
       cityId: 'city-1',
       fullAddress: 'Example Street 4',
@@ -465,6 +622,39 @@ it('refreshes the advanced contract terms after a submission conflict', async ()
   ).toHaveLength(2);
 });
 
+it('keeps the verified delivery address and does not start payment after an advanced order rejection', async () => {
+  const error = vi.spyOn(toast, 'error').mockImplementation(() => {});
+  step = 5;
+  quantities = { thermal: '100', green: '0', free_market: '0', energy_saving: '0' };
+  quoteSuccess = true;
+  addresses = [
+    {
+      id: 'address-1',
+      profileId,
+      provinceId: 'province-1',
+      cityId: 'city-1',
+      fullAddress: 'Verified street',
+      postalCode: '1234567890',
+      mainAddress: true,
+    },
+  ];
+  orderReply = async () => reply({}, 422);
+  await mount();
+  await settlePreview();
+  const submit = [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === t('electricity.order.submit', 'en')
+  )!;
+  await approveVisibleConfirmation();
+  await act(async () => submit.click());
+  expect(error).toHaveBeenCalledWith(t('electricity.order.error.create', 'en'));
+  expect(container.textContent).toContain('Verified street');
+  expect(container.textContent).not.toContain(t('electricity.order.retrySubmission', 'en'));
+  expect(navigateMock).not.toHaveBeenCalled();
+  expect(
+    fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/orders/advanced')
+  ).toHaveLength(1);
+});
+
 it('does not advance when the saved bundle differs from the reviewed quantities', async () => {
   step = 2;
   quantities = { thermal: '100', green: '0', free_market: '0', energy_saving: '0' };
@@ -490,6 +680,7 @@ it('sends one submission and retains its key until all order references are conf
   addresses = [
     {
       id: 'address-1',
+      profileId,
       provinceId: 'province-1',
       cityId: 'city-1',
       fullAddress: 'Example Street',
@@ -557,6 +748,7 @@ it('ignores an order receipt after the advanced form has unmounted', async () =>
   addresses = [
     {
       id: 'address-1',
+      profileId,
       provinceId: 'province-1',
       cityId: 'city-1',
       fullAddress: 'Example Street',

@@ -333,6 +333,58 @@ async function fixture(page: Page, mode: Mode, locale: Locale, step = 2) {
   return state;
 }
 
+for (const locale of ['en', 'fa'] as const) {
+  for (const mode of ['simple', 'advanced'] as const) {
+    test(`${mode} delivery address rejects mixed profiles and retries without writing (${locale})`, async ({
+      page,
+    }) => {
+      const state = await fixture(page, mode, locale, 4);
+      const privateAddress = 'Private address from another profile';
+      let includeForeignAddress = true;
+      const methods: string[] = [];
+      await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
+        methods.push(route.request().method());
+        const addresses = includeForeignAddress
+          ? [
+              address,
+              {
+                ...address,
+                id: receipt.invoiceId,
+                profileId: receipt.orderId,
+                fullAddress: privateAddress,
+              },
+            ]
+          : [address];
+        return route.fulfill({ json: { addresses } });
+      });
+      await page.goto(`/electricity/${mode === 'simple' ? 'order' : 'advanced'}?step=4`);
+      const errorKey = mode === 'simple' ? 'addressLoadFailed' : 'draftLoadFailed';
+      const alert = page
+        .getByRole('alert')
+        .filter({ hasText: t(`electricity.order.${errorKey}`, locale) });
+      await expect(alert).toBeVisible();
+      await expect(page.getByText(privateAddress)).toHaveCount(0);
+      await expect(page.getByText(address.fullAddress)).toHaveCount(0);
+
+      includeForeignAddress = false;
+      await alert
+        .getByRole('button', { name: t('electricity.order.retry', locale), exact: true })
+        .press('Enter');
+      const group = page.getByRole('radiogroup', {
+        name: t('electricity.order.selectAddress', locale),
+        exact: true,
+      });
+      await expect(group.getByRole('radio')).toHaveCount(1);
+      await expect(group.getByRole('radio')).toBeChecked();
+      await expect(group).toContainText(address.fullAddress);
+      await expect(page.getByText(privateAddress)).toHaveCount(0);
+      expect(methods).toEqual(['GET', 'GET']);
+      expect(state.saves).toEqual([]);
+      expect(state.orders).toEqual([]);
+    });
+  }
+}
+
 for (const locale of ['en', 'fa'] as const)
   test(`advanced electricity retries stalled settings and draft reads (${locale})`, async ({
     page,

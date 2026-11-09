@@ -199,10 +199,11 @@ const advance = () => act(async () => next().click());
 const orderCalls = () =>
   fetchMock.mock.calls.filter(([url]) => url === '/api/electricity/orders/simple');
 async function fill(id: string, value: string) {
-  const field = container.querySelector<HTMLInputElement | HTMLSelectElement>(`#${id}`)!;
+  const field = container.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+    `#${id}`
+  )!;
   await act(async () => {
-    const prototype =
-      field instanceof HTMLSelectElement ? HTMLSelectElement.prototype : HTMLInputElement.prototype;
+    const prototype = Object.getPrototypeOf(field);
     Object.getOwnPropertyDescriptor(prototype, 'value')!.set!.call(field, value);
     field.dispatchEvent(
       new Event(field instanceof HTMLSelectElement ? 'change' : 'input', { bubbles: true })
@@ -213,6 +214,72 @@ const settlePreview = () =>
   act(async () => {
     await new Promise((resolve) => setTimeout(resolve, 300));
   });
+
+it('keeps mixed-profile addresses out of simple checkout and recovers with an authorized list', async () => {
+  const fallback = fetchMock.getMockImplementation()!;
+  let addresses = [
+    address,
+    {
+      ...address,
+      id: 'foreign',
+      profileId: 'another-profile',
+      fullAddress: 'Private foreign street',
+    },
+  ];
+  fetchMock.mockImplementation((url, init) =>
+    String(url) === `/api/profiles/${profileId}/addresses`
+      ? Promise.resolve(response({ addresses }))
+      : fallback(url, init)
+  );
+  draft = { currentStep: 4, data: { period: 'next_week', totalKwh: '10' } };
+  await mount();
+
+  const error = [...container.querySelectorAll('[role="alert"]')].find((node) =>
+    node.textContent?.includes(t('electricity.order.addressLoadFailed', 'en'))
+  );
+  expect(error).toBeDefined();
+  expect(container.textContent).not.toContain('Private foreign street');
+  expect(container.textContent).not.toContain(address.fullAddress);
+  expect(next().disabled).toBe(true);
+  addresses = [address];
+  await act(async () => error!.querySelector('button')!.click());
+  expect(container.textContent).toContain(address.fullAddress);
+  expect(container.textContent).not.toContain('Private foreign street');
+  expect(orderCalls()).toHaveLength(0);
+  expect(
+    fetchMock.mock.calls.filter(
+      ([url, init]) =>
+        init?.method === 'PUT' || (init?.method === 'POST' && String(url).endsWith('/addresses'))
+    )
+  ).toEqual([]);
+});
+
+it.each([
+  { currentStep: 4, data: null },
+  { currentStep: 4, data: { period: 'next_week', totalKwh: 'bad' } },
+  { currentStep: 4, data: { period: 'unknown', totalKwh: '10' } },
+])('keeps simple checkout closed until a malformed saved draft is replaced %#', async (value) => {
+  const fallback = fetchMock.getMockImplementation()!;
+  let invalid = true;
+  fetchMock.mockImplementation((url, init) =>
+    invalid && String(url).includes('/drafts/simple/guarded?')
+      ? Promise.resolve(response(value))
+      : fallback(url, init)
+  );
+  await mount();
+  const error = container.querySelector('[role="alert"]');
+  expect(error?.textContent).toContain(t('electricity.order.draftLoadFailed', 'en'));
+  expect(container.querySelector('nav')).toBeNull();
+  const retry = [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === t('electricity.order.retry', 'en')
+  )!;
+  invalid = false;
+  await act(async () => retry.click());
+  expect(container.querySelector('li[aria-current="step"]')?.textContent).toContain(
+    t('electricity.order.step1', 'en')
+  );
+  expect(orderCalls()).toHaveLength(0);
+});
 
 it('shows manual entry, period dates and the server price before one submission', async () => {
   previewReply = async () =>
@@ -276,6 +343,55 @@ it('shows manual entry, period dates and the server price before one submission'
     to: '/electricity/orders/$orderId',
     params: { orderId: saved.orderId },
   });
+});
+
+it('cancels an inline address edit without changing the selected verified address', async () => {
+  draft = { currentStep: 4, data: { period: 'next_week', totalKwh: '10' } };
+  await mount();
+  const button = (key: string) =>
+    [...container.querySelectorAll('button')].find((node) => node.textContent === t(key, 'en'))!;
+  const add = 'electricity.order.addNewAddress';
+  await act(async () => button(add).click());
+  await fill('order-address-fullAddress', 'Unsaved address');
+  await act(async () => button('electricity.order.cancel').click());
+  expect(container.textContent).toContain(address.fullAddress);
+  expect(
+    container.querySelector<HTMLInputElement>('[role="radiogroup"] input[type="radio"]:checked')
+      ?.value
+  ).toBe(address.id);
+  await act(async () => button(add).click());
+  expect(container.querySelector<HTMLTextAreaElement>('#order-address-fullAddress')?.value).toBe(
+    ''
+  );
+  expect(fetchMock.mock.calls.some(([, init]) => init?.method === 'PUT')).toBe(false);
+  expect(orderCalls()).toHaveLength(0);
+});
+
+it('requires the applied gift code and its reviewed discount before advancing from delivery', async () => {
+  draft = { currentStep: 4, data: { period: 'next_week', totalKwh: '10' } };
+  await mount();
+  await settlePreview();
+  await fill('electricity-gift', ' OWNER-GIFT ');
+  expect(next().disabled).toBe(true);
+  const apply = [...container.querySelectorAll('button')].find(
+    (button) => button.textContent === t('electricity.order.applyGift', 'en')
+  )!;
+  previewReply = async () =>
+    response({
+      ...quote,
+      lines: [{ ...quote.lines[0], discountIrR: '250000', totalIrR: '2250000' }],
+      discountIrR: '250000',
+      totalIrR: '2250000',
+    });
+  await act(async () => apply.click());
+  await settlePreview();
+  const preview = fetchMock.mock.calls
+    .filter(([url]) => url === '/api/electricity/preview/simple')
+    .at(-1);
+  expect(JSON.parse(String(preview?.[1]?.body))).toMatchObject({ giftCode: 'OWNER-GIFT' });
+  expect(container.textContent).toContain(`${t('electricity.order.discount', 'en')}: 250000`);
+  expect(next().disabled).toBe(false);
+  expect(orderCalls()).toHaveLength(0);
 });
 
 it('retries an unavailable estimate without clearing a manual quantity', async () => {
@@ -535,6 +651,36 @@ async function openFundingReview() {
   await advance();
   await advance();
 }
+
+it('keeps the simple financial review and named delivery profile after a definitive order rejection', async () => {
+  catalogue = [{ ...product, limits: { minKwh: '5', maxKwh: '15' } }];
+  const fallback = fetchMock.getMockImplementation()!;
+  fetchMock.mockImplementation((url, init) =>
+    String(url) === '/api/profiles/verification-status'
+      ? Promise.resolve(
+          response({
+            activeProfileId: profileId,
+            activeProfileName: ' Delivery owner ',
+            verificationRequired: true,
+            isVerified: true,
+          })
+        )
+      : fallback(url, init)
+  );
+  orderReply = async () => response({}, 422);
+  await openFundingReview();
+  await approveVisibleConfirmation();
+  await act(async () => submit().click());
+  expect(orderCalls()).toHaveLength(1);
+  expect(notices.error).toHaveBeenCalledWith(t('electricity.order.error.create', 'en'));
+  expect(container.querySelector('[data-review-section=profile] dd')?.textContent).toBe(
+    'Delivery owner'
+  );
+  expect(container.textContent).toContain(address.fullAddress);
+  expect(container.textContent).not.toContain(t('electricity.order.retrySubmission', 'en'));
+  expect(navigate).not.toHaveBeenCalled();
+});
+
 it.each([9007199254740992, '9007199254740993123456'])(
   'electricity funding preview preserves decimal-string money and refuses numeric JSON %s',
   async (balance) => {

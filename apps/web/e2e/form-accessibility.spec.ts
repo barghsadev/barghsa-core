@@ -2436,23 +2436,19 @@ for (const locale of ['en', 'fa']) {
   test(`ordering city choices ignore background and obsolete province responses (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
-    await page.route('**/api/profiles/verification-status', (route) =>
-      route.fulfill({
-        json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
-      })
-    );
-    await page.route('**/api/products', (route) => route.fulfill({ json: [] }));
-    await page.route('**/api/profiles/profile-one/addresses', (route) =>
+    await orderAddressShell(page, locale);
+    await page.route(`**/api/profiles/${orderAddressProfile}/addresses`, (route) =>
       route.fulfill({
         json: {
           addresses: [
             {
               id: 'saved',
+              profileId: orderAddressProfile,
               provinceId: 'a',
               cityId: 'city-a',
               fullAddress: 'Saved address',
               postalCode: '1234567890',
+              mainAddress: true,
             },
           ],
         },
@@ -2486,7 +2482,7 @@ for (const locale of ['en', 'fa']) {
       });
     });
     try {
-      await page.goto('/electricity/order');
+      await page.goto('/electricity/order?step=4');
       await expect.poll(() => backgroundStarted).toBe(true);
       await page
         .getByRole('button', {
@@ -2506,11 +2502,14 @@ for (const locale of ['en', 'fa']) {
       await province.selectOption('c');
       await expect.poll(() => obsoleteStarted).toBe(true);
       await expect(city).toHaveValue('');
+      const obsoleteCancelled = page.waitForEvent('requestfailed', {
+        predicate: (request) =>
+          new URL(request.url()).pathname === '/api/geography/provinces/c/cities',
+      });
       await province.selectOption('b');
       await city.selectOption('city-b');
-      const obsoleteResponse = page.waitForResponse('**/api/geography/provinces/c/cities');
+      await obsoleteCancelled;
       releaseObsolete();
-      await obsoleteResponse;
       await expect(city).toHaveValue('city-b');
       await expect(city.locator('option[value="city-c"]')).toHaveCount(0);
     } finally {
@@ -2537,6 +2536,7 @@ for (const locale of ['en', 'fa']) {
           addresses: [
             {
               id: 'main',
+              profileId: orderAddressProfile,
               provinceId: 'province',
               cityId: 'city',
               fullAddress: 'Recovered saved address',

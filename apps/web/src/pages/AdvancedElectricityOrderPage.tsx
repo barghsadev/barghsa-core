@@ -22,6 +22,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { useWizardStep } from '../hooks/useWizardStep.js';
 import { electricityOrderReceipt } from '../lib/form-receipt.js';
+import { readIntakeAddresses, type IntakeAddress } from '../lib/service-intake-records.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   ElectricityDraftRecovery,
@@ -45,14 +46,6 @@ type Product = {
   status: string;
   orderable: boolean;
   limits: { minKwh: string; maxKwh: string };
-};
-type Address = {
-  id: string;
-  provinceId: string;
-  cityId: string;
-  fullAddress: string;
-  postalCode: string;
-  mainAddress: boolean;
 };
 type Quote = {
   reviewDigest: string;
@@ -178,7 +171,7 @@ export function AdvancedElectricityOrderPage() {
   const [profileName, setProfileName] = useState<string | null>(null);
   const [blocked, setBlocked] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
-  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [addresses, setAddresses] = useState<IntakeAddress[]>([]);
   const [options, setOptions] = useState<{
     limits: { leadTimeDays: number; maxContractDuration: number };
     mandatoryGreenEnabled: boolean;
@@ -374,24 +367,21 @@ export function AdvancedElectricityOrderPage() {
     resetDraft();
     setSubmitting(false);
     setLoading(true);
-    void readWithDeadline(
-      abort.signal,
-      async (signal): Promise<[{ addresses: Address[] }, Draft]> => {
-        const [addresses, draft] = await Promise.all([
-          fetch(`/api/profiles/${profileId}/addresses`, { credentials: 'include', signal }),
-          fetch(electricityDraftPath('advanced', profileId), {
-            credentials: 'include',
-            signal,
-          }),
-        ]);
-        if (!addresses.ok || !draft.ok) throw new Error('Unavailable');
-        return Promise.all([addresses.json(), draft.json()]);
-      }
-    )
+    void readWithDeadline(abort.signal, async (signal): Promise<[unknown, Draft]> => {
+      const [addresses, draft] = await Promise.all([
+        fetch(`/api/profiles/${profileId}/addresses`, { credentials: 'include', signal }),
+        fetch(electricityDraftPath('advanced', profileId), {
+          credentials: 'include',
+          signal,
+        }),
+      ]);
+      if (!addresses.ok || !draft.ok) throw new Error('Unavailable');
+      return Promise.all([addresses.json(), draft.json()]);
+    })
       .then(([addressData, draft]) => {
         if (abort.signal.aborted) return;
+        const addresses = readIntakeAddresses(addressData, profileId);
         if (
-          !Array.isArray(addressData.addresses) ||
           !draft ||
           !Number.isInteger(draft.currentStep) ||
           draft.currentStep < 1 ||
@@ -420,11 +410,10 @@ export function AdvancedElectricityOrderPage() {
         )
           throw new Error('Invalid draft');
         readRevision(draft);
-        setAddresses(addressData.addresses);
+        setAddresses(addresses);
         const restoredAddress =
           draft.data?.addressId ??
-          (addressData.addresses.find((address) => address.mainAddress) ?? addressData.addresses[0])
-            ?.id ??
+          (addresses.find((address) => address.mainAddress) ?? addresses[0])?.id ??
           '';
         const restoredStart = draft.data?.startAt
           ? formatJalaliDateTime(new Date(draft.data.startAt))
@@ -941,7 +930,7 @@ export function AdvancedElectricityOrderPage() {
                   <h2 id="advanced-address-title" className="font-semibold">
                     {t('electricity.order.selectAddress', locale)}
                   </h2>
-                  {addresses.length > 0 && (
+                  {addresses.length > 0 ? (
                     <div
                       role="radiogroup"
                       aria-labelledby="advanced-address-title"
@@ -963,6 +952,10 @@ export function AdvancedElectricityOrderPage() {
                         </label>
                       ))}
                     </div>
+                  ) : (
+                    <p role="status" className="text-sm text-muted-foreground">
+                      {t('electricity.order.noAddresses', locale)}
+                    </p>
                   )}
                   <Button
                     type="button"

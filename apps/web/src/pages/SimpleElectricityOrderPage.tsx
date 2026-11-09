@@ -47,6 +47,7 @@ import {
 import { useReviewedSubmission } from '../hooks/useReviewedSubmission.js';
 import { SubmissionRecovery } from '../components/SubmissionRecovery.js';
 import { withCsrf } from '../lib/csrf.js';
+import { readIntakeAddresses, type IntakeAddress } from '../lib/service-intake-records.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { ValidatedFormWizard } from '../components/ValidatedFormWizard.js';
@@ -71,18 +72,6 @@ interface Product {
   status: string;
   simpleOrderable: boolean;
   limits: { minKwh: string; maxKwh: string };
-}
-
-interface Address {
-  id: string;
-  profileId: string;
-  provinceId: string;
-  cityId: string;
-  fullAddress: string;
-  postalCode: string;
-  mainAddress: boolean;
-  createdAt: string;
-  updatedAt: string;
 }
 
 type SimplePeriod =
@@ -295,7 +284,7 @@ function OwnedSimpleElectricityOrderPage() {
   const productGeneration = useRef(0);
 
   // Addresses
-  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [addresses, setAddresses] = useState<IntakeAddress[]>([]);
   const [selectedAddressId, setSelectedAddressId] = fields.field('selectedAddressId');
   const [addressTouched, setAddressTouched] = fields.field('addressTouched');
   const [loadingAddresses, setLoadingAddresses] = useState(true);
@@ -535,7 +524,7 @@ function OwnedSimpleElectricityOrderPage() {
       return;
     }
     try {
-      const data = await readIntake<{ addresses: Address[] }>(
+      const data = await readIntake<unknown>(
         queryKeys.profiles.list(
           { ...intakeScope, context: 'customer', ownerId: activeProfileId },
           new URLSearchParams({ owner: 'electricity-intake-addresses' })
@@ -544,20 +533,8 @@ function OwnedSimpleElectricityOrderPage() {
         'Addresses unavailable',
         { credentials: 'include' }
       );
-      if (
-        !Array.isArray(data?.addresses) ||
-        data.addresses.some(
-          (address: unknown) =>
-            !address ||
-            typeof address !== 'object' ||
-            ['id', 'provinceId', 'cityId', 'fullAddress', 'postalCode'].some(
-              (key) => typeof (address as Record<string, unknown>)[key] !== 'string'
-            )
-        )
-      )
-        throw new Error('Invalid addresses');
       if (current !== addressGeneration.current) return;
-      const items: Address[] = data.addresses;
+      const items = readIntakeAddresses(data, activeProfileId);
       setAddresses(items);
       setSelectedAddressId((current) =>
         items.some((address) => address.id === current)
@@ -970,7 +947,7 @@ function OwnedSimpleElectricityOrderPage() {
         return;
       }
 
-      const newAddress: Address = await res.json();
+      const newAddress: IntakeAddress = await res.json();
       if (
         !newAddress ||
         typeof newAddress.id !== 'string' ||
