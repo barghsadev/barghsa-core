@@ -1,0 +1,29 @@
+# Bad deployment and rollback
+
+**Incident P1 for a failed rollout with traffic still served, or P0 for core unavailability or financial integrity risk. Platform operations leads with the owners listed below.** Signals include failed readiness or smoke, elevated error budget burn, reconciliation mismatch or a security alert.
+
+## Application rollback
+
+1. Halt the rollout and remove the affected canary or replicas from traffic. Record the candidate and previous image digests, applied migrations and failed checks. In staging, read Compose status and the active manifest to see whether automatic restoration succeeded.
+2. The release operator restores the last verified compatible app and web image digests through the deployment tooling. Verify API, worker, inference and web image readback. Keep additive forward-compatible migrations in place. If the schema is incompatible, use a tested roll-forward or the separately authorized migration recovery plan. A reverse migration must be explicitly tested against the current data and shown to preserve accepted writes.
+3. Check `GET /api/health/live`, `GET /api/health/ready`, worker readiness, the affected journey, reconciliation and the post-rollback error baseline before returning traffic. [Staging image restoration](../../deploy/staging/README.md). [Production image verification](../../deploy/production/README.md).
+
+## Configuration rollback
+
+1. The authorized configuration owner identifies the last safe version and why it remains safe with current data and application versions. Preserve the current version, audit trail and active object location. Keep compromised credentials retired.
+2. Use the supported versioned admin flow to apply the captured safe settings as an audited active version, with fresh authority and validation. Providers require the configuration-bound tests and explicit activation.
+3. Read back the effective version and exercise the affected behavior. Confirm the rejected version remains in the audit and stale updates are refused. [Storage configuration](../operations/storage-configuration.md). [Provider activation and recovery](../operations/notification-monitoring.md).
+
+## Data rollback
+
+1. Treat suspected data loss as P0. The database operator preserves the source and restores to a separate target using the approved backup and, when needed, the PITR target.
+2. Finance and the affected service owner verify lost or retained transactions against independent evidence. Fence source writes before an approved cutover.
+3. Confirm restored data, measured recovery point/time and authenticated service readiness. A failed schema migration alone does not authorize overwriting the live database. [Database restore](database-restore.md).
+
+## Feature rollback
+
+1. The authorized feature owner disables the affected capability using its documented flag or maintenance control. Keep unaffected routes and required provider reconciliation paths available.
+2. Verify current persisted flag state and the server's enforcement, including no new side effects for disabled operations. Check existing obligations and unrelated workflows before reopening.
+3. Re-enable only after the approved fix and affected journey checks pass. [AI chat maintenance example](../operations/ai-inference.md).
+
+Call the primary, service owner and Finance or security when the rollback cannot restore verified state. Preserve the failed and restored versions, exact verification receipts and recovery decision in the incident follow-up. [Incident response](../operations/incident-response.md).

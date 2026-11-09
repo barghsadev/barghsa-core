@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T21:34:27+00:00",
+  "updated": "2026-11-09T21:42:06+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -13660,11 +13660,11 @@
         "story": "01-platform-infrastructure.md#spec-67a5e8a8c05f"
       },
       "requirement": "- **T-05.04.04:** Create runbooks for rollback scenarios\n  - **Notes:** Runbooks: (1) Rollback code: redeploy previous Docker image, run migration rollback (reverse migration), verify. (2) Rollback config: activate previous safe config version. (3) Rollback data: restore PostgreSQL from backup + PITR if migration caused data loss. (4) Rollback feature: disable feature flag. Each runbook has severity, owner, steps, verification criteria.\n  - **Dependencies:** T-05.04.02\n  - **Complexity:** L\n  - **UI/UX:** N/A\n\n---",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Four procedures are documented. Reconcile the reverse-migration clause with the deployed forward-only expand/migrate/contract workflow, or produce a verified candidate-specific reverse procedure that preserves committed writes. Production promotion and rollback rehearsal remain separate gates."
       ],
       "owner": null,
       "depends_on": [],
@@ -13692,10 +13692,11 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          "docs/runbooks/bad-deployment.md"
         ],
         "batches": [
-          "release-0.6-staging-image-rollback"
+          "release-0.6-staging-image-rollback",
+          "release-0.6-incident-response-and-runbooks"
         ],
         "current_acceptance": null
       }
@@ -16944,12 +16945,10 @@
         "story": "01-platform-infrastructure.md#spec-60f7e95e69a7"
       },
       "requirement": "- **T-07.04.01:** Create incident runbooks directory (`docs/runbooks/`)\n  - **Notes:** One `.md` file per runbook. Each has: Title, Severity (P0-P2), Symptoms, Impact, Owner/Team, Step-by-step recovery (numbered, commands included), Verification (how to confirm recovery), Escalation (who to call if steps fail), Post-incident actions. Create runbooks for: `payment-wallet-mismatch`, `refund-backlog`, `database-failover`, `database-restore`, `storage-outage`, `notification-outage`, `credential-compromise`, `bad-deployment`, `redis-loss`, `ai-provider-outage`.\n  - **Dependencies:** S-04.01, S-04.02, S-04.03, S-05.02\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -16976,10 +16975,74 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          "docs/operations/incident-response.md",
+          "docs/runbooks/payment-wallet-mismatch.md",
+          "docs/runbooks/refund-backlog.md",
+          "docs/runbooks/database-failover.md",
+          "docs/runbooks/database-restore.md",
+          "docs/runbooks/storage-outage.md",
+          "docs/runbooks/notification-outage.md",
+          "docs/runbooks/credential-compromise.md",
+          "docs/runbooks/bad-deployment.md",
+          "docs/runbooks/redis-loss.md",
+          "docs/runbooks/ai-provider-outage.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-incident-response-and-runbooks"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-operations-documentation",
+          "base_commit": "36ece712099b927e0ec2608bb7464f1f34a03694",
+          "source_evidence": [
+            {
+              "path": "docs/operations/incident-response.md",
+              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+            },
+            {
+              "path": "docs/runbooks/payment-wallet-mismatch.md",
+              "sha256": "3d93ef1f083cf42d39853ad94c565d4ea0b1c8ecce85e3106b74b10dc6a37aa6"
+            },
+            {
+              "path": "docs/runbooks/refund-backlog.md",
+              "sha256": "a5d219b41a21ad89796e76b46c140db1ebfd520c1e315de17a27d45e039aea3e"
+            },
+            {
+              "path": "docs/runbooks/database-failover.md",
+              "sha256": "96a04793edb15a9f7cb5fa6519c7d2da5827f7e72918cac172b6882816e6bb4f"
+            },
+            {
+              "path": "docs/runbooks/database-restore.md",
+              "sha256": "f98b041a7ec71d27be5b0bb9cc59e41cb33039f9f6343536962cb62a1efea494"
+            },
+            {
+              "path": "docs/runbooks/storage-outage.md",
+              "sha256": "0f20dd60e58b471f1c05983271c2976cac13ab19e8ad0ac29bcbec820b48a05c"
+            },
+            {
+              "path": "docs/runbooks/notification-outage.md",
+              "sha256": "df9739d98b9e9ef2ac4c420e288e3c79d826bdd911fd40e55e7e1333017df309"
+            },
+            {
+              "path": "docs/runbooks/credential-compromise.md",
+              "sha256": "7ec48a447595fd62046804e970a0272ce6510fcf29796b6253a987a63f096056"
+            },
+            {
+              "path": "docs/runbooks/bad-deployment.md",
+              "sha256": "0b103cf914cbe4527c281e2b75fc4abe7b0f6f6005cf2d1ca46b14f19a1477ce"
+            },
+            {
+              "path": "docs/runbooks/redis-loss.md",
+              "sha256": "649c23261fbbfaeb66763b869f8ad3d9ab71a12ec42ce1ddca1749811ca41b5e"
+            },
+            {
+              "path": "docs/runbooks/ai-provider-outage.md",
+              "sha256": "1850add8f2109e4f27c2c238f7dd97ed9daaafc8812e07b7cf82bfca10c104fa"
+            }
+          ],
+          "checks": [
+            "All ten required incident runbooks exist and are indexed. Reviewed documented severity, symptoms and impact, responsible operator, numbered recovery steps, existing protected commands or authorized UI paths, verification, escalation and post-incident evidence. Verified cross-links and exact route or command references without changing live systems."
+          ]
+        }
       }
     },
     {
@@ -17091,12 +17154,10 @@
         "story": "01-platform-infrastructure.md#spec-60f7e95e69a7"
       },
       "requirement": "- **T-07.04.04:** Create incident response plan\n  - **Notes:** Document severity levels: P0 (critical — service down, payment issue, security breach) — page on-call, response <15 min. P1 (major — feature unavailable, degraded) — page owner, response <1 hour. P2 (minor — cosmetic, non-critical bug) — next working day. P3 (cosmetic) — backlog. On-call rotation: primary + secondary. Notification channels: Slack/Telegram for alerts, phone call for P0. Post-incident review: within 5 working days, create Jira issue, document timeline, root cause, action items.\n  - **Dependencies:** T-07.04.01\n  - **Complexity:** M\n  - **UI/UX:** N/A\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17123,10 +17184,79 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          "docs/operations/incident-response.md",
+          "docs/operations/service-objectives.md",
+          "docs/runbooks/payment-wallet-mismatch.md",
+          "docs/runbooks/refund-backlog.md",
+          "docs/runbooks/database-failover.md",
+          "docs/runbooks/database-restore.md",
+          "docs/runbooks/storage-outage.md",
+          "docs/runbooks/notification-outage.md",
+          "docs/runbooks/credential-compromise.md",
+          "docs/runbooks/bad-deployment.md",
+          "docs/runbooks/redis-loss.md",
+          "docs/runbooks/ai-provider-outage.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-incident-response-and-runbooks"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-operations-documentation",
+          "base_commit": "36ece712099b927e0ec2608bb7464f1f34a03694",
+          "source_evidence": [
+            {
+              "path": "docs/operations/incident-response.md",
+              "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+            },
+            {
+              "path": "docs/operations/service-objectives.md",
+              "sha256": "4a4344c2755b128cf77031b39466a00d912aa46278cfd9f5d710e203e1888ef3"
+            },
+            {
+              "path": "docs/runbooks/payment-wallet-mismatch.md",
+              "sha256": "3d93ef1f083cf42d39853ad94c565d4ea0b1c8ecce85e3106b74b10dc6a37aa6"
+            },
+            {
+              "path": "docs/runbooks/refund-backlog.md",
+              "sha256": "a5d219b41a21ad89796e76b46c140db1ebfd520c1e315de17a27d45e039aea3e"
+            },
+            {
+              "path": "docs/runbooks/database-failover.md",
+              "sha256": "96a04793edb15a9f7cb5fa6519c7d2da5827f7e72918cac172b6882816e6bb4f"
+            },
+            {
+              "path": "docs/runbooks/database-restore.md",
+              "sha256": "f98b041a7ec71d27be5b0bb9cc59e41cb33039f9f6343536962cb62a1efea494"
+            },
+            {
+              "path": "docs/runbooks/storage-outage.md",
+              "sha256": "0f20dd60e58b471f1c05983271c2976cac13ab19e8ad0ac29bcbec820b48a05c"
+            },
+            {
+              "path": "docs/runbooks/notification-outage.md",
+              "sha256": "df9739d98b9e9ef2ac4c420e288e3c79d826bdd911fd40e55e7e1333017df309"
+            },
+            {
+              "path": "docs/runbooks/credential-compromise.md",
+              "sha256": "7ec48a447595fd62046804e970a0272ce6510fcf29796b6253a987a63f096056"
+            },
+            {
+              "path": "docs/runbooks/bad-deployment.md",
+              "sha256": "0b103cf914cbe4527c281e2b75fc4abe7b0f6f6005cf2d1ca46b14f19a1477ce"
+            },
+            {
+              "path": "docs/runbooks/redis-loss.md",
+              "sha256": "649c23261fbbfaeb66763b869f8ad3d9ab71a12ec42ce1ddca1749811ca41b5e"
+            },
+            {
+              "path": "docs/runbooks/ai-provider-outage.md",
+              "sha256": "1850add8f2109e4f27c2c238f7dd97ed9daaafc8812e07b7cf82bfca10c104fa"
+            }
+          ],
+          "checks": [
+            "Reviewed the documented P0–P3 response times, primary and secondary rotation, private channel and P0 phone response, protected evidence and credential revocation, Persian and English customer drafts, and five-working-day post-incident follow-up. Alert priorities are distinct from confirmed incident severities. The active on-call rota, destination and dead-man readback are separate deployment requirements."
+          ]
+        }
       }
     },
     {
@@ -484376,7 +484506,8 @@
           "docs/operations/service-objectives.md"
         ],
         "batches": [
-          "release-0.6-service-objectives-and-priorities"
+          "release-0.6-service-objectives-and-priorities",
+          "release-0.6-incident-response-and-runbooks"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -484384,7 +484515,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "7c5ec1a00171b0f4cc25fba50eac0832e0d89dbb32c474a9471b7c708c86efcc"
+              "sha256": "4a4344c2755b128cf77031b39466a00d912aa46278cfd9f5d710e203e1888ef3"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -484400,7 +484531,8 @@
             }
           ],
           "checks": [
-            "Reviewed P1 customer outage and financial integrity, P2 degradation and backlog, and P3 working-hours warning with separate response and ownership expectations. The specific owner-approved notification rule and staged readback confirm low SMS credit remains P2. Alert transport labels and deployment/routing remain separately assessed."
+            "Reviewed P1 customer outage and financial integrity, P2 degradation and backlog, and P3 working-hours warning with separate response and ownership expectations. The specific owner-approved notification rule and staged readback confirm low SMS credit remains P2. Alert transport labels and deployment/routing remain separately assessed.",
+            "Distinguished the unchanged alert-priority categories and SLO targets from confirmed incident severity; checked the new response-plan link."
           ]
         }
       }
@@ -484655,7 +484787,8 @@
           "docs/operations/service-objectives.md"
         ],
         "batches": [
-          "release-0.6-service-objectives-and-priorities"
+          "release-0.6-service-objectives-and-priorities",
+          "release-0.6-incident-response-and-runbooks"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -484663,7 +484796,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "7c5ec1a00171b0f4cc25fba50eac0832e0d89dbb32c474a9471b7c708c86efcc"
+              "sha256": "4a4344c2755b128cf77031b39466a00d912aa46278cfd9f5d710e203e1888ef3"
             },
             {
               "path": "architecture.md",
@@ -484675,7 +484808,8 @@
             }
           ],
           "checks": [
-            "Matched all six indicators to the unchanged reliability budgets and restore limits. Definitions cover authenticated eligible outcomes, route p95, representative mobile p75 LCP, due-to-claim job p99 and late misses, verified RPO and readiness-through-finance RTO. No SLO measurement or dashboard deployment is implied."
+            "Matched all six indicators to the unchanged reliability budgets and restore limits. Definitions cover authenticated eligible outcomes, route p95, representative mobile p75 LCP, due-to-claim job p99 and late misses, verified RPO and readiness-through-finance RTO. No SLO measurement or dashboard deployment is implied.",
+            "Distinguished the unchanged alert-priority categories and SLO targets from confirmed incident severity; checked the new response-plan link."
           ]
         }
       }
@@ -746554,7 +746688,8 @@
           "release-0.6-dynamic-js-lint-and-sanitized-html-boundary",
           "release-0.6-current-license-inventory-readback",
           "release-0.6-service-objectives-and-priorities",
-          "release-0.6-assistant-display-maintenance-fixture"
+          "release-0.6-assistant-display-maintenance-fixture",
+          "release-0.6-incident-response-and-runbooks"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -838902,6 +839037,75 @@
         "Hosted exact run 42697837840 job 129434451985 failed 1 of 5504 web tests. The same display test reproduced locally because the existing fetch mock treated the new read-only AI maintenance lookup and the assistant availability lookup as one request.",
         "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
         "All 95 assertions across six assistant and maintenance test files passed. Final web typecheck and changed-file ESLint passed. Product code did not change. Full hosted acceptance remains dependent on the corrected exact run."
+      ]
+    },
+    "release-0.6-incident-response-and-runbooks": {
+      "batch": "release-0.6-incident-response-and-runbooks",
+      "base_commit": "36ece712099b927e0ec2608bb7464f1f34a03694",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.04",
+        "01-platform-infrastructure.md#T-07.04.01",
+        "01-platform-infrastructure.md#T-07.04.04",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/incident-response.md",
+          "sha256": "0fa45e27ac71f56e1a2729845ae52efec1f4e6e30760efff11be1ea584724ca1"
+        },
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "4a4344c2755b128cf77031b39466a00d912aa46278cfd9f5d710e203e1888ef3"
+        },
+        {
+          "path": "docs/runbooks/payment-wallet-mismatch.md",
+          "sha256": "3d93ef1f083cf42d39853ad94c565d4ea0b1c8ecce85e3106b74b10dc6a37aa6"
+        },
+        {
+          "path": "docs/runbooks/refund-backlog.md",
+          "sha256": "a5d219b41a21ad89796e76b46c140db1ebfd520c1e315de17a27d45e039aea3e"
+        },
+        {
+          "path": "docs/runbooks/database-failover.md",
+          "sha256": "96a04793edb15a9f7cb5fa6519c7d2da5827f7e72918cac172b6882816e6bb4f"
+        },
+        {
+          "path": "docs/runbooks/database-restore.md",
+          "sha256": "f98b041a7ec71d27be5b0bb9cc59e41cb33039f9f6343536962cb62a1efea494"
+        },
+        {
+          "path": "docs/runbooks/storage-outage.md",
+          "sha256": "0f20dd60e58b471f1c05983271c2976cac13ab19e8ad0ac29bcbec820b48a05c"
+        },
+        {
+          "path": "docs/runbooks/notification-outage.md",
+          "sha256": "df9739d98b9e9ef2ac4c420e288e3c79d826bdd911fd40e55e7e1333017df309"
+        },
+        {
+          "path": "docs/runbooks/credential-compromise.md",
+          "sha256": "7ec48a447595fd62046804e970a0272ce6510fcf29796b6253a987a63f096056"
+        },
+        {
+          "path": "docs/runbooks/bad-deployment.md",
+          "sha256": "0b103cf914cbe4527c281e2b75fc4abe7b0f6f6005cf2d1ca46b14f19a1477ce"
+        },
+        {
+          "path": "docs/runbooks/redis-loss.md",
+          "sha256": "649c23261fbbfaeb66763b869f8ad3d9ab71a12ec42ce1ddca1749811ca41b5e"
+        },
+        {
+          "path": "docs/runbooks/ai-provider-outage.md",
+          "sha256": "1850add8f2109e4f27c2c238f7dd97ed9daaafc8812e07b7cf82bfca10c104fa"
+        }
+      ],
+      "checks": [
+        "All ten required incident runbooks exist and are indexed. Reviewed documented severity, symptoms and impact, responsible operator, numbered recovery steps, existing protected commands or authorized UI paths, verification, escalation and post-incident evidence. Verified cross-links and exact route or command references without changing live systems.",
+        "Reviewed the documented P0–P3 response times, primary and secondary rotation, private channel and P0 phone response, protected evidence and credential revocation, Persian and English customer drafts, and five-working-day post-incident follow-up. Alert priorities are distinct from confirmed incident severities. The active on-call rota, destination and dead-man readback are separate deployment requirements.",
+        "Documented application, configuration, data and feature rollback, with responsible owners, approvals, ordered steps and verification. The existing stage operator uses pinned prior images and forward-compatible schema. Conditional reverse migration requires a candidate-specific approved plan that preserves committed writes. No production rollback was performed.",
+        "Distinguished the unchanged alert-priority categories and SLO targets from confirmed incident severity; checked the new response-plan link.",
+        "Hosted 42704339290 job 129457186905 caught unformatted Markdown table alignment in service-objectives.md. Applied the same formatter to the service objectives and incident plan. Content comparison and targeted Prettier verification passed for all twelve documents and the assistant display fixture."
       ]
     }
   },

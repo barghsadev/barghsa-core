@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T21:34:27+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T21:42:06+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1016 | Accepted with unchanged source bindings. |
-| verify | 313 | Existing work may be complete; inspect evidence before building. |
-| partial | 33 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 1018 | Accepted with unchanged source bindings. |
+| verify | 310 | Existing work may be complete; inspect evidence before building. |
+| partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -1041,7 +1041,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.04.01` | verify | Earlier deferred | Create staging gate CI workflow |
 | `01-platform-infrastructure.md#T-05.04.02` | verify | Earlier deferred | Create production promotion workflow with canary/gradual rollout |
 | `01-platform-infrastructure.md#T-05.04.03` | verify | Earlier deferred | Implement post-deploy smoke tests and SLO comparison |
-| `01-platform-infrastructure.md#T-05.04.04` | verify | Earlier deferred | Create runbooks for rollback scenarios |
+| `01-platform-infrastructure.md#T-05.04.04` | partial | Earlier deferred | Create runbooks for rollback scenarios |
 | `01-platform-infrastructure.md#T-05.05.01` | partial | Earlier deferred | Create nightly CI schedule |
 | `01-platform-infrastructure.md#T-05.05.02` | verify | Earlier deferred | Create weekly load/performance regression test |
 | `01-platform-infrastructure.md#T-05.05.03` | verify | Earlier deferred | Create quarterly disaster-recovery and restore exercise |
@@ -1076,10 +1076,10 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-07.03.02` | verify | Earlier deferred | Configure Prettier with consistent formatting |
 | `01-platform-infrastructure.md#T-07.03.03` | verify | Earlier deferred | Set up Husky, lint-staged, and commitlint |
 | `01-platform-infrastructure.md#T-07.03.04` | verify | Earlier deferred | Create `.editorconfig` and `.vscode` workspace settings |
-| `01-platform-infrastructure.md#T-07.04.01` | verify | Earlier deferred | Create incident runbooks directory (`docs/runbooks/`) |
+| `01-platform-infrastructure.md#T-07.04.01` | done | Earlier deferred | Create incident runbooks directory (`docs/runbooks/`) |
 | `01-platform-infrastructure.md#T-07.04.02` | verify | Earlier deferred | Create initial ADRs |
 | `01-platform-infrastructure.md#T-07.04.03` | verify | Earlier deferred | Create deployment guide |
-| `01-platform-infrastructure.md#T-07.04.04` | verify | Earlier deferred | Create incident response plan |
+| `01-platform-infrastructure.md#T-07.04.04` | done | Earlier deferred | Create incident response plan |
 | `01-platform-infrastructure.md#T-07.05.01` | verify | Earlier deferred | Enforce “no external call inside a database transaction” |
 | `01-platform-infrastructure.md#T-07.05.02` | verify | Earlier deferred | Generate and verify TypeScript API client contracts from OpenAPI |
 | `01-platform-infrastructure.md#T-07.05.03` | done | Earlier deferred | Verify health-endpoint middleware exclusions |
