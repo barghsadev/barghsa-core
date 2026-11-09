@@ -59,6 +59,30 @@ test('paused checkout shows a bilingual reason and support while other intake st
   );
 });
 
+test('paused AI chat shows support without taking down the customer workspace', async ({
+  page,
+}) => {
+  await page.route('**/api/maintenance', (route) =>
+    route.fulfill({
+      json: {
+        capabilities: [
+          {
+            ...settings[0],
+            capability: 'ai_chat',
+            reason: { fa: 'بررسی دستیار', en: 'Checking the assistant' },
+          },
+        ],
+      },
+    })
+  );
+  await page.goto('/ai');
+  await expect(page.getByText('بررسی دستیار', { exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'تماس با پشتیبانی' })).toHaveAttribute(
+    'href',
+    '/tickets'
+  );
+});
+
 test('staff can prepare a versioned maintenance change', async ({ page }) => {
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({

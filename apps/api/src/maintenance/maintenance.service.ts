@@ -1,7 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { v7 as uuidv7 } from 'uuid';
 import { z } from 'zod';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
@@ -103,6 +104,18 @@ export class MaintenanceService {
       )
     ).rows[0];
     return settingFor(capability, row);
+  }
+
+  async requireAvailable(capability: Capability): Promise<void> {
+    const setting = await this.get(capability);
+    if (!setting.active) return;
+    throw new ServiceUnavailableException({
+      error: ErrorCodes.MAINTENANCE_ACTIVE.code,
+      capability,
+      reason: setting.reason,
+      estimatedUntil: setting.estimatedUntil,
+      supportUrl: '/tickets',
+    });
   }
 
   async update(

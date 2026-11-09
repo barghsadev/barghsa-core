@@ -12,5 +12,6 @@ import { SessionModule } from '../session/session.module.js';
   imports: [SessionModule],
   controllers: [AdminMaintenanceController, PublicMaintenanceController],
   providers: [MaintenanceService, { provide: APP_GUARD, useClass: MaintenanceGuard }],
+  exports: [MaintenanceService],
 })
 export class MaintenanceModule {}

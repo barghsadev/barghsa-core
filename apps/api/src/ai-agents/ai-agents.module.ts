@@ -14,6 +14,7 @@ import { AiHealthController } from './ai-health.controller.js';
 import { AiStaffChatController } from './ai-staff-chat.controller.js';
 import { AiWebsiteChatController } from './ai-website-chat.controller.js';
 import { AiStatelessKnowledgeService } from './ai-stateless-knowledge.service.js';
+import { MaintenanceModule } from '../maintenance/maintenance.module.js';
 
 /**
  * AI agent administration module (S-09.11, T-09.11.04 + T-09.11.05).
@@ -25,7 +26,7 @@ import { AiStatelessKnowledgeService } from './ai-stateless-knowledge.service.js
  * slots to agents. The isolated test chat previews the saved configuration.
  */
 @Module({
-  imports: [SessionModule, AiModelsModule, ProfilesModule],
+  imports: [SessionModule, AiModelsModule, ProfilesModule, MaintenanceModule],
   controllers: [
     AgentsController,
     AgentSlotsController,

@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { withAiMaintenance } from '../test/ai-maintenance.js';
 import type { KnowledgeAnswer } from './ai-knowledge-chat.service.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -138,6 +139,28 @@ function ask(body: unknown, requestHeaders = headers) {
     body: JSON.stringify(body),
   });
 }
+
+it('blocks customer AI maintenance requests before admitting a question', async () => {
+  const before = completions;
+  await withAiMaintenance(http.pool, async () => {
+    const availability = await fetch(`${http.base}/api/ai/knowledge/availability`, { headers });
+    expect(await availability.json()).toMatchObject({ available: false, profileId: null });
+    const requestId = randomUUID();
+    const response = await ask({ requestId, message: 'Paused?' });
+    expect(response.status).toBe(503);
+    expect(await response.json()).toMatchObject({
+      error: { code: 'MAINTENANCE:ACTIVE', capability: 'ai_chat', supportUrl: '/tickets' },
+    });
+    expect(
+      (
+        await http.pool.query('SELECT 1 FROM ai_knowledge_questions WHERE request_id=$1', [
+          requestId,
+        ])
+      ).rowCount
+    ).toBe(0);
+    expect(completions).toBe(before);
+  });
+});
 
 it('publishes owned question feedback without reflecting content or consuming provider calls', async () => {
   const before = completions;

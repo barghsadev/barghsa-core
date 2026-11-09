@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { telegramText } from '@barghsa/i18n/telegram';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { AiStatelessKnowledgeService } from '../ai-agents/ai-stateless-knowledge.service.js';
 import { appendAiAudit } from '../ai-agents/ai-audit.js';
 import { redactAiText } from '../ai-agents/ai-prompt-redaction.js';
@@ -406,10 +407,18 @@ export class TelegramRuntimeService implements OnModuleInit, OnModuleDestroy {
       if (row.status === 'processing') await this.process(row);
       else await this.send(row);
     } catch (error) {
-      const failure =
-        error instanceof HttpException && [401, 403].includes(error.getStatus())
-          ? 'authority_changed'
-          : 'telegram_processing_failed';
+      let failure = 'telegram_processing_failed';
+      if (error instanceof HttpException) {
+        const response = error.getResponse();
+        if ([401, 403].includes(error.getStatus())) failure = 'authority_changed';
+        else if (
+          response &&
+          typeof response === 'object' &&
+          'error' in response &&
+          response.error === ErrorCodes.MAINTENANCE_ACTIVE.code
+        )
+          failure = 'maintenance_active';
+      }
       if (row.kind === 'question' && row.status === 'processing') {
         const link = (
           await pool.query<{ user_id: string; profile_id: string }>(

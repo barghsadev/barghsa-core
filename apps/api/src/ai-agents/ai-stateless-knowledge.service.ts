@@ -6,6 +6,7 @@ import type { KnowledgeAnswer } from './ai-knowledge-chat.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { requireRouteOperatingContext } from '../session/operating-context.js';
+import { MaintenanceService } from '../maintenance/maintenance.service.js';
 
 type Slot = 'website_chatbot' | 'staff_chatbot' | 'telegram_chatbot';
 type Session = { sessionId: string; userId: string; csrfToken: string };
@@ -28,15 +29,26 @@ function fail(status: number, code: string, retryAfterMs?: number): never {
 export class AiStatelessKnowledgeService {
   private active = 0;
 
-  constructor(private readonly inference: AiTestChatService) {}
+  constructor(
+    private readonly inference: AiTestChatService,
+    private readonly maintenance: MaintenanceService
+  ) {}
 
   async availability(): Promise<{ available: boolean }> {
-    return { available: (await this.agent('website_chatbot')) !== null };
+    return {
+      available:
+        !(await this.maintenance.get('ai_chat')).active &&
+        (await this.agent('website_chatbot')) !== null,
+    };
   }
 
   async staffAvailability(session: Session): Promise<{ available: boolean }> {
     await this.staffAuthority(session);
-    return { available: (await this.agent('staff_chatbot')) !== null };
+    return {
+      available:
+        !(await this.maintenance.get('ai_chat')).active &&
+        (await this.agent('staff_chatbot')) !== null,
+    };
   }
 
   async askStaff(message: string, session: Session) {
@@ -93,6 +105,7 @@ export class AiStatelessKnowledgeService {
     latencyMs: number;
     agentId: string;
   }> {
+    await this.maintenance.requireAvailable('ai_chat');
     // Limit public work to two requests per API process; no additional DB lease spans this request.
     const publicQuestion = slotKey === 'website_chatbot';
     if (publicQuestion && this.active >= 2) fail(503, 'AI_WEBSITE_BUSY');

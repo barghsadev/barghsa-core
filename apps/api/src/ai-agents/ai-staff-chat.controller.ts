@@ -107,6 +107,7 @@ export class AiStaffChatController {
             ? code
             : ErrorCodes.PROVIDER_UNAVAILABLE.code,
       });
+      if (rawCode === ErrorCodes.MAINTENANCE_ACTIVE.code) throw error;
       const retryAfterMs =
         detail &&
         typeof detail === 'object' &&

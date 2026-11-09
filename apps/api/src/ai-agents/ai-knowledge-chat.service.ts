@@ -6,6 +6,7 @@ import { ProfilesService } from '../profiles/profiles.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { AiTestChatService, type TestChatResponse } from './ai-test-chat.service.js';
 import type { PolicyType } from '../ai-policies/ai-policies.service.js';
+import { MaintenanceService } from '../maintenance/maintenance.service.js';
 
 type CustomerSlot = 'individual_chatbot' | 'legal_entity_chatbot';
 type Session = { sessionId: string; userId: string; csrfToken: string };
@@ -38,7 +39,8 @@ function fail(status: number, code: string, retryAfterMs?: number): never {
 export class AiKnowledgeChatService {
   constructor(
     private readonly profiles: ProfilesService,
-    private readonly inference: AiTestChatService
+    private readonly inference: AiTestChatService,
+    private readonly maintenance: MaintenanceService
   ) {}
 
   async availability(userId: string): Promise<{
@@ -47,7 +49,9 @@ export class AiKnowledgeChatService {
     profileName: string | null;
     slotKey: CustomerSlot | null;
   }> {
-    const scope = await this.scopeFor(userId);
+    const scope = (await this.maintenance.get('ai_chat')).active
+      ? null
+      : await this.scopeFor(userId);
     return {
       available: scope !== null,
       profileId: scope?.profileId ?? null,
@@ -66,6 +70,7 @@ export class AiKnowledgeChatService {
     tokenUsage: TestChatResponse['tokenUsage'];
     latencyMs: number;
   }> {
+    await this.maintenance.requireAvailable('ai_chat');
     const started = Date.now();
     const scope = await this.scopeFor(session.userId);
     if (!scope) fail(409, 'AI_KNOWLEDGE_UNAVAILABLE');

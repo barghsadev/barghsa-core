@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-09T20:50:10+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-09T20:56:41+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 989 | Accepted with unchanged source bindings. |
-| verify | 340 | Existing work may be complete; inspect evidence before building. |
-| partial | 33 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 993 | Accepted with unchanged source bindings. |
+| verify | 335 | Existing work may be complete; inspect evidence before building. |
+| partial | 34 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
@@ -1032,7 +1032,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.02.01` | verify | Earlier deferred | Design and document commercial HA topology |
 | `01-platform-infrastructure.md#T-05.02.02` | verify | Earlier deferred | Configure rolling/blue-green deployment automation for HA |
 | `01-platform-infrastructure.md#T-05.02.03` | verify | Earlier deferred | Implement circuit breaker for external providers |
-| `01-platform-infrastructure.md#T-05.02.04` | verify | Earlier deferred | Configure maintenance mode per capability, not whole-application |
+| `01-platform-infrastructure.md#T-05.02.04` | partial | Earlier deferred | Configure maintenance mode per capability, not whole-application |
 | `01-platform-infrastructure.md#T-05.03.01` | done | Earlier deferred | Create CI workflow definition (GitHub Actions, GitLab CI, or equivalent) |
 | `01-platform-infrastructure.md#T-05.03.02` | done | Earlier deferred | Implement migration validation step (two environments) |
 | `01-platform-infrastructure.md#T-05.03.03` | done | Earlier deferred | Implement OpenAPI generation and drift check |
@@ -1425,11 +1425,11 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.17.01.06` | verify | Inventory needed | Write Credential Compromise runbook: revoke sessions, rotate keys, notify users, audit trail |
 | `06-security-testing-observability.md#T-06.17.01.07` | verify | Recorded batch work | Write Bad Deployment runbook: rollback, smoke test, incident report, blameless post-mortem |
 | `06-security-testing-observability.md#T-06.17.01.08` | verify | Inventory needed | Store runbooks in `docs/runbooks/` with alert links; review quarterly |
-| `06-security-testing-observability.md#T-06.17.02.01` | verify | Recorded batch work | Design capability-based maintenance mode: granular toggles per module/capability with admin UI |
-| `06-security-testing-observability.md#T-06.17.02.02` | verify | Inventory needed | Implement maintenance mode middleware: check capability toggle before processing; return `503` with safe message and support link |
-| `06-security-testing-observability.md#T-06.17.02.03` | verify | Recorded batch work | Build admin UI: view active maintenance modes, activate/deactivate with reason + estimated duration + owner |
+| `06-security-testing-observability.md#T-06.17.02.01` | done | Recorded batch work | Design capability-based maintenance mode: granular toggles per module/capability with admin UI |
+| `06-security-testing-observability.md#T-06.17.02.02` | done | Recorded batch work | Implement maintenance mode middleware: check capability toggle before processing; return `503` with safe message and support link |
+| `06-security-testing-observability.md#T-06.17.02.03` | done | Recorded batch work | Build admin UI: view active maintenance modes, activate/deactivate with reason + estimated duration + owner |
 | `06-security-testing-observability.md#T-06.17.02.04` | verify | Inventory needed | Ensure in-app and synthetic health checks respect maintenance mode (don't alert on expected unavailability) |
-| `06-security-testing-observability.md#T-06.17.02.05` | verify | Recorded batch work | Write integration tests: maintenance-prevented action returns correct status; non-maintained capabilities unaffected |
+| `06-security-testing-observability.md#T-06.17.02.05` | done | Recorded batch work | Write integration tests: maintenance-prevented action returns correct status; non-maintained capabilities unaffected |
 | `06-security-testing-observability.md#T-06.17.03.01` | verify | Inventory needed | Define synthetic check endpoints: `/health` (public), authenticated read-only query, login flow |
 | `06-security-testing-observability.md#T-06.17.03.02` | verify | Inventory needed | Implement synthetic monitoring configuration (Checkly / Grafana Synthetics / independent provider) |
 | `06-security-testing-observability.md#T-06.17.03.03` | verify | Inventory needed | Ensure synthetic checks use isolated test accounts and never create real orders/payments |

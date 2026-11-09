@@ -5,6 +5,7 @@ import { resolve } from 'node:path';
 import { fork, type ChildProcess } from 'node:child_process';
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { withAiMaintenance } from '../test/ai-maintenance.js';
 import { rootReleaseVersion } from './root-version.js';
 import { telegramConfirmationCode } from './telegram-protocol.js';
 
@@ -287,6 +288,29 @@ it('audits cancellation of an unconfirmed intent once and retains its immutable 
     profileId: f.profile,
   });
 });
+
+it('keeps private linking available and records AI maintenance without sending an answer', async () => {
+  await withAiMaintenance(http.pool, async () => {
+    const f = await linkWithKnowledge();
+    modelCalls = 0;
+    const question = await webhook('Is the assistant paused?', f.chat);
+    expect(question.response.status).toBe(200);
+    await expect
+      .poll(
+        async () =>
+          (
+            await http.pool.query(
+              'SELECT status,last_error,sent_message_id FROM telegram_updates WHERE update_id=$1',
+              [question.id]
+            )
+          ).rows[0],
+        { timeout: 10000 }
+      )
+      .toMatchObject({ status: 'failed', last_error: 'maintenance_active', sent_message_id: null });
+    expect(modelCalls).toBe(0);
+    expect(sends.filter((s) => s.chat_id === String(f.chat))).toHaveLength(1);
+  });
+}, 20000);
 
 it('answers from published Telegram knowledge with real isolated inference, source excerpts and current private binding', async () => {
   const f = await linkWithKnowledge();

@@ -12,13 +12,18 @@ import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import KnowledgeAssistantPanel from '../components/KnowledgeAssistantPanel.js';
+import { MaintenanceBoundary } from '../components/MaintenanceNotice.js';
 
 type Availability = AssistantAvailability;
 
 export default function AIChat() {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  return <OwnedAIChat key={JSON.stringify([actor, revision])} />;
+  return (
+    <MaintenanceBoundary capability="ai_chat">
+      <OwnedAIChat key={JSON.stringify([actor, revision])} />
+    </MaintenanceBoundary>
+  );
 }
 function OwnedAIChat() {
   const client = useQueryClient();

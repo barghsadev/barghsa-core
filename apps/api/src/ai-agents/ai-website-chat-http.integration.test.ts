@@ -5,6 +5,7 @@ import { resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it, vi } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import { withAiMaintenance } from '../test/ai-maintenance.js';
 import type { KnowledgeAnswer } from './ai-knowledge-chat.service.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -424,6 +425,34 @@ function staffAsk(body: unknown = { message: 'Staff reference?' }, headers = sta
     body: JSON.stringify(body),
   });
 }
+it('returns the same AI maintenance notice for public and staff questions without calling inference', async () => {
+  await withAiMaintenance(http.pool, async () => {
+    for (const [scope, headers] of [
+      ['public', {}],
+      ['staff', staffHeaders],
+    ] as const) {
+      const availability = await fetch(http.base + `/api/${scope}/knowledge/availability`, {
+        headers,
+      });
+      expect(await availability.json()).toEqual({ available: false });
+    }
+    for (const response of [await ask({ message: 'Paused?' }), await staffAsk()]) {
+      expect(response.status).toBe(503);
+      expect(await response.json()).toMatchObject({
+        error: {
+          code: 'MAINTENANCE:ACTIVE',
+          capability: 'ai_chat',
+          reason: 'Assistant service check',
+          supportUrl: '/tickets',
+        },
+      });
+    }
+    expect(calls).toBe(0);
+  });
+  expect((await ask({ message: 'Available again?' })).status).toBe(200);
+  expect(calls).toBe(1);
+});
+
 it('staff fixed slot consumes staff/public sources with session audit and no business profile or history', async () => {
   expect(
     await (

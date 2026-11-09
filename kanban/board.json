@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T20:50:10+00:00",
+  "updated": "2026-11-09T20:56:41+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -12474,11 +12474,11 @@
         "story": "01-platform-infrastructure.md#spec-cdd7dd41709e"
       },
       "requirement": "- **T-05.02.04:** Configure maintenance mode per capability, not whole-application\n  - **Notes:** Each capability (electricity ordering, saving plans, solar, wallet top-up, AI chat) can be individually disabled. Admin toggle with optional reason message shown to customers. When a capability is disabled, affected pages show \"This service is temporarily unavailable\" with support contact. Other capabilities remain functional. Never disable login, support/ticketing, contracts list, invoices, or refund access.\n  - **Dependencies:** T-05.02.01\n  - **Complexity:** M\n  - **UI/UX:** Banner on affected pages: \"[Service name] is temporarily unavailable. [optional reason]. Contact support if you need assistance.\" Action buttons are disabled/hidden. Navigation to affected sections shows a clear maintenance page. Staff see a management page to toggle capabilities.\n\n---",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Reconcile the platform requirement for an optional customer-facing reason with the existing active-switch requirement for bilingual reason, owner and future deadline. Confirm all unaffected login, support, contracts, invoices and refund routes through the launch rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -12508,8 +12508,136 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-capability-and-assistant-maintenance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-capability-switch-api-and-browser",
+          "base_commit": "9a863b78a64c9c9c2c9a58111e6330eda5c7fdd5",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/ai-agents/ai-agents.module.ts",
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.guard.ts",
+              "sha256": "0c0b5660537432f8816947df475c61251ff4a3bb87bb5a55bf27b414128aeda7"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.module.ts",
+              "sha256": "eeb0345638889b91b3fd424999440e226e4a96b94aeb1f5500e5aaaf0cd91aba"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.service.ts",
+              "sha256": "0036a1e2be712c1459468cf0a4dc19c8377f04cb4e12e90e896ff061e8219359"
+            },
+            {
+              "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
+            },
+            {
+              "path": "apps/api/src/telegram/telegram-runtime.service.ts",
+              "sha256": "6bb0667086f5d4151c1feba75fff4b03218d58cc88273c6139f4cc99e1b5692a"
+            },
+            {
+              "path": "apps/api/src/test/ai-maintenance.ts",
+              "sha256": "438f43c68be9819576ab11c85df1233ed75a03c3de0a85f0811f2ca6d077231f"
+            },
+            {
+              "path": "apps/web/e2e/maintenance.spec.ts",
+              "sha256": "5c3ac6a19d1fe9fae1546556ee0545b60bc29d7cce0ada8ba54641540aabb1da"
+            },
+            {
+              "path": "apps/web/src/pages/AIChat.tsx",
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
+            },
+            {
+              "path": "docs/operations/ai-inference.md",
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.controller.ts",
+              "sha256": "51dc03ef4757ce40ba61557f31a57c1019316b7d49b96391b61c07522c33ea5a"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+              "sha256": "9db8463f440bb41a4f5b6390a19bb1d4e2a6ef5581e1225fddfe28abc17c0d1f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.controller.ts",
+              "sha256": "5a98d104cb95c3c8c0fc03654950cdc53815daa02b1335adf4919205210262a0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.controller.ts",
+              "sha256": "bfedfd7b8ab6e6a436d9b463f59bc6a7181e4abfaa2422f54ad759e3f671a69d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.controller.ts",
+              "sha256": "59b166b61c88c6f6e800bd13f5acae1a98d6c17090b79b31b7123f4c0dfe48de"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-test-chat.controller.ts",
+              "sha256": "2ce65913367970ca0062382461123cd53f07f593804737010a0fa47518626d90"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+            },
+            {
+              "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
+              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+            },
+            {
+              "path": "apps/web/src/components/AdminMaintenanceSummary.tsx",
+              "sha256": "1a3cdcf73c6b4a11cfda0fe7aad1a5f5166722863dc6c85706c5348fc883fabc"
+            },
+            {
+              "path": "apps/web/src/components/MaintenanceNotice.tsx",
+              "sha256": "3a96b04a5d4a296bf79682b8b049ad043d7f88ab79382dd0cfae1c5dcae2feff"
+            },
+            {
+              "path": "apps/web/src/hooks/useMaintenance.ts",
+              "sha256": "40d33aa865ec496437afff7c9010c5b0c76f5ba22e21624d68a583c74bb1ce27"
+            },
+            {
+              "path": "apps/web/src/lib/maintenance-form.ts",
+              "sha256": "9373b3851bb38213e30f7c3feba991cd7efc0aa3112da60810fa7d2f6c646d66"
+            }
+          ],
+          "checks": [
+            "Nine selected compiled API cases passed against isolated migrated PostgreSQL. Customer, public, staff and Telegram question processing honored the pause before provider calls, while private Telegram linking and an unaffected capability remained available. Existing customer, staff and Telegram authority and knowledge paths passed after the pause was removed. Core liveness stayed available.",
+            "Six browser cases against the built app passed across Chromium and Mobile Safari. The customer AI page shows the Persian maintenance reason and support link, checkout continues to use its localized notice, and the admin view shows owner and deadline and submits a versioned change. Staff authority, recent step-up, version conflicts and protected audit were verified by the compiled API cases.",
+            "API and both web builds, typechecks, canonical OpenAPI contract, 101 gzip route and interaction budgets and changed-file lint and formatting passed. The current switch keeps the protected admin model test available and records a durable maintenance reason for paused Telegram questions."
+          ]
+        }
       }
     },
     {
@@ -38050,7 +38178,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -38178,7 +38307,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -65863,7 +65992,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "accepted-native-brand-theme-application",
@@ -65987,7 +66117,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminApprovalRequestsPage.tsx",
@@ -106033,7 +106163,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-review-preview-deadlines",
           "release-0.6-nightly-admin-policy-group-contract",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -106089,7 +106220,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -106565,7 +106696,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -106589,7 +106721,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agent-slots.service.test.ts",
@@ -106633,7 +106765,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -106641,7 +106773,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -107267,7 +107399,8 @@
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -107323,7 +107456,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -107367,7 +107500,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -107375,7 +107508,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -107403,11 +107536,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -107431,11 +107564,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -107471,7 +107604,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "04cbf5ac8988253a449d073a600673b701e497960155d6b336d36aa6f347b55b"
+              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
             },
             {
               "path": "apps/api/src/telegram/telegram-links.controller.ts",
@@ -107491,7 +107624,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "b852bfe6ec6f18bccf0815d394cb7bec1c2b6b6a18a3a1274184d82969303557"
+              "sha256": "6bb0667086f5d4151c1feba75fff4b03218d58cc88273c6139f4cc99e1b5692a"
             },
             {
               "path": "apps/api/src/telegram/telegram-webhook.controller.ts",
@@ -107607,7 +107740,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -107659,7 +107792,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "packages/db/drizzle/production/0273_telegram_profile_linkage.sql",
@@ -195654,7 +195787,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -195806,7 +195940,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -196580,7 +196714,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -196732,7 +196867,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -197507,7 +197642,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
@@ -197531,7 +197667,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -198575,7 +198711,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -198599,7 +198736,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -200528,7 +200665,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -200552,7 +200690,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -202463,7 +202601,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -202615,7 +202754,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -457736,7 +457875,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457792,7 +457932,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -458116,7 +458256,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-review-preview-deadlines",
           "release-0.6-nightly-admin-policy-group-contract",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458172,7 +458313,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -458492,7 +458633,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458548,7 +458690,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -458873,7 +459015,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458897,7 +459040,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agent-slots.service.test.ts",
@@ -458941,7 +459084,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -458949,7 +459092,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -459356,7 +459499,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -459380,7 +459524,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agent-slots.service.test.ts",
@@ -459424,7 +459568,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -459432,7 +459576,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -459865,7 +460009,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459889,7 +460034,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agent-slots.service.test.ts",
@@ -459933,7 +460078,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -459941,7 +460086,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -460347,7 +460492,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460371,7 +460517,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agent-slots.service.test.ts",
@@ -460415,7 +460561,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -460423,7 +460569,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -460854,7 +461000,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-web-fixture-typecheck-and-license-readback",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460878,7 +461025,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agent-slots.service.test.ts",
@@ -460922,7 +461069,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -460930,7 +461077,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -461332,7 +461479,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461376,7 +461524,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -461420,7 +461568,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -461428,7 +461576,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -461548,7 +461696,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
@@ -461580,7 +461728,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -461904,7 +462052,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461948,7 +462097,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -461992,7 +462141,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -462000,7 +462149,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -462120,7 +462269,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
@@ -462152,7 +462301,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -462474,7 +462623,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462518,7 +462668,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -462562,7 +462712,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -462570,7 +462720,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -462690,7 +462840,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
@@ -462722,7 +462872,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -463044,7 +463194,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -463088,7 +463239,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -463132,7 +463283,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -463140,7 +463291,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -463260,7 +463411,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
@@ -463292,7 +463443,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -464113,7 +464264,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464157,7 +464309,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -464201,7 +464353,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -464209,7 +464361,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -464329,7 +464481,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
@@ -464361,7 +464513,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -464721,7 +464873,8 @@
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -464777,7 +464930,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -464821,7 +464974,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -464829,7 +464982,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -464857,11 +465010,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -464885,11 +465038,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -464925,7 +465078,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "04cbf5ac8988253a449d073a600673b701e497960155d6b336d36aa6f347b55b"
+              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
             },
             {
               "path": "apps/api/src/telegram/telegram-links.controller.ts",
@@ -464945,7 +465098,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "b852bfe6ec6f18bccf0815d394cb7bec1c2b6b6a18a3a1274184d82969303557"
+              "sha256": "6bb0667086f5d4151c1feba75fff4b03218d58cc88273c6139f4cc99e1b5692a"
             },
             {
               "path": "apps/api/src/telegram/telegram-webhook.controller.ts",
@@ -465061,7 +465214,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -465113,7 +465266,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -465875,7 +466028,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -465919,7 +466073,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -465963,7 +466117,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -465971,7 +466125,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -466091,7 +466245,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
@@ -466123,7 +466277,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -466444,7 +466598,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -466488,7 +466643,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -466532,7 +466687,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -466540,7 +466695,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -466660,7 +466815,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
@@ -466692,7 +466847,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -467014,7 +467169,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -467058,7 +467214,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -467102,7 +467258,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -467110,7 +467266,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -467230,7 +467386,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
@@ -467262,7 +467418,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -467585,7 +467741,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -467629,7 +467786,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -467673,7 +467830,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -467681,7 +467838,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -467801,7 +467958,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
@@ -467833,7 +467990,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -468178,7 +468335,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -468222,7 +468380,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -468266,7 +468424,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -468274,7 +468432,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -468394,7 +468552,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
@@ -468426,7 +468584,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -468747,7 +468905,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-staging-image-rollback",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "status": "done",
@@ -468791,7 +468950,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -468835,7 +468994,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -468843,7 +469002,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -468963,7 +469122,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/worker/src/ai-inference/main.ts",
@@ -468995,7 +469154,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -484169,21 +484328,146 @@
         "story": "06-security-testing-observability.md#spec-480b1f235a2e"
       },
       "requirement": "| T-06.17.02.01 | Design capability-based maintenance mode: granular toggles per module/capability with admin UI | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-24-capability-maintenance"
+          "2026-09-24-capability-maintenance",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source-bound-capability-switch-api-and-browser",
+          "base_commit": "9a863b78a64c9c9c2c9a58111e6330eda5c7fdd5",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/ai-agents/ai-agents.module.ts",
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.guard.ts",
+              "sha256": "0c0b5660537432f8816947df475c61251ff4a3bb87bb5a55bf27b414128aeda7"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.module.ts",
+              "sha256": "eeb0345638889b91b3fd424999440e226e4a96b94aeb1f5500e5aaaf0cd91aba"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.service.ts",
+              "sha256": "0036a1e2be712c1459468cf0a4dc19c8377f04cb4e12e90e896ff061e8219359"
+            },
+            {
+              "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
+            },
+            {
+              "path": "apps/api/src/telegram/telegram-runtime.service.ts",
+              "sha256": "6bb0667086f5d4151c1feba75fff4b03218d58cc88273c6139f4cc99e1b5692a"
+            },
+            {
+              "path": "apps/api/src/test/ai-maintenance.ts",
+              "sha256": "438f43c68be9819576ab11c85df1233ed75a03c3de0a85f0811f2ca6d077231f"
+            },
+            {
+              "path": "apps/web/e2e/maintenance.spec.ts",
+              "sha256": "5c3ac6a19d1fe9fae1546556ee0545b60bc29d7cce0ada8ba54641540aabb1da"
+            },
+            {
+              "path": "apps/web/src/pages/AIChat.tsx",
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
+            },
+            {
+              "path": "docs/operations/ai-inference.md",
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.controller.ts",
+              "sha256": "51dc03ef4757ce40ba61557f31a57c1019316b7d49b96391b61c07522c33ea5a"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+              "sha256": "9db8463f440bb41a4f5b6390a19bb1d4e2a6ef5581e1225fddfe28abc17c0d1f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.controller.ts",
+              "sha256": "5a98d104cb95c3c8c0fc03654950cdc53815daa02b1335adf4919205210262a0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.controller.ts",
+              "sha256": "bfedfd7b8ab6e6a436d9b463f59bc6a7181e4abfaa2422f54ad759e3f671a69d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.controller.ts",
+              "sha256": "59b166b61c88c6f6e800bd13f5acae1a98d6c17090b79b31b7123f4c0dfe48de"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-test-chat.controller.ts",
+              "sha256": "2ce65913367970ca0062382461123cd53f07f593804737010a0fa47518626d90"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+            },
+            {
+              "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
+              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+            },
+            {
+              "path": "apps/web/src/components/AdminMaintenanceSummary.tsx",
+              "sha256": "1a3cdcf73c6b4a11cfda0fe7aad1a5f5166722863dc6c85706c5348fc883fabc"
+            },
+            {
+              "path": "apps/web/src/components/MaintenanceNotice.tsx",
+              "sha256": "3a96b04a5d4a296bf79682b8b049ad043d7f88ab79382dd0cfae1c5dcae2feff"
+            },
+            {
+              "path": "apps/web/src/hooks/useMaintenance.ts",
+              "sha256": "40d33aa865ec496437afff7c9010c5b0c76f5ba22e21624d68a583c74bb1ce27"
+            },
+            {
+              "path": "apps/web/src/lib/maintenance-form.ts",
+              "sha256": "9373b3851bb38213e30f7c3feba991cd7efc0aa3112da60810fa7d2f6c646d66"
+            }
+          ],
+          "checks": [
+            "Nine selected compiled API cases passed against isolated migrated PostgreSQL. Customer, public, staff and Telegram question processing honored the pause before provider calls, while private Telegram linking and an unaffected capability remained available. Existing customer, staff and Telegram authority and knowledge paths passed after the pause was removed. Core liveness stayed available.",
+            "Six browser cases against the built app passed across Chromium and Mobile Safari. The customer AI page shows the Persian maintenance reason and support link, checkout continues to use its localized notice, and the admin view shows owner and deadline and submits a versioned change. Staff authority, recent step-up, version conflicts and protected audit were verified by the compiled API cases.",
+            "API and both web builds, typechecks, canonical OpenAPI contract, 101 gzip route and interaction budgets and changed-file lint and formatting passed. The current switch keeps the protected admin model test available and records a durable maintenance reason for paused Telegram questions."
+          ]
+        }
       }
     },
     {
@@ -484197,19 +484481,145 @@
         "story": "06-security-testing-observability.md#spec-480b1f235a2e"
       },
       "requirement": "| T-06.17.02.02 | Implement maintenance mode middleware: check capability toggle before processing; return `503` with safe message and support link | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-capability-and-assistant-maintenance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-capability-switch-api-and-browser",
+          "base_commit": "9a863b78a64c9c9c2c9a58111e6330eda5c7fdd5",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/ai-agents/ai-agents.module.ts",
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.guard.ts",
+              "sha256": "0c0b5660537432f8816947df475c61251ff4a3bb87bb5a55bf27b414128aeda7"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.module.ts",
+              "sha256": "eeb0345638889b91b3fd424999440e226e4a96b94aeb1f5500e5aaaf0cd91aba"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.service.ts",
+              "sha256": "0036a1e2be712c1459468cf0a4dc19c8377f04cb4e12e90e896ff061e8219359"
+            },
+            {
+              "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
+            },
+            {
+              "path": "apps/api/src/telegram/telegram-runtime.service.ts",
+              "sha256": "6bb0667086f5d4151c1feba75fff4b03218d58cc88273c6139f4cc99e1b5692a"
+            },
+            {
+              "path": "apps/api/src/test/ai-maintenance.ts",
+              "sha256": "438f43c68be9819576ab11c85df1233ed75a03c3de0a85f0811f2ca6d077231f"
+            },
+            {
+              "path": "apps/web/e2e/maintenance.spec.ts",
+              "sha256": "5c3ac6a19d1fe9fae1546556ee0545b60bc29d7cce0ada8ba54641540aabb1da"
+            },
+            {
+              "path": "apps/web/src/pages/AIChat.tsx",
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
+            },
+            {
+              "path": "docs/operations/ai-inference.md",
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.controller.ts",
+              "sha256": "51dc03ef4757ce40ba61557f31a57c1019316b7d49b96391b61c07522c33ea5a"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+              "sha256": "9db8463f440bb41a4f5b6390a19bb1d4e2a6ef5581e1225fddfe28abc17c0d1f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.controller.ts",
+              "sha256": "5a98d104cb95c3c8c0fc03654950cdc53815daa02b1335adf4919205210262a0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.controller.ts",
+              "sha256": "bfedfd7b8ab6e6a436d9b463f59bc6a7181e4abfaa2422f54ad759e3f671a69d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.controller.ts",
+              "sha256": "59b166b61c88c6f6e800bd13f5acae1a98d6c17090b79b31b7123f4c0dfe48de"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-test-chat.controller.ts",
+              "sha256": "2ce65913367970ca0062382461123cd53f07f593804737010a0fa47518626d90"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+            },
+            {
+              "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
+              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+            },
+            {
+              "path": "apps/web/src/components/AdminMaintenanceSummary.tsx",
+              "sha256": "1a3cdcf73c6b4a11cfda0fe7aad1a5f5166722863dc6c85706c5348fc883fabc"
+            },
+            {
+              "path": "apps/web/src/components/MaintenanceNotice.tsx",
+              "sha256": "3a96b04a5d4a296bf79682b8b049ad043d7f88ab79382dd0cfae1c5dcae2feff"
+            },
+            {
+              "path": "apps/web/src/hooks/useMaintenance.ts",
+              "sha256": "40d33aa865ec496437afff7c9010c5b0c76f5ba22e21624d68a583c74bb1ce27"
+            },
+            {
+              "path": "apps/web/src/lib/maintenance-form.ts",
+              "sha256": "9373b3851bb38213e30f7c3feba991cd7efc0aa3112da60810fa7d2f6c646d66"
+            }
+          ],
+          "checks": [
+            "Nine selected compiled API cases passed against isolated migrated PostgreSQL. Customer, public, staff and Telegram question processing honored the pause before provider calls, while private Telegram linking and an unaffected capability remained available. Existing customer, staff and Telegram authority and knowledge paths passed after the pause was removed. Core liveness stayed available.",
+            "Six browser cases against the built app passed across Chromium and Mobile Safari. The customer AI page shows the Persian maintenance reason and support link, checkout continues to use its localized notice, and the admin view shows owner and deadline and submits a versioned change. Staff authority, recent step-up, version conflicts and protected audit were verified by the compiled API cases.",
+            "API and both web builds, typechecks, canonical OpenAPI contract, 101 gzip route and interaction budgets and changed-file lint and formatting passed. The current switch keeps the protected admin model test available and records a durable maintenance reason for paused Telegram questions."
+          ]
+        }
       }
     },
     {
@@ -484223,21 +484633,146 @@
         "story": "06-security-testing-observability.md#spec-480b1f235a2e"
       },
       "requirement": "| T-06.17.02.03 | Build admin UI: view active maintenance modes, activate/deactivate with reason + estimated duration + owner | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-10-05-maintenance-settings-forms"
+          "2026-10-05-maintenance-settings-forms",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source-bound-capability-switch-api-and-browser",
+          "base_commit": "9a863b78a64c9c9c2c9a58111e6330eda5c7fdd5",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/ai-agents/ai-agents.module.ts",
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.guard.ts",
+              "sha256": "0c0b5660537432f8816947df475c61251ff4a3bb87bb5a55bf27b414128aeda7"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.module.ts",
+              "sha256": "eeb0345638889b91b3fd424999440e226e4a96b94aeb1f5500e5aaaf0cd91aba"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.service.ts",
+              "sha256": "0036a1e2be712c1459468cf0a4dc19c8377f04cb4e12e90e896ff061e8219359"
+            },
+            {
+              "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
+            },
+            {
+              "path": "apps/api/src/telegram/telegram-runtime.service.ts",
+              "sha256": "6bb0667086f5d4151c1feba75fff4b03218d58cc88273c6139f4cc99e1b5692a"
+            },
+            {
+              "path": "apps/api/src/test/ai-maintenance.ts",
+              "sha256": "438f43c68be9819576ab11c85df1233ed75a03c3de0a85f0811f2ca6d077231f"
+            },
+            {
+              "path": "apps/web/e2e/maintenance.spec.ts",
+              "sha256": "5c3ac6a19d1fe9fae1546556ee0545b60bc29d7cce0ada8ba54641540aabb1da"
+            },
+            {
+              "path": "apps/web/src/pages/AIChat.tsx",
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
+            },
+            {
+              "path": "docs/operations/ai-inference.md",
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.controller.ts",
+              "sha256": "51dc03ef4757ce40ba61557f31a57c1019316b7d49b96391b61c07522c33ea5a"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+              "sha256": "9db8463f440bb41a4f5b6390a19bb1d4e2a6ef5581e1225fddfe28abc17c0d1f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.controller.ts",
+              "sha256": "5a98d104cb95c3c8c0fc03654950cdc53815daa02b1335adf4919205210262a0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.controller.ts",
+              "sha256": "bfedfd7b8ab6e6a436d9b463f59bc6a7181e4abfaa2422f54ad759e3f671a69d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.controller.ts",
+              "sha256": "59b166b61c88c6f6e800bd13f5acae1a98d6c17090b79b31b7123f4c0dfe48de"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-test-chat.controller.ts",
+              "sha256": "2ce65913367970ca0062382461123cd53f07f593804737010a0fa47518626d90"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+            },
+            {
+              "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
+              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+            },
+            {
+              "path": "apps/web/src/components/AdminMaintenanceSummary.tsx",
+              "sha256": "1a3cdcf73c6b4a11cfda0fe7aad1a5f5166722863dc6c85706c5348fc883fabc"
+            },
+            {
+              "path": "apps/web/src/components/MaintenanceNotice.tsx",
+              "sha256": "3a96b04a5d4a296bf79682b8b049ad043d7f88ab79382dd0cfae1c5dcae2feff"
+            },
+            {
+              "path": "apps/web/src/hooks/useMaintenance.ts",
+              "sha256": "40d33aa865ec496437afff7c9010c5b0c76f5ba22e21624d68a583c74bb1ce27"
+            },
+            {
+              "path": "apps/web/src/lib/maintenance-form.ts",
+              "sha256": "9373b3851bb38213e30f7c3feba991cd7efc0aa3112da60810fa7d2f6c646d66"
+            }
+          ],
+          "checks": [
+            "Nine selected compiled API cases passed against isolated migrated PostgreSQL. Customer, public, staff and Telegram question processing honored the pause before provider calls, while private Telegram linking and an unaffected capability remained available. Existing customer, staff and Telegram authority and knowledge paths passed after the pause was removed. Core liveness stayed available.",
+            "Six browser cases against the built app passed across Chromium and Mobile Safari. The customer AI page shows the Persian maintenance reason and support link, checkout continues to use its localized notice, and the admin view shows owner and deadline and submits a versioned change. Staff authority, recent step-up, version conflicts and protected audit were verified by the compiled API cases.",
+            "API and both web builds, typechecks, canonical OpenAPI contract, 101 gzip route and interaction budgets and changed-file lint and formatting passed. The current switch keeps the protected admin model test available and records a durable maintenance reason for paused Telegram questions."
+          ]
+        }
       }
     },
     {
@@ -484277,21 +484812,146 @@
         "story": "06-security-testing-observability.md#spec-480b1f235a2e"
       },
       "requirement": "| T-06.17.02.05 | Write integration tests: maintenance-prevented action returns correct status; non-maintained capabilities unaffected | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "2026-09-24-capability-maintenance"
+          "2026-09-24-capability-maintenance",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source-bound-capability-switch-api-and-browser",
+          "base_commit": "9a863b78a64c9c9c2c9a58111e6330eda5c7fdd5",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/ai-agents/ai-agents.module.ts",
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.guard.ts",
+              "sha256": "0c0b5660537432f8816947df475c61251ff4a3bb87bb5a55bf27b414128aeda7"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.module.ts",
+              "sha256": "eeb0345638889b91b3fd424999440e226e4a96b94aeb1f5500e5aaaf0cd91aba"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.service.ts",
+              "sha256": "0036a1e2be712c1459468cf0a4dc19c8377f04cb4e12e90e896ff061e8219359"
+            },
+            {
+              "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
+            },
+            {
+              "path": "apps/api/src/telegram/telegram-runtime.service.ts",
+              "sha256": "6bb0667086f5d4151c1feba75fff4b03218d58cc88273c6139f4cc99e1b5692a"
+            },
+            {
+              "path": "apps/api/src/test/ai-maintenance.ts",
+              "sha256": "438f43c68be9819576ab11c85df1233ed75a03c3de0a85f0811f2ca6d077231f"
+            },
+            {
+              "path": "apps/web/e2e/maintenance.spec.ts",
+              "sha256": "5c3ac6a19d1fe9fae1546556ee0545b60bc29d7cce0ada8ba54641540aabb1da"
+            },
+            {
+              "path": "apps/web/src/pages/AIChat.tsx",
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
+            },
+            {
+              "path": "docs/operations/ai-inference.md",
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.controller.ts",
+              "sha256": "51dc03ef4757ce40ba61557f31a57c1019316b7d49b96391b61c07522c33ea5a"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+              "sha256": "9db8463f440bb41a4f5b6390a19bb1d4e2a6ef5581e1225fddfe28abc17c0d1f"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.controller.ts",
+              "sha256": "5a98d104cb95c3c8c0fc03654950cdc53815daa02b1335adf4919205210262a0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.controller.ts",
+              "sha256": "bfedfd7b8ab6e6a436d9b463f59bc6a7181e4abfaa2422f54ad759e3f671a69d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.controller.ts",
+              "sha256": "59b166b61c88c6f6e800bd13f5acae1a98d6c17090b79b31b7123f4c0dfe48de"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-test-chat.controller.ts",
+              "sha256": "2ce65913367970ca0062382461123cd53f07f593804737010a0fa47518626d90"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+            },
+            {
+              "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
+              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+            },
+            {
+              "path": "apps/web/src/components/AdminMaintenanceSummary.tsx",
+              "sha256": "1a3cdcf73c6b4a11cfda0fe7aad1a5f5166722863dc6c85706c5348fc883fabc"
+            },
+            {
+              "path": "apps/web/src/components/MaintenanceNotice.tsx",
+              "sha256": "3a96b04a5d4a296bf79682b8b049ad043d7f88ab79382dd0cfae1c5dcae2feff"
+            },
+            {
+              "path": "apps/web/src/hooks/useMaintenance.ts",
+              "sha256": "40d33aa865ec496437afff7c9010c5b0c76f5ba22e21624d68a583c74bb1ce27"
+            },
+            {
+              "path": "apps/web/src/lib/maintenance-form.ts",
+              "sha256": "9373b3851bb38213e30f7c3feba991cd7efc0aa3112da60810fa7d2f6c646d66"
+            }
+          ],
+          "checks": [
+            "Nine selected compiled API cases passed against isolated migrated PostgreSQL. Customer, public, staff and Telegram question processing honored the pause before provider calls, while private Telegram linking and an unaffected capability remained available. Existing customer, staff and Telegram authority and knowledge paths passed after the pause was removed. Core liveness stayed available.",
+            "Six browser cases against the built app passed across Chromium and Mobile Safari. The customer AI page shows the Persian maintenance reason and support link, checkout continues to use its localized notice, and the admin view shows owner and deadline and submits a versioned change. Staff authority, recent step-up, version conflicts and protected audit were verified by the compiled API cases.",
+            "API and both web builds, typechecks, canonical OpenAPI contract, 101 gzip route and interaction budgets and changed-file lint and formatting passed. The current switch keeps the protected admin model test available and records a durable maintenance reason for paused Telegram questions."
+          ]
+        }
       }
     },
     {
@@ -499775,7 +500435,8 @@
           "release-0.5-consultation-offer-layout",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-bulk-trusted-device-removal"
+          "release-0.6-bulk-trusted-device-removal",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -499995,7 +500656,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -576436,7 +577097,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -576904,7 +577566,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -578352,7 +579014,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -578820,7 +579483,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -580288,7 +580951,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582228,7 +582892,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
@@ -583182,7 +583846,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583650,7 +584315,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -585098,7 +585763,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585566,7 +586232,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -587014,7 +587680,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587482,7 +588149,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -588930,7 +589597,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -589398,7 +590066,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -590846,7 +591514,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -591314,7 +591983,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -592762,7 +593431,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -593230,7 +593900,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -594678,7 +595348,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -595146,7 +595817,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -596594,7 +597265,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -597062,7 +597734,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -598510,7 +599182,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -598978,7 +599651,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -600426,7 +601099,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -600894,7 +601568,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -602342,7 +603016,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -602810,7 +603485,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -605004,7 +605679,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -605472,7 +606148,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -606920,7 +607596,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -607388,7 +608065,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -608931,7 +609608,8 @@
           "release-0.5-wallet-verification-controls",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
@@ -609340,7 +610018,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
@@ -673587,7 +674265,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -673639,7 +674318,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -673683,7 +674362,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -673691,7 +674370,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -673719,11 +674398,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -673747,11 +674426,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -673967,7 +674646,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -674272,7 +674951,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -674324,7 +675004,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -674368,7 +675048,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -674376,7 +675056,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -674404,11 +675084,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -674432,11 +675112,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -674652,7 +675332,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -674959,7 +675639,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -675011,7 +675692,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -675055,7 +675736,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -675063,7 +675744,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -675091,11 +675772,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -675119,11 +675800,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -675339,7 +676020,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -675644,7 +676325,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -675696,7 +676378,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -675740,7 +676422,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -675748,7 +676430,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -675776,11 +676458,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -675804,11 +676486,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -676024,7 +676706,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -676328,7 +677010,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -676380,7 +677063,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -676424,7 +677107,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -676432,7 +677115,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -676460,11 +677143,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -676488,11 +677171,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -676708,7 +677391,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -677511,7 +678194,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -677563,7 +678247,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -677607,7 +678291,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -677615,7 +678299,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -677643,11 +678327,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -677671,11 +678355,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -677891,7 +678575,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -678196,7 +678880,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -678248,7 +678933,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -678292,7 +678977,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -678300,7 +678985,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -678328,11 +679013,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -678356,11 +679041,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -678576,7 +679261,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -678882,7 +679567,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -678934,7 +679620,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -678978,7 +679664,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -678986,7 +679672,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -679014,11 +679700,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -679042,11 +679728,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -679262,7 +679948,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -679567,7 +680253,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -679619,7 +680306,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -679663,7 +680350,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -679671,7 +680358,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -679699,11 +680386,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -679727,11 +680414,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -679947,7 +680634,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -680250,7 +680937,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -680302,7 +680990,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -680346,7 +681034,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -680354,7 +681042,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -680382,11 +681070,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -680410,11 +681098,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -680630,7 +681318,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -680933,7 +681621,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -680985,7 +681674,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -681029,7 +681718,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -681037,7 +681726,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -681065,11 +681754,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -681093,11 +681782,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -681313,7 +682002,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -681616,7 +682305,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -681668,7 +682358,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -681712,7 +682402,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -681720,7 +682410,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -681748,11 +682438,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -681776,11 +682466,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -681996,7 +682686,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -732895,7 +733585,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -732939,7 +733629,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -732947,7 +733637,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -732975,11 +733665,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
-              "sha256": "d10a8d0e64a8cc9c2ce286e77a215906df3cd212c32c2dca5846fa7e24a48951"
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
@@ -733003,11 +733693,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
-              "sha256": "ecd15216758912777bd3bb75a7d667e5446f727b11d86c32aa3978642beaa34a"
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
-              "sha256": "7a680a584835ec4f4a6da812043b4432b36800ef2e913ae3da5fde51131d1e19"
+              "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -734495,7 +735185,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -734991,7 +735681,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "docs/operations/async-jobs.md",
@@ -736705,7 +737395,8 @@
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -736854,7 +737545,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.module.ts",
-              "sha256": "aea2729af36bd20d6981cd42eda4040a2904a911996f30dde49b4b8ebd80424b"
+              "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
             },
             {
               "path": "apps/api/src/ai-agents/ai-agents.service.test.ts",
@@ -736898,7 +737589,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
-              "sha256": "5f5f39c2de4091ef111e948b0182ed8b35001b402f4d989d20c0aa4b81bf50a9"
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.controller.ts",
@@ -736906,7 +737597,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
-              "sha256": "bc01204818763b286e77a427ee4d60c893ca8de857a35b1bf93f36030122d51f"
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -738418,7 +739109,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AdminAgentSlotsPage.tsx",
@@ -738910,7 +739601,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
             },
             {
               "path": "docs/operations/async-jobs.md",
@@ -739722,7 +740413,7 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
-              "sha256": "6e15beb805087d4a70f5c448b6966b3f9e83a9508cc19cd03e674a7827309989"
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
             },
             {
               "path": "deploy/telegram/nginx.conf",
@@ -739734,7 +740425,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-runtime.service.ts",
-              "sha256": "b852bfe6ec6f18bccf0815d394cb7bec1c2b6b6a18a3a1274184d82969303557"
+              "sha256": "6bb0667086f5d4151c1feba75fff4b03218d58cc88273c6139f4cc99e1b5692a"
             },
             {
               "path": "apps/api/src/telegram/root-version.ts",
@@ -739742,7 +740433,7 @@
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
-              "sha256": "04cbf5ac8988253a449d073a600673b701e497960155d6b336d36aa6f347b55b"
+              "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
             },
             {
               "path": "package.json",
@@ -740532,7 +741223,8 @@
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-http-and-wallet-diagnostic-privacy"
+          "release-0.6-http-and-wallet-diagnostic-privacy",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -741227,7 +741919,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
@@ -742250,7 +742942,8 @@
           "release-0.5-wallet-verification-controls",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ]
       }
     },
@@ -743126,7 +743819,7 @@
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
-              "sha256": "1340c89b0dcd5818ad1563109d09b5cbdae9fb955c2bb159b6423844f8bdc790"
+              "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
             },
             {
               "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
@@ -744363,7 +745056,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-capability-and-assistant-maintenance"
         ]
       }
     },
@@ -744533,7 +745227,8 @@
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-exception-correlation-and-sensitive-diagnostics"
+          "release-0.6-exception-correlation-and-sensitive-diagnostics",
+          "release-0.6-capability-and-assistant-maintenance"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -836015,6 +836710,144 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/exception-correlation-and-sensitive-diagnostics",
       "source_scope_proof": "release-0.6-exception-correlation-and-sensitive-diagnostics.json",
       "source_scope_proof_sha256": "5274c467c04e92b9d8d9aa6630a11f8b7496b999d36ced491bee8dd3ebe8fb75"
+    },
+    "release-0.6-capability-and-assistant-maintenance": {
+      "batch": "release-0.6-capability-and-assistant-maintenance",
+      "base_commit": "9a863b78a64c9c9c2c9a58111e6330eda5c7fdd5",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.17.02.01",
+        "06-security-testing-observability.md#T-06.17.02.02",
+        "06-security-testing-observability.md#T-06.17.02.03",
+        "06-security-testing-observability.md#T-06.17.02.05",
+        "01-platform-infrastructure.md#T-05.02.04",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/ai-agents/ai-agents.module.ts",
+          "sha256": "224161c93410a9bab948dcb5d88c4d197258a19e37d87ed8a11e6c313d6f1abb"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+          "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
+          "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
+          "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+          "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+          "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-website-chat.controller.ts",
+          "sha256": "e5a1bca912b0d36317b7b70a6c34713f67cc218bd0472425efb898bb67b79b29"
+        },
+        {
+          "path": "apps/api/src/maintenance/maintenance.guard.ts",
+          "sha256": "0c0b5660537432f8816947df475c61251ff4a3bb87bb5a55bf27b414128aeda7"
+        },
+        {
+          "path": "apps/api/src/maintenance/maintenance.module.ts",
+          "sha256": "eeb0345638889b91b3fd424999440e226e4a96b94aeb1f5500e5aaaf0cd91aba"
+        },
+        {
+          "path": "apps/api/src/maintenance/maintenance.service.ts",
+          "sha256": "0036a1e2be712c1459468cf0a4dc19c8377f04cb4e12e90e896ff061e8219359"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
+          "sha256": "a8bbbe729a49de844b9066715918355ff70d5fc0158b2436db50b92e2374c634"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-runtime.service.ts",
+          "sha256": "6bb0667086f5d4151c1feba75fff4b03218d58cc88273c6139f4cc99e1b5692a"
+        },
+        {
+          "path": "apps/api/src/test/ai-maintenance.ts",
+          "sha256": "438f43c68be9819576ab11c85df1233ed75a03c3de0a85f0811f2ca6d077231f"
+        },
+        {
+          "path": "apps/web/e2e/maintenance.spec.ts",
+          "sha256": "5c3ac6a19d1fe9fae1546556ee0545b60bc29d7cce0ada8ba54641540aabb1da"
+        },
+        {
+          "path": "apps/web/src/pages/AIChat.tsx",
+          "sha256": "659e6610c95cae4076272183b2acdae26c0198e89f9742f68367585505f00dfa"
+        },
+        {
+          "path": "docs/operations/ai-inference.md",
+          "sha256": "e391c47f5a171232b97fecdfaf17c46abfa60089800c4b49506603648cb7bf75"
+        },
+        {
+          "path": "apps/api/src/maintenance/maintenance.controller.ts",
+          "sha256": "51dc03ef4757ce40ba61557f31a57c1019316b7d49b96391b61c07522c33ea5a"
+        },
+        {
+          "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+          "sha256": "9db8463f440bb41a4f5b6390a19bb1d4e2a6ef5581e1225fddfe28abc17c0d1f"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.controller.ts",
+          "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.controller.ts",
+          "sha256": "5a98d104cb95c3c8c0fc03654950cdc53815daa02b1335adf4919205210262a0"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.controller.ts",
+          "sha256": "bfedfd7b8ab6e6a436d9b463f59bc6a7181e4abfaa2422f54ad759e3f671a69d"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.ts",
+          "sha256": "59b166b61c88c6f6e800bd13f5acae1a98d6c17090b79b31b7123f4c0dfe48de"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-test-chat.controller.ts",
+          "sha256": "2ce65913367970ca0062382461123cd53f07f593804737010a0fa47518626d90"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+        },
+        {
+          "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
+          "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+        },
+        {
+          "path": "apps/web/src/components/AdminMaintenanceSummary.tsx",
+          "sha256": "1a3cdcf73c6b4a11cfda0fe7aad1a5f5166722863dc6c85706c5348fc883fabc"
+        },
+        {
+          "path": "apps/web/src/components/MaintenanceNotice.tsx",
+          "sha256": "3a96b04a5d4a296bf79682b8b049ad043d7f88ab79382dd0cfae1c5dcae2feff"
+        },
+        {
+          "path": "apps/web/src/hooks/useMaintenance.ts",
+          "sha256": "40d33aa865ec496437afff7c9010c5b0c76f5ba22e21624d68a583c74bb1ce27"
+        },
+        {
+          "path": "apps/web/src/lib/maintenance-form.ts",
+          "sha256": "9373b3851bb38213e30f7c3feba991cd7efc0aa3112da60810fa7d2f6c646d66"
+        }
+      ],
+      "checks": [
+        "Nine selected compiled API cases passed against isolated migrated PostgreSQL. Customer, public, staff and Telegram question processing honored the pause before provider calls, while private Telegram linking and an unaffected capability remained available. Existing customer, staff and Telegram authority and knowledge paths passed after the pause was removed. Core liveness stayed available.",
+        "Six browser cases against the built app passed across Chromium and Mobile Safari. The customer AI page shows the Persian maintenance reason and support link, checkout continues to use its localized notice, and the admin view shows owner and deadline and submits a versioned change. Staff authority, recent step-up, version conflicts and protected audit were verified by the compiled API cases.",
+        "API and both web builds, typechecks, canonical OpenAPI contract, 101 gzip route and interaction budgets and changed-file lint and formatting passed. The current switch keeps the protected admin model test available and records a durable maintenance reason for paused Telegram questions."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/capability-and-assistant-maintenance",
+      "source_scope_proof": "release-0.6-capability-and-assistant-maintenance.json",
+      "source_scope_proof_sha256": "47bc4ca12c2be10b103a64d2814861bb992ddda9fd8c90ab8d03852f3eb4678c"
     }
   },
   "historical_improvements": [
