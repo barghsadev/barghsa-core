@@ -12,6 +12,46 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  contracts:
+    name: Dependency advisories and migration drift
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+        id: install
+      - name: Fetch and check dependency advisories
+        run: |
+          pnpm audit --audit-level=high --json > "$RUNNER_TEMP/dependency-audit.json" || true
+          node scripts/check-dependency-audit.mjs "$RUNNER_TEMP/dependency-audit.json"
+      - name: Verify Drizzle generation has no migration drift
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        shell: bash
+        run: |
+          pnpm --filter @barghsa/db run db:generate | tee "$RUNNER_TEMP/drizzle-generate.log"
+          grep -Fq 'No schema changes, nothing to migrate' "$RUNNER_TEMP/drizzle-generate.log"
+          changes=$(git status --porcelain --untracked-files=all -- packages/db/drizzle/production)
+          if [[ -n "$changes" ]]; then
+            printf '%s\n' "$changes" >&2
+            exit 1
+          fi
+      - name: Upload nightly dependency and migration results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-dependencies-and-migrations
+          path: |
+            ${{ runner.temp }}/dependency-audit.json
+            ${{ runner.temp }}/drizzle-generate.log
+          retention-days: 14
+
   browsers:
     name: Production browser / ${{ matrix.project }} / ${{ matrix.shard }} of 8
     runs-on: ubuntu-latest

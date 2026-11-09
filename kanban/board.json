@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T17:00:09+00:00",
+  "updated": "2026-11-09T17:13:01+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4069,11 +4069,12 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             }
           ],
           "checks": [
-            "GitHub quality job 129286725191 passed the exact frozen install and workspace build at fe665002. Current app, package, lock, workspace and CI build inputs match. Local Turbo discovery verified seven executable build tasks."
+            "GitHub quality job 129286725191 passed the exact frozen install and workspace build at fe665002. Current app, package, lock, workspace and CI build inputs match. Local Turbo discovery verified seven executable build tasks.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -4443,7 +4444,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4459,7 +4460,8 @@
             }
           ],
           "checks": [
-            "The actual Turbo plan runs seven typechecks with upstream builds. GitHub quality job 129286725191 passed typecheck and the suppression gate. The current local suppression gate passed eight unit cases and found no unapproved production suppressions."
+            "The actual Turbo plan runs seven typechecks with upstream builds. GitHub quality job 129286725191 passed typecheck and the suppression gate. The current local suppression gate passed eight unit cases and found no unapproved production suppressions.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -4645,11 +4647,12 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             }
           ],
           "checks": [
-            "Exact hosted build and OpenAPI drift checks passed in job 129286725191. The current SWC config keeps monorepo symlink and Nest decorator settings, produces dist/src/main.js and emits the OpenAPI 3.0 contract with 620 paths."
+            "Exact hosted build and OpenAPI drift checks passed in job 129286725191. The current SWC config keeps monorepo symlink and Nest decorator settings, produces dist/src/main.js and emits the OpenAPI 3.0 contract with 620 paths.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -4932,7 +4935,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": ".size-limit.json",
@@ -4956,7 +4959,8 @@
             }
           ],
           "checks": [
-            "Node 24 passed all 101 current route and interaction budgets through both the default gzip and Size Limit checks. Electricity measures 246.71 KB under its restored 250 KB limit, wallet 299.44 KB under 300 KB, login 146.51 KB under 150 KB and admin wallet receipts 499.90 KB under 500 KB. CI runs this command on every integrity build, including ordinary changes, and uses its own bundled checker tests once."
+            "Node 24 passed all 101 current route and interaction budgets through both the default gzip and Size Limit checks. Electricity measures 246.71 KB under its restored 250 KB limit, wallet 299.44 KB under 300 KB, login 146.51 KB under 150 KB and admin wallet receipts 499.90 KB under 500 KB. CI runs this command on every integrity build, including ordinary changes, and uses its own bundled checker tests once.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -5175,11 +5179,11 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
-              "sha256": "bcd6d2f6f61d27ea968e5f4fe80475e05f7c79dcb7c909c78c4a3cee5d8aff35"
+              "sha256": "9b56723ed59fa50c448e044592ff5206ad2b3c524123e1a5e346a51a2d086f28"
             }
           ],
           "checks": [
@@ -5187,7 +5191,9 @@
             "The exact Turbo dry graph finds eight executable test tasks and eight executable coverage tasks. Coverage enables --coverage and the API, web and worker retain upstream build dependencies. The per-package package-wide floors remain in place. Separate changed-code gates enforce 80 percent lines and 75 percent branches, and modified critical files enforce 90 and 85 percent. All 11 changed-coverage policy cases passed.",
             "Manual release CI now selects the full test and coverage path without a repository variable change. The actual shell selector read the previous released commit from the canonical board, preserved the existing PR base and push-before paths, and selected the expected v0.5.0 SHA for the manual v0.6.0 candidate. Ordinary direct-main and PR development stays scoped to affected tests by default.",
             "Workflow syntax passed. This batch verifies configuration and scoped policy controls. Running the full suite on the accepted release candidate remains a separate milestone gate.",
-            "Renewed the quarantine process document binding after its nightly topology paragraph documented the eight-shard partition. The ordinary test and quarantine policy sections are unchanged."
+            "Renewed the quarantine process document binding after its nightly topology paragraph documented the eight-shard partition. The ordinary test and quarantine policy sections are unchanged.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check."
           ]
         }
       }
@@ -5283,11 +5289,11 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
-              "sha256": "bcd6d2f6f61d27ea968e5f4fe80475e05f7c79dcb7c909c78c4a3cee5d8aff35"
+              "sha256": "9b56723ed59fa50c448e044592ff5206ad2b3c524123e1a5e346a51a2d086f28"
             }
           ],
           "checks": [
@@ -5295,7 +5301,9 @@
             "The exact Turbo dry graph finds eight executable test tasks and eight executable coverage tasks. Coverage enables --coverage and the API, web and worker retain upstream build dependencies. The per-package package-wide floors remain in place. Separate changed-code gates enforce 80 percent lines and 75 percent branches, and modified critical files enforce 90 and 85 percent. All 11 changed-coverage policy cases passed.",
             "Manual release CI now selects the full test and coverage path without a repository variable change. The actual shell selector read the previous released commit from the canonical board, preserved the existing PR base and push-before paths, and selected the expected v0.5.0 SHA for the manual v0.6.0 candidate. Ordinary direct-main and PR development stays scoped to affected tests by default.",
             "Workflow syntax passed. This batch verifies configuration and scoped policy controls. Running the full suite on the accepted release candidate remains a separate milestone gate.",
-            "Renewed the quarantine process document binding after its nightly topology paragraph documented the eight-shard partition. The ordinary test and quarantine policy sections are unchanged."
+            "Renewed the quarantine process document binding after its nightly topology paragraph documented the eight-shard partition. The ordinary test and quarantine policy sections are unchanged.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check."
           ]
         }
       }
@@ -5655,11 +5663,11 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
-              "sha256": "bcd6d2f6f61d27ea968e5f4fe80475e05f7c79dcb7c909c78c4a3cee5d8aff35"
+              "sha256": "9b56723ed59fa50c448e044592ff5206ad2b3c524123e1a5e346a51a2d086f28"
             }
           ],
           "checks": [
@@ -5667,7 +5675,9 @@
             "The exact Turbo dry graph finds eight executable test tasks and eight executable coverage tasks. Coverage enables --coverage and the API, web and worker retain upstream build dependencies. The per-package package-wide floors remain in place. Separate changed-code gates enforce 80 percent lines and 75 percent branches, and modified critical files enforce 90 and 85 percent. All 11 changed-coverage policy cases passed.",
             "Manual release CI now selects the full test and coverage path without a repository variable change. The actual shell selector read the previous released commit from the canonical board, preserved the existing PR base and push-before paths, and selected the expected v0.5.0 SHA for the manual v0.6.0 candidate. Ordinary direct-main and PR development stays scoped to affected tests by default.",
             "Workflow syntax passed. This batch verifies configuration and scoped policy controls. Running the full suite on the accepted release candidate remains a separate milestone gate.",
-            "Renewed the quarantine process document binding after its nightly topology paragraph documented the eight-shard partition. The ordinary test and quarantine policy sections are unchanged."
+            "Renewed the quarantine process document binding after its nightly topology paragraph documented the eight-shard partition. The ordinary test and quarantine policy sections are unchanged.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check."
           ]
         }
       }
@@ -12381,8 +12391,9 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record a complete scheduled Chromium, Firefox, WebKit and mobile critical-browser run. The existing schedule runs Firefox, WebKit and both mobile projects at 02:17 UTC; desktop Chromium currently runs in the ordinary CI path.",
-        "Connect and verify scheduled fresh dependency scanning, navigation link checks, schema drift checks, seven-day observed flake analysis and an authorized results receiver. The nightly browser job currently produces per-shard outcomes and a quarantine registry report."
+        "Record a complete scheduled Chromium, Firefox, WebKit and mobile critical-browser run. The existing schedule runs Firefox, WebKit and both mobile projects at 02:17 UTC. Desktop Chromium currently runs in the ordinary CI path.",
+        "Record the fresh advisory and Drizzle migration-drift job outcomes from the actual schedule. Local validation passed and the ordinary CI validator consumed the exact hosted report.",
+        "Connect and verify scheduled navigation link checks, seven-day observed flake analysis and an authorized results receiver."
       ],
       "owner": null,
       "depends_on": [],
@@ -12414,7 +12425,8 @@
         ],
         "batches": [
           "2026-09-21-nightly-browser-repairs",
-          "release-0.6-nightly-browser-shard-capacity"
+          "release-0.6-nightly-browser-shard-capacity",
+          "release-0.6-nightly-advisory-and-schema-gate"
         ],
         "current_acceptance": null
       }
@@ -439453,7 +439465,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -439655,7 +439667,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-preflight-classification",
@@ -439848,7 +439861,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -440133,7 +440146,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-operations-current-acceptance",
@@ -440396,7 +440410,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -440571,7 +440585,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-operations-current-acceptance",
@@ -440771,7 +440786,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -440946,7 +440961,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-operations-current-acceptance",
@@ -441146,7 +441162,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -441321,7 +441337,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/provider-operations-current-acceptance",
@@ -470519,7 +470536,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "Dockerfile.web",
@@ -470558,7 +470575,8 @@
             "The production web server issues a fresh nonce for trusted scripts, preloads and style elements in both compiled shells. Arbitrary inline style elements are refused in enforce mode. Dynamic style attributes retain their separate directive. Onboarding confetti now loads bundled CSS. The only fixed inline stylesheet hashes match Sonner 2.0.8 and Base UI 1.7.0. The required production-build check derives both hashes from the installed packages and checks the complete header. No global CSP provider or dependency was added. Comparing Node 24 inputs measured 499910 bytes before, 500211 with the rejected provider and 499.90 KB in the final build, below the existing 500 KB cap.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -470754,7 +470772,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -470769,7 +470787,8 @@
             "The production web server issues a fresh nonce for trusted scripts, preloads and style elements in both compiled shells. Arbitrary inline style elements are refused in enforce mode. Dynamic style attributes retain their separate directive. Onboarding confetti now loads bundled CSS.",
             "The only fixed inline stylesheet hashes match Sonner 2.0.8 and Base UI 1.7.0. The required production-build check derives both hashes from the installed packages and checks the complete header. No global CSP provider or dependency was added. Comparing Node 24 inputs measured 499910 bytes before, 500211 with the rejected provider and 499.90 KB in the final build, below the existing 500 KB cap.",
             "Node 24 built both shells and the package wiring. Twenty-nine server cases passed. Nine native CSP browser cases and thirty affected production-build cases passed across Chromium, Firefox and WebKit. The latter exercised login, onboarding, toasts, confetti and wallet receipt scroll styling under enforcement. All 101 route and interaction bundle budgets passed without changing thresholds.",
-            "The previous staging proxy checks and actual v0.5 response headers are retained. Live production-ingress TLS and HSTS and the report-only observation window remain open."
+            "The previous staging proxy checks and actual v0.5 response headers are retained. Live production-ingress TLS and HSTS and the report-only observation window remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -470815,7 +470834,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "Dockerfile.web",
@@ -470854,7 +470873,8 @@
             "Required integrity workflow checks actual built web HTML and security headers. Exact local built-shell smoke passed.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -471079,14 +471099,15 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             }
           ],
           "checks": [
             "Built web header integration now verifies the default report-only and explicit enforce modes, the exact expected directives, fresh HTML nonces on scripts and module preloads, and protective headers on a missing asset. The existing CI step runs the strengthened script. Local header check and formatting passed.",
             "Chromium, Firefox and WebKit all rejected the exact enforced frame-ancestors policy when copied into a cross-origin fixture with no X-Frame-Options. The separate control with only frame-ancestors removed executed, and the combined production headers also blocked embedding. Eight first-party login cases passed with enforcement in Chromium and WebKit, in English and Persian.",
             "Staging API initially lacked Permissions-Policy. Its NGINX configuration matched v0.5.0. Applied the existing main template whose only delta is the approved Permissions-Policy and duplicate handling. Validated syntax, reloaded NGINX and verified the HTTPS API, login and 404 responses. The application remains v0.5.0, CSP remains report-only, and HSTS stays disabled on staging.",
-            "The production-equivalent TLS and HSTS verification, the required CSP observation window, and the accepted v0.6.0 staging rollout remain open."
+            "The production-equivalent TLS and HSTS verification, the required CSP observation window, and the accepted v0.6.0 staging rollout remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -472209,7 +472230,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -472231,7 +472252,8 @@
           "checks": [
             "SQL injection fixtures reject Express and Nest-controlled text in direct driver SQL or Drizzle sql.raw, and accept parameterized driver and Drizzle templates.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -473525,7 +473547,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": ".gitignore",
@@ -473561,7 +473583,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding."
+            "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -473606,7 +473629,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": ".gitignore",
@@ -473629,7 +473652,8 @@
             "Required GitHub check now depends on full-history redacted secret scan and fails on any non-success. Actual base secret receipt and negative status matrix verified.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally.",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         },
         "ci_checkpoint": {
@@ -473728,7 +473752,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-nightly-advisory-and-schema-gate"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -473736,17 +473761,23 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "pnpm-lock.yaml",
               "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            },
+            {
+              "path": "scripts/check-dependency-audit.mjs",
+              "sha256": "419d82abc01f0f46614ec100e7c15074b7c092e30f1ceebf3ff4de6506877c61"
             }
           ],
           "checks": [
             "CI always runs a frozen-lockfile dependency audit and fails invalid reports or high/critical advisories. Hosted zero high/critical readback; moderate and low counts retained.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "Reused the exact dependency artifact from GitHub run 42660509974. The shared parser accepted zero high and critical advisories, and seven clean, vulnerable and malformed input controls passed."
           ]
         },
         "ci_checkpoint": {
@@ -473841,7 +473872,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -473863,7 +473894,8 @@
           "checks": [
             "Pinned Semgrep CI uses tested Nest/Drizzle rules and checks application, worker and shared source; exact strict run passed.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -473909,7 +473941,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "Dockerfile.base",
@@ -473944,7 +473976,8 @@
             "Runtime image renewal: the pinned Node 24 Alpine images built and ran; packaged migration, nonroot native Argon2/Sharp/Poppler, API/worker/AI/web readiness and built login CSP passed. Trivy found no high or critical findings in either isolated image.",
             "Exact isolated PostgreSQL 16.15/PostGIS/pgvector Alpine image, with Go 1.27.3 rebuilt gosu, scanned at zero high or critical findings. Final repository build and deployment proof remain separate.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding."
+            "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -473989,7 +474022,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": ".gitignore",
@@ -474012,7 +474045,8 @@
             "PR, main and preflight all run Gitleaks with complete history and verified redaction. Required check rejects missing/failed scan outcomes.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Gitleaks flagged a specification SHA-256 on the exact preflight commit. Verified the digest against the committed public file. Only the exact historical fingerprint is excluded. Synthetic credential detection, redaction, and a full 3,018-commit scan with zero leaks passed locally.",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         },
         "current_scan_checkpoint": {
@@ -474110,7 +474144,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -474119,7 +474153,8 @@
           ],
           "checks": [
             "The current runbook defines how to triage medium findings, blocks high and critical findings with credible production paths and requires explicit approval with reason, compensating control and expiry for accepted risk.",
-            "The existing hosted image and dependency scan enforcement remains stronger for high and critical findings. The new license gate does not change those scan thresholds."
+            "The existing hosted image and dependency scan enforcement remains stronger for high and critical findings. The new license gate does not change those scan thresholds.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -474582,7 +474617,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -474595,7 +474630,8 @@
             "Runtime image renewal: the pinned Node 24 Alpine images built and ran; packaged migration, nonroot native Argon2/Sharp/Poppler, API/worker/AI/web readiness and built login CSP passed. Trivy found no high or critical findings in either isolated image.",
             "Exact isolated PostgreSQL 16.15/PostGIS/pgvector Alpine image, with Go 1.27.3 rebuilt gosu, scanned at zero high or critical findings. Final repository build and deployment proof remain separate.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding."
+            "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -476676,7 +476712,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -476698,7 +476734,8 @@
           "checks": [
             "Local rule fixtures prove Nest and Drizzle flows along with SQL/XSS/SSRF/open redirect and literal credentials; exact application scan passed.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -476739,7 +476776,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -476766,7 +476803,8 @@
             "Existing required ruleset check now fails closed on the SAST outcome; medium triage and credible high/critical remediation are documented.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding."
+            "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ]
         }
       }
@@ -525230,7 +525268,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": ".size-limit.json",
@@ -525728,7 +525766,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -526073,7 +526112,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": ".size-limit.json",
@@ -526571,7 +526610,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -527428,7 +527468,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": ".size-limit.json",
@@ -527926,7 +527966,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -528235,12 +528276,13 @@
             "GitHub Actions job 129001187379 passed on the inspected main SHA. Its critical accessibility, non-critical advisory and advisory artifact steps all succeeded.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ],
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -727960,7 +728002,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "apps/api/openapi.json",
@@ -731066,7 +731108,8 @@
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ],
           "limitations": [],
           "operational_limits": [
@@ -731891,7 +731934,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": "apps/api/openapi.json",
@@ -734974,7 +735017,8 @@
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
-            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged."
+            "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -737380,7 +737424,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "268da7de506b96e4546fb9a2ad7b74777ea736208cf31a0e84b3895961d90b3c"
+              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
             },
             {
               "path": ".size-limit.json",
@@ -739341,7 +739385,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+            "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -739592,7 +739637,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-pilot-proxy-and-cache-policy",
-          "release-0.6-nightly-browser-shard-capacity"
+          "release-0.6-nightly-browser-shard-capacity",
+          "release-0.6-nightly-advisory-and-schema-gate"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -828644,6 +828690,57 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
       "source_scope_proof": "nightly-browser-shard-partition-proof.json",
       "source_scope_proof_sha256": "65c96cee95c5551fe05245176e8956f52b190e3f8c9b274f447ff30bc074582f"
+    },
+    "release-0.6-nightly-advisory-and-schema-gate": {
+      "batch": "release-0.6-nightly-advisory-and-schema-gate",
+      "base_commit": "d765d76fe961485e13ab8b97791f7e82b89a45b2",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+        },
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "7a4ccc81aac9490efacc6d558b648a160703d698b295cd3df8dd05bd59bd0bc1"
+        },
+        {
+          "path": "scripts/check-dependency-audit.mjs",
+          "sha256": "419d82abc01f0f46614ec100e7c15074b7c092e30f1ceebf3ff4de6506877c61"
+        },
+        {
+          "path": "docs/flaky-test-quarantine.md",
+          "sha256": "9b56723ed59fa50c448e044592ff5206ad2b3c524123e1a5e346a51a2d086f28"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "6ceac918bc7d7953794b548bad0223e48358590b8ce6b94269532f60ae02c17a"
+        },
+        {
+          "path": "packages/db/drizzle.config.ts",
+          "sha256": "d2579b827513a2c26414737f5cfb57b97189038f897d9dedbad7ba87af5c380e"
+        },
+        {
+          "path": "packages/db/package.json",
+          "sha256": "f50a797717d37728081e84710f49e96cf22681e314a28da2239296ede40efe88"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Reused the exact dependency artifact from GitHub run 42660509974. The shared parser accepted zero high and critical advisories, and seven clean, vulnerable and malformed input controls passed.",
+        "Node 24 and the locked Drizzle CLI generated from the exact current schema against an isolated production journal copy through 0282. Drizzle reported no schema changes and the complete migration tree diff was empty.",
+        "Both workflows passed actionlint and formatting. Nightly now fetches a fresh advisory report, checks the same dependency policy as ordinary CI, and independently checks Drizzle generation plus tracked and untracked migration drift. The actual scheduled job and the remaining nightly criteria still require evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-contract-gate",
+      "source_scope_proof": "receipt.json",
+      "source_scope_proof_sha256": "fcfce15dbd1ea0f52ffc6c92d8a5634f435b899d4730af10f521b5cf72612830"
     }
   },
   "historical_improvements": [

@@ -129,3 +129,5 @@ source for known quarantines across runners; browser counts describe that run on
 - `.github/workflows/ci.yml` — CI pipeline with flaky-test reporting step
 
 The nightly browser workflow is `.github/workflows/browser-nightly.yml`. Firefox, WebKit and both mobile projects each run across eight Playwright shards. Each shard serves its own production build and uses disposable test fixtures. Nightly and full CI build the component catalogue with `pnpm --filter @barghsa/ui stories:build` before Playwright discovers tests. The catalogue specs load the generated `packages/ui/story-build/meta.json` during discovery. The nightly workflow retains each shard's failure traces and outcome and quarantine reports for 14 days and also supports manual dispatch. Record actual GitHub runs separately from local verification.
+
+A separate nightly job fetches a fresh dependency advisory report and checks it with the same validator as ordinary CI. It also runs Drizzle generation against the checkout and requires an unchanged migration directory. The job retains both reports for 14 days.
