@@ -1,9 +1,11 @@
-import { HttpException, type ArgumentsHost } from '@nestjs/common';
-import { expect, it, vi } from 'vitest';
+import { HttpException, Logger, type ArgumentsHost } from '@nestjs/common';
+import { afterEach, expect, it, vi } from 'vitest';
 import { InputFieldException } from './input-field.exception.js';
 import { HttpExceptionFilter } from './http-exception.filter.js';
 
-function render(exception: HttpException) {
+afterEach(() => vi.restoreAllMocks());
+
+function render(exception: unknown) {
   let body: unknown;
   const response = {
     setHeader: vi.fn(),
@@ -15,6 +17,8 @@ function render(exception: HttpException) {
   const request = {
     headers: { 'accept-language': 'en' },
     method: 'POST',
+    ip: '192.0.2.51',
+    originalUrl: '/api/profiles/private-session-ref/addresses?token=private-token',
     route: { path: '/api/profiles/:profileId/addresses' },
   };
   const host = {
@@ -45,6 +49,7 @@ it('exposes only bounded unique public identifiers from the dedicated exception'
   ).toHaveLength(50);
 });
 it('never echoes arbitrary exception metadata or submitted values', () => {
+  const debug = vi.spyOn(Logger.prototype, 'debug').mockImplementation(() => undefined);
   const body = render(
     new HttpException(
       {
@@ -57,4 +62,18 @@ it('never echoes arbitrary exception metadata or submitted values', () => {
   );
   expect(body.error).not.toHaveProperty('fields');
   expect(JSON.stringify(body)).not.toContain('private');
+  expect(debug).toHaveBeenCalledWith(
+    expect.stringContaining('POST /api/profiles/:profileId/addresses | correlationId=')
+  );
+  expect(JSON.stringify(debug.mock.calls)).not.toMatch(/private|192\.0\.2\.51/);
+});
+
+it('logs the matched route and correlation reference without an unexpected exception payload', () => {
+  const errorLog = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+  const body = render(new Error('private-provider-credential'));
+  expect(body.error.code).toBe('INTERNAL:UNEXPECTED');
+  expect(errorLog).toHaveBeenCalledWith(
+    expect.stringContaining('POST /api/profiles/:profileId/addresses | correlationId=')
+  );
+  expect(JSON.stringify(errorLog.mock.calls)).not.toMatch(/private|192\.0\.2\.51/);
 });

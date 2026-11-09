@@ -82,7 +82,7 @@ export class ChargebackAlertService {
     const recipients = await this.loadFinanceRecipients(client);
     if (recipients.length === 0) {
       this.logger.warn(
-        `Chargeback ${input.eventId} is ${input.status} but no active finance recipient has permission`
+        `Chargeback is ${input.status} but no active finance recipient has permission correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       return { recipients: 0, inserted: 0 };
     }
@@ -105,7 +105,7 @@ export class ChargebackAlertService {
       if (result.inserted) inserted += 1;
     }
     this.logger.log(
-      `Chargeback ${input.eventId} (${input.status}) alerted ${inserted}/${recipients.length} finance recipient(s)`
+      `Chargeback (${input.status}) alerted ${inserted}/${recipients.length} finance recipient(s) correlationId=${correlationIdStorage.getStore() ?? 'none'}`
     );
     return { recipients: recipients.length, inserted };
   }

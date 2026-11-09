@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T20:40:31+00:00",
+  "updated": "2026-11-09T20:45:00+00:00",
   "source_commit": "5a09d3393bbd98fc40a9e034a1fbf65f6d0cdeee",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5374,7 +5374,8 @@
         ],
         "batches": [
           "2026-09-20-http-fixture-template",
-          "release-0.6-native-integration-acceptance"
+          "release-0.6-native-integration-acceptance",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "native-postgresql-fixture-and-mandatory-financial-concurrency",
@@ -5434,15 +5435,15 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-              "sha256": "31e8f68411a3bc083817bf70b35a52225b9898bf0f93786451b7739900e52023"
+              "sha256": "9e8100ab2239b915d6b54f6cd5f99a5fdf0fc6b3980366acf9d700930caeb231"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.ts",
-              "sha256": "e26f8952d5453615418dd3bace94dae60323f8337efce8088364efda7caf7a02"
+              "sha256": "0b9fd5ff3004a99cad4842326a3bfbb0dbdf95b1cbe2ad8c4e0fafe5b4653aea"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -27590,7 +27591,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -27630,7 +27632,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
@@ -31721,7 +31723,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-browser-and-edge-privacy",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -31749,7 +31752,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
@@ -71367,7 +71370,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-document-http-fixture-isolation",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -71399,7 +71403,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-              "sha256": "31e8f68411a3bc083817bf70b35a52225b9898bf0f93786451b7739900e52023"
+              "sha256": "9e8100ab2239b915d6b54f6cd5f99a5fdf0fc6b3980366acf9d700930caeb231"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
@@ -92751,7 +92755,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -92903,7 +92908,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "7b32e0218cdd8fd170646fc1f7c21fbcaa1752bc647806417fea31b7ffaf8ed4"
+              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -94163,7 +94168,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -94315,7 +94321,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "7b32e0218cdd8fd170646fc1f7c21fbcaa1752bc647806417fea31b7ffaf8ed4"
+              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -98730,7 +98736,8 @@
           "release-0.6-api-worker-shutdown-and-fixture-reuse",
           "release-0.6-reconciliation-fixture-document-boundary",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -99050,7 +99057,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.ts",
-              "sha256": "e26f8952d5453615418dd3bace94dae60323f8337efce8088364efda7caf7a02"
+              "sha256": "0b9fd5ff3004a99cad4842326a3bfbb0dbdf95b1cbe2ad8c4e0fafe5b4653aea"
             },
             {
               "path": "apps/api/src/wallet/online-topup-unmatched.integration.test.ts",
@@ -99058,7 +99065,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-balance-http.integration.test.ts",
@@ -101496,7 +101503,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -101648,7 +101656,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "7b32e0218cdd8fd170646fc1f7c21fbcaa1752bc647806417fea31b7ffaf8ed4"
+              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -104658,7 +104666,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-staff-workspace-read-closure",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -104762,7 +104771,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.ts",
@@ -105935,7 +105944,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-nightly-admin-policy-group-contract"
+          "release-0.6-nightly-admin-policy-group-contract",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -106007,7 +106017,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "packages/db/src/schema/ai-policies.ts",
@@ -106466,7 +106476,8 @@
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-essential-control-contrast",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -106558,7 +106569,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "packages/db/src/schema/ai-agents.ts",
@@ -107167,7 +107178,8 @@
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -107351,7 +107363,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/operating-context.ts",
@@ -143165,7 +143177,8 @@
           "release-0.5-route-fallback-and-announcement",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -143189,7 +143202,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "7b32e0218cdd8fd170646fc1f7c21fbcaa1752bc647806417fea31b7ffaf8ed4"
+              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
@@ -143480,7 +143493,8 @@
           "release-0.3-provider-csrf-disposition",
           "release-0.5-route-fallback-and-announcement",
           "release-0.6-browser-origin-security",
-          "release-0.6-native-integration-acceptance"
+          "release-0.6-native-integration-acceptance",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-provider-callbacks",
@@ -143512,7 +143526,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.service.ts",
-              "sha256": "9ad1a18ec7dcb699cc1dd87474f2e60d807e02aa2985710053563deb091fb08a"
+              "sha256": "20313596591eead595869e01dddfddb6feadf3116e94a7f441f9194d2b8d1780"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback-recovery.test.ts",
@@ -143532,7 +143546,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.ts",
-              "sha256": "e26f8952d5453615418dd3bace94dae60323f8337efce8088364efda7caf7a02"
+              "sha256": "0b9fd5ff3004a99cad4842326a3bfbb0dbdf95b1cbe2ad8c4e0fafe5b4653aea"
             },
             {
               "path": "apps/api/src/wallet/online-topup-http.integration.test.ts",
@@ -144137,7 +144151,8 @@
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-native-integration-acceptance"
+          "release-0.6-native-integration-acceptance",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -144181,7 +144196,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-              "sha256": "31e8f68411a3bc083817bf70b35a52225b9898bf0f93786451b7739900e52023"
+              "sha256": "9e8100ab2239b915d6b54f6cd5f99a5fdf0fc6b3980366acf9d700930caeb231"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -144693,7 +144708,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-rehearsal",
-          "release-0.6-native-integration-acceptance"
+          "release-0.6-native-integration-acceptance",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -144737,7 +144753,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-              "sha256": "31e8f68411a3bc083817bf70b35a52225b9898bf0f93786451b7739900e52023"
+              "sha256": "9e8100ab2239b915d6b54f6cd5f99a5fdf0fc6b3980366acf9d700930caeb231"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -145059,7 +145075,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-rehearsal",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -145079,7 +145096,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "7b32e0218cdd8fd170646fc1f7c21fbcaa1752bc647806417fea31b7ffaf8ed4"
+              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -145441,7 +145458,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-final-rehearsal",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -145453,11 +145471,11 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.ts",
-              "sha256": "e26f8952d5453615418dd3bace94dae60323f8337efce8088364efda7caf7a02"
+              "sha256": "0b9fd5ff3004a99cad4842326a3bfbb0dbdf95b1cbe2ad8c4e0fafe5b4653aea"
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "7b32e0218cdd8fd170646fc1f7c21fbcaa1752bc647806417fea31b7ffaf8ed4"
+              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -146049,7 +146067,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-browser-font-notices",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -146093,7 +146112,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -146916,7 +146935,8 @@
           "release-0.5-exact-coverage",
           "release-0.5-final-gates",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -146952,7 +146972,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -147239,7 +147259,8 @@
           "release-0.5-exact-coverage",
           "release-0.5-final-gates",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -147279,7 +147300,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -147559,7 +147580,8 @@
           "release-0.5-exact-coverage",
           "release-0.5-final-gates",
           "release-0.5-dashboard-browser-recovery",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -147591,7 +147613,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -148138,7 +148160,8 @@
           "release-0.3-provider-csrf-disposition",
           "release-0.5-route-fallback-and-announcement",
           "release-0.6-browser-origin-security",
-          "release-0.6-native-integration-acceptance"
+          "release-0.6-native-integration-acceptance",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-provider-callbacks",
@@ -148170,7 +148193,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.service.ts",
-              "sha256": "9ad1a18ec7dcb699cc1dd87474f2e60d807e02aa2985710053563deb091fb08a"
+              "sha256": "20313596591eead595869e01dddfddb6feadf3116e94a7f441f9194d2b8d1780"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback-recovery.test.ts",
@@ -148190,7 +148213,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.ts",
-              "sha256": "e26f8952d5453615418dd3bace94dae60323f8337efce8088364efda7caf7a02"
+              "sha256": "0b9fd5ff3004a99cad4842326a3bfbb0dbdf95b1cbe2ad8c4e0fafe5b4653aea"
             },
             {
               "path": "apps/api/src/wallet/online-topup-http.integration.test.ts",
@@ -148389,7 +148412,8 @@
           "release-0.5-dashboard-browser-recovery",
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-preflight-recovery-and-staging-smoke"
+          "release-0.6-preflight-recovery-and-staging-smoke",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -148409,7 +148433,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.service.ts",
-              "sha256": "519d62bc07a244392c00cdc599196a6da6e9c8a6a270fa7a29da79193820ef44"
+              "sha256": "dc1b52b41f0c60935ce84c5d996a1a858e5c6b46e307983a04c2e7f60950abe0"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
@@ -453856,7 +453880,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-staff-workspace-read-closure",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453960,7 +453985,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.ts",
@@ -454337,7 +454362,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-staff-workspace-read-closure",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -454441,7 +454467,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.ts",
@@ -454820,7 +454846,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-staff-workspace-read-closure",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -454924,7 +454951,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.ts",
@@ -455301,7 +455328,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-staff-workspace-read-closure",
-          "release-0.5-dependency-gate-closure"
+          "release-0.5-dependency-gate-closure",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455405,7 +455433,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.ts",
@@ -457602,7 +457630,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-staff-confirmation-fixtures",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457674,7 +457703,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "packages/db/src/schema/ai-policies.ts",
@@ -457981,7 +458010,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-nightly-admin-policy-group-contract"
+          "release-0.6-nightly-admin-policy-group-contract",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458053,7 +458083,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "packages/db/src/schema/ai-policies.ts",
@@ -458356,7 +458386,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-staff-confirmation-fixtures",
-          "release-0.5-review-preview-deadlines"
+          "release-0.5-review-preview-deadlines",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458428,7 +458459,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "packages/db/src/schema/ai-policies.ts",
@@ -458736,7 +458767,8 @@
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-essential-control-contrast",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458828,7 +458860,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "packages/db/src/schema/ai-agents.ts",
@@ -459218,7 +459250,8 @@
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-essential-control-contrast",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -459310,7 +459343,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "packages/db/src/schema/ai-agents.ts",
@@ -459726,7 +459759,8 @@
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-essential-control-contrast",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459818,7 +459852,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "packages/db/src/schema/ai-agents.ts",
@@ -460207,7 +460241,8 @@
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-essential-control-contrast",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460299,7 +460334,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "packages/db/src/schema/ai-agents.ts",
@@ -460713,7 +460748,8 @@
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.5-essential-control-contrast",
           "release-0.6-preflight-recovery-and-staging-smoke",
-          "release-0.6-web-fixture-typecheck-and-license-readback"
+          "release-0.6-web-fixture-typecheck-and-license-readback",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460805,7 +460841,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "packages/db/src/schema/ai-agents.ts",
@@ -464579,7 +464615,8 @@
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -464763,7 +464800,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/operating-context.ts",
@@ -474091,7 +474128,8 @@
           "release-0.6-remove-unapproved-session-location-data",
           "release-0.6-private-api-monitoring",
           "release-0.6-proxy-trust-and-request-limits",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -474115,7 +474153,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/csrf.guard.test.ts",
@@ -482126,7 +482164,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Complete the remaining application and worker sink review, including generic HTTP errors, database and ingress error logs. Rehearse representative token, identity and payment inputs against the configured production-equivalent sinks and verify their receipts."
+        "Review remaining application, worker, database and ingress error sinks. Invoice transitions still log free-form reasons outside their protected audit. Rehearse representative token, identity and payment inputs against configured production-equivalent sinks and verify their receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -482138,8 +482176,17 @@
           "apps/api/src/auth/delivery-http.integration.test.ts",
           "apps/api/src/auth/otp.service.spec.ts",
           "apps/api/src/auth/otp.service.ts",
+          "apps/api/src/common/http-exception.filter.ts",
+          "apps/api/src/common/input-field.exception.test.ts",
           "apps/api/src/crm/crm-v2.service.test.ts",
           "apps/api/src/crm/crm-v2.service.ts",
+          "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "apps/api/src/wallet/chargeback-alert.service.ts",
+          "apps/api/src/wallet/chargeback-detection.service.ts",
+          "apps/api/src/wallet/online-topup-callback.service.ts",
+          "apps/api/src/wallet/online-topup.service.test.ts",
+          "apps/api/src/wallet/online-topup.service.ts",
+          "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
           "deploy/pilot/nginx.conf",
           "deploy/staging/nginx.conf",
           "docs/security/otp.md"
@@ -482147,11 +482194,12 @@
         "batches": [
           "release-0.6-database-pool-deadlines-and-log-privacy",
           "release-0.6-browser-and-edge-privacy",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
-          "kind": "source-bound-ingress-and-authentication-diagnostic-proof",
-          "base_commit": "374f885752a82dfe01a407bc66689f758dc1a77d",
+          "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
+          "base_commit": "3467b7cd2044e3664d59221a71b09c66997e84e2",
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
@@ -482196,13 +482244,52 @@
             {
               "path": "docs/security/otp.md",
               "sha256": "6ea9b24cf002c0c19ac5ce076e1b80b16851673d562659bdc0b792c491da376b"
+            },
+            {
+              "path": "apps/api/src/common/http-exception.filter.ts",
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+            },
+            {
+              "path": "apps/api/src/common/input-field.exception.test.ts",
+              "sha256": "d4ff943e66eb5a7df6b30851a63159f872b63b15b440d753eebd130bf3a3b77f"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+              "sha256": "9e8100ab2239b915d6b54f6cd5f99a5fdf0fc6b3980366acf9d700930caeb231"
+            },
+            {
+              "path": "apps/api/src/wallet/chargeback-alert.service.ts",
+              "sha256": "dc1b52b41f0c60935ce84c5d996a1a858e5c6b46e307983a04c2e7f60950abe0"
+            },
+            {
+              "path": "apps/api/src/wallet/chargeback-detection.service.ts",
+              "sha256": "20313596591eead595869e01dddfddb6feadf3116e94a7f441f9194d2b8d1780"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+              "sha256": "0b9fd5ff3004a99cad4842326a3bfbb0dbdf95b1cbe2ad8c4e0fafe5b4653aea"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.service.test.ts",
+              "sha256": "629c504dd3ea643a105794467fd5cc3051a9fcf6450a62a40de563bf066ee74a"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup.service.ts",
+              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
             }
           ],
           "checks": [
             "The live staging config inherited the standard raw request access log. The source change strips query and referrer values and normalizes individual revocation paths for staging and pilot. Full staging syntax passed on the installed NGINX binary. Ten private loopback requests verified both log formats while the handler retained the original query and expected status.",
             "77 targeted unit assertions passed across OTP, auth and CRM. Positive log assertions confirm correlation references remain while contact destinations, staff notes and raw database errors are omitted. OTP codes remain available only to the explicitly enabled local development console, without destination values.",
             "Five compiled HTTP cases passed against isolated migrated PostgreSQL using a synthetic mailbox: registration, mismatch and successful username replacement, trusted-device sign-in, and both staff-disablement transaction cases. The isolated database and network were removed.",
-            "API build, typecheck, changed-file formatting and lint, and canonical OpenAPI contract passed. Scoped diff review confirmed the authorization and transaction logic, audit payloads and provider delivery behavior are preserved."
+            "API build, typecheck, changed-file formatting and lint, and canonical OpenAPI contract passed. Scoped diff review confirmed the authorization and transaction logic, audit payloads and provider delivery behavior are preserved.",
+            "122 targeted unit assertions passed, including positive HTTP route and correlation logging and omission of raw client IP, URL values, arbitrary exception messages and provider error text.",
+            "21 selected cases passed against isolated migrated PostgreSQL. They covered durable callback acknowledgement and replay, invoice wallet payment and rollback, bank receipt overpayment and concurrency, and signed chargeback and replay. The private fixture database and network were removed.",
+            "API build, typecheck, canonical contract, changed-file lint and formatting passed. Scope review confirmed changes are diagnostic only. Provider data, financial amounts and attachment identifiers remain available through their protected domain records and authorized APIs."
           ]
         }
       }
@@ -673347,7 +673434,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -673531,7 +673619,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -674031,7 +674119,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -674215,7 +674304,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -674717,7 +674806,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -674901,7 +674991,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -675401,7 +675491,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -675585,7 +675676,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -676084,7 +676175,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -676268,7 +676360,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -677266,7 +677358,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -677450,7 +677543,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -677950,7 +678043,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -678134,7 +678228,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -678635,7 +678729,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -678819,7 +678914,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -679319,7 +679414,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -679503,7 +679599,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -680001,7 +680097,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -680185,7 +680282,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -680683,7 +680780,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -680867,7 +680965,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -681365,7 +681463,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-review-preview-deadlines",
           "release-0.6-bulk-trusted-device-removal",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -681549,7 +681648,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -724580,7 +724679,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "7b32e0218cdd8fd170646fc1f7c21fbcaa1752bc647806417fea31b7ffaf8ed4"
+              "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
@@ -724680,7 +724779,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-              "sha256": "31e8f68411a3bc083817bf70b35a52225b9898bf0f93786451b7739900e52023"
+              "sha256": "9e8100ab2239b915d6b54f6cd5f99a5fdf0fc6b3980366acf9d700930caeb231"
             },
             {
               "path": "apps/web/e2e/receipt-emergency.spec.ts",
@@ -724744,7 +724843,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.service.ts",
-              "sha256": "e26f8952d5453615418dd3bace94dae60323f8337efce8088364efda7caf7a02"
+              "sha256": "0b9fd5ff3004a99cad4842326a3bfbb0dbdf95b1cbe2ad8c4e0fafe5b4653aea"
             },
             {
               "path": "packages/db/drizzle/0076_wallet_tx_online_pending_expiry_idx.sql",
@@ -724780,7 +724879,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "7d0fdc3f45f6d70321b60b190c0c5870698e86b65dea5367a33259b278f28511"
+              "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
             },
             {
               "path": "apps/api/src/wallet/wallet.module.ts",
@@ -724872,7 +724971,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.service.ts",
-              "sha256": "519d62bc07a244392c00cdc599196a6da6e9c8a6a270fa7a29da79193820ef44"
+              "sha256": "dc1b52b41f0c60935ce84c5d996a1a858e5c6b46e307983a04c2e7f60950abe0"
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
@@ -727875,7 +727974,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ]
       }
     },
@@ -732854,7 +732954,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/common/shutdown-http.integration.test.ts",
@@ -733630,7 +733730,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-              "sha256": "31e8f68411a3bc083817bf70b35a52225b9898bf0f93786451b7739900e52023"
+              "sha256": "9e8100ab2239b915d6b54f6cd5f99a5fdf0fc6b3980366acf9d700930caeb231"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-receipt-http.integration.test.ts",
@@ -736451,7 +736551,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -736796,7 +736897,7 @@
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
-              "sha256": "288a5e0bc3efec01f35408879f709139391d6c822839ac1ff338af5dc5babe40"
+              "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
             },
             {
               "path": "apps/api/src/common/shutdown-http.integration.test.ts",
@@ -737568,7 +737669,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
-              "sha256": "31e8f68411a3bc083817bf70b35a52225b9898bf0f93786451b7739900e52023"
+              "sha256": "9e8100ab2239b915d6b54f6cd5f99a5fdf0fc6b3980366acf9d700930caeb231"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-receipt-http.integration.test.ts",
@@ -740277,7 +740378,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -744276,7 +744378,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-browser-and-edge-privacy",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-http-and-wallet-diagnostic-privacy"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -835584,6 +835687,60 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/auth-diagnostic-privacy",
       "source_scope_proof": "release-0.6-authentication-and-crm-diagnostic-privacy.json",
       "source_scope_proof_sha256": "20b74868034dd60044306bbaf123745a6ac00b5487f4b7554678e358e33f58f8"
+    },
+    "release-0.6-http-and-wallet-diagnostic-privacy": {
+      "batch": "release-0.6-http-and-wallet-diagnostic-privacy",
+      "base_commit": "3467b7cd2044e3664d59221a71b09c66997e84e2",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.02.06",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "7a0e73f704eb5bff8ad6e775ff9d5b43303d7f3e584b978ee64fe55cbd9bbbff"
+        },
+        {
+          "path": "apps/api/src/common/input-field.exception.test.ts",
+          "sha256": "d4ff943e66eb5a7df6b30851a63159f872b63b15b440d753eebd130bf3a3b77f"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "9e8100ab2239b915d6b54f6cd5f99a5fdf0fc6b3980366acf9d700930caeb231"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.service.ts",
+          "sha256": "dc1b52b41f0c60935ce84c5d996a1a858e5c6b46e307983a04c2e7f60950abe0"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.ts",
+          "sha256": "20313596591eead595869e01dddfddb6feadf3116e94a7f441f9194d2b8d1780"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "0b9fd5ff3004a99cad4842326a3bfbb0dbdf95b1cbe2ad8c4e0fafe5b4653aea"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup.service.test.ts",
+          "sha256": "629c504dd3ea643a105794467fd5cc3051a9fcf6450a62a40de563bf066ee74a"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup.service.ts",
+          "sha256": "58090bbdb1cba343648ea351c89dccf71d94330dc0d2a01265bf0acc6ae31677"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "48c24047a4e6bfc45880359d467db66d8f07f85e4565f1bbbba3301794b6249b"
+        }
+      ],
+      "checks": [
+        "122 targeted unit assertions passed, including positive HTTP route and correlation logging and omission of raw client IP, URL values, arbitrary exception messages and provider error text.",
+        "21 selected cases passed against isolated migrated PostgreSQL. They covered durable callback acknowledgement and replay, invoice wallet payment and rollback, bank receipt overpayment and concurrency, and signed chargeback and replay. The private fixture database and network were removed.",
+        "API build, typecheck, canonical contract, changed-file lint and formatting passed. Scope review confirmed changes are diagnostic only. Provider data, financial amounts and attachment identifiers remain available through their protected domain records and authorized APIs."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/http-and-wallet-diagnostic-privacy",
+      "source_scope_proof": "release-0.6-http-and-wallet-diagnostic-privacy.json",
+      "source_scope_proof_sha256": "0d6ab020df78c3e540b4d2a98e35e27d23e4dc81a9d7074e0a1948a8aeb302a2"
     }
   },
   "historical_improvements": [

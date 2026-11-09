@@ -309,12 +309,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (httpStatus < 500 || errorCode === ErrorCodes.MAINTENANCE_ACTIVE.code) {
       // 4xx — debug level (client errors, not actionable)
       this.logger.debug(
-        `Client error: ${errorCode} — ${httpStatus} ${request.method} ${route} | correlationId=${correlationId ?? 'none'} | ip=${request.ip}`
+        `Client error: ${errorCode} — ${httpStatus} ${request.method} ${route} | correlationId=${correlationId ?? 'none'}`
       );
     } else {
       // 5xx — error level (actionable)
       this.logger.error(
-        `Server error: ${errorCode} — ${httpStatus} ${request.method} ${route} | correlationId=${correlationId ?? 'none'} | ip=${request.ip}`
+        `Server error: ${errorCode} — ${httpStatus} ${request.method} ${route} | correlationId=${correlationId ?? 'none'}`
       );
     }
   }

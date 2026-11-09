@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import {
   lockFinancialSubmissionActor,
   type FinancialSubmissionActor,
@@ -359,10 +360,9 @@ export class OnlineTopUpCallbackService {
             authority: input.authority,
             idempotencyKey: pending.id,
           });
-        } catch (error) {
+        } catch {
           this.logger.error(
-            `Payment gateway verify failed for pending top-up ${pending.id}`,
-            error instanceof Error ? error.stack : undefined
+            `Payment gateway verify failed for pending top-up ${pending.id} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
           );
           httpError(ErrorCodes.PROVIDER_DOWNSTREAM, 'Payment gateway is unavailable', 502);
         }

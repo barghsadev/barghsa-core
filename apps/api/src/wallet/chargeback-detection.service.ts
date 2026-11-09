@@ -1,4 +1,5 @@
 import { WalletProfileArchivedError } from './profile-lock.js';
+import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { createHash, timingSafeEqual } from 'node:crypto';
 import {
   BadRequestException,
@@ -219,7 +220,9 @@ export class ChargebackDetectionService {
             walletId: null,
             matchMethod: null,
           });
-          this.logger.warn(`Chargeback ${eventId} could not be mapped to an original top-up`);
+          this.logger.warn(
+            `Chargeback could not be mapped to an original top-up correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+          );
           return {
             ok: true,
             processed: true,
@@ -305,7 +308,7 @@ export class ChargebackDetectionService {
               matchMethod: match.method,
             });
             this.logger.warn(
-              `Chargeback ${eventId} mapped to ${match.original.id} but reversal could not post`
+              `Chargeback mapped to ${match.original.id} but reversal could not post correlationId=${correlationIdStorage.getStore() ?? 'none'}`
             );
             return {
               ok: true,
@@ -322,7 +325,7 @@ export class ChargebackDetectionService {
         }
 
         this.logger.log(
-          `Chargeback ${eventId} reversed top-up ${match.original.id} as ${reversal.id}`
+          `Chargeback reversed top-up ${match.original.id} as ${reversal.id} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
         );
         return {
           ok: true,

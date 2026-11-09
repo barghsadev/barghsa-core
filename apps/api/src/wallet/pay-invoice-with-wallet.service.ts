@@ -305,7 +305,7 @@ export class PayInvoiceWithWalletService {
       await this.persistCachedResult(client, key, invoice.id, result);
       if (!options.client) await client.query('COMMIT');
       this.logger.log(
-        `Invoice ${invoice.id} paid from wallet ${invoice.profile_id} debit=${debit.id} remaining=${remaining.toString()}`
+        `Invoice ${invoice.id} paid from wallet ${invoice.profile_id} debit=${debit.id}`
       );
       return result;
     } catch (error) {

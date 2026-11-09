@@ -297,8 +297,7 @@ export class OnlineTopUpService {
           } catch (error) {
             if (error instanceof HttpException) throw error;
             this.logger.error(
-              `Payment gateway recover failed for pending top-up ${pending.id}`,
-              error instanceof Error ? error.stack : undefined
+              `Payment gateway recover failed for pending top-up ${pending.id} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
             );
             throw httpError(ErrorCodes.PROVIDER_DOWNSTREAM, 'Payment gateway is unavailable', 502);
           }
@@ -310,8 +309,7 @@ export class OnlineTopUpService {
               await this.releaseGatewayClaim(client, pending.id, claimId);
             }
             this.logger.error(
-              `Payment gateway start failed for pending top-up ${pending.id}`,
-              error instanceof Error ? error.stack : undefined
+              `Payment gateway start failed for pending top-up ${pending.id} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
             );
             throw httpError(ErrorCodes.PROVIDER_DOWNSTREAM, 'Payment gateway is unavailable', 502);
           }
@@ -329,10 +327,9 @@ export class OnlineTopUpService {
             session,
             providerIdempotencyKey
           );
-        } catch (error) {
+        } catch {
           this.logger.error(
-            `Failed to persist payment gateway session for pending top-up ${pending.id}`,
-            error instanceof Error ? error.stack : undefined
+            `Failed to persist payment gateway session for pending top-up ${pending.id} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
           );
           throw httpError(
             ErrorCodes.PROVIDER_DOWNSTREAM,

@@ -5,8 +5,8 @@ vi.mock('../finance/financial-submission-actor.js', () => ({
 vi.mock('../session/session-step-up.js', () => ({
   requireCurrentSession: vi.fn().mockResolvedValue(undefined),
 }));
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ConflictException, HttpException, NotFoundException } from '@nestjs/common';
+import { afterEach, describe, it, expect, vi, beforeEach } from 'vitest';
+import { ConflictException, HttpException, Logger, NotFoundException } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { OnlineTopUpService } from './online-topup.service.js';
@@ -165,6 +165,8 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
   let walletService: ReturnType<typeof makeWalletService>;
   let gateway: PaymentGateway;
   let service: OnlineTopUpService;
+
+  afterEach(() => vi.restoreAllMocks());
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -411,9 +413,10 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
   });
 
   it('surfaces a gateway failure as PROVIDER_DOWNSTREAM and keeps the initializing claim after an ambiguous error', async () => {
+    const errorLog = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
     scriptClient();
     gateway.startPayment = vi.fn().mockRejectedValue(
-      Object.assign(new Error('The operation was aborted due to timeout'), {
+      Object.assign(new Error('Timeout included private-provider-credential'), {
         name: 'TimeoutError',
       })
     );
@@ -441,6 +444,10 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       expect.any(Array)
     );
     expect(gateway.recoverPayment).not.toHaveBeenCalled();
+    expect(errorLog).toHaveBeenCalledWith(
+      expect.stringContaining(`Payment gateway start failed for pending top-up ${TX_ID}`)
+    );
+    expect(JSON.stringify(errorLog.mock.calls)).not.toContain('private-provider-credential');
   });
 
   it('releases the initializing claim only after a definite provider rejection', async () => {

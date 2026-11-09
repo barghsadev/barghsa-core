@@ -608,7 +608,7 @@ export class BankReceiptConfirmationService {
 
         this.logger.log(
           invoiceId
-            ? `Bank receipt ${pending.id} allocated to invoice ${invoiceId}; wallet excess ${overpayment?.walletCreditAmount ?? '0'}`
+            ? `Bank receipt ${pending.id} allocated to invoice ${invoiceId}`
             : `Bank receipt top-up ${pending.id} credited as ${creditId} for wallet ${pending.walletId}`
         );
         return {
@@ -1259,7 +1259,7 @@ export class BankReceiptConfirmationService {
       paymentDate: receipt?.paymentDate ?? null,
       payerReference: receipt?.payerReference ?? null,
       attachmentKey,
-      attachmentUrl: await this.signAttachmentUrl(attachmentKey),
+      attachmentUrl: await this.signAttachmentUrl(row.id, attachmentKey),
       customerNote: receipt?.customerNote ?? null,
       bankName: receipt?.bankName ?? null,
       submittedAt: toIso(row.created_at),
@@ -1280,15 +1280,16 @@ export class BankReceiptConfirmationService {
     };
   }
 
-  private async signAttachmentUrl(attachmentKey: string | null): Promise<string | null> {
+  private async signAttachmentUrl(
+    receiptId: string,
+    attachmentKey: string | null
+  ): Promise<string | null> {
     if (!attachmentKey || !this.storage) return null;
     try {
       return await this.storage.presignedGetUrl(attachmentKey, ATTACHMENT_URL_TTL_SECONDS);
-    } catch (error) {
+    } catch {
       this.logger.warn(
-        `Could not sign bank-receipt attachment ${attachmentKey}: ${
-          error instanceof Error ? error.message : 'unknown error'
-        }`
+        `Could not sign attachment for bank receipt ${receiptId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       return null;
     }
