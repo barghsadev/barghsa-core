@@ -13,6 +13,36 @@ The [architecture reliability targets](../../architecture.md#reliability-targets
 
 Exclude rejected invalid input and expected authorization denials from availability. Count a denial of an authorized critical action caused by a service failure as a failure. Report raw request, journey and job counts with the indicators. Keep unobserved periods visible.
 
+## Latency budgets for release rehearsal
+
+Use these starting budgets per route and query class. The existing 300 ms
+read and 500 ms write p95 targets apply to every ordinary core route.
+
+| Operation                                      |    p50 |          p95 |      p99 |
+| ---------------------------------------------- | -----: | -----------: | -------: |
+| API reads, including lists and detail          | 125 ms | under 300 ms |   750 ms |
+| API writes, including reviewed money mutations | 200 ms | under 500 ms | 1,250 ms |
+| Profile-scoped SQL reads and bounded lists     |  25 ms |       100 ms |   200 ms |
+| SQL statements in a core write transaction     |  40 ms |       125 ms |   200 ms |
+
+Time the API request through completion and keep end-to-end latency visible.
+For a write with a third-party call, exclude provider time from the write
+budget only when the same attempt measures it separately. Record queue time
+and lock waits as part of the appropriate request or query measurement. For
+SQL, group by a stable operation label or a private PostgreSQL query ID. Use
+elapsed statement samples for percentiles. Report connection acquisition
+separately, and use the existing 200 ms slow-query warning to investigate
+the tail. [PostgreSQL monitoring](postgresql-monitoring.md)
+
+Measure electricity previews and submissions, wallet payments, customer
+invoice lists, staff CRM search, authorized upload reservation and
+notification enqueue separately. Separate provider work and worker queue
+start from API enqueue latency. Use representative Persian and English
+fixtures, realistic index cardinality and synthetic funds. Record the
+candidate, dataset size, concurrency, warm-up interval, sample counts,
+failures and timeouts. Keep p99 unverified for any operation with fewer than
+1,000 completed samples and report unsuccessful attempts separately.
+
 ## Alert priorities
 
 | Priority | When to use                                                                                                                                                                                                                         | Required response                                                                                                          |

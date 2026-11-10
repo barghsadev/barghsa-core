@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T07:37:48+00:00",
-  "source_commit": "c0f3966959221d14b2baebdeea94080e77d5d545",
+  "updated": "2026-11-10T07:42:55+00:00",
+  "source_commit": "1783cfca99ff21d2bd56c8ea26a33ea532070e7a",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -18460,7 +18460,8 @@
         "batches": [
           "release-0.6-incident-response-and-runbooks",
           "release-0.6-incident-runbook-criteria",
-          "release-0.6-security-incident-and-review-prerequisites"
+          "release-0.6-security-incident-and-review-prerequisites",
+          "release-0.6-latency-rehearsal-budgets"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -18472,7 +18473,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "4a4344c2755b128cf77031b39466a00d912aa46278cfd9f5d710e203e1888ef3"
+              "sha256": "24da43cec22202acb8e1f659365e359b2422f3f72b384307060f1e4e5a185d66"
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
@@ -497042,19 +497043,45 @@
         "story": "06-security-testing-observability.md#spec-fa8333966eb7"
       },
       "requirement": "| T-06.11.03.01 | Establish query and route latency budgets (p50/p95/p99) before load testing | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-latency-rehearsal-budgets"
+        ],
+        "current_acceptance": {
+          "kind": "documented-performance-rehearsal-budget",
+          "reviewed_sha": "1783cfca99ff21d2bd56c8ea26a33ea532070e7a",
+          "checks": [
+            "The service objectives now define route and statement p50/p95/p99 rehearsal budgets before running load. The architecture’s strict p95 read/write targets are byte-identical in the SLO table. Statement p99 aligns with the existing 200 ms slow-query warning.",
+            "The instructions define per-attempt measured provider exclusions, end-to-end reporting, queue and lock timing, stable private query grouping, sample sufficiency and representative Persian/English scope. Initial p50/p99 values are release rehearsal targets; no latency measurement or production-host pass is claimed.",
+            "The reviewed documentation, preserved SLO and all four monotonic budget rows passed structural assertions, Prettier and diff checks."
+          ],
+          "source_evidence": [
+            {
+              "path": "architecture.md",
+              "sha256": "cbcd79a588d4abc2e4e65760058504bc6619fba4cdd00e76db457ec0e9e0c7e2"
+            },
+            {
+              "path": "docs/operations/postgresql-monitoring.md",
+              "sha256": "30ef84b616a107084ec54a24565b543f596690ffcbf156dbae9c977469823a6f"
+            },
+            {
+              "path": "docs/operations/service-objectives.md",
+              "sha256": "24da43cec22202acb8e1f659365e359b2422f3f72b384307060f1e4e5a185d66"
+            },
+            {
+              "path": "packages/db/src/index.ts",
+              "sha256": "b3f5d1610e70400a1bc2b267e871f177e992ce70ecdab2bab5c526440ce0178f"
+            }
+          ]
+        }
       }
     },
     {
@@ -500194,7 +500221,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-external-provider-metrics-reconciliation"
+          "release-0.6-external-provider-metrics-reconciliation",
+          "release-0.6-latency-rehearsal-budgets"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -500202,7 +500230,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "4a4344c2755b128cf77031b39466a00d912aa46278cfd9f5d710e203e1888ef3"
+              "sha256": "24da43cec22202acb8e1f659365e359b2422f3f72b384307060f1e4e5a185d66"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -500484,7 +500512,8 @@
         ],
         "batches": [
           "release-0.6-service-objectives-and-priorities",
-          "release-0.6-incident-response-and-runbooks"
+          "release-0.6-incident-response-and-runbooks",
+          "release-0.6-latency-rehearsal-budgets"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -500492,7 +500521,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "4a4344c2755b128cf77031b39466a00d912aa46278cfd9f5d710e203e1888ef3"
+              "sha256": "24da43cec22202acb8e1f659365e359b2422f3f72b384307060f1e4e5a185d66"
             },
             {
               "path": "architecture.md",
@@ -872441,6 +872470,42 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/preflight-42772013847-fixture-corrections",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "23a61cd34de73d9d19eccb8a5fdb7f8281ba414d7e39e5c6e987ff9dca5b5ad4"
+    },
+    "release-0.6-latency-rehearsal-budgets": {
+      "batch": "release-0.6-latency-rehearsal-budgets",
+      "base_commit": "1783cfca99ff21d2bd56c8ea26a33ea532070e7a",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.11.03.01"
+      ],
+      "changed_paths": [
+        "docs/operations/service-objectives.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "architecture.md",
+          "sha256": "cbcd79a588d4abc2e4e65760058504bc6619fba4cdd00e76db457ec0e9e0c7e2"
+        },
+        {
+          "path": "docs/operations/postgresql-monitoring.md",
+          "sha256": "30ef84b616a107084ec54a24565b543f596690ffcbf156dbae9c977469823a6f"
+        },
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "24da43cec22202acb8e1f659365e359b2422f3f72b384307060f1e4e5a185d66"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "b3f5d1610e70400a1bc2b267e871f177e992ce70ecdab2bab5c526440ce0178f"
+        }
+      ],
+      "checks": [
+        "The service objectives now define route and statement p50/p95/p99 rehearsal budgets before running load. The architecture’s strict p95 read/write targets are byte-identical in the SLO table. Statement p99 aligns with the existing 200 ms slow-query warning.",
+        "The instructions define per-attempt measured provider exclusions, end-to-end reporting, queue and lock timing, stable private query grouping, sample sufficiency and representative Persian/English scope. Initial p50/p99 values are release rehearsal targets; no latency measurement or production-host pass is claimed.",
+        "The reviewed documentation, preserved SLO and all four monotonic budget rows passed structural assertions, Prettier and diff checks."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/performance-budget",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "f0533e87e4be9e5b66518ae4503d981f47d1130bdc022b91875512e5fe003e64"
     }
   },
   "historical_improvements": [
