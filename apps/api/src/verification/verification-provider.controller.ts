@@ -24,7 +24,7 @@ import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 /**
  * Zod schema for the provider config update request body.
  */
-const SetProviderConfigSchema = z.object({
+const SetProviderConfigSchema = z.strictObject({
   providerId: z.string().min(1),
   settings: z.record(z.string(), z.string()),
   enabled: z.boolean(),
@@ -33,7 +33,7 @@ const SetProviderConfigSchema = z.object({
 /**
  * Zod schema for the verification request body.
  */
-const RunVerificationSchema = z.object({
+const RunVerificationSchema = z.strictObject({
   providerId: z.string().min(1),
   input: z.record(z.string(), z.unknown()),
 });

@@ -58,7 +58,7 @@ export function validateEmailConfigPatch(
           reply_to: ResendConfigSchema.shape.reply_to.nullable(),
           sending_domain: ResendConfigSchema.shape.sending_domain.nullable(),
         });
-  const parsed = schema.safeParse(config);
+  const parsed = schema.strict().safeParse(config);
   if (!parsed.success)
     throw providerInputError(
       parsed.error.issues.map((issue) => ({ path: ['config', ...issue.path] })),

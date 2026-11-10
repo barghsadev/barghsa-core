@@ -26,6 +26,12 @@ The repository regression fixtures cover these cases across the API, shared
 validation, and the native PostgreSQL and object-storage boundaries. See the
 source-bound test receipts on the task board. [Task board](../../kanban/BOARD.md).
 
+Provider commands reject unknown envelope fields before a write or connection
+test. New email draft patches also reject unknown transport settings. SMS
+commands validate the configuration and each template mapping against their
+supported fields. Stored provider configuration continues to use its existing
+read parser.
+
 The compiled HTTP subset runs the application with disposable databases. It
 exercises session and origin controls, forwarded-address limits, direct UUID
 substitution, the SMTP connection guard, and payment-return navigation.

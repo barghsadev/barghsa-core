@@ -21,22 +21,26 @@ import {
   type SmsProviderConfigResult,
   type UpdateSmsProviderInput,
 } from './sms-provider-config.service';
-import { SmsirConfigSchema } from './smsir-config.schema';
+import { SmsirConfigSchema, SmsirTemplateMappingSchema } from './smsir-config.schema';
 import { SessionAuthGuard } from '../session/session.guard';
 import type { AuthenticatedRequest } from '../session/session.guard';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard';
 
-export const CreateSmsProviderSchema = z.object({
+const SmsirCommandConfigSchema = SmsirConfigSchema.strict().extend({
+  template_mappings: z.array(SmsirTemplateMappingSchema.strict()).optional(),
+});
+
+export const CreateSmsProviderSchema = z.strictObject({
   label: z.string().trim().min(1).max(120),
-  config: SmsirConfigSchema,
+  config: SmsirCommandConfigSchema,
 });
 
-export const UpdateSmsProviderSchema = z.object({
+export const UpdateSmsProviderSchema = z.strictObject({
   label: z.string().trim().min(1).max(120).optional(),
-  config: SmsirConfigSchema.partial().optional(),
+  config: SmsirCommandConfigSchema.partial().optional(),
 });
 
-export const RecordSmsTestSchema = z.object({
+export const RecordSmsTestSchema = z.strictObject({
   passed: z.boolean(),
   error: z.string().max(1000).optional(),
 });
@@ -48,7 +52,7 @@ export const RecordSmsTestSchema = z.object({
  * recipient uses the admin's current verified mobile. Every successful
  * test must include a live send; another person's contact is forbidden.
  */
-export const TestConnectionSmsSchema = z.object({
+export const TestConnectionSmsSchema = z.strictObject({
   recipient: z
     .string()
     .regex(/^\+?[0-9]{10,15}$/, 'Recipient must be a valid mobile number')

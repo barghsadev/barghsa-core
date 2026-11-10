@@ -25,18 +25,18 @@ import { SessionAuthGuard } from '../session/session.guard';
 import type { AuthenticatedRequest } from '../session/session.guard';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard';
 
-export const CreateProviderSchema = z.object({
+export const CreateProviderSchema = z.strictObject({
   transport: z.enum(['smtp', 'resend']),
   label: z.string().trim().min(1).max(120),
   config: z.record(z.string(), z.unknown()),
 });
 
-export const UpdateProviderSchema = z.object({
+export const UpdateProviderSchema = z.strictObject({
   label: z.string().trim().min(1).max(120).optional(),
   config: z.record(z.string(), z.unknown()).optional(),
 });
 
-export const RecordTestSchema = z.object({
+export const RecordTestSchema = z.strictObject({
   passed: z.boolean(),
   error: z.string().max(1000).optional(),
 });
@@ -46,7 +46,7 @@ export const RecordTestSchema = z.object({
  * the Resend transport (the admin's email to which the test-send is delivered);
  * SMTP ignores it.
  */
-export const TestConnectionSchema = z.object({
+export const TestConnectionSchema = z.strictObject({
   recipient: z.string().email().optional(),
 });
 

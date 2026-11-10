@@ -36,3 +36,11 @@ it('validates Resend patches without demanding the write-only stored key', () =>
     InputFieldException
   );
 });
+it.each(['smtp', 'resend'] as const)(
+  'rejects an unknown %s draft field without exposing it',
+  (transport) => {
+    const error = () =>
+      validateEmailConfigPatch(transport, { unexpectedSecret: 'fixture-private' }, true);
+    expect(error).toThrow(expect.objectContaining({ fields: ['config'] }));
+  }
+);

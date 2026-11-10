@@ -9,11 +9,13 @@ const mockUpdate = vi.fn();
 const mockCreate = vi.fn();
 const mockActivate = vi.fn();
 const mockList = vi.fn();
+const mockTestConnection = vi.fn();
 const mockService = {
   update: mockUpdate,
   create: mockCreate,
   activate: mockActivate,
   list: mockList,
+  testConnection: mockTestConnection,
 } as unknown as EmailProviderConfigService;
 
 const adminSession = {
@@ -56,6 +58,26 @@ describe('EmailProviderConfigController', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     controller = new EmailProviderConfigController(mockService);
+  });
+
+  it('rejects unexpected fields before creating, updating or testing an email provider', async () => {
+    await expect(
+      controller.create(adminReq, {
+        transport: 'smtp',
+        label: 'Draft',
+        config: {},
+        status: 'active',
+      } as never)
+    ).rejects.toMatchObject({ status: 400 });
+    await expect(
+      controller.update(adminReq, 'cfg-1', { label: 'Draft', status: 'active' } as never)
+    ).rejects.toMatchObject({ status: 400 });
+    await expect(
+      controller.testConnection(adminReq, 'cfg-1', { force: true } as never)
+    ).rejects.toMatchObject({ status: 400 });
+    expect(mockCreate).not.toHaveBeenCalled();
+    expect(mockUpdate).not.toHaveBeenCalled();
+    expect(mockTestConnection).not.toHaveBeenCalled();
   });
 
   describe('PUT /api/admin/email-providers/:id', () => {

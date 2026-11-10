@@ -116,6 +116,7 @@ it.each([
   { ...config, enabled: 'true' },
   { ...config, settings: { secret: 1 } },
   { ...config, providerId: 'different' },
+  { ...config, force: true },
 ])('rejects invalid or mismatched configuration %j before writes', async (body) => {
   const { controller, service } = fixture();
   await expect(
@@ -124,13 +125,16 @@ it.each([
   expect(service.getAdapter).not.toHaveBeenCalled();
   expect(service.setProviderConfig).not.toHaveBeenCalled();
 });
-it.each([null, {}, { providerId: '', input: {} }, { providerId: 'test-adapter', input: [] }])(
-  'rejects malformed verification request %j before invoking a provider',
-  async (body) => {
-    const { controller, service } = fixture();
-    await expect(
-      controller.runVerification(body, request(['verification:write']))
-    ).rejects.toMatchObject({ status: 400 });
-    expect(service.verify).not.toHaveBeenCalled();
-  }
-);
+it.each([
+  null,
+  {},
+  { providerId: '', input: {} },
+  { providerId: 'test-adapter', input: [] },
+  { providerId: 'test-adapter', input: {}, force: true },
+])('rejects malformed verification request %j before invoking a provider', async (body) => {
+  const { controller, service } = fixture();
+  await expect(
+    controller.runVerification(body, request(['verification:write']))
+  ).rejects.toMatchObject({ status: 400 });
+  expect(service.verify).not.toHaveBeenCalled();
+});

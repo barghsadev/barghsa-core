@@ -61,6 +61,29 @@ describe('SmsProviderConfigController (T-09.06.02)', () => {
     controller = new SmsProviderConfigController(mockService);
   });
 
+  it('rejects unexpected fields in SMS commands and template mappings before side effects', async () => {
+    await expect(
+      controller.create(adminReq, {
+        label: 'Draft',
+        config: { api_key: 'k', sender: '3000', api_base: 'https://example.test' },
+      } as never)
+    ).rejects.toMatchObject({ status: 400 });
+    await expect(
+      controller.update(adminReq, 'cfg-1', { label: 'Draft', status: 'active' } as never)
+    ).rejects.toMatchObject({ status: 400 });
+    await expect(
+      controller.update(adminReq, 'cfg-1', {
+        config: { template_mappings: [{ event_key: 'otp:login', template_id: '12', force: true }] },
+      } as never)
+    ).rejects.toMatchObject({ status: 400 });
+    await expect(
+      controller.testConnection(adminReq, 'cfg-1', { force: true } as never)
+    ).rejects.toMatchObject({ status: 400 });
+    expect(mockCreate).not.toHaveBeenCalled();
+    expect(mockUpdate).not.toHaveBeenCalled();
+    expect(mockTestConnection).not.toHaveBeenCalled();
+  });
+
   describe('POST /api/admin/sms-providers', () => {
     it('creates a draft config for an admin', async () => {
       mockCreate.mockResolvedValue(baseResult({ label: 'Prod SMS' }));

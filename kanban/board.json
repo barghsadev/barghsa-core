@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T06:18:05+00:00",
-  "source_commit": "2e36b48fa373a257f4c1af8799898a6b6a64a5bc",
+  "updated": "2026-11-10T06:21:17+00:00",
+  "source_commit": "ecca190624d0ac9936ed3858f4bfd5c157bf60b0",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -88009,7 +88009,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -88073,11 +88074,11 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.test.ts",
-              "sha256": "16b0ddaa42b17a60748b0a9df93568c7d74751222d5c328fa20d6d4437d10ac3"
+              "sha256": "c663243387cda4d47da8f3e6b171cd3c90547b83cdead9d7d0831f855ac1de63"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
-              "sha256": "8272401a078d2fdbe00354a3b188d06b5324619f01aeb9bb007f12c5c9d6309b"
+              "sha256": "8211c6e86e1970ae0b4eadb3945623e50b1abdb5dc823f631320acf6c093594a"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
@@ -88977,7 +88978,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -89041,11 +89043,11 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.test.ts",
-              "sha256": "16b0ddaa42b17a60748b0a9df93568c7d74751222d5c328fa20d6d4437d10ac3"
+              "sha256": "c663243387cda4d47da8f3e6b171cd3c90547b83cdead9d7d0831f855ac1de63"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
-              "sha256": "8272401a078d2fdbe00354a3b188d06b5324619f01aeb9bb007f12c5c9d6309b"
+              "sha256": "8211c6e86e1970ae0b4eadb3945623e50b1abdb5dc823f631320acf6c093594a"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
@@ -89945,7 +89947,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -90009,11 +90012,11 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.test.ts",
-              "sha256": "16b0ddaa42b17a60748b0a9df93568c7d74751222d5c328fa20d6d4437d10ac3"
+              "sha256": "c663243387cda4d47da8f3e6b171cd3c90547b83cdead9d7d0831f855ac1de63"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
-              "sha256": "8272401a078d2fdbe00354a3b188d06b5324619f01aeb9bb007f12c5c9d6309b"
+              "sha256": "8211c6e86e1970ae0b4eadb3945623e50b1abdb5dc823f631320acf6c093594a"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
@@ -90914,7 +90917,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -90978,11 +90982,11 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.test.ts",
-              "sha256": "16b0ddaa42b17a60748b0a9df93568c7d74751222d5c328fa20d6d4437d10ac3"
+              "sha256": "c663243387cda4d47da8f3e6b171cd3c90547b83cdead9d7d0831f855ac1de63"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
-              "sha256": "8272401a078d2fdbe00354a3b188d06b5324619f01aeb9bb007f12c5c9d6309b"
+              "sha256": "8211c6e86e1970ae0b4eadb3945623e50b1abdb5dc823f631320acf6c093594a"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
@@ -91882,7 +91886,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -91946,11 +91951,11 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.test.ts",
-              "sha256": "16b0ddaa42b17a60748b0a9df93568c7d74751222d5c328fa20d6d4437d10ac3"
+              "sha256": "c663243387cda4d47da8f3e6b171cd3c90547b83cdead9d7d0831f855ac1de63"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
-              "sha256": "8272401a078d2fdbe00354a3b188d06b5324619f01aeb9bb007f12c5c9d6309b"
+              "sha256": "8211c6e86e1970ae0b4eadb3945623e50b1abdb5dc823f631320acf6c093594a"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
@@ -92853,7 +92858,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "status": "done",
@@ -92901,7 +92907,7 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
-              "sha256": "8272401a078d2fdbe00354a3b188d06b5324619f01aeb9bb007f12c5c9d6309b"
+              "sha256": "8211c6e86e1970ae0b4eadb3945623e50b1abdb5dc823f631320acf6c093594a"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
@@ -93607,7 +93613,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "status": "done",
@@ -93667,7 +93674,7 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
-              "sha256": "8272401a078d2fdbe00354a3b188d06b5324619f01aeb9bb007f12c5c9d6309b"
+              "sha256": "8211c6e86e1970ae0b4eadb3945623e50b1abdb5dc823f631320acf6c093594a"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
@@ -94261,7 +94268,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -94325,11 +94333,11 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.test.ts",
-              "sha256": "16b0ddaa42b17a60748b0a9df93568c7d74751222d5c328fa20d6d4437d10ac3"
+              "sha256": "c663243387cda4d47da8f3e6b171cd3c90547b83cdead9d7d0831f855ac1de63"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
-              "sha256": "8272401a078d2fdbe00354a3b188d06b5324619f01aeb9bb007f12c5c9d6309b"
+              "sha256": "8211c6e86e1970ae0b4eadb3945623e50b1abdb5dc823f631320acf6c093594a"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
@@ -95097,7 +95105,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -95137,11 +95146,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
-              "sha256": "7c496fcf699e4d71da72c60937e6ff05797e9a7cca027163fc675b7f65ab28c7"
+              "sha256": "a1eead9e203b685938ff493ef5cb17ac6d6edd869c47184ed869285af8a742c2"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
-              "sha256": "f2e3b8f67b87879ad6b329e367ec8cecd04f648ac73aee2fef64e47db840b46f"
+              "sha256": "1c0c34d12a79a64d8b701fce74a95bc54b2380b0f3023d2d4b3529df5aa9e893"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
@@ -446723,7 +446732,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -446763,11 +446773,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
-              "sha256": "7c496fcf699e4d71da72c60937e6ff05797e9a7cca027163fc675b7f65ab28c7"
+              "sha256": "a1eead9e203b685938ff493ef5cb17ac6d6edd869c47184ed869285af8a742c2"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
-              "sha256": "f2e3b8f67b87879ad6b329e367ec8cecd04f648ac73aee2fef64e47db840b46f"
+              "sha256": "1c0c34d12a79a64d8b701fce74a95bc54b2380b0f3023d2d4b3529df5aa9e893"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
@@ -447188,7 +447198,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -447228,11 +447239,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
-              "sha256": "7c496fcf699e4d71da72c60937e6ff05797e9a7cca027163fc675b7f65ab28c7"
+              "sha256": "a1eead9e203b685938ff493ef5cb17ac6d6edd869c47184ed869285af8a742c2"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
-              "sha256": "f2e3b8f67b87879ad6b329e367ec8cecd04f648ac73aee2fef64e47db840b46f"
+              "sha256": "1c0c34d12a79a64d8b701fce74a95bc54b2380b0f3023d2d4b3529df5aa9e893"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
@@ -447652,7 +447663,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -447692,11 +447704,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
-              "sha256": "7c496fcf699e4d71da72c60937e6ff05797e9a7cca027163fc675b7f65ab28c7"
+              "sha256": "a1eead9e203b685938ff493ef5cb17ac6d6edd869c47184ed869285af8a742c2"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
-              "sha256": "f2e3b8f67b87879ad6b329e367ec8cecd04f648ac73aee2fef64e47db840b46f"
+              "sha256": "1c0c34d12a79a64d8b701fce74a95bc54b2380b0f3023d2d4b3529df5aa9e893"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
@@ -448118,7 +448130,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448158,11 +448171,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
-              "sha256": "7c496fcf699e4d71da72c60937e6ff05797e9a7cca027163fc675b7f65ab28c7"
+              "sha256": "a1eead9e203b685938ff493ef5cb17ac6d6edd869c47184ed869285af8a742c2"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
-              "sha256": "f2e3b8f67b87879ad6b329e367ec8cecd04f648ac73aee2fef64e47db840b46f"
+              "sha256": "1c0c34d12a79a64d8b701fce74a95bc54b2380b0f3023d2d4b3529df5aa9e893"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
@@ -448672,7 +448685,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -448716,11 +448730,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
-              "sha256": "7c496fcf699e4d71da72c60937e6ff05797e9a7cca027163fc675b7f65ab28c7"
+              "sha256": "a1eead9e203b685938ff493ef5cb17ac6d6edd869c47184ed869285af8a742c2"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
-              "sha256": "f2e3b8f67b87879ad6b329e367ec8cecd04f648ac73aee2fef64e47db840b46f"
+              "sha256": "1c0c34d12a79a64d8b701fce74a95bc54b2380b0f3023d2d4b3529df5aa9e893"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
@@ -485184,7 +485198,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-high-risk-staff-step-up"
+          "release-0.6-high-risk-staff-step-up",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -485258,7 +485273,7 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
-              "sha256": "8272401a078d2fdbe00354a3b188d06b5324619f01aeb9bb007f12c5c9d6309b"
+              "sha256": "8211c6e86e1970ae0b4eadb3945623e50b1abdb5dc823f631320acf6c093594a"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
@@ -485266,7 +485281,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
-              "sha256": "f2e3b8f67b87879ad6b329e367ec8cecd04f648ac73aee2fef64e47db840b46f"
+              "sha256": "1c0c34d12a79a64d8b701fce74a95bc54b2380b0f3023d2d4b3529df5aa9e893"
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
@@ -485314,11 +485329,11 @@
             },
             {
               "path": "apps/api/src/verification/verification-provider.controller.test.ts",
-              "sha256": "de1df7e37c29339e3a6ffcaa35a6f95361699b67f7783fa1f32d177d9adb864c"
+              "sha256": "81220a0fd61408df3fb4ddcaff95efde6af920262eac572ca478c93a3c3dd618"
             },
             {
               "path": "apps/api/src/verification/verification-provider.controller.ts",
-              "sha256": "1d40b0639f944a0b4cffc5885d984e448d0a0dce3af750be75ff8ddf9b00fd2b"
+              "sha256": "d6327a4f8abfaa0854e56e3cd062a11ffe1a62053927ca9303a2a45537f5cd2b"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-topup-http.integration.test.ts",
@@ -485476,7 +485491,8 @@
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -485516,7 +485532,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "fad8000cf177af60b0960cfa3a53c4af654582c5a5fc0efee3d9f8e31b287814"
+              "sha256": "926c926f965afeb5595eabcb94c31e2e58f57017b3c911ede9b50d4cf23be573"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -485613,7 +485629,8 @@
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -485669,7 +485686,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "fad8000cf177af60b0960cfa3a53c4af654582c5a5fc0efee3d9f8e31b287814"
+              "sha256": "926c926f965afeb5595eabcb94c31e2e58f57017b3c911ede9b50d4cf23be573"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -486114,8 +486131,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Audit and enforce unknown-field rejection in remaining profile and CRM, service ordering, financial, document, provider, notification, support and operational command DTOs. Preserve their documented command fields, typed envelopes, provider signature handling and narrow CSP telemetry exception.",
-        "Verify that malformed remaining commands fail before protected side effects. Complete the separate application-wide schema inventory before accepting this task."
+        "Audit and enforce unknown-field rejection in remaining profile and CRM, service ordering, financial, document, notification, support and operational command DTOs. Preserve documented fields, typed envelopes, provider signature handling and the narrow CSP telemetry exception.",
+        "Verify malformed remaining commands fail before protected side effects, finish the application-wide schema inventory and verify the current hosted provider mutation and test boundaries."
       ],
       "owner": null,
       "depends_on": [],
@@ -486137,7 +486154,8 @@
           "docs/decisions/authentication-workspaces.md"
         ],
         "batches": [
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-auth-command-scope",
@@ -489141,7 +489159,8 @@
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -489269,7 +489288,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "fad8000cf177af60b0960cfa3a53c4af654582c5a5fc0efee3d9f8e31b287814"
+              "sha256": "926c926f965afeb5595eabcb94c31e2e58f57017b3c911ede9b50d4cf23be573"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -489584,7 +489603,8 @@
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -489644,7 +489664,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "fad8000cf177af60b0960cfa3a53c4af654582c5a5fc0efee3d9f8e31b287814"
+              "sha256": "926c926f965afeb5595eabcb94c31e2e58f57017b3c911ede9b50d4cf23be573"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -489690,7 +489710,8 @@
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -489739,7 +489760,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "fad8000cf177af60b0960cfa3a53c4af654582c5a5fc0efee3d9f8e31b287814"
+              "sha256": "926c926f965afeb5595eabcb94c31e2e58f57017b3c911ede9b50d4cf23be573"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -489939,7 +489960,8 @@
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -490019,7 +490041,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "fad8000cf177af60b0960cfa3a53c4af654582c5a5fc0efee3d9f8e31b287814"
+              "sha256": "926c926f965afeb5595eabcb94c31e2e58f57017b3c911ede9b50d4cf23be573"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -491672,7 +491694,8 @@
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -491680,7 +491703,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "fad8000cf177af60b0960cfa3a53c4af654582c5a5fc0efee3d9f8e31b287814"
+              "sha256": "926c926f965afeb5595eabcb94c31e2e58f57017b3c911ede9b50d4cf23be573"
             },
             {
               "path": "docs/threat-model.md",
@@ -491825,7 +491848,8 @@
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -491833,7 +491857,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "fad8000cf177af60b0960cfa3a53c4af654582c5a5fc0efee3d9f8e31b287814"
+              "sha256": "926c926f965afeb5595eabcb94c31e2e58f57017b3c911ede9b50d4cf23be573"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -491944,7 +491968,8 @@
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -491952,7 +491977,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "fad8000cf177af60b0960cfa3a53c4af654582c5a5fc0efee3d9f8e31b287814"
+              "sha256": "926c926f965afeb5595eabcb94c31e2e58f57017b3c911ede9b50d4cf23be573"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -492011,7 +492036,8 @@
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -492027,7 +492053,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "fad8000cf177af60b0960cfa3a53c4af654582c5a5fc0efee3d9f8e31b287814"
+              "sha256": "926c926f965afeb5595eabcb94c31e2e58f57017b3c911ede9b50d4cf23be573"
             }
           ],
           "checks": [
@@ -492092,7 +492118,8 @@
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -492152,7 +492179,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "fad8000cf177af60b0960cfa3a53c4af654582c5a5fc0efee3d9f8e31b287814"
+              "sha256": "926c926f965afeb5595eabcb94c31e2e58f57017b3c911ede9b50d4cf23be573"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -495091,7 +495118,8 @@
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -495107,7 +495135,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "fad8000cf177af60b0960cfa3a53c4af654582c5a5fc0efee3d9f8e31b287814"
+              "sha256": "926c926f965afeb5595eabcb94c31e2e58f57017b3c911ede9b50d4cf23be573"
             }
           ],
           "checks": [
@@ -495164,7 +495192,8 @@
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -495172,7 +495201,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "fad8000cf177af60b0960cfa3a53c4af654582c5a5fc0efee3d9f8e31b287814"
+              "sha256": "926c926f965afeb5595eabcb94c31e2e58f57017b3c911ede9b50d4cf23be573"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -753671,11 +753700,11 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.test.ts",
-              "sha256": "16b0ddaa42b17a60748b0a9df93568c7d74751222d5c328fa20d6d4437d10ac3"
+              "sha256": "c663243387cda4d47da8f3e6b171cd3c90547b83cdead9d7d0831f855ac1de63"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
-              "sha256": "8272401a078d2fdbe00354a3b188d06b5324619f01aeb9bb007f12c5c9d6309b"
+              "sha256": "8211c6e86e1970ae0b4eadb3945623e50b1abdb5dc823f631320acf6c093594a"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
@@ -753735,11 +753764,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
-              "sha256": "7c496fcf699e4d71da72c60937e6ff05797e9a7cca027163fc675b7f65ab28c7"
+              "sha256": "a1eead9e203b685938ff493ef5cb17ac6d6edd869c47184ed869285af8a742c2"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
-              "sha256": "f2e3b8f67b87879ad6b329e367ec8cecd04f648ac73aee2fef64e47db840b46f"
+              "sha256": "1c0c34d12a79a64d8b701fce74a95bc54b2380b0f3023d2d4b3529df5aa9e893"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
@@ -756929,7 +756958,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -757678,11 +757708,11 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.test.ts",
-              "sha256": "16b0ddaa42b17a60748b0a9df93568c7d74751222d5c328fa20d6d4437d10ac3"
+              "sha256": "c663243387cda4d47da8f3e6b171cd3c90547b83cdead9d7d0831f855ac1de63"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
-              "sha256": "8272401a078d2fdbe00354a3b188d06b5324619f01aeb9bb007f12c5c9d6309b"
+              "sha256": "8211c6e86e1970ae0b4eadb3945623e50b1abdb5dc823f631320acf6c093594a"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
@@ -757742,11 +757772,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
-              "sha256": "7c496fcf699e4d71da72c60937e6ff05797e9a7cca027163fc675b7f65ab28c7"
+              "sha256": "a1eead9e203b685938ff493ef5cb17ac6d6edd869c47184ed869285af8a742c2"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
-              "sha256": "f2e3b8f67b87879ad6b329e367ec8cecd04f648ac73aee2fef64e47db840b46f"
+              "sha256": "1c0c34d12a79a64d8b701fce74a95bc54b2380b0f3023d2d4b3529df5aa9e893"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
@@ -760818,7 +760848,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-command-unknown-fields"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -868843,6 +868874,102 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/high-risk-step-up",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "fab000b31fbabea393ea93a33d4949465fd25ed188751e3d73457977fd878008"
+    },
+    "release-0.6-provider-command-unknown-fields": {
+      "batch": "release-0.6-provider-command-unknown-fields",
+      "base_commit": "ecca190624d0ac9936ed3858f4bfd5c157bf60b0",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.01.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/provider-config/email-provider-config.controller.test.ts",
+        "apps/api/src/provider-config/email-provider-config.controller.ts",
+        "apps/api/src/provider-config/provider-input-fields.test.ts",
+        "apps/api/src/provider-config/provider-input-fields.ts",
+        "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
+        "apps/api/src/provider-config/sms-provider-config.controller.ts",
+        "apps/api/src/verification/verification-provider.controller.test.ts",
+        "apps/api/src/verification/verification-provider.controller.ts",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.controller.test.ts",
+          "sha256": "c663243387cda4d47da8f3e6b171cd3c90547b83cdead9d7d0831f855ac1de63"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
+          "sha256": "8211c6e86e1970ae0b4eadb3945623e50b1abdb5dc823f631320acf6c093594a"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "57e8352838954be282354b839af6edd70e968db557a0ba1fdacd332d42e374d5"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-input-fields.test.ts",
+          "sha256": "8c82d6541ce5b89c83eba867efff1469772e36793129d99d904b3578f284c298"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-input-fields.ts",
+          "sha256": "79ecdc98f41e4de136a3c9e9299965dde7312f4d35dfa09c50346600162ac0fb"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
+          "sha256": "a1eead9e203b685938ff493ef5cb17ac6d6edd869c47184ed869285af8a742c2"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
+          "sha256": "1c0c34d12a79a64d8b701fce74a95bc54b2380b0f3023d2d4b3529df5aa9e893"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "4544fbd5f15ae00d811559d0fea6f96d50d16edf7f331640a84e8695cef05703"
+        },
+        {
+          "path": "apps/api/src/verification/verification-provider.controller.test.ts",
+          "sha256": "81220a0fd61408df3fb4ddcaff95efde6af920262eac572ca478c93a3c3dd618"
+        },
+        {
+          "path": "apps/api/src/verification/verification-provider.controller.ts",
+          "sha256": "d6327a4f8abfaa0854e56e3cd062a11ffe1a62053927ca9303a2a45537f5cd2b"
+        },
+        {
+          "path": "apps/web/src/lib/email-providers-api.ts",
+          "sha256": "57456f70542968ec9f29ffc86caba06f71ff6119f728cd88b71ebe0fb80d9987"
+        },
+        {
+          "path": "apps/web/src/lib/provider-form.ts",
+          "sha256": "d5e2f36a786817420508d975fb429dacd890c034c595eb823d609fb83785f0b0"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "a72f4e37a56dd99540aeb5a9ecfe69126db05f322e971061614e9f11f0ab33b0"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "sha256": "1802e145d7f66afb2a51293170f4f8e6efa05b8111a3b7c82b31a5f8be619360"
+        },
+        {
+          "path": "apps/web/src/pages/provider-forms.test.tsx",
+          "sha256": "7286caff450af4224c03fb867007a72d0d25c7cb4afb2bc086b9d41e91db9619"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "926c926f965afeb5595eabcb94c31e2e58f57017b3c911ede9b50d4cf23be573"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smsir-config.schema.ts",
+          "sha256": "63c6e5a9dce10b593999c506d8e3707e01e1eba9050d18e1d12d20e2bcd8cd38"
+        }
+      ],
+      "checks": [
+        "Six strengthened baseline cases failed: provider commands accepted unknown envelope, SMS configuration and email patch fields. Existing email create and update persist the original validated patch, so an unknown field can be saved under the old parser.",
+        "Email, SMS and verification command envelopes now reject unknown fields. SMTP/Resend draft patches reject unknown settings before writing. SMS draft configuration and each template mapping reject unknown fields while retaining supported locales, variable maps, omissions and defaults. Verification provider-specific settings and input retain their documented record types. Shared stored-configuration parsing is unchanged.",
+        "Ninety-six related API cases and seventy-seven provider form, recovery and API client cases passed. API typecheck, ESLint, Prettier and diff checks passed. No real provider send was attempted. The hosted native provider matrix needs verification against this final command source."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/provider-command-input",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "9140a20fb917627b05f3656f9691b906be5c96c649bc413fdfba9a4b12118267"
     }
   },
   "historical_improvements": [
