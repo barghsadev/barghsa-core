@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1204 | Accepted with unchanged source bindings. |
-| verify | 98 | Existing work may be complete; inspect evidence before building. |
-| partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 97 | Existing work may be complete; inspect evidence before building. |
+| partial | 59 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1343,7 +1343,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.12.04.03` | partial | Recorded batch work | Implement auto-halt/rollback on: smoke failure, elevated error rate, SLO burn, reconciliation mismatch, security alert |
 | `06-security-testing-observability.md#T-06.12.04.04` | done | Recorded batch work | Create production release notes template: changes, customer/support impact, owner, dashboard links, alert/runbook links, on-call |
 | `06-security-testing-observability.md#T-06.12.04.05` | verify | Inventory needed | Implement post-deploy smoke tests and SLO/error comparison against previous release |
-| `06-security-testing-observability.md#T-06.12.05.01` | verify | Recorded batch work | Configure nightly CI: cross-browser E2E, full dep + security scan, dead-link check, flaky test report |
+| `06-security-testing-observability.md#T-06.12.05.01` | partial | Recorded batch work | Configure nightly CI: cross-browser E2E, full dep + security scan, dead-link check, flaky test report |
 | `06-security-testing-observability.md#T-06.12.05.02` | verify | Inventory needed | Configure weekly CI: load/performance regression, critical-domain mutation testing, dependency update PR |
 | `06-security-testing-observability.md#T-06.12.05.03` | verify | Inventory needed | Configure quarterly manual trigger: PG restore, DR rehearsal, access review, threat-model review, incident runbook exercise |
 | `06-security-testing-observability.md#T-06.12.05.04` | done | Recorded batch work | Flaky test management: quarantine system with owner, issue, expiry, equivalent temporary coverage |

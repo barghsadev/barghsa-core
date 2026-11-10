@@ -1,5 +1,6 @@
 import { test, expect } from './coverage-fixture';
 import { scanCriticalMain } from './critical-accessibility';
+import { expectRegisteredNavigationLinks } from './registered-navigation';
 import { checkRoutePresentation } from './route-presentation';
 import { startPrimaryMobilePerformance } from './primary-mobile-performance';
 import AxeBuilder from '@axe-core/playwright';
@@ -185,6 +186,7 @@ for (const locale of ['en', 'fa'] as const) {
         const table = page.getByRole('table', { name: config.title, exact: true });
         await page.goto(`${config.path}?sort=submitted_at%3Aasc`);
         await expect(detail(first)).toBeVisible();
+        await expectRegisteredNavigationLinks(page.getByRole('main'));
         await measure();
         await scanCriticalMain(page);
         await expect(mobile ? cardButton : tableButton).toHaveAttribute('aria-pressed', 'true');
@@ -288,6 +290,7 @@ for (const locale of ['en', 'fa'] as const) {
             secondRow.getByRole('link', { name: tConsultation('provideInfo', locale), exact: true })
           ).toHaveAttribute('href', `${config.path}/${second}#consultation-information-form`);
         }
+        await expectRegisteredNavigationLinks(table);
         const scroller = page
           .getByRole('region', { name: config.title, exact: true })
           .locator('[data-slot="scroll-area-viewport"]');

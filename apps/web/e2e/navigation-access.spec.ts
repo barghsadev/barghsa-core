@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
+import { expectRegisteredNavigationLinks } from './registered-navigation';
 import { shellText } from '@barghsa/i18n/shell';
 import { contractText } from '@barghsa/i18n/contracts';
 import { feedbackText } from '@barghsa/i18n/feedback';
@@ -60,6 +61,7 @@ for (const locale of ['en', 'fa'] as const) {
     const quick = page.getByRole('navigation', { name: shellText('quickNavigation', locale) });
     await expect(quick.getByRole('link')).toHaveCount(4);
     await expect(quick.locator('a[href="/invoices"]')).toHaveAttribute('aria-current', 'page');
+    await expectRegisteredNavigationLinks(quick);
     const aside = page.locator('#dashboard-navigation');
     await expect(aside.locator('a[href="/admin/roles"]')).toHaveCount(0);
     await expect(aside.locator('a[href="/contracts"]')).toHaveCount(0);
@@ -77,6 +79,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(aside.locator('a[href="/settings/profile"]')).toHaveText(
       shellText('legalProfile', locale)
     );
+    await expectRegisteredNavigationLinks(aside);
     expect(
       (await new AxeBuilder({ page }).include('#dashboard-navigation').analyze()).violations
     ).toEqual([]);
@@ -94,6 +97,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/tickets');
     const quick = page.getByRole('navigation', { name: shellText('quickNavigation', locale) });
     await expect(quick.getByRole('link')).toHaveCount(3);
+    await expectRegisteredNavigationLinks(quick);
     const widths = await quick
       .getByRole('link')
       .evaluateAll((links) => links.map((link) => link.getBoundingClientRect().width));
@@ -108,6 +112,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(aside.locator('a[href="/admin/crm"]')).toHaveCount(1);
     await page.setViewportSize({ width: 1280, height: 844 });
     await expect(aside).toBeVisible();
+    await expectRegisteredNavigationLinks(aside);
     expect(
       (await new AxeBuilder({ page }).include('#admin-navigation').analyze()).violations
     ).toEqual([]);
@@ -144,6 +149,7 @@ test('missing or changed-workspace navigation never falls back to broad links an
   await aside.getByRole('button', { name: 'Refresh navigation', exact: true }).click();
   await expect(aside.locator('a[href="/wallet"]')).toHaveCount(1);
   await expect(aside.getByRole('status')).toHaveCount(0);
+  await expectRegisteredNavigationLinks(aside);
   await expect(page).toHaveURL(/\/invoices$/);
 });
 

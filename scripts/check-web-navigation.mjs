@@ -1,18 +1,5 @@
-import { readFile } from 'node:fs/promises';
 import { ESLint } from 'eslint';
-
-const routeSource = await readFile('apps/web/src/routeTree.gen.ts', 'utf8');
-const routeInterface = routeSource.match(/export interface FileRoutesByFullPath \{([^}]+)\}/);
-const routes = [...(routeInterface?.[1].matchAll(/^ +'([^']+)':/gm) ?? [])].map((match) =>
-  segments(match[1])
-);
-if (!routes.some((route) => route.length === 0)) {
-  throw new Error('Could not read registered paths from the generated web router');
-}
-
-function segments(path) {
-  return path === '/' ? [] : path.slice(1).replace(/\/$/, '').split('/');
-}
+import { isRegisteredWebPath } from './web-navigation-paths.mjs';
 
 const parameter = '\u0000';
 function destination(attribute) {
@@ -55,13 +42,7 @@ const checker = new ESLint({
                     // API downloads are endpoint URLs rather than client routes.
                     if (path.startsWith('/api/')) return;
                     checked++;
-                    const parts = segments(path);
-                    const matches = routes.some(
-                      (route) =>
-                        route.length === parts.length &&
-                        route.every((part, index) => part.startsWith('$') || part === parts[index])
-                    );
-                    if (!matches) {
+                    if (!isRegisteredWebPath(path)) {
                       context.report({
                         node,
                         messageId: 'unknown',

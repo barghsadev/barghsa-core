@@ -46,6 +46,7 @@ jobs:
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
           pnpm exec turbo run typecheck --filter=@barghsa/web
+          node --test scripts/web-navigation-paths.test.mjs
           node scripts/check-web-navigation.mjs
       - name: Upload nightly dependency and migration results
         if: always()
