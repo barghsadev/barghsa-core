@@ -315,9 +315,10 @@ export function ConversationIdentityDialog({
               </p>
             </div>
             <div className="space-y-2">
-              <div className="flex items-start gap-2">
+              <div className="relative flex items-start gap-2">
                 <Checkbox
                   id={`${id}-activity`}
+                  name="shareInActivity"
                   checked={shareInActivity}
                   disabled={locked || !name.trim()}
                   aria-describedby={`${id}-activity-help`}
@@ -332,9 +333,10 @@ export function ConversationIdentityDialog({
               </p>
             </div>
             <div className="space-y-2">
-              <div className="flex items-start gap-2">
+              <div className="relative flex items-start gap-2">
                 <Checkbox
                   id={`${id}-payment-activity`}
+                  name="shareInPaymentActivity"
                   checked={shareInPaymentActivity}
                   disabled={locked || !name.trim()}
                   aria-describedby={`${id}-payment-activity-help`}

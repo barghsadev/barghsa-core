@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T15:11:39+00:00",
-  "source_commit": "d1308fc8ae872af644066243ea2ec9712425dd6e",
+  "updated": "2026-11-10T15:18:26+00:00",
+  "source_commit": "d7fc70509455e1fc0fe8ff627ff5133ae5380846",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5643,7 +5643,8 @@
           "release-0.6-solar-request-touch-target",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-browser-stable-native-feedback",
-          "release-0.6-isolated-live-scanner-and-safari-recovery"
+          "release-0.6-isolated-live-scanner-and-safari-recovery",
+          "release-0.6-conversation-identity-rtl-native-checkboxes"
         ],
         "current_acceptance": null
       }
@@ -504620,7 +504621,8 @@
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "release-0.6-conversation-identity-rtl-native-checkboxes"
         ],
         "current_acceptance": null
       }
@@ -528282,7 +528284,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-video-upload-policy-ceiling",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-conversation-identity-rtl-native-checkboxes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -528370,7 +528373,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
+              "sha256": "92e59fe4a5c085edfd98cfa7fb520510706205d4663b184d4b1808e75ce58de0"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -528817,7 +528820,8 @@
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
             "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -529200,7 +529204,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-video-upload-policy-ceiling",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-conversation-identity-rtl-native-checkboxes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -529288,7 +529293,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
+              "sha256": "92e59fe4a5c085edfd98cfa7fb520510706205d4663b184d4b1808e75ce58de0"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -529735,7 +529740,8 @@
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
             "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -530059,7 +530065,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-video-upload-policy-ceiling",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-conversation-identity-rtl-native-checkboxes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -530147,7 +530154,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
+              "sha256": "92e59fe4a5c085edfd98cfa7fb520510706205d4663b184d4b1808e75ce58de0"
             },
             {
               "path": "apps/web/src/components/CrmProfileRecords.tsx",
@@ -530594,7 +530601,8 @@
             "All 10 reminder-query and 25 reminder-panel checks passed. Four owner changes still cancel pending reads. Error bodies are unread, raw text is hidden, localized fallback and no-retry behavior are tested.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
             "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-lists-and-receipts",
           "limitations": [
@@ -552181,7 +552189,8 @@
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "release-0.6-conversation-identity-rtl-native-checkboxes"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -552805,7 +552814,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
+              "sha256": "92e59fe4a5c085edfd98cfa7fb520510706205d4663b184d4b1808e75ce58de0"
             },
             {
               "path": "apps/web/src/components/CrmAddressEditor.tsx",
@@ -553651,7 +553660,8 @@
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain."
+            "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
           "scope_dispositions": [
@@ -553737,7 +553747,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-conversation-identity-rtl-native-checkboxes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553837,7 +553848,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
+              "sha256": "92e59fe4a5c085edfd98cfa7fb520510706205d4663b184d4b1808e75ce58de0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -554051,7 +554062,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility",
           "limitations": [
@@ -555261,7 +555273,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-conversation-identity-rtl-native-checkboxes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555361,7 +555374,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
+              "sha256": "92e59fe4a5c085edfd98cfa7fb520510706205d4663b184d4b1808e75ce58de0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -555575,7 +555588,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility",
           "limitations": [
@@ -557559,7 +557573,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-conversation-identity-rtl-native-checkboxes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557659,7 +557674,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
+              "sha256": "92e59fe4a5c085edfd98cfa7fb520510706205d4663b184d4b1808e75ce58de0"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -557873,7 +557888,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-form-and-document-accessibility",
           "limitations": [
@@ -607782,7 +607798,8 @@
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "release-0.6-conversation-identity-rtl-native-checkboxes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -608590,7 +608607,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
+              "sha256": "92e59fe4a5c085edfd98cfa7fb520510706205d4663b184d4b1808e75ce58de0"
             },
             {
               "path": "apps/web/src/components/CrmLegalEditor.test.tsx",
@@ -610586,7 +610603,8 @@
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain."
+            "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -636870,7 +636888,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-consultation-and-threshold-browser-recovery",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-conversation-identity-rtl-native-checkboxes"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
@@ -636882,7 +636901,8 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
           ],
           "source_evidence": [
             {
@@ -636923,7 +636943,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
+              "sha256": "92e59fe4a5c085edfd98cfa7fb520510706205d4663b184d4b1808e75ce58de0"
             },
             {
               "path": "apps/web/src/components/CrmLegalDocuments.tsx",
@@ -772425,7 +772445,8 @@
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain."
+            "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
           ],
           "source_evidence": [
             {
@@ -772494,7 +772515,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
+              "sha256": "92e59fe4a5c085edfd98cfa7fb520510706205d4663b184d4b1808e75ce58de0"
             },
             {
               "path": "apps/web/src/components/CrmLegalDocuments.tsx",
@@ -773981,7 +774002,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "release-0.6-conversation-identity-rtl-native-checkboxes"
         ]
       }
     },
@@ -774193,7 +774215,7 @@
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
-              "sha256": "ae5035d95579e61de2169b37d5da72d143d2018ed0d45e91c887b5aacb88bee0"
+              "sha256": "92e59fe4a5c085edfd98cfa7fb520510706205d4663b184d4b1808e75ce58de0"
             },
             {
               "path": "apps/web/src/components/CrmLegalDocuments.tsx",
@@ -775984,7 +776006,8 @@
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain."
+            "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -776149,7 +776172,8 @@
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "release-0.6-conversation-identity-rtl-native-checkboxes"
         ]
       }
     },
@@ -776405,7 +776429,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-native-credential-and-migration-acceptance",
           "release-0.6-browser-stable-native-feedback",
-          "release-0.6-isolated-live-scanner-and-safari-recovery"
+          "release-0.6-isolated-live-scanner-and-safari-recovery",
+          "release-0.6-conversation-identity-rtl-native-checkboxes"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -888145,6 +888170,47 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/isolated-live-document-scanner-retry",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "40773eec3c5a43ae69f2df55290d26c5426e2d733e6f0ac844139f5f8e01ad17"
+    },
+    "release-0.6-conversation-identity-rtl-native-checkboxes": {
+      "batch": "release-0.6-conversation-identity-rtl-native-checkboxes",
+      "base_commit": "d7fc70509455e1fc0fe8ff627ff5133ae5380846",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "06-security-testing-observability.md#T-06.12.05.01",
+        "07-ui-ux-design.md#T-07.01.04.02",
+        "07-ui-ux-design.md#T-07.01.04.03",
+        "07-ui-ux-design.md#T-07.01.04.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/components/ConversationIdentityDialog.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/ConversationIdentityDialog.tsx",
+          "sha256": "92e59fe4a5c085edfd98cfa7fb520510706205d4663b184d4b1808e75ce58de0"
+        },
+        {
+          "path": "apps/web/e2e/conversation-identity.spec.ts",
+          "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
+        }
+      ],
+      "checks": [
+        "Hosted pinned Firefox shard 2 (42834362257 job 129892516696) consistently failed both Persian conversation recovery cases at the unchanged no-horizontal-overflow assertion. The local production build reproduced a 359-pixel scroll width for a 358-pixel dialog. The measured overflow came from the two unnamed Base UI checkbox inputs using fixed positioning inside the transformed RTL dialog.",
+        "Both checkboxes use their existing payload field names and the visually hidden native inputs are positioned inside their rows. Visible controls, labels, keyboard behavior, permissions, photo checks, captured retry, revision and draft semantics retain their existing assertions. All 16 Firefox and Mobile Safari journey cases passed without retries for both operating contexts and locales.",
+        "Seventeen component cases, the web production build, web typecheck, changed-file ESLint and Prettier, and all 102 route and interaction gzip budgets passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/conversation-identity-rtl-native-checkboxes",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "2120b4e4c53d46cfb1a33e55ddd03fc0ce08c380092cb13faa48d78785cb7aae"
     }
   },
   "historical_improvements": [
