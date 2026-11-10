@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T12:36:45+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T12:39:15+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1176 | Accepted with unchanged source bindings. |
-| verify | 132 | Existing work may be complete; inspect evidence before building. |
+| done | 1177 | Accepted with unchanged source bindings. |
+| verify | 131 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1341,7 +1341,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.12.04.01` | verify | Inventory needed | Define production release checklist and automated gate runner |
 | `06-security-testing-observability.md#T-06.12.04.02` | verify | Inventory needed | Implement automatic canary/gradual rollout for high-risk changes (payment, wallet, auth, contract, pricing) |
 | `06-security-testing-observability.md#T-06.12.04.03` | partial | Recorded batch work | Implement auto-halt/rollback on: smoke failure, elevated error rate, SLO burn, reconciliation mismatch, security alert |
-| `06-security-testing-observability.md#T-06.12.04.04` | verify | Inventory needed | Create production release notes template: changes, customer/support impact, owner, dashboard links, alert/runbook links, on-call |
+| `06-security-testing-observability.md#T-06.12.04.04` | done | Recorded batch work | Create production release notes template: changes, customer/support impact, owner, dashboard links, alert/runbook links, on-call |
 | `06-security-testing-observability.md#T-06.12.04.05` | verify | Inventory needed | Implement post-deploy smoke tests and SLO/error comparison against previous release |
 | `06-security-testing-observability.md#T-06.12.05.01` | verify | Inventory needed | Configure nightly CI: cross-browser E2E, full dep + security scan, dead-link check, flaky test report |
 | `06-security-testing-observability.md#T-06.12.05.02` | verify | Inventory needed | Configure weekly CI: load/performance regression, critical-domain mutation testing, dependency update PR |

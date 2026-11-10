@@ -1,5 +1,7 @@
 -- Read-only inventory. Reports row/field identities, never credential values.
 -- Run against the intended database before a controlled credential migration.
+-- Known envelope prefixes exclude a value from this plaintext inventory.
+-- Verify envelope integrity and key availability separately.
 WITH providers AS (
   SELECT 'email' AS channel, id, transport, config FROM email_provider_configs
   UNION ALL
@@ -14,4 +16,5 @@ WHERE ((p.transport = 'smtp' AND secret.key = 'password')
   AND jsonb_typeof(secret.value) = 'string'
   AND length(secret.value #>> '{}') > 0
   AND secret.value #>> '{}' NOT LIKE 'v1:%'
+  AND secret.value #>> '{}' NOT LIKE 'v2:%'
 ORDER BY p.channel, p.id, secret.key;

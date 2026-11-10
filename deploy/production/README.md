@@ -27,6 +27,23 @@ scripts/check-flaky-tests.sh --promotion \
   --report /protected/release-evidence/flaky-test-report.json
 ```
 
+## Production release notes template
+
+Copy this outline into the protected production approval package for the exact candidate. Keep customer-facing release notes separate from protected links, contact details and evidence.
+
+| Field                       | Record for this release                                                                                                                           |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Candidate                   | Version, full source SHA, staging verification receipt, pinned app/web/scanner digests and previous compatible release.                           |
+| Changes                     | Shipped changes by service, affected roles and rollout flags.                                                                                     |
+| Customer and support impact | Changed workflows, actions customers need to take, expected disruption, and the support response and escalation path.                             |
+| Release owner and on-call   | Named release owner, deployment operator, primary and backup responders, coverage window in UTC, and protected paging route.                      |
+| Monitoring                  | Working production dashboard and alert links, previous-release baseline, candidate observation window, and the responder for each rollout signal. |
+| Runbooks                    | Applicable recovery procedures, halt conditions, last compatible digests, and the owner authorized to halt or roll back.                          |
+| Gate evidence               | Exact browser, security, performance, migration, backup and restore receipts. Link the post-deploy smoke and SLO comparison as they are observed. |
+| Approval                    | Outstanding gates, proposed rollout window and explicit owner authorization for this version, SHA and target.                                     |
+
+Use the [service objectives](../../docs/operations/service-objectives.md), [incident contacts and recovery procedures](../../docs/operations/incident-response.md), and [deployment rollback runbook](../../docs/runbooks/bad-deployment.md) to fill in the applicable links and triggers. Verify access with the named on-call responders before requesting approval.
+
 ## Initial database seed
 
 After the owner approves initial provisioning, use the pinned app image and separate migration principal to migrate and seed a new database before starting the app services. Put only `ADMIN_BOOTSTRAP_SECRET`, `ADMIN_BOOTSTRAP_KEY`, `ADMIN_BOOTSTRAP_EMAIL` and `ADMIN_BOOTSTRAP_PASSWORD` in a root-owned `0600` bootstrap environment file. Keep the direct connection and CA in the existing migration configuration.
