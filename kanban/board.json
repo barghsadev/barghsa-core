@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T04:06:21+00:00",
-  "source_commit": "f622696a69f823a5431f4d430b514a14cf7dc793",
+  "updated": "2026-11-10T04:09:38+00:00",
+  "source_commit": "3fae1bac50ababaa8087ca0b1e3882f7fdb070a2",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -17651,12 +17651,10 @@
         "story": "01-platform-infrastructure.md#spec-31ce54d88b4a"
       },
       "requirement": "- **T-07.03.02:** Configure Prettier with consistent formatting\n  - **Notes:** Root `.prettierrc` with `singleQuote: true`, `trailingComma: 'es5'`, `printWidth: 100`, `tabWidth: 2`, `semi: true`, `arrowParens: 'always'`, `endOfLine: 'lf'`. `.prettierignore` excludes `dist/`, `node_modules/`, `.turbo/`, `pnpm-lock.yaml`, `coverage/`. CI runs `pnpm format:check`.\n  - **Dependencies:** S-01.01\n  - **Complexity:** S",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17685,8 +17683,43 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-workspace-editor-and-formatter"
+        ],
+        "current_acceptance": {
+          "kind": "verification",
+          "reviewed_sha": "3fae1bac50ababaa8087ca0b1e3882f7fdb070a2",
+          "checks": [
+            "The existing Prettier configuration provides all seven requested settings. The actual Prettier resolver confirmed each setting and the exclusions for dist, node_modules, .turbo, coverage and the lockfile.",
+            "Exact protected run 42750652390 at e8a7cd99 passed the full repository format step. Its formatter, ignore rules, package scripts and lockfile match the current checkout. The current workflow retains the same format command. The newly configured editor settings and representative TS files passed the local format check."
+          ],
+          "source_evidence": [
+            {
+              "path": ".editorconfig",
+              "sha256": "a71035eea13b82779da4dd5c7de385f9ec3af700ebc1d623f44f81abf13e8ae8"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+            },
+            {
+              "path": ".prettierignore",
+              "sha256": "8e90d90f8dac465142c23adc2a1cb3a8bd6efc9d0bbfee90a626e276d6a699c4"
+            },
+            {
+              "path": ".prettierrc.json",
+              "sha256": "9b219456a554f96041da19f1082318e289ef282721e6063eb3b209ac3305dd38"
+            },
+            {
+              "path": "package.json",
+              "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ]
+        }
       }
     },
     {
@@ -17749,12 +17782,10 @@
         "story": "01-platform-infrastructure.md#spec-31ce54d88b4a"
       },
       "requirement": "- **T-07.03.04:** Create `.editorconfig` and `.vscode` workspace settings\n  - **Notes:** `.editorconfig`: `root = true`, `[*] indent_style = space`, `indent_size = 2`, `end_of_line = lf`, `charset = utf-8`, `trim_trailing_whitespace = true`, `insert_final_newline = true`. `.vscode/settings.json`: `typescript.preferences.importModuleSpecifier = 'shortest'`, `editor.formatOnSave = true`, `editor.codeActionsOnSave = { \"source.fixAll.eslint\": true }`, `tailwindCSS.experimental.configFile = 'packages/ui/tailwind.config.ts'`. `.vscode/extensions.json`: recommend `dbaeumer.vscode-eslint`, `esbenp.prettier-vscode`, `bradlc.vscode-tailwindcss`, `ms-azuretools.vscode-docker`, `csstools.postcss`.\n  - **Dependencies:** S-01.01\n  - **Complexity:** S\n  - **UI/UX:** N/A\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17783,8 +17814,39 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-workspace-editor-and-formatter"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "3fae1bac50ababaa8087ca0b1e3882f7fdb070a2",
+          "checks": [
+            "EditorConfig uses UTF-8, LF, two spaces, trailing whitespace cleanup and a final newline. The workspace enables formatting, the shortest TypeScript imports and ESLint fixes on explicit save, with all five required extension recommendations.",
+            "VS Code uses the supported explicit save action value. The Tailwind v4 extension points to the actual CSS entry point, which imports the shared theme config. The local check parsed both files, matched the real CSS entry and verified formatting."
+          ],
+          "source_evidence": [
+            {
+              "path": ".editorconfig",
+              "sha256": "a71035eea13b82779da4dd5c7de385f9ec3af700ebc1d623f44f81abf13e8ae8"
+            },
+            {
+              "path": ".vscode/extensions.json",
+              "sha256": "ddaf39000e8e7272ed4ca7d5374e4092803240490d3bad8d1ba334257c0de8a4"
+            },
+            {
+              "path": ".vscode/settings.json",
+              "sha256": "c81bf7d9644b21b234bd4f7d592004c4374d4238f1553654e88e833dbe9bb94d"
+            },
+            {
+              "path": "packages/ui/src/styles.css",
+              "sha256": "6934971e0de9d57aa8b85644cb45668e7618f96bc1d51716d0c04d740a2834d2"
+            },
+            {
+              "path": "packages/ui/tailwind.config.ts",
+              "sha256": "fd374f1cdb0f3545f1a506cb2f814af2106b8593af63eb78add6ca607e723d43"
+            }
+          ]
+        }
       }
     },
     {
@@ -860671,6 +860733,70 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/postgres-compose-fixture",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "7e6d4471931682edd19dfcff4baf6090429b7112af352495de41ac5758fa4637"
+    },
+    "release-0.6-workspace-editor-and-formatter": {
+      "batch": "release-0.6-workspace-editor-and-formatter",
+      "base_commit": "3fae1bac50ababaa8087ca0b1e3882f7fdb070a2",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.04"
+      ],
+      "changed_paths": [
+        ".editorconfig",
+        ".vscode/extensions.json",
+        ".vscode/settings.json"
+      ],
+      "source_evidence": [
+        {
+          "path": ".editorconfig",
+          "sha256": "a71035eea13b82779da4dd5c7de385f9ec3af700ebc1d623f44f81abf13e8ae8"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+        },
+        {
+          "path": ".prettierignore",
+          "sha256": "8e90d90f8dac465142c23adc2a1cb3a8bd6efc9d0bbfee90a626e276d6a699c4"
+        },
+        {
+          "path": ".prettierrc.json",
+          "sha256": "9b219456a554f96041da19f1082318e289ef282721e6063eb3b209ac3305dd38"
+        },
+        {
+          "path": ".vscode/extensions.json",
+          "sha256": "ddaf39000e8e7272ed4ca7d5374e4092803240490d3bad8d1ba334257c0de8a4"
+        },
+        {
+          "path": ".vscode/settings.json",
+          "sha256": "c81bf7d9644b21b234bd4f7d592004c4374d4238f1553654e88e833dbe9bb94d"
+        },
+        {
+          "path": "package.json",
+          "sha256": "0d38ca16dff0d91baf910710ab6f0e82f44fb03b09a2d42796e34de9cfd6b5ee"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "6934971e0de9d57aa8b85644cb45668e7618f96bc1d51716d0c04d740a2834d2"
+        },
+        {
+          "path": "packages/ui/tailwind.config.ts",
+          "sha256": "fd374f1cdb0f3545f1a506cb2f814af2106b8593af63eb78add6ca607e723d43"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "The existing Prettier configuration provides all seven requested settings. The actual Prettier resolver confirmed each setting and the exclusions for dist, node_modules, .turbo, coverage and the lockfile.",
+        "Exact protected run 42750652390 at e8a7cd99 passed the full repository format step. Its formatter, ignore rules, package scripts and lockfile match the current checkout. The current workflow retains the same format command. The newly configured editor settings and representative TS files passed the local format check.",
+        "EditorConfig uses UTF-8, LF, two spaces, trailing whitespace cleanup and a final newline. The workspace enables formatting, the shortest TypeScript imports and ESLint fixes on explicit save, with all five required extension recommendations.",
+        "VS Code uses the supported explicit save action value. The Tailwind v4 extension points to the actual CSS entry point, which imports the shared theme config. The local check parsed both files, matched the real CSS entry and verified formatting."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/editor-toolchain-verification",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "36ec4bdeb431898807a478231444906fe1ca846a38e09f85ae0db268e4100ea4"
     }
   },
   "historical_improvements": [
