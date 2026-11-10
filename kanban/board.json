@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T05:33:41+00:00",
-  "source_commit": "076ac89547db252030bcafd07fe3b0f105af0477",
+  "updated": "2026-11-10T05:36:32+00:00",
+  "source_commit": "d56482cf64ceeca0fe0af077ceab251cb2d93a56",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -10056,7 +10056,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-api-and-worker-process-verification",
@@ -10088,7 +10089,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/jobs/poller-group.ts",
@@ -56899,7 +56900,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -56983,7 +56985,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/profiles/invitation-expiry.integration.test.ts",
@@ -73019,7 +73021,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -73035,7 +73038,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -74318,7 +74321,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -75050,7 +75054,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/drizzle/production/meta/0269_snapshot.json",
@@ -94991,7 +94995,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -95091,7 +95096,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -102069,7 +102074,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -102541,11 +102547,11 @@
             },
             {
               "path": "apps/worker/src/invoices/reconciliation-scanner.test.ts",
-              "sha256": "9f923d16d56b0cc648d66446134765d1101d8866e1f68a085618ea88c826b2d7"
+              "sha256": "cb6afb0001c7059cf6f4a9435b6b4aa11af340693c1a1df15898c213689b2142"
             },
             {
               "path": "apps/worker/src/invoices/reconciliation-scanner.ts",
-              "sha256": "363d126a97adfd60599c72d8d1003ca0f41cefddacd82ad392e636e96b56efc7"
+              "sha256": "ff2bbdbe7a04d190a450c4a7cd2575b1b996f56d9b0659c087163d2af1fddb45"
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.ts",
@@ -102557,7 +102563,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
@@ -102565,11 +102571,11 @@
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.test.ts",
-              "sha256": "8ff048f651ac6a527d377622fa4dc257dad7b034dce3afcc981a89c9bd55a9d7"
+              "sha256": "a59b26d38e75fdd461cbacd1eb2bcfbcc26a385f359e88b251956dd52f0c85c8"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.ts",
-              "sha256": "cdaf2239a3c2512a11bbf3cedae81f223ac4d3e808297d22c6d4d4d9c9d43733"
+              "sha256": "39f8be1b712e7b2d643b4909342a7aec1cf99edbdc374edaca2981446b6ef993"
             },
             {
               "path": "apps/worker/src/wallet/low-balance-notifications.integration.test.ts",
@@ -102593,11 +102599,11 @@
             },
             {
               "path": "apps/worker/src/wallet/provider-reconciliation-scanner.test.ts",
-              "sha256": "be4d37d9cdc9a4543e38d4b78e30069d22f05af740efd360c9c74eee6c51b40d"
+              "sha256": "e37b25af0a1aa06ad67fb6f053be92b30d785829c11dcd873539d86dacbd84e2"
             },
             {
               "path": "apps/worker/src/wallet/provider-reconciliation-scanner.ts",
-              "sha256": "831372737216003f21f5118ce364fbf4efbdf19622c318169b9cd99ab2959dc7"
+              "sha256": "1f6c5708cd0e1610246cae57b621f7c83218da917dc7c9ef3d18a782e606414f"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.integration.test.ts",
@@ -108062,7 +108068,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -108178,7 +108185,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -108708,7 +108715,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -108868,7 +108876,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -131677,7 +131685,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -131889,7 +131898,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -132698,7 +132707,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -132910,7 +132920,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -133719,7 +133729,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -133931,7 +133942,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -134740,7 +134751,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -134952,7 +134964,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -135761,7 +135773,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -135973,7 +135986,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -136782,7 +136795,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -136994,7 +137008,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -137889,7 +137903,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -138125,7 +138140,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -139040,7 +139055,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -139252,7 +139268,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -140147,7 +140163,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -140383,7 +140400,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -141298,7 +141315,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -141510,7 +141528,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -142313,7 +142331,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -142485,7 +142504,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -143102,7 +143121,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -143290,7 +143310,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -143909,7 +143929,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -144065,7 +144086,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -146702,7 +146723,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -146738,7 +146760,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.integration.test.ts",
@@ -149493,7 +149515,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -149541,7 +149564,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -329446,7 +329469,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -329498,7 +329522,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -330359,7 +330383,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -330411,7 +330436,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -331275,7 +331300,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -331327,7 +331353,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -332188,7 +332214,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -332240,7 +332267,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -333102,7 +333129,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -333154,7 +333182,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -334015,7 +334043,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -334067,7 +334096,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -334930,7 +334959,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -334982,7 +335012,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -335849,7 +335879,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -335901,7 +335932,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -344271,7 +344302,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -344323,7 +344355,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -345192,7 +345224,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -345244,7 +345277,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -346114,7 +346147,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -346166,7 +346200,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -445690,7 +445724,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -445790,7 +445825,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -446153,7 +446188,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -446253,7 +446289,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -446615,7 +446651,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -446715,7 +446752,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -447079,7 +447116,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -447179,7 +447217,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -447631,7 +447669,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -447759,7 +447798,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -459600,7 +459639,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459616,7 +459656,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -459954,7 +459994,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459970,7 +460011,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -460310,7 +460351,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460326,7 +460368,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -460691,7 +460733,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460707,7 +460750,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -461045,7 +461088,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461061,7 +461105,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -461405,7 +461449,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461521,7 +461566,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -461903,7 +461948,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462019,7 +462065,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -462403,7 +462449,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462519,7 +462566,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -462901,7 +462948,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463017,7 +463065,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -463397,7 +463445,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463557,7 +463606,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -463860,7 +463909,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464020,7 +464070,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -464325,7 +464375,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464485,7 +464536,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -464789,7 +464840,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464949,7 +465001,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -477016,7 +477068,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -477116,7 +477169,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -477379,7 +477432,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -477479,7 +477533,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -477766,7 +477820,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "done",
@@ -477866,7 +477921,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -478130,7 +478185,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -478230,7 +478286,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -479075,7 +479131,8 @@
           "release-0.6-strict-otp-caller-preflight",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -479107,7 +479164,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -479239,7 +479296,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -479283,7 +479341,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "docs/security/otp.md",
@@ -479474,7 +479532,8 @@
           "release-0.6-strict-otp-caller-preflight",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -479518,7 +479577,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/src/schema/auth-delivery-outbox.ts",
@@ -479611,7 +479670,8 @@
           "release-0.6-strict-otp-caller-preflight",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -479667,7 +479727,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "docs/security/otp.md",
@@ -484019,7 +484079,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-provider-webhook-storage-and-replay-evidence"
+          "release-0.6-provider-webhook-storage-and-replay-evidence",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -484059,7 +484120,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+              "sha256": "664f15e4d7ffdf95ad3c5e899951dad82c745fa6425b3d68704a2978b0784de5"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -484153,7 +484214,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-provider-webhook-storage-and-replay-evidence"
+          "release-0.6-provider-webhook-storage-and-replay-evidence",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -484209,7 +484271,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+              "sha256": "664f15e4d7ffdf95ad3c5e899951dad82c745fa6425b3d68704a2978b0784de5"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -487570,7 +487632,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-upload-key-and-scanner-tests",
@@ -487598,7 +487661,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -487668,7 +487731,8 @@
           "release-0.6-react-output-safety-and-receipt-urls",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-provider-webhook-storage-and-replay-evidence"
+          "release-0.6-provider-webhook-storage-and-replay-evidence",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -487796,7 +487860,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+              "sha256": "664f15e4d7ffdf95ad3c5e899951dad82c745fa6425b3d68704a2978b0784de5"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -487982,7 +488046,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-upload-key-and-scanner-tests",
@@ -488034,7 +488099,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -488106,7 +488171,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-provider-webhook-storage-and-replay-evidence"
+          "release-0.6-provider-webhook-storage-and-replay-evidence",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -488166,7 +488232,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+              "sha256": "664f15e4d7ffdf95ad3c5e899951dad82c745fa6425b3d68704a2978b0784de5"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -488209,7 +488275,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-provider-webhook-storage-and-replay-evidence"
+          "release-0.6-provider-webhook-storage-and-replay-evidence",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -488258,7 +488325,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+              "sha256": "664f15e4d7ffdf95ad3c5e899951dad82c745fa6425b3d68704a2978b0784de5"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -488452,7 +488519,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-provider-webhook-storage-and-replay-evidence"
+          "release-0.6-provider-webhook-storage-and-replay-evidence",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -488532,7 +488600,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+              "sha256": "664f15e4d7ffdf95ad3c5e899951dad82c745fa6425b3d68704a2978b0784de5"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -490176,7 +490244,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-provider-webhook-storage-and-replay-evidence"
+          "release-0.6-provider-webhook-storage-and-replay-evidence",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -490184,7 +490253,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+              "sha256": "664f15e4d7ffdf95ad3c5e899951dad82c745fa6425b3d68704a2978b0784de5"
             },
             {
               "path": "docs/threat-model.md",
@@ -490326,7 +490395,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-provider-webhook-storage-and-replay-evidence"
+          "release-0.6-provider-webhook-storage-and-replay-evidence",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -490334,7 +490404,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+              "sha256": "664f15e4d7ffdf95ad3c5e899951dad82c745fa6425b3d68704a2978b0784de5"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -490442,7 +490512,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-provider-webhook-storage-and-replay-evidence"
+          "release-0.6-provider-webhook-storage-and-replay-evidence",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -490450,7 +490521,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+              "sha256": "664f15e4d7ffdf95ad3c5e899951dad82c745fa6425b3d68704a2978b0784de5"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -490506,7 +490577,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-provider-webhook-storage-and-replay-evidence"
+          "release-0.6-provider-webhook-storage-and-replay-evidence",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -490522,7 +490594,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+              "sha256": "664f15e4d7ffdf95ad3c5e899951dad82c745fa6425b3d68704a2978b0784de5"
             }
           ],
           "checks": [
@@ -490584,7 +490656,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-provider-webhook-storage-and-replay-evidence"
+          "release-0.6-provider-webhook-storage-and-replay-evidence",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -490644,7 +490717,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+              "sha256": "664f15e4d7ffdf95ad3c5e899951dad82c745fa6425b3d68704a2978b0784de5"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -493575,7 +493648,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-provider-webhook-storage-and-replay-evidence"
+          "release-0.6-provider-webhook-storage-and-replay-evidence",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -493591,7 +493665,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+              "sha256": "664f15e4d7ffdf95ad3c5e899951dad82c745fa6425b3d68704a2978b0784de5"
             }
           ],
           "checks": [
@@ -493645,7 +493719,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-provider-webhook-storage-and-replay-evidence"
+          "release-0.6-provider-webhook-storage-and-replay-evidence",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -493653,7 +493728,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+              "sha256": "664f15e4d7ffdf95ad3c5e899951dad82c745fa6425b3d68704a2978b0784de5"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -495539,7 +495614,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Review remaining provider and worker poller diagnostics and persisted failure details, including reminder delivery and the other reconciliation scans. Keep fixed operation and bounded structured diagnostics.",
+        "Review remaining provider and worker poller diagnostics and persisted failures, including service targets, notification outbox, reminder delivery and saving inventory and invitation expiry. Keep fixed operation and bounded structured diagnostics.",
         "Rehearse representative token, identity and payment inputs against all configured production-equivalent sinks, including the isolated proxy failure cases, and retain the observed redacted receipts."
       ],
       "owner": null,
@@ -495597,7 +495672,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
@@ -495805,7 +495881,8 @@
           "release-0.6-staging-pilot-proxy-log-redaction",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -495821,7 +495898,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -496007,7 +496084,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -496043,7 +496121,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-lease.ts",
@@ -496228,7 +496306,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -496240,7 +496319,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
@@ -496337,7 +496416,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -496373,7 +496453,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-lease.ts",
@@ -497371,7 +497451,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-refund-overdue-alert-and-native-worker",
@@ -497383,7 +497464,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
@@ -497489,7 +497570,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -497501,7 +497583,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
@@ -737978,7 +738060,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -738114,7 +738197,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -738710,7 +738793,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -738846,7 +738930,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -743001,7 +743085,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -746676,7 +746760,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ]
       }
     },
@@ -747844,7 +747929,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -751352,7 +751437,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-reconciliation-worker-failure-logs"
         ]
       }
     },
@@ -753340,7 +753426,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.test.ts",
@@ -755343,7 +755429,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-test-fixtures-and-affected-dependents"
+          "release-0.6-test-fixtures-and-affected-dependents",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -757316,7 +757403,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "52997a4876920efc409119e39ef092d9e48a10cea991df72ba3ee3f87610a79a"
+              "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.test.ts",
@@ -759225,7 +759312,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-test-fixtures-and-affected-dependents"
+          "release-0.6-test-fixtures-and-affected-dependents",
+          "release-0.6-reconciliation-worker-failure-logs"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -866382,6 +866470,82 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webhook-acceptance",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "919c572a666544c19e8c92e988236fe8cd389b0c22728d74f7e5ad82522a8631"
+    },
+    "release-0.6-reconciliation-worker-failure-logs": {
+      "batch": "release-0.6-reconciliation-worker-failure-logs",
+      "base_commit": "d56482cf64ceeca0fe0af077ceab251cb2d93a56",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.02.06"
+      ],
+      "changed_paths": [
+        "apps/worker/src/invoices/reconciliation-scanner.test.ts",
+        "apps/worker/src/invoices/reconciliation-scanner.ts",
+        "apps/worker/src/main.ts",
+        "apps/worker/src/refunds/reconciliation-scanner.test.ts",
+        "apps/worker/src/refunds/reconciliation-scanner.ts",
+        "apps/worker/src/wallet/provider-reconciliation-scanner.test.ts",
+        "apps/worker/src/wallet/provider-reconciliation-scanner.ts",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/invoices/reconciliation-scanner.test.ts",
+          "sha256": "cb6afb0001c7059cf6f4a9435b6b4aa11af340693c1a1df15898c213689b2142"
+        },
+        {
+          "path": "apps/worker/src/invoices/reconciliation-scanner.ts",
+          "sha256": "ff2bbdbe7a04d190a450c4a7cd2575b1b996f56d9b0659c087163d2af1fddb45"
+        },
+        {
+          "path": "apps/worker/src/jobs/job-recorder.test.ts",
+          "sha256": "6f030f3ecfd82591b1f663855a6f804d2a72d9f4fcd300dfea59529f47523e1e"
+        },
+        {
+          "path": "apps/worker/src/jobs/job-recorder.ts",
+          "sha256": "d00ebd4dabee92e77eab36df6e9abbbd8e8e97fa2ac4418c8c25e2c45c6b7204"
+        },
+        {
+          "path": "apps/worker/src/jobs/poller-group.test.ts",
+          "sha256": "5e5bd04543b7167c3fe8db0c507d2da6ad14ecfc15b60a28326d51bcc3d2390e"
+        },
+        {
+          "path": "apps/worker/src/jobs/poller-group.ts",
+          "sha256": "d22697ce850bd8adcb7b0496781a84743d26df556126fb9032cb159d84bb5d8b"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "02b297ae0e0b1cd4036f3a3948fd1a7c1fb276db08bb4c12138cf5ec661789a3"
+        },
+        {
+          "path": "apps/worker/src/refunds/reconciliation-scanner.test.ts",
+          "sha256": "a59b26d38e75fdd461cbacd1eb2bcfbcc26a385f359e88b251956dd52f0c85c8"
+        },
+        {
+          "path": "apps/worker/src/refunds/reconciliation-scanner.ts",
+          "sha256": "39f8be1b712e7b2d643b4909342a7aec1cf99edbdc374edaca2981446b6ef993"
+        },
+        {
+          "path": "apps/worker/src/wallet/provider-reconciliation-scanner.test.ts",
+          "sha256": "e37b25af0a1aa06ad67fb6f053be92b30d785829c11dcd873539d86dacbd84e2"
+        },
+        {
+          "path": "apps/worker/src/wallet/provider-reconciliation-scanner.ts",
+          "sha256": "1f6c5708cd0e1610246cae57b621f7c83218da917dc7c9ef3d18a782e606414f"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "664f15e4d7ffdf95ad3c5e899951dad82c745fa6425b3d68704a2978b0784de5"
+        }
+      ],
+      "checks": [
+        "Four regression cases reproduced raw private fixture details in candidate errors for invoice, provider and refund reconciliation.",
+        "Candidate failures retain opaque record IDs and a known SQLSTATE category, or a fixed fallback. The outer pollers log and persist the same bounded category and keep safe interval defaults. Restricted financial report details, lock order, rollback and continuation behavior are preserved.",
+        "Forty-seven focused scanner, job recorder and poller cases passed, including rollback and release, committing a later candidate after a connection failure, and known and unknown error categories. Worker typecheck, lint, formatting and diff checks passed.",
+        "These tests inject database responses. Complete hosted and production-equivalent sink verification remain separate requirements."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/reconciliation-log-safety",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "3f752bc81efda5ce22f4e8ed316cf8ac8c5b088f06bd95d1cc40ecaa470a9713"
     }
   },
   "historical_improvements": [

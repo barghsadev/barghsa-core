@@ -35,7 +35,7 @@ it('continues after a failed connection and commits only the next candidate repo
     release = vi.fn(),
     connect = vi
       .fn()
-      .mockRejectedValueOnce(new Error('fixture connection unavailable'))
+      .mockRejectedValueOnce(new Error('fixture private refund connection detail'))
       .mockResolvedValue({ query, release });
   const pool = {
     query: vi
@@ -45,7 +45,7 @@ it('continues after a failed connection and commits only the next candidate repo
     connect,
   } as unknown as Pool;
   const result = await reconcileRefunds({ pool });
-  expect(result).toMatchObject({ reported: 1, errors: ['bad: fixture connection unavailable'] });
+  expect(result).toMatchObject({ reported: 1, errors: ['bad: database operation failed'] });
   expect(
     query.mock.calls.filter(([sql]) => sql.startsWith('INSERT INTO reconciliation_exceptions'))
   ).toHaveLength(1);

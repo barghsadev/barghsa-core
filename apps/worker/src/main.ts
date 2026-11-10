@@ -884,7 +884,7 @@ async function main(): Promise<void> {
       : DEFAULT_INVOICE_RECONCILIATION_INTERVAL_MS;
   if (invoiceReconcileInterval !== invoiceReconcileRaw)
     logger.warn(
-      `Invalid INVOICE_RECONCILIATION_SCAN_MS '${process.env['INVOICE_RECONCILIATION_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_INVOICE_RECONCILIATION_INTERVAL_MS}ms`
+      `Invalid INVOICE_RECONCILIATION_SCAN_MS — falling back to ${DEFAULT_INVOICE_RECONCILIATION_INTERVAL_MS}ms`
     );
   let invoiceReconcileInFlight = false;
   const invoiceReconciler = pollers.every(async () => {
@@ -905,12 +905,11 @@ async function main(): Promise<void> {
         });
       else await recordJobSuccess(INVOICE_RECONCILIATION_JOB_TYPE);
     } catch (error) {
-      logger.error(
-        `Invoice reconciliation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
-      );
+      const message = `Invoice reconciliation failed: ${databaseFailureReason(error)}`;
+      logger.error(message);
       await recordJobFailure({
         jobType: INVOICE_RECONCILIATION_JOB_TYPE,
-        error: error instanceof Error ? error.message : 'Invoice reconciliation failed',
+        error: message,
         errorCategory: 'transient',
       });
     } finally {
@@ -934,7 +933,7 @@ async function main(): Promise<void> {
       : DEFAULT_PROVIDER_RECONCILIATION_INTERVAL_MS;
   if (providerReconcileInterval !== providerReconcileRaw)
     logger.warn(
-      `Invalid PROVIDER_RECONCILIATION_SCAN_MS '${process.env['PROVIDER_RECONCILIATION_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_PROVIDER_RECONCILIATION_INTERVAL_MS}ms`
+      `Invalid PROVIDER_RECONCILIATION_SCAN_MS — falling back to ${DEFAULT_PROVIDER_RECONCILIATION_INTERVAL_MS}ms`
     );
   let providerReconcileInFlight = false;
   const providerReconciler = pollers.every(async () => {
@@ -955,12 +954,11 @@ async function main(): Promise<void> {
         });
       else await recordJobSuccess(PROVIDER_RECONCILIATION_JOB_TYPE);
     } catch (error) {
-      logger.error(
-        `Provider reconciliation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
-      );
+      const message = `Provider reconciliation failed: ${databaseFailureReason(error)}`;
+      logger.error(message);
       await recordJobFailure({
         jobType: PROVIDER_RECONCILIATION_JOB_TYPE,
-        error: error instanceof Error ? error.message : 'Provider reconciliation failed',
+        error: message,
         errorCategory: 'transient',
       });
     } finally {
@@ -984,7 +982,7 @@ async function main(): Promise<void> {
       : DEFAULT_REFUND_RECONCILIATION_INTERVAL_MS;
   if (refundReconcileInterval !== refundReconcileRaw)
     logger.warn(
-      `Invalid REFUND_RECONCILIATION_SCAN_MS '${process.env['REFUND_RECONCILIATION_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_REFUND_RECONCILIATION_INTERVAL_MS}ms`
+      `Invalid REFUND_RECONCILIATION_SCAN_MS — falling back to ${DEFAULT_REFUND_RECONCILIATION_INTERVAL_MS}ms`
     );
   let refundReconcileInFlight = false;
   const refundReconciler = pollers.every(async () => {
@@ -1005,12 +1003,11 @@ async function main(): Promise<void> {
         });
       else await recordJobSuccess(REFUND_RECONCILIATION_JOB_TYPE);
     } catch (error) {
-      logger.error(
-        `Refund reconciliation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
-      );
+      const message = `Refund reconciliation failed: ${databaseFailureReason(error)}`;
+      logger.error(message);
       await recordJobFailure({
         jobType: REFUND_RECONCILIATION_JOB_TYPE,
-        error: error instanceof Error ? error.message : 'Refund reconciliation failed',
+        error: message,
         errorCategory: 'transient',
       });
     } finally {

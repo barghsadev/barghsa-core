@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import type { Pool, PoolClient } from 'pg';
 import { getDbPool } from '@barghsa/db';
 import { parseLedgerAmount } from '@barghsa/shared/finance';
+import { databaseFailureReason } from '../jobs/database-failure-reason.js';
 
 export const REFUND_RECONCILIATION_JOB_TYPE = 'refund_reconciliation_scan';
 export const DEFAULT_REFUND_RECONCILIATION_INTERVAL_MS = 60 * 60 * 1000;
@@ -199,9 +200,7 @@ export async function reconcileRefunds(options: { pool?: Pool; batchSize?: numbe
       result.reported++;
     } catch (error) {
       await client?.query('ROLLBACK').catch(() => {});
-      result.errors.push(
-        `${candidate.id}: ${error instanceof Error ? error.message : 'Refund reconciliation failed'}`
-      );
+      result.errors.push(`${candidate.id}: ${databaseFailureReason(error)}`);
     } finally {
       client?.release();
     }

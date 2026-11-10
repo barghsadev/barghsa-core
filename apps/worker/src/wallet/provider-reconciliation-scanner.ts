@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import type { Pool, PoolClient } from 'pg';
 import { getDbPool } from '@barghsa/db';
 import { ONLINE_TOPUP_EXPIRY_REASON, parseOnlineTopUpPendingTtlMs } from '@barghsa/shared/finance';
+import { databaseFailureReason } from '../jobs/database-failure-reason.js';
 
 export const PROVIDER_RECONCILIATION_JOB_TYPE = 'provider_reconciliation_scan';
 export const DEFAULT_PROVIDER_RECONCILIATION_INTERVAL_MS = 60 * 60 * 1000;
@@ -186,9 +187,7 @@ export async function reconcileProviderTransactions(
       result.reported++;
     } catch (error) {
       await client?.query('ROLLBACK').catch(() => {});
-      result.errors.push(
-        `${candidate.id}: ${error instanceof Error ? error.message : 'Provider reconciliation failed'}`
-      );
+      result.errors.push(`${candidate.id}: ${databaseFailureReason(error)}`);
     } finally {
       client?.release();
     }

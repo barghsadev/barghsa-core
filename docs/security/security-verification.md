@@ -109,6 +109,9 @@ record the job type while preserving retry and recovery behavior.
 Invoice overdue, reminder scheduling and top-up expiry scans log the operation,
 opaque record identifier when available and an allowlisted SQLSTATE category.
 Their retry records keep the same bounded diagnostics.
+Invoice, provider and refund reconciliation use the same safe diagnostic
+categories for candidate errors and poller failures. Reconciliation reports
+retain their existing restricted financial detail.
 Worker and inference process failures report the lifecycle stage. Production
 PostgreSQL pool errors report the event and level. These diagnostics omit
 exception text and connection details.

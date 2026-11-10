@@ -21,7 +21,7 @@ function fixture({ locked = true, current = snapshot, existing = false, failInse
     if (sql.startsWith('SELECT id FROM reconciliation_exceptions'))
       return { rows: existing ? [{ id }] : [] };
     if (sql.startsWith('INSERT INTO reconciliation_exceptions') && failInsert)
-      throw new Error('fixture insert failed');
+      throw Object.assign(new Error('fixture private invoice detail'), { code: '40P01' });
     return { rows: [] };
   });
   const release = vi.fn();
@@ -59,17 +59,17 @@ it('rolls back an insert failure, reports it and releases the client', async () 
   const f = fixture({ failInsert: true });
   const result = await reconcileInvoicePayments({ pool: f.pool });
   expect(result.reported).toBe(0);
-  expect(result.errors).toEqual([`${id}: fixture insert failed`]);
+  expect(result.errors).toEqual([`${id}: deadlock`]);
   expect(f.query.mock.calls.at(-1)).toEqual(['ROLLBACK']);
   expect(f.release).toHaveBeenCalledOnce();
 });
 it('records connection failure for one candidate and continues the remaining candidates', async () => {
   const f = fixture();
   f.raw.query.mockResolvedValue({ rows: [{ id }, { id: '22222222-2222-7222-8222-222222222222' }] });
-  f.raw.connect.mockRejectedValueOnce(new Error('fixture connection failed'));
+  f.raw.connect.mockRejectedValueOnce(new Error('fixture private connection detail'));
   const result = await reconcileInvoicePayments({ pool: f.pool });
   expect(result.reported).toBe(1);
-  expect(result.errors).toEqual([`${id}: fixture connection failed`]);
+  expect(result.errors).toEqual([`${id}: database operation failed`]);
   const inserted = f.query.mock.calls.find(([sql]) => sql.startsWith('INSERT'));
   expect(JSON.parse(String(inserted?.[1]?.[1])).invoiceId).toBe(
     '22222222-2222-7222-8222-222222222222'

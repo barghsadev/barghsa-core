@@ -1,6 +1,7 @@
 import type { Pool } from 'pg';
 import { getDbPool } from '@barghsa/db';
 import { INVOICE_BANK_RECEIPT_CHANNEL, parseLedgerAmount } from '@barghsa/shared/finance';
+import { databaseFailureReason } from '../jobs/database-failure-reason.js';
 
 export const INVOICE_RECONCILIATION_JOB_TYPE = 'invoice_reconciliation_scan';
 export const DEFAULT_INVOICE_RECONCILIATION_INTERVAL_MS = 60 * 60 * 1000;
@@ -153,9 +154,7 @@ export async function reconcileInvoicePayments(options: { pool?: Pool; batchSize
       result.reported++;
     } catch (error) {
       await client?.query('ROLLBACK').catch(() => {});
-      result.errors.push(
-        `${candidate.id}: ${error instanceof Error ? error.message : 'Invoice reconciliation failed'}`
-      );
+      result.errors.push(`${candidate.id}: ${databaseFailureReason(error)}`);
     } finally {
       client?.release();
     }
