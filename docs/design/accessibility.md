@@ -19,7 +19,7 @@ Fast CI also scans customer media pages and staff failed-notification triage.
 Full CI adds the same Axe scan to populated route presentation checks outside
 the critical cases.
 Axe violations and items that need manual review appear as workflow warnings
-with the route, browser, direction, rule and targets. The fast job also
+with the route, browser, direction, rule, impact and targets. The fast job also
 attaches a structured report. Existing journey assertions still fail on
 regressions.
 
@@ -27,6 +27,48 @@ For each finding, record whether the cause is in shared UI or in the page.
 Fix confirmed defects. Where automation cannot evaluate the result, record
 the manual check and its result, for example the contrast of text over a
 gradient. An exception needs a specific rule, scope, reason and owner approval.
+
+## Manual keyboard and screen-reader review
+
+Use an isolated staging candidate with synthetic identities, documents and
+funds. Record the commit, browser and OS versions, assistive technology
+version, account role, language, direction, theme and viewport. Run the
+keyboard checks with the screen reader off, then repeat the journeys with
+speech on. Use Persian RTL and English LTR, including mixed-direction invoice
+numbers, amounts and dates.
+
+| Setup                          | How to navigate                                                                                                                                                                                                                                                     |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Keyboard only                  | Use Tab and Shift+Tab through the page, Enter or Space to activate, arrow keys within composite controls, and Escape to dismiss. Enable full keyboard navigation in Safari before testing. [WAI keyboard checks](https://www.w3.org/WAI/test-evaluate/preliminary/) |
+| NVDA on Windows with Firefox   | Inspect headings, landmarks and controls in browse mode. Enter a form, operate its controls in focus mode, then resume reading. [NVDA user guide](https://api.nvaccess.org/documentation/userGuide.html)                                                            |
+| JAWS on Windows with Edge      | Use the heading and form-field lists, then enter the relevant control and check the switch into and out of forms mode. [JAWS web navigation guide](https://support.freedomscientific.com/Content/Documents/Manuals/JAWS/JAWS-Quick-Start-Guide.pdf)                 |
+| VoiceOver on macOS with Safari | Use the rotor to find headings, landmarks and form controls. Check the reading position and keyboard focus when entering and leaving a form or dialog. [Apple VoiceOver rotor guide](https://support.apple.com/en-lamr/guide/voiceover/mchlp2719/mac)               |
+
+- [ ] Sign in and exercise OTP, step-up and session expiry. Check the skip
+      link, page title, one main landmark, visible focus and a predictable first
+      control after navigation or an expired session.
+- [ ] Switch between a customer profile and an authorized staff workspace.
+      Check the spoken profile, selected workspace and heading. Navigate tabs,
+      comboboxes, menus, dialogs and separately scrollable tables in both
+      directions. Verify that focus stays inside a modal and returns to its
+      trigger, or to a logical successor when the trigger is gone.
+- [ ] Complete each launch journey through its review step. Exercise
+      electricity quantities, saving agreements, solar document selection and a
+      consultation response. Check that labels, requirements, progress, file
+      limits and error messages are available in context. Choose a file and
+      cancel a selection with the keyboard.
+- [ ] Review and confirm a synthetic wallet payment and staff approval.
+      Check the spoken amount, currency, destination, confirmation control and
+      outcome. Trigger one validation error and one retryable failure. Confirm
+      that valid values stay present and the status is announced once.
+- [ ] Repeat focus and error checks at a narrow viewport, with reduced motion
+      and with high contrast. Confirm that focus remains visible and that error,
+      selection and success states can be understood through text or semantics.
+
+Record pass, fail or untested per setup and journey. For a failure, capture
+the route, control, keystrokes, spoken result, expected result and the
+smallest replayable steps. Keep customer and payment identifiers out of the
+report. Attach the results to the candidate's existing release evidence.
 
 Use unrounded contrast ratios. Ordinary text needs 4.5:1. Large text and
 visual cues needed to identify or operate controls need 3:1. Measure control

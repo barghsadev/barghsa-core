@@ -22,7 +22,12 @@ export async function scanAdvisoryMain(page: Page, info: TestInfo) {
   const direction = await page.locator('html').getAttribute('dir');
   const browser = info.project.name;
   const summarize = (rules: typeof result.violations) =>
-    rules.map(({ id, help, nodes }) => ({ id, help, targets: nodes.map(({ target }) => target) }));
+    rules.map(({ id, help, impact, nodes }) => ({
+      id,
+      help,
+      impact: impact ?? null,
+      targets: nodes.map(({ target }) => target),
+    }));
   const violations = summarize(result.violations);
   const incomplete = summarize(result.incomplete);
   await info.attach('a11y-advisory', {
@@ -34,7 +39,7 @@ export async function scanAdvisoryMain(page: Page, info: TestInfo) {
     ['manual review', incomplete],
   ] as const) {
     for (const rule of rules) {
-      const message = `${route} (${browser}, ${direction}) ${kind} ${rule.id}: ${rule.help}; targets ${JSON.stringify(rule.targets)}`;
+      const message = `${route} (${browser}, ${direction}) ${kind} ${rule.id} (${rule.impact ?? 'unrated'}): ${rule.help}; targets ${JSON.stringify(rule.targets)}`;
       const escaped = message
         .replaceAll('%', '%25')
         .replaceAll('\r', '%0D')

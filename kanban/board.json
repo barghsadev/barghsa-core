@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T07:16:01+00:00",
-  "source_commit": "e195e28de328f766079d0acd2ee2e2eeaf828f1f",
+  "updated": "2026-11-10T07:21:34+00:00",
+  "source_commit": "5646a5256e460a173713a7e15d77ed347e9de26a",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -496385,19 +496385,84 @@
         "story": "06-security-testing-observability.md#spec-77cda1ff4488"
       },
       "requirement": "| T-06.11.01.03 | Add CI gate: axe violations block PR; track severity | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-accessibility-impact-and-manual-review"
+        ],
+        "current_acceptance": {
+          "kind": "verified-accessibility-ci-and-review-scope",
+          "reviewed_sha": "5646a5256e460a173713a7e15d77ed347e9de26a",
+          "checks": [
+            "GitHub Protect main ruleset 26844024 is active and requires Verify monorepo integrity from GitHub Actions app 15368. The required job depends on application quality. Exact preflight 42772013847 quality job 129681776193 passed critical accessibility and advisory steps; job 129684033530 passed the required integrity check. This is the CI gate receipt, not acceptance of the still-running full affected test job.",
+            "Critical Axe assertions remain byte-identical and fail on any violation in their tested scope. Advisory warnings and JSON now retain Axe impact, including unrated incomplete results. A current production-browser run passed four Chromium cases, producing six RTL/LTR advisory records with zero automated violations. Both staff notification triage views retain serious contrast items for manual measurement."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
+            },
+            {
+              "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
+              "sha256": "e426afca86cd4123d0e4a9ee77ad67f6496ecc60ba1e4df8e96c0c70bb2b6d15"
+            },
+            {
+              "path": "apps/web/e2e/critical-accessibility.ts",
+              "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
+            },
+            {
+              "path": "apps/web/e2e/customer-service-history-views.spec.ts",
+              "sha256": "1aaea8e0a7ba394e68df54ea5fe621b99cc7b4d7fe04037eb734441cb21a6f85"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+            },
+            {
+              "path": "apps/web/e2e/failed-notifications.spec.ts",
+              "sha256": "f958980c3dcbaf02cc621fe150abb4602e7fdce039a93287ed7938d956f9309b"
+            },
+            {
+              "path": "apps/web/e2e/login-ui.spec.ts",
+              "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
+            },
+            {
+              "path": "apps/web/e2e/route-presentation.ts",
+              "sha256": "3b8b1e8ea1c428bea8034336170811dd33171a51c028ece2fbabe6b2484f259b"
+            },
+            {
+              "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+            },
+            {
+              "path": "apps/web/e2e/workspace-media-routes.spec.ts",
+              "sha256": "281aeb4f4bf429353f97b28ae96ef4b039ba0b2ee75e392e95c196875ace6a7a"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "docs/design/accessibility.md",
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "acc5f4df899fea132ed03121d10e205838e901ab9d31cfec30ab08129e1b3ba8"
+            }
+          ]
+        }
       }
     },
     {
@@ -496411,19 +496476,32 @@
         "story": "06-security-testing-observability.md#spec-77cda1ff4488"
       },
       "requirement": "| T-06.11.01.04 | Document manual testing checklist for screen readers (NVDA/JAWS, VoiceOver) and keyboard-only | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-accessibility-impact-and-manual-review"
+        ],
+        "current_acceptance": {
+          "kind": "verified-accessibility-ci-and-review-scope",
+          "reviewed_sha": "5646a5256e460a173713a7e15d77ed347e9de26a",
+          "checks": [
+            "The existing accessibility guide includes a repeatable keyboard-only, NVDA/Firefox, JAWS/Edge and VoiceOver/Safari checklist. It covers Persian and English, launch service forms, document selection, wallet and staff approvals, visible focus, dialog restoration, preserved input and announcements.",
+            "The checklist records version, role, locale, viewport, theme, expected and spoken results and pass/fail/untested. Linked primary WAI and assistive-technology guides were checked. This accepts the documentation deliverable. No manual assistive-technology result is claimed."
+          ],
+          "source_evidence": [
+            {
+              "path": "docs/design/accessibility.md",
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+            }
+          ]
+        }
       }
     },
     {
@@ -542844,7 +542922,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-accessibility-impact-and-manual-review"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542868,7 +542947,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
+              "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
@@ -543032,7 +543111,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -543289,7 +543368,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-accessibility-impact-and-manual-review"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543309,7 +543389,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
+              "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -543425,7 +543505,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -543740,7 +543820,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-accessibility-impact-and-manual-review"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543760,7 +543841,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
+              "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -543876,7 +543957,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -544184,7 +544265,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-accessibility-impact-and-manual-review"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -544208,7 +544290,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
+              "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
@@ -544372,7 +544454,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -544650,7 +544732,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-react-output-safety-and-receipt-urls"
+          "release-0.6-react-output-safety-and-receipt-urls",
+          "release-0.6-accessibility-impact-and-manual-review"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -545954,7 +546037,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -546192,7 +546275,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-react-output-safety-and-receipt-urls"
+          "release-0.6-react-output-safety-and-receipt-urls",
+          "release-0.6-accessibility-impact-and-manual-review"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546408,7 +546492,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -547044,7 +547128,8 @@
           "release-0.5-order-notice-placement",
           "release-0.5-conditional-control-contrast",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-accessibility-impact-and-manual-review"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -547108,7 +547193,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -547220,7 +547305,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-accessibility-impact-and-manual-review"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -547240,7 +547326,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
+              "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -547356,7 +547442,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -547676,7 +547762,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-react-output-safety-and-receipt-urls"
+          "release-0.6-react-output-safety-and-receipt-urls",
+          "release-0.6-accessibility-impact-and-manual-review"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -547892,7 +547979,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -548229,7 +548316,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-test-fixtures-and-affected-dependents"
+          "release-0.6-test-fixtures-and-affected-dependents",
+          "release-0.6-accessibility-impact-and-manual-review"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548309,7 +548397,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
+              "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
@@ -548641,7 +548729,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -549087,7 +549175,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-test-fixtures-and-affected-dependents"
+          "release-0.6-test-fixtures-and-affected-dependents",
+          "release-0.6-accessibility-impact-and-manual-review"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549167,7 +549256,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
+              "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
@@ -549499,7 +549588,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -549917,7 +550006,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-react-output-safety-and-receipt-urls"
+          "release-0.6-react-output-safety-and-receipt-urls",
+          "release-0.6-accessibility-impact-and-manual-review"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550133,7 +550223,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -550470,7 +550560,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-test-fixtures-and-affected-dependents"
+          "release-0.6-test-fixtures-and-affected-dependents",
+          "release-0.6-accessibility-impact-and-manual-review"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550550,7 +550641,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
+              "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
@@ -550882,7 +550973,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -551279,7 +551370,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-test-fixtures-and-affected-dependents"
+          "release-0.6-test-fixtures-and-affected-dependents",
+          "release-0.6-accessibility-impact-and-manual-review"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -551299,7 +551391,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
+              "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -764065,7 +764157,7 @@
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
-              "sha256": "26c1eec14dcc0819954be255d1529b895382787d12a0510ebf7114aee5498392"
+              "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
@@ -766139,7 +766231,8 @@
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-accessibility-impact-and-manual-review"
         ]
       }
     },
@@ -871683,6 +871776,85 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/business-state-machine-unit-evidence",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "88e74465bac22b070d91e575361a08491e08730d2f5dd71c55f5e8e9e46c5984"
+    },
+    "release-0.6-accessibility-impact-and-manual-review": {
+      "batch": "release-0.6-accessibility-impact-and-manual-review",
+      "base_commit": "5646a5256e460a173713a7e15d77ed347e9de26a",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.01.04"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/critical-accessibility.ts",
+        "docs/design/accessibility.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
+        },
+        {
+          "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
+          "sha256": "e426afca86cd4123d0e4a9ee77ad67f6496ecc60ba1e4df8e96c0c70bb2b6d15"
+        },
+        {
+          "path": "apps/web/e2e/critical-accessibility.ts",
+          "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
+        },
+        {
+          "path": "apps/web/e2e/customer-service-history-views.spec.ts",
+          "sha256": "1aaea8e0a7ba394e68df54ea5fe621b99cc7b4d7fe04037eb734441cb21a6f85"
+        },
+        {
+          "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+          "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+        },
+        {
+          "path": "apps/web/e2e/failed-notifications.spec.ts",
+          "sha256": "f958980c3dcbaf02cc621fe150abb4602e7fdce039a93287ed7938d956f9309b"
+        },
+        {
+          "path": "apps/web/e2e/login-ui.spec.ts",
+          "sha256": "a91d9497fe05a10b3a1ff412989ee7444fbeb7cfb208ef6a5b6af5ae13109b6f"
+        },
+        {
+          "path": "apps/web/e2e/route-presentation.ts",
+          "sha256": "3b8b1e8ea1c428bea8034336170811dd33171a51c028ece2fbabe6b2484f259b"
+        },
+        {
+          "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+          "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+        },
+        {
+          "path": "apps/web/e2e/workspace-media-routes.spec.ts",
+          "sha256": "281aeb4f4bf429353f97b28ae96ef4b039ba0b2ee75e392e95c196875ace6a7a"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "acc5f4df899fea132ed03121d10e205838e901ab9d31cfec30ab08129e1b3ba8"
+        }
+      ],
+      "checks": [
+        "GitHub Protect main ruleset 26844024 is active and requires Verify monorepo integrity from GitHub Actions app 15368. The required job depends on application quality. Exact preflight 42772013847 quality job 129681776193 passed critical accessibility and advisory steps; job 129684033530 passed the required integrity check. This is the CI gate receipt, not acceptance of the still-running full affected test job.",
+        "Critical Axe assertions remain byte-identical and fail on any violation in their tested scope. Advisory warnings and JSON now retain Axe impact, including unrated incomplete results. A current production-browser run passed four Chromium cases, producing six RTL/LTR advisory records with zero automated violations. Both staff notification triage views retain serious contrast items for manual measurement.",
+        "The existing accessibility guide includes a repeatable keyboard-only, NVDA/Firefox, JAWS/Edge and VoiceOver/Safari checklist. It covers Persian and English, launch service forms, document selection, wallet and staff approvals, visible focus, dialog restoration, preserved input and announcements.",
+        "The checklist records version, role, locale, viewport, theme, expected and spoken results and pass/fail/untested. Linked primary WAI and assistive-technology guides were checked. This accepts the documentation deliverable. No manual assistive-technology result is claimed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/accessibility-impact-and-manual-review",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "8575b9cf184e3a0500bf74a8bfc3064b2bb21065c907a86f8d8008b97a76fe62"
     }
   },
   "historical_improvements": [

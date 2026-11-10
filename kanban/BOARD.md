@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T07:16:01+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T07:21:34+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1138 | Accepted with unchanged source bindings. |
-| verify | 170 | Existing work may be complete; inspect evidence before building. |
+| done | 1140 | Accepted with unchanged source bindings. |
+| verify | 168 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1306,8 +1306,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.03.17` | verify | Inventory needed | Add dedicated English/LTR smoke tests and Gregorian calendar boundary tests |
 | `06-security-testing-observability.md#T-06.11.01.01` | verify | Inventory needed | Integrate `@axe-core/playwright` into E2E pipeline; run on all critical pages |
 | `06-security-testing-observability.md#T-06.11.01.02` | verify | Inventory needed | Create accessibility test suite covering: keyboard navigation, focus visibility, contrast, labels, ARIA roles, error announcements, reduced motion |
-| `06-security-testing-observability.md#T-06.11.01.03` | verify | Inventory needed | Add CI gate: axe violations block PR; track severity |
-| `06-security-testing-observability.md#T-06.11.01.04` | verify | Inventory needed | Document manual testing checklist for screen readers (NVDA/JAWS, VoiceOver) and keyboard-only |
+| `06-security-testing-observability.md#T-06.11.01.03` | done | Recorded batch work | Add CI gate: axe violations block PR; track severity |
+| `06-security-testing-observability.md#T-06.11.01.04` | done | Recorded batch work | Document manual testing checklist for screen readers (NVDA/JAWS, VoiceOver) and keyboard-only |
 | `06-security-testing-observability.md#T-06.11.02.01` | done | Recorded batch work | Integrate OWASP ZAP for authenticated API scanning in staging environment |
 | `06-security-testing-observability.md#T-06.11.02.02` | done | Recorded batch work | Write targeted security test scenarios: CSRF, CORS misconfiguration, BOLA/IDOR, rate limit bypass, upload abuse, open redirect, SSRF, webhook replay, session rotation corner cases |
 | `06-security-testing-observability.md#T-06.11.02.03` | done | Recorded batch work | Configure Semgrep/CodeQL with security-focused rules for NestJS/Drizzle patterns |
