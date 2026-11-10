@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T13:19:36+00:00",
-  "source_commit": "5b603c877ee3a0e6887b7950c44c2d393556d87f",
+  "updated": "2026-11-10T13:23:35+00:00",
+  "source_commit": "b9df179c8226d3f71353f0c48f75189cee948ad0",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -492426,7 +492426,7 @@
       "launch_required": true,
       "remaining": [
         "The code gates cover immutable business documents, owner-scoped direct uploads and multipart template versions. New and retained template bytes are screened before extraction and publishing. The isolated native checks use controlled socket responses. The sealed worker now covers the full 100 MiB ceiling with a locally verified byte-integrity boundary. The video request and picker now also honor the full existing policy.",
-        "Verify the protected live scanner configuration and clean/EICAR, unavailable and retry receipts on the exact candidate. Live ClamAV signature refresh remains under vendor cooldown."
+        "Verify the protected live scanner configuration and clean/EICAR, unavailable and retry receipts on the exact candidate. The isolated official feed recheck returned HTTP 403 with a new cooldown until November 11 at 13:22:17 UTC. Provide a reachable approved mirror or restore vendor access."
       ],
       "owner": null,
       "depends_on": [],
@@ -492449,7 +492449,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-video-upload-policy-ceiling"
+          "release-0.6-video-upload-policy-ceiling",
+          "release-0.6-official-clamav-feed-recheck"
         ],
         "current_acceptance": null
       }
@@ -774128,7 +774129,7 @@
         "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO.",
         "Verify production-equivalent monitoring and quality schedules. The stage receiver has 16 private inbox delivery receipts including provider, dead-letter and SMS low-credit firing/recovery. All six external email legs were skipped because the channel was disabled. An authorized monitoring email recipient with an enabled verified channel and actual provider delivery receipt are still required.",
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
-        "Provide an authorized ClamAV signature feed and verify that the chosen staging scanner loads current vendor data, including clean and infected scan receipts. The direct stage feed returned HTTP 403 and a cooldown.",
+        "Provide an authorized ClamAV signature feed and verify that the chosen staging scanner loads current vendor data, including clean and infected scan receipts. The isolated retry on November 10 returned HTTP 403 and a renewed cooldown through November 11 at 13:22:17 UTC. Await an approved mirror or restored vendor access.",
         "Staging CSP report-only review found five cross-origin image reports and the live public branding response references the same barghsa.com favicon origin. Publish the preserved PNG as a sealed staging asset with authorized staff step-up, verify the byte-identical response and complete the full week of reviewed reports before enforcing CSP.",
         "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics.",
         "The live scanner reported 50M INSTREAM and September 28 signatures. The isolated source-matching image verifies the 100M scanner setting. Still prove fresh signed data and the approved scanner rollout, preserving the previous volume for rollback."
@@ -774153,7 +774154,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-video-upload-policy-ceiling"
+          "release-0.6-video-upload-policy-ceiling",
+          "release-0.6-official-clamav-feed-recheck"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -884291,6 +884293,40 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/native-credential-and-migration-acceptance",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "0f8aededfbc937295af026d5081ae7cb36fc5bcb34a82553aa70ce14aa883048"
+    },
+    "release-0.6-official-clamav-feed-recheck": {
+      "batch": "release-0.6-official-clamav-feed-recheck",
+      "base_commit": "b9df179c8226d3f71353f0c48f75189cee948ad0",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.01.01",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "5accedbaa9b8dbd596fcc4324150399379017e5b395704ffdc368cd0743b2da2"
+        },
+        {
+          "path": "deploy/clamav/healthcheck.sh",
+          "sha256": "23bf1005115c965d5584ce4cd4aee7b7e645e0e71f334141109c5c8a00760229"
+        },
+        {
+          "path": "docs/operations/clamav-signatures.md",
+          "sha256": "c932c865778993427b9b0022901fdc981ace2deece6cc8fb8e5a11134f50f0bc"
+        },
+        {
+          "path": "docs/operations/document-scanning.md",
+          "sha256": "e08ad767219759b2288e3e9b383c29c9913601bfc46991d48b45ebaa6d435f85"
+        }
+      ],
+      "checks": [
+        "At 13:22 UTC on 10 November, the isolated 100M scanner image 9b03670406718952efd5f5451e327594ad4b30877091ea214e20a2029245ea0c made one official FreshClam update attempt after the vendor cooldown. CDN returned HTTP 403, FreshClam exited 17 and set the next cooldown to 11 November at 13:22:17 UTC.",
+        "The active staging scanner reported the same ClamAV 1.5.4 daily 28137 dated September 28 before and after. No fresh vendor signature, isolated real clean/EICAR verdict, or scanner rollout acceptance is claimed. A protected approved private mirror reachable from staging or restored vendor access is required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/official-clamav-feed-recheck",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "939a3f9dba431e96a3cefac8d1bb269882c8017af14b946411f006dae4a848fe"
     }
   },
   "historical_improvements": [
