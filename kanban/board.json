@@ -14736,11 +14736,12 @@
         "story": "01-platform-infrastructure.md#spec-e250c6a91715"
       },
       "requirement": "- **T-05.05.03:** Create quarterly disaster-recovery and restore exercise\n  - **Notes:** Cron: quarterly on first Saturday. Steps: (1) Restore PostgreSQL from latest backup in isolated environment, measure RPO and RTO. (2) Restore object storage from backup/versioning. (3) DR simulation: bring up a fresh deployment from backups in a separate environment, verify critical user journey works. (4) Document measured RPO/RTO. Alert if RPO > 5 min or RTO > 60 min for core services.\n  - **Dependencies:** T-04.01.05\n  - **Complexity:** XL",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Enable the validated schedule on the approved dedicated backup host after verifying authenticated off-server storage, isolated capacity, key recovery, independent baseline capture and authorized alert delivery.",
+        "Execute and retain the production-equivalent PostgreSQL and object-storage restores, separate fresh deployment and critical journey, measured core-service RPO/RTO and tested alert receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -14770,7 +14771,9 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-quarterly-database-restore-calendar"
+        ],
         "current_acceptance": null
       }
     },
@@ -19375,7 +19378,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "2847d70d254764dde8123bc4d132f8b0e809ac0e667282cea7f5e6c519799374"
+              "sha256": "8e57e18c8adf121a34a8f6128a33297a3f05720ec60ecda222600061890738c3"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -19390,6 +19393,14 @@
                 ".env.example"
               ],
               "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            },
+            {
+              "batch": "release-0.6-quarterly-database-restore-calendar",
+              "base_commit": "3ba84a82dfcf1881ed28e29bce26cce87481d93f",
+              "paths": [
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "Correct the documented calendar to the first Saturday of each quarter at the existing hour. The isolation, RPO/RTO and alert procedures retain their existing evidence."
             }
           ]
         }
@@ -515085,18 +515096,20 @@
         "story": "06-security-testing-observability.md#spec-9df3f15eb1bf"
       },
       "requirement": "| T-06.11.04.04 | Schedule quarterly PostgreSQL restore test: measure RPO/RTO, document in runbook | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Read back the installed timer on the approved dedicated backup host, execute its isolated restore against an authenticated off-server backup and independent baseline, and retain measured RPO/RTO and failure-alert receipts."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-quarterly-database-restore-calendar"
+        ],
         "current_acceptance": null
       }
     },
@@ -520153,7 +520166,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "2847d70d254764dde8123bc4d132f8b0e809ac0e667282cea7f5e6c519799374"
+              "sha256": "8e57e18c8adf121a34a8f6128a33297a3f05720ec60ecda222600061890738c3"
             }
           ],
           "checks": [
@@ -520184,6 +520197,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
+            },
+            {
+              "batch": "release-0.6-quarterly-database-restore-calendar",
+              "base_commit": "3ba84a82dfcf1881ed28e29bce26cce87481d93f",
+              "paths": [
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "Correct the documented calendar to the first Saturday of each quarter at the existing hour. The isolation, RPO/RTO and alert procedures retain their existing evidence."
             }
           ]
         }
@@ -912156,6 +912177,50 @@
         {
           "file": "issue-repository.json",
           "sha256": "7664136f7934e2ea49eb382b39fb649aa78edb589f20d71175f221b08e180312"
+        }
+      ]
+    },
+    "release-0.6-quarterly-database-restore-calendar": {
+      "batch": "release-0.6-quarterly-database-restore-calendar",
+      "base_commit": "3ba84a82dfcf1881ed28e29bce26cce87481d93f",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.03",
+        "06-security-testing-observability.md#T-06.11.04.04"
+      ],
+      "changed_paths": [
+        "docs/operations/backup/postgresql-restore-runbook.md",
+        "packages/db/scripts/backup/systemd/barghsa-db-restore-exercise.timer"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/backup/postgresql-restore-runbook.md",
+          "sha256": "8e57e18c8adf121a34a8f6128a33297a3f05720ec60ecda222600061890738c3"
+        },
+        {
+          "path": "packages/db/scripts/backup/systemd/barghsa-db-restore-exercise.timer",
+          "sha256": "ecd7198d6932da81b89db64ea772537c4c8f88f02ec757b30d75aac32f43fee6"
+        },
+        {
+          "path": "packages/db/scripts/backup/systemd/barghsa-db-restore-exercise.service",
+          "sha256": "92381d36a16dfeb4dbf8ac28770f7721ad2d96371b443d4ea21a5c67dffc28f5"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify-restore.sh",
+          "sha256": "615d8615db6e893b642eed3e5e6ec0676b1cd274bbd89cdbfefd36a706d12169"
+        }
+      ],
+      "checks": [
+        "Linux systemd-analyze parsed the timer calendar and returned all twelve expected first Saturdays in January, April, July and October of 2026 through 2028 at 03:00 UTC. The independent date check includes the first and seventh days of a month. Persistent catch-up and the existing isolated restore service target were verified.",
+        "The operator runbook records the corrected schedule, independent source baseline, WAL replay RPO, measured database RTO, failure notification and separate core service cutover evidence. Prettier and whitespace checks passed. The schedule proof ran without installing or starting a timer, and provides no backup, recovery or alert receipt."
+      ],
+      "proof_logs": [
+        {
+          "file": "restore-timer-calendar.log",
+          "sha256": "934e56086bd3588274bd02881cbec0f2602cde0a61b150269bf3bca3ca1e7b32"
+        },
+        {
+          "file": "restore-timer-check.log",
+          "sha256": "e789bd7d12b85e294280fb57c786d88bec20a642efc602e63065ec761124c7c2"
         }
       ]
     }

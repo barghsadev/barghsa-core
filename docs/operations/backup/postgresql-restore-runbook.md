@@ -189,8 +189,8 @@ and private workspace `/var/lib/barghsa-backup`. Install the pinned requirements
 into that environment. Supply `/etc/barghsa/backup.env` from managed secrets.
 The daily job uses `run_backup_job.py`: it prunes only after a successful backup
 and sends backup or retention failures to the same configured alert receiver.
-The quarterly job runs January,
-April, July and October1 at03:00 UTC. Both timers catch up missed executions.
+The quarterly job runs at 03:00 UTC on the first Saturday of January, April,
+July and October. Both timers catch up missed executions.
 
 Install/enable those timers only after checking storage access, source baseline
 preparation, key recovery, failure-alert delivery and disk capacity. No timer is

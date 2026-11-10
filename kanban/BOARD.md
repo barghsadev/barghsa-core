@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1196 | Accepted with unchanged source bindings. |
-| verify | 108 | Existing work may be complete; inspect evidence before building. |
-| partial | 56 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 106 | Existing work may be complete; inspect evidence before building. |
+| partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1044,7 +1044,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.04.04` | partial | Earlier deferred | Create runbooks for rollback scenarios |
 | `01-platform-infrastructure.md#T-05.05.01` | partial | Earlier deferred | Create nightly CI schedule |
 | `01-platform-infrastructure.md#T-05.05.02` | partial | Earlier deferred | Create weekly load/performance regression test |
-| `01-platform-infrastructure.md#T-05.05.03` | verify | Earlier deferred | Create quarterly disaster-recovery and restore exercise |
+| `01-platform-infrastructure.md#T-05.05.03` | partial | Earlier deferred | Create quarterly disaster-recovery and restore exercise |
 | `01-platform-infrastructure.md#T-05.05.04` | verify | Earlier deferred | Create quarterly access review and threat-model update |
 | `01-platform-infrastructure.md#T-06.01.01` | done | Earlier deferred | Initialize `packages/shared` with tsconfig and dependencies |
 | `01-platform-infrastructure.md#T-06.01.02` | done | Earlier deferred | Create username validation and normalization helpers |
@@ -1321,7 +1321,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.11.04.01` | done | Recorded batch work | Write failure-injection tests: provider timeout → circuit breaker → queue; Redis unavailable → fallback to PG |
 | `06-security-testing-observability.md#T-06.11.04.02` | done | Recorded batch work | Write worker reliability tests: crash during job → reprocess or dead-letter; duplicate delivery → idempotency |
 | `06-security-testing-observability.md#T-06.11.04.03` | done | Recorded batch work | Write DB connection exhaustion test: pool full → queue/backpressure → graceful degradation |
-| `06-security-testing-observability.md#T-06.11.04.04` | verify | Inventory needed | Schedule quarterly PostgreSQL restore test: measure RPO/RTO, document in runbook |
+| `06-security-testing-observability.md#T-06.11.04.04` | partial | Recorded batch work | Schedule quarterly PostgreSQL restore test: measure RPO/RTO, document in runbook |
 | `06-security-testing-observability.md#T-06.11.04.05` | verify | Inventory needed | Schedule quarterly object storage recovery test: version retrieval, policy enforcement, orphan detection |
 | `06-security-testing-observability.md#T-06.11.04.06` | done | Recorded batch work | Write reconciliation tests: deliberately inconsistent fixtures → mismatch alert → finance exception |
 | `06-security-testing-observability.md#T-06.12.01.01` | done | Recorded batch work | Configure Vitest coverage thresholds per package with different target levels for critical vs non-critical |
