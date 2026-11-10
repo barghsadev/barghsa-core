@@ -8,6 +8,14 @@ Set `AI_INFERENCE_SHARED_SECRET` to the same random value of at least 32 charact
 
 The API's FIFO gate admits 10 AI requests per process and waits up to 30 seconds by default. `AI_INFERENCE_MAX_CONCURRENCY`, `AI_INFERENCE_QUEUE_TIMEOUT_MS`, and `AI_INFERENCE_MAX_PENDING` tune it. The AI process separately rejects work above its active-call limit, using `AI_INFERENCE_MAX_CONCURRENCY`. The process-local API queue does not coordinate FIFO order across API replicas.
 
+Customer knowledge allows five questions per minute per account and active
+profile, with three concurrent customer questions across API replicas sharing
+the database. The linked Telegram assistant applies its own five-per-minute
+limit to the account and linked profile. Test chat allows ten questions per
+minute per staff account. Agent policies can apply a lower limit before
+inference. Monthly model budgets can cap both tokens and USD cost. The first
+inference in a new UTC month resets their counters. [Approved AI budget design](../../kanban/epics/05-notifications-documents-ai.md).
+
 Check `GET /health/ready` on the private AI port for its database connectivity and active-call saturation. Staff with `admin:ai:models` can use `GET /api/ai/health` for queue and circuit state. Core `/api/health/ready` stays independent of the AI process. If the AI process is unavailable, agent chat returns `AI_INFERENCE_UNAVAILABLE` (503); budget and circuit state are not charged as a provider failure.
 
 The private API scrape exposes completion duration and count by model and

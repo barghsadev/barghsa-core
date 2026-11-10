@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T06:21:17+00:00",
-  "source_commit": "ecca190624d0ac9936ed3858f4bfd5c157bf60b0",
+  "updated": "2026-11-10T06:23:42+00:00",
+  "source_commit": "cbb9186d474045321a9357007b8fbddf4f783f19",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -110755,7 +110755,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-immutable-staging-acceptance",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -111147,7 +111148,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "packages/db/drizzle/production/0273_telegram_profile_linkage.sql",
@@ -469997,7 +469998,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -470245,7 +470247,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -470579,7 +470581,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -470827,7 +470830,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -471159,7 +471162,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -471407,7 +471411,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -471739,7 +471743,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -471987,7 +471992,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -472818,7 +472823,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -473066,7 +473072,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -473445,7 +473451,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-immutable-staging-acceptance",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -473837,7 +473844,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -474610,7 +474617,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -474858,7 +474866,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -475189,7 +475197,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -475437,7 +475446,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -475769,7 +475778,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -476017,7 +476027,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -476350,7 +476360,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -476598,7 +476609,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -476953,7 +476964,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -477201,7 +477213,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -477532,7 +477544,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -477780,7 +477793,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -488711,19 +488724,89 @@
         "story": "06-security-testing-observability.md#spec-07c59e0b9397"
       },
       "requirement": "| T-06.05.02.08 | Configure AI limits: per-user requests, concurrency, token, cost budgets; stricter for tool-enabled actions | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-ai-quotas-and-budget-evidence"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-ai-quotas-and-budgets",
+          "reviewed_sha": "cbb9186d474045321a9357007b8fbddf4f783f19",
+          "checks": [
+            "Current customer and Telegram questions charge five per account-and-profile pair per minute. Staff live guidance charges five and test chat ten per account across sessions. The public channel has its independent trusted-IP HMAC quota. Policy quotas can further restrict admitted requests.",
+            "Current customer capacity uses three database advisory slots. The API FIFO and private inference process have separate bounded concurrency. The approved model budget supports simultaneous token and cost caps with atomic actual usage accounting and UTC lazy reset. The approved read-only launch has no AI business tool or write actions.",
+            "Exact hosted run 42757750063 job 129636126527 passed 86 selected customer, staff/public, administrator, model-budget, model-breaker and inference-server cases. The tests and governing source match this batch. The per-channel Telegram quota was checked in the current linked admission and inference source."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/ai-agents/ai-inference-queue.ts",
+              "sha256": "3f73ec24553b66f34220f0c85f9a825f4c282bf7887dfebb020eda0e51e19cb2"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-model-budget.ts",
+              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
+              "sha256": "5dc79440360c10d845959f2688a58018f52e148bbb5fc978e1f0140456af8a38"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-test-chat.service.ts",
+              "sha256": "64f1e21c7208b0922720908f060797ab1b5b51b84af01d2d206278c7620d9071"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+              "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+            },
+            {
+              "path": "apps/api/src/telegram/telegram-runtime.service.ts",
+              "sha256": "6bb0667086f5d4151c1feba75fff4b03218d58cc88273c6139f4cc99e1b5692a"
+            },
+            {
+              "path": "apps/worker/src/ai-inference/server.test.ts",
+              "sha256": "e3fab55f489d88c0258b967144e450d429c6334996140340bad78669758140d0"
+            },
+            {
+              "path": "apps/worker/src/ai-inference/server.ts",
+              "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+            },
+            {
+              "path": "docs/decisions/ai-assistant-delivery.md",
+              "sha256": "8b98850062cb3962ebd66352b0cfacb2c08e1f38c1fbdd97d84a2aabbd4907ae"
+            },
+            {
+              "path": "docs/operations/ai-inference.md",
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+            }
+          ]
+        }
       }
     },
     {
@@ -497987,7 +498070,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-ai-inference-metrics",
-          "release-0.6-runtime-failure-log-redaction"
+          "release-0.6-runtime-failure-log-redaction",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-ai-provider-attempts-and-durable-budget-metrics",
@@ -498019,7 +498103,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
@@ -500365,7 +500449,8 @@
           "2026-09-24-capability-maintenance",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-ai-inference-metrics",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -500433,7 +500518,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -500520,7 +500605,8 @@
         "batches": [
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-ai-inference-metrics",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -500588,7 +500674,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -500676,7 +500762,8 @@
           "2026-10-05-maintenance-settings-forms",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-ai-inference-metrics",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -500744,7 +500831,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -500858,7 +500945,8 @@
           "2026-09-24-capability-maintenance",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-ai-inference-metrics",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -500926,7 +501014,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -755180,7 +755268,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "docs/operations/async-jobs.md",
@@ -756959,7 +757047,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-provider-command-unknown-fields"
+          "release-0.6-provider-command-unknown-fields",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -759164,7 +759253,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
             },
             {
               "path": "docs/operations/async-jobs.md",
@@ -760849,7 +760938,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-provider-command-unknown-fields"
+          "release-0.6-provider-command-unknown-fields",
+          "release-0.6-ai-quotas-and-budget-evidence"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -868970,6 +869060,86 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/provider-command-input",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "9140a20fb917627b05f3656f9691b906be5c96c649bc413fdfba9a4b12118267"
+    },
+    "release-0.6-ai-quotas-and-budget-evidence": {
+      "batch": "release-0.6-ai-quotas-and-budget-evidence",
+      "base_commit": "cbb9186d474045321a9357007b8fbddf4f783f19",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.05.02.08"
+      ],
+      "changed_paths": [
+        "docs/operations/ai-inference.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-queue.ts",
+          "sha256": "3f73ec24553b66f34220f0c85f9a825f4c282bf7887dfebb020eda0e51e19cb2"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+          "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
+          "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
+          "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+          "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-budget.ts",
+          "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+          "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-test-chat-http.integration.test.ts",
+          "sha256": "5dc79440360c10d845959f2688a58018f52e148bbb5fc978e1f0140456af8a38"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-test-chat.service.ts",
+          "sha256": "64f1e21c7208b0922720908f060797ab1b5b51b84af01d2d206278c7620d9071"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+          "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+        },
+        {
+          "path": "apps/api/src/telegram/telegram-runtime.service.ts",
+          "sha256": "6bb0667086f5d4151c1feba75fff4b03218d58cc88273c6139f4cc99e1b5692a"
+        },
+        {
+          "path": "apps/worker/src/ai-inference/server.test.ts",
+          "sha256": "e3fab55f489d88c0258b967144e450d429c6334996140340bad78669758140d0"
+        },
+        {
+          "path": "apps/worker/src/ai-inference/server.ts",
+          "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+        },
+        {
+          "path": "docs/decisions/ai-assistant-delivery.md",
+          "sha256": "8b98850062cb3962ebd66352b0cfacb2c08e1f38c1fbdd97d84a2aabbd4907ae"
+        },
+        {
+          "path": "docs/operations/ai-inference.md",
+          "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+        }
+      ],
+      "checks": [
+        "Current customer and Telegram questions charge five per account-and-profile pair per minute. Staff live guidance charges five and test chat ten per account across sessions. The public channel has its independent trusted-IP HMAC quota. Policy quotas can further restrict admitted requests.",
+        "Current customer capacity uses three database advisory slots. The API FIFO and private inference process have separate bounded concurrency. The approved model budget supports simultaneous token and cost caps with atomic actual usage accounting and UTC lazy reset. The approved read-only launch has no AI business tool or write actions.",
+        "Exact hosted run 42757750063 job 129636126527 passed 86 selected customer, staff/public, administrator, model-budget, model-breaker and inference-server cases. The tests and governing source match this batch. The per-channel Telegram quota was checked in the current linked admission and inference source."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/ai-quota-evidence",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "1d842f9eb764a27100de2076dd87fcdd140a74b3d035fecc47ca2305556ad381"
     }
   },
   "historical_improvements": [

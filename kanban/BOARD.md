@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T06:21:17+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T06:23:42+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1126 | Accepted with unchanged source bindings. |
-| verify | 184 | Existing work may be complete; inspect evidence before building. |
+| done | 1127 | Accepted with unchanged source bindings. |
+| verify | 183 | Existing work may be complete; inspect evidence before building. |
 | partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1195,7 +1195,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.05.02.05` | done | Recorded batch work | Configure order/consultation limits: 5 per profile/minute; idempotency key as secondary protect |
 | `06-security-testing-observability.md#T-06.05.02.06` | verify | Inventory needed | Configure wallet/payment/refund limits: 10 per profile/minute; stricter provider+anomaly controls |
 | `06-security-testing-observability.md#T-06.05.02.07` | verify | Inventory needed | Configure file upload limits: 20 per profile/minute; concurrent upload, size, storage quotas |
-| `06-security-testing-observability.md#T-06.05.02.08` | verify | Inventory needed | Configure AI limits: per-user requests, concurrency, token, cost budgets; stricter for tool-enabled actions |
+| `06-security-testing-observability.md#T-06.05.02.08` | done | Recorded batch work | Configure AI limits: per-user requests, concurrency, token, cost budgets; stricter for tool-enabled actions |
 | `06-security-testing-observability.md#T-06.05.02.09` | verify | Inventory needed | Admin UI: view/edit limits within safe min/max bounds; versioned configuration |
 | `06-security-testing-observability.md#T-06.05.02.10` | verify | Inventory needed | Emergency rule engine: security can set temporary rules with owner, expiry, reason, audit record |
 | `06-security-testing-observability.md#T-06.05.02.11` | verify | Inventory needed | Write tests: each action limit enforced correctly, admin tuning, emergency override |
