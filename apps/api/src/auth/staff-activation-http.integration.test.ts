@@ -8,11 +8,11 @@ let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const token = `v2_${'b'.repeat(64)}`;
 const tokenHash = createHash('sha256').update(token).digest('hex');
 const newPassword = 'Activated-staff-password-123!';
-const activate = () =>
+const activate = (extra: Record<string, unknown> = {}) =>
   fetchWithPreauth(`${http.base}/api/auth/activate-staff`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ token, invitation: tokenHash, newPassword }),
+    body: JSON.stringify({ token, invitation: tokenHash, newPassword, ...extra }),
   });
 
 beforeEach(async () => {
@@ -131,6 +131,8 @@ it('rolls back staff activation when the token expires during audit persistence'
 });
 
 it('activates once and invalidates only that account credentials in the same audited transaction', async () => {
+  expect((await activate({ role: 'admin' })).status).toBe(400);
+  await unchanged();
   const responses = await Promise.all([activate(), activate()]);
   expect(responses.map((r) => r.status).sort()).toEqual([200, 401]);
   const success = responses.find((r) => r.status === 200)!;

@@ -3,7 +3,7 @@ import { z } from 'zod';
 /**
  * Zod schema for initiating an add-contact flow (send OTP to new contact).
  */
-export const AddContactSendOtpSchema = z.object({
+export const AddContactSendOtpSchema = z.strictObject({
   contactType: z.enum(['email', 'mobile'], { message: 'VALIDATION:INPUT:INVALID' }),
   contactValue: z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' }).max(255),
 });
@@ -13,7 +13,7 @@ export type AddContactSendOtpInput = z.infer<typeof AddContactSendOtpSchema>;
 /**
  * Zod schema for completing the add-contact flow (verify OTP).
  */
-export const AddContactVerifySchema = z.object({
+export const AddContactVerifySchema = z.strictObject({
   contactType: z.enum(['email', 'mobile'], { message: 'VALIDATION:INPUT:INVALID' }),
   contactValue: z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' }).max(255),
   otpChallengeId: z.string().uuid({ message: 'VALIDATION:INPUT:INVALID' }),

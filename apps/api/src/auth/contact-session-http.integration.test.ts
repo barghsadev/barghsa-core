@@ -132,6 +132,12 @@ it.each(['change-username', 'add-contact'])(
         headers,
         body: JSON.stringify(body),
       });
+    expect(
+      (await post(`${operation}/send-otp`, { ...input, profileId: 'unexpected' })).status
+    ).toBe(400);
+    expect(
+      (await http.pool.query('SELECT count(*)::int AS count FROM otp_challenges')).rows[0].count
+    ).toBe(0);
     const issued = await post(`${operation}/send-otp`, input);
     expect(issued.status, await issued.clone().text()).toBe(200);
     const { challengeId } = (await issued.json()) as { challengeId: string };
@@ -144,6 +150,7 @@ it.each(['change-username', 'add-contact'])(
       otp: '123456',
       ...(username ? { previousOtp: '123456' } : {}),
     };
+    expect((await post(operation, { ...body, profileId: 'unexpected' })).status).toBe(400);
     const response = await post(operation, body);
     expect(response.status, await response.clone().text()).toBe(200);
     expect(

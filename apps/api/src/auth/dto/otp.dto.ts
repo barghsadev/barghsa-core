@@ -3,7 +3,7 @@ import { z } from 'zod';
 /**
  * Zod schema for OTP verification request body.
  */
-export const VerifyOtpSchema = z.object({
+export const VerifyOtpSchema = z.strictObject({
   challengeId: z.string().uuid({ message: 'VALIDATION:INPUT:INVALID' }),
   otp: z
     .string()
@@ -33,7 +33,7 @@ export interface RegisterVerifyResponse {
 /**
  * OTP resend request body.
  */
-export const ResendOtpSchema = z.object({
+export const ResendOtpSchema = z.strictObject({
   challengeId: z.string().uuid({ message: 'VALIDATION:INPUT:INVALID' }),
 });
 

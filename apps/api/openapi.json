@@ -25302,6 +25302,50 @@
       "post": {
         "operationId": "AuthController_activateStaff",
         "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "invitation": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  },
+                  "newPassword": {
+                    "allOf": [
+                      {
+                        "pattern": "[A-Z]",
+                        "type": "string"
+                      },
+                      {
+                        "pattern": "[a-z]",
+                        "type": "string"
+                      },
+                      {
+                        "pattern": "[0-9]",
+                        "type": "string"
+                      }
+                    ],
+                    "maxLength": 128,
+                    "minLength": 8,
+                    "type": "string"
+                  },
+                  "token": {
+                    "pattern": "^v2_[a-f0-9]{64}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "newPassword",
+                  "token"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": ""
@@ -25321,6 +25365,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "contactType": {
                     "enum": [
@@ -25389,6 +25434,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "contactType": {
                     "enum": [
@@ -25441,6 +25487,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "newUsername": {
                     "maxLength": 255,
@@ -25506,6 +25553,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "newUsername": {
                     "maxLength": 255,
@@ -25581,6 +25629,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "newPassword": {
                     "allOf": [
@@ -25644,6 +25693,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "username": {
                     "maxLength": 255,
@@ -25701,8 +25751,10 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "deviceInfo": {
+                    "additionalProperties": false,
                     "properties": {
                       "fingerprint": {
                         "maxLength": 256,
@@ -25794,6 +25846,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "challengeId": {
                     "format": "uuid",
@@ -25832,6 +25885,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "challengeId": {
                     "format": "uuid",
@@ -25986,6 +26040,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "password": {
                     "allOf": [
@@ -26070,6 +26125,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "challengeId": {
                     "format": "uuid",
@@ -26108,6 +26164,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "challengeId": {
                     "format": "uuid",

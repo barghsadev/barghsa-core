@@ -68,6 +68,15 @@ import { RefreshCsrfGuard } from '../session/refresh-csrf.guard.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 
+const StaffActivationSchema = z.strictObject({
+  newPassword: ResetPasswordStrengthSchema,
+  token: z.string().regex(/^v2_[a-f0-9]{64}$/),
+  invitation: z
+    .string()
+    .regex(/^[a-f0-9]{64}$/)
+    .optional(),
+});
+
 function sessionAcknowledgement(sessionId: string, csrfToken: string, expiresAt: string) {
   return { sessionId: sessionReference(sessionId), csrfToken, expiresAt };
 }
@@ -431,21 +440,13 @@ export class AuthController {
    * - 5 attempts per IP per hour
    */
   @RequirePreauthCsrf()
+  @ApiZodBody(StaffActivationSchema)
   @Post('activate-staff')
   @HttpCode(200)
   @RateLimit({ namespace: 'activate-staff:ip', limit: 10, windowMs: 900_000, security: true })
   @ApiOperation({ summary: 'Consume a staff activation link and set a password' })
   async activateStaff(@Body() body: unknown, @Req() req: Request): Promise<{ activated: true }> {
-    const parsed = z
-      .object({ newPassword: ResetPasswordStrengthSchema })
-      .extend({
-        token: z.string().regex(/^v2_[a-f0-9]{64}$/),
-        invitation: z
-          .string()
-          .regex(/^[a-f0-9]{64}$/)
-          .optional(),
-      })
-      .safeParse(body);
+    const parsed = StaffActivationSchema.safeParse(body);
     if (!parsed.success)
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },

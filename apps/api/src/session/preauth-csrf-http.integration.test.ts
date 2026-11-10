@@ -161,13 +161,40 @@ it('allows only one concurrent use, with no authenticated session promotion', as
   expect(results.map((r) => r.status).sort()).toEqual([401, 403]);
 });
 
+it('rejects unexpected login and device fields before establishing a session', async () => {
+  const credentials = { username: 'preauth@example.test', password };
+  const query = "SELECT count(*)::int AS count FROM sessions WHERE user_id='preauth-user'";
+  const before = (await http.pool.query(query)).rows[0].count;
+  for (const body of [
+    { ...credentials, role: 'admin' },
+    { ...credentials, deviceInfo: { userAgent: 'fixture', profileId: 'unexpected' } },
+  ]) {
+    const anonymous = await bootstrap();
+    const response = await post(
+      'login',
+      `${anonymous.cookie}; barghsa_device=${device}`,
+      anonymous.token,
+      body
+    );
+    expect(response.status).toBe(401);
+    expect(
+      response.headers.getSetCookie().some((cookie) => cookie.startsWith('barghsa_session='))
+    ).toBe(false);
+  }
+  expect((await http.pool.query(query)).rows[0].count).toBe(before);
+});
+
 it('replaces anonymous CSRF with the authenticated token and never logs credentials', async () => {
   const anonymous = await bootstrap();
   const response = await post(
     'login',
     `${anonymous.cookie}; barghsa_device=${device}`,
     anonymous.token,
-    { username: 'preauth@example.test', password }
+    {
+      username: 'preauth@example.test',
+      password,
+      deviceInfo: { userAgent: 'legacy browser', fingerprint: 'ignored legacy hint' },
+    }
   );
   expect(response.status, await response.clone().text()).toBe(200);
   const body = (await response.json()) as {

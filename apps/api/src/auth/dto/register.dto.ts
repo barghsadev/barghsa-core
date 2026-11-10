@@ -12,7 +12,7 @@ import { z } from 'zod';
  * - Normalizes Iranian mobile to E.164 on the backend.
  * - Validates password minimum requirements.
  */
-export const RegisterSchema = z.object({
+export const RegisterSchema = z.strictObject({
   username: z
     .string()
     .trim()

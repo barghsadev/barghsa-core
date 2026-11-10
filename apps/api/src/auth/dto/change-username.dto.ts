@@ -19,7 +19,7 @@ const usernameSchema = z
 /**
  * Zod schema for initiating a username change (sends OTP).
  */
-export const ChangeUsernameSendOtpSchema = z.object({
+export const ChangeUsernameSendOtpSchema = z.strictObject({
   newUsername: usernameSchema,
 });
 
@@ -28,7 +28,7 @@ export type ChangeUsernameSendOtpInput = z.infer<typeof ChangeUsernameSendOtpSch
 /**
  * Zod schema for completing a username change (verifies OTP).
  */
-export const ChangeUsernameVerifySchema = z.object({
+export const ChangeUsernameVerifySchema = z.strictObject({
   newUsername: usernameSchema,
   previousOtp: z.string().regex(/^\d{6}$/, { message: 'VALIDATION:INPUT:INVALID' }),
   otpChallengeId: z.string().uuid({ message: 'VALIDATION:INPUT:INVALID' }),

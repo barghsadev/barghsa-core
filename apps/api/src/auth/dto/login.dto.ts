@@ -12,7 +12,7 @@ import { z } from 'zod';
  * - Password is required (no strength re-validation — already enforced at registration).
  * - Legacy device info is accepted but ignored for trust; HTTP uses an opaque device cookie.
  */
-export const LoginSchema = z.object({
+export const LoginSchema = z.strictObject({
   username: z
     .string()
     .trim()
@@ -23,7 +23,7 @@ export const LoginSchema = z.object({
     .refine(isAuthenticationUsername, { message: 'VALIDATION:INPUT:INVALID' }),
   password: z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' }),
   deviceInfo: z
-    .object({
+    .strictObject({
       userAgent: z.string().max(512).optional(),
       fingerprint: z.string().max(256).optional(),
     })
@@ -71,7 +71,7 @@ export interface LoginResponse {
 /**
  * Zod schema for login OTP verification request body.
  */
-export const LoginVerifySchema = z.object({
+export const LoginVerifySchema = z.strictObject({
   challengeId: z.string().uuid({ message: 'VALIDATION:INPUT:INVALID' }),
   otp: z
     .string()
@@ -102,7 +102,7 @@ export interface LoginVerifyResponse {
 /**
  * Login OTP resend request body.
  */
-export const LoginResendSchema = z.object({
+export const LoginResendSchema = z.strictObject({
   challengeId: z.string().uuid({ message: 'VALIDATION:INPUT:INVALID' }),
 });
 

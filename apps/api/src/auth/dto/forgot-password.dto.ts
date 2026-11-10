@@ -11,7 +11,7 @@ import { z } from 'zod';
  * - Normalizes Iranian mobile to E.164 on the backend.
  * - Response is always generic to avoid user enumeration.
  */
-export const ForgotPasswordSchema = z.object({
+export const ForgotPasswordSchema = z.strictObject({
   username: z
     .string()
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })

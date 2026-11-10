@@ -7,7 +7,7 @@ import { z } from 'zod';
  * Requires the password change token issued during login detection and
  * the new password that satisfies the same strength policy as registration.
  */
-export const ForceChangePasswordSchema = z.object({
+export const ForceChangePasswordSchema = z.strictObject({
   passwordChangeToken: z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' }),
   newPassword: replacementPasswordSchema,
 });
