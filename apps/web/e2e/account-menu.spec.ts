@@ -220,17 +220,18 @@ for (const locale of ['en', 'fa'] as const) {
       await popup.getByRole('button', { name: shellText('logout', locale), exact: true }).click();
       await expect(page).toHaveURL(/\/login$/);
       expect(logoutReads).toBe(2);
-      // Settle the logout document before starting the next protected navigation.
+      // The auth document loads before its session bootstrap and sign-in form finish.
       await expect(page.locator('script[type="module"][src^="/auth/assets/"]')).toHaveCount(1);
-      await page.waitForLoadState('load');
+      await expect(page.locator('#username')).toBeVisible();
       const protectedProbe = '/app?loggedOutProbe=1';
+      const probeUrl = new URL(protectedProbe, page.url()).href;
       let releaseProbe!: () => void;
       const probeGate = new Promise<void>((resolve) => {
         releaseProbe = resolve;
       });
       await page.route('**/api/auth/user', async (route) => {
         // Let the protected document commit before delivering its real fixture denial.
-        if (new URL(route.request().frame().url()).pathname === '/app') await probeGate;
+        if (route.request().headers()['referer'] === probeUrl) await probeGate;
         await route.fallback();
       });
       try {
@@ -240,7 +241,10 @@ for (const locale of ['en', 'fa'] as const) {
           protectedProbe
         );
         const denied = page.waitForResponse(
-          (value) => new URL(value.url()).pathname === '/api/auth/user' && value.status() === 401
+          (value) =>
+            new URL(value.url()).pathname === '/api/auth/user' &&
+            value.request().headers()['referer'] === probeUrl &&
+            value.status() === 401
         );
         const login = page.waitForURL(/\/login$/);
         releaseProbe();
@@ -250,6 +254,7 @@ for (const locale of ['en', 'fa'] as const) {
       }
       await expect(page).toHaveURL(/\/login$/);
       await expect(page.locator('script[type="module"][src^="/auth/assets/"]')).toHaveCount(1);
+      await expect(page.locator('#username')).toBeVisible();
     });
   }
 }

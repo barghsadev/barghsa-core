@@ -5657,7 +5657,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the terminal 40-shard outcome of run 42878628863. Targeted repairs passed for the Mobile Chrome native CSP teardown and Firefox duplicate emergency report. Require a clean final-source rollup for all five projects and retain seven days of quarantine history."
+        "Require a clean exact-candidate rollup for all five browser projects. Run 42878628863 reported all 40 shards; targeted repairs passed for the four failed shards. Retain and verify seven days of quarantine history."
       ],
       "owner": null,
       "depends_on": [],
@@ -5748,7 +5748,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-native-csp-fixture-teardown",
-          "release-0.6-report-mounted-emergency-recovery"
+          "release-0.6-report-mounted-emergency-recovery",
+          "release-0.6-logout-probe-auth-bootstrap"
         ],
         "current_acceptance": null
       }
@@ -5949,7 +5950,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the terminal 40-shard outcome of run 42878628863. Targeted repairs passed for the Mobile Chrome native CSP teardown and Firefox duplicate emergency report. Require a clean final-source rollup for all five projects and retain seven days of quarantine history.",
+        "Require a clean exact-candidate rollup for all five browser projects. Run 42878628863 reported all 40 shards; targeted repairs passed for the four failed shards. Retain and verify seven days of quarantine history.",
         "Record the strict promotion report from the accepted candidate in the production approval package."
       ],
       "owner": null,
@@ -6039,7 +6040,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-native-csp-fixture-teardown",
-          "release-0.6-report-mounted-emergency-recovery"
+          "release-0.6-report-mounted-emergency-recovery",
+          "release-0.6-logout-probe-auth-bootstrap"
         ],
         "current_acceptance": null
       }
@@ -14499,7 +14501,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the terminal 40-shard outcome of run 42878628863. Targeted repairs passed for the Mobile Chrome native CSP teardown and Firefox duplicate emergency report. Require a clean final-source rollup for all five projects and retain seven days of quarantine history.",
+        "Require a clean exact-candidate rollup for all five browser projects. Run 42878628863 reported all 40 shards; targeted repairs passed for the four failed shards. Retain and verify seven days of quarantine history.",
         "Read back the hosted navigation checks and complete journey coverage on final source. Verify delivery of the scheduled results to the authorized dedicated receiver."
       ],
       "owner": null,
@@ -14566,7 +14568,8 @@
           "release-0.6-native-csp-fixture-teardown",
           "release-0.6-runtime-navigation-route-checks",
           "release-0.6-nightly-source-security-scan",
-          "release-0.6-report-mounted-emergency-recovery"
+          "release-0.6-report-mounted-emergency-recovery",
+          "release-0.6-logout-probe-auth-bootstrap"
         ],
         "current_acceptance": null
       }
@@ -518565,7 +518568,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the terminal 40-shard outcome of run 42878628863 at a51b8b74. Targeted repairs passed for the Mobile Chrome and Firefox failures. Verify a clean exact candidate run with all five browsers, no unexpected, flaky or runner errors and seven days of quarantine history.",
+        "Require a clean exact-candidate rollup for all five browser projects. Run 42878628863 reported all 40 shards; targeted repairs passed for the four failed shards. Retain and verify seven days of quarantine history.",
         "Read back the final hosted dependency, expanded navigation, schema drift and source-security reports. The exact local Semgrep gate scanned 2,124 files with zero findings or errors, and the selected navigation scope passed 26 browser cases."
       ],
       "owner": null,
@@ -518585,7 +518588,8 @@
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-runtime-navigation-route-checks",
           "release-0.6-nightly-source-security-scan",
-          "release-0.6-report-mounted-emergency-recovery"
+          "release-0.6-report-mounted-emergency-recovery",
+          "release-0.6-logout-probe-auth-bootstrap"
         ],
         "current_acceptance": null
       }
@@ -540723,7 +540727,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/ai-catalogue-tables.spec.ts",
@@ -541018,6 +541022,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -549510,7 +549522,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -549933,6 +549945,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -550117,7 +550137,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -550540,6 +550560,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -550724,7 +550752,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -551147,6 +551175,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -551331,7 +551367,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -551754,6 +551790,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -551938,7 +551982,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -552361,6 +552405,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -552545,7 +552597,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -552968,6 +553020,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -553152,7 +553212,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -553575,6 +553635,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -553759,7 +553827,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -554182,6 +554250,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -554366,7 +554442,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -554789,6 +554865,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -554973,7 +555057,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -555396,6 +555480,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -555580,7 +555672,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -556003,6 +556095,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -556187,7 +556287,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -556610,6 +556710,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -556794,7 +556902,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -557217,6 +557325,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -557401,7 +557517,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -557824,6 +557940,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -557898,7 +558022,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -558432,6 +558556,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -558512,7 +558644,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -559046,6 +559178,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -559126,7 +559266,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -559660,6 +559800,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -560094,7 +560242,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -560453,6 +560601,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -560544,7 +560700,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -560903,6 +561059,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -560992,7 +561156,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -561351,6 +561515,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -561440,7 +561612,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -561799,6 +561971,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -596201,7 +596381,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -596560,6 +596740,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -596649,7 +596837,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -597008,6 +597196,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -597097,7 +597293,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -597456,6 +597652,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -597545,7 +597749,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -597904,6 +598108,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -597998,7 +598210,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -598357,6 +598569,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -598452,7 +598672,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -598811,6 +599031,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -598900,7 +599128,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -599259,6 +599487,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -599348,7 +599584,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -599707,6 +599943,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -599797,7 +600041,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -600156,6 +600400,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -600247,7 +600499,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -600606,6 +600858,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -600695,7 +600955,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -601054,6 +601314,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -601144,7 +601412,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -601503,6 +601771,14 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         },
@@ -626765,7 +627041,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+              "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
@@ -629652,6 +629928,14 @@
                 "apps/web/src/router.tsx"
               ],
               "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
+            },
+            {
+              "batch": "release-0.6-logout-probe-auth-bootstrap",
+              "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Synchronize the logout verification with the mounted sign-in form and identify the exact protected document and denial. All prior responsive, authorization, identity, retry and accessibility assertions remain. All 36 production browser cases and four coverage-mode account cases passed."
             }
           ]
         }
@@ -799886,9 +800170,9 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the terminal 40-shard outcome of run 42878628863. Targeted repairs passed for the Mobile Chrome native CSP teardown and Firefox duplicate emergency report. Require a clean final-source rollup for all five projects and retain seven days of quarantine history.",
+        "Require a clean exact-candidate rollup for all five browser projects. Run 42878628863 reported all 40 shards; targeted repairs passed for the four failed shards. Retain and verify seven days of quarantine history.",
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
-        "Read back full hosted native and combined coverage on the revised auth and financial fixtures. Earlier run 42857945735 failed these older callers; targeted fixes have passing receipts.",
+        "Read back full hosted native and combined coverage on the revised auth, financial and browser fixtures. Push run 42857945735 used fast mode. The older manual run 42751525133 failed native upload and coverage-mode browser tests; targeted repairs have passing receipts.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
@@ -800059,7 +800343,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-native-csp-fixture-teardown",
           "release-0.6-runtime-navigation-route-checks",
-          "release-0.6-report-mounted-emergency-recovery"
+          "release-0.6-report-mounted-emergency-recovery",
+          "release-0.6-logout-probe-auth-bootstrap"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -917660,6 +917945,104 @@
         {
           "file": "firefox-3/feedback-a-missing-route-a-cabc9-a-localized-reload-path-fa--firefox/trace.zip",
           "sha256": "f47311b32c642777669f92b4e091077799c172ed5dda73d8b7b44298333a77da"
+        }
+      ]
+    },
+    "release-0.6-logout-probe-auth-bootstrap": {
+      "batch": "release-0.6-logout-probe-auth-bootstrap",
+      "base_commit": "407c1270ed3dcedad0e6458e471ad33c44f6a4c1",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "06-security-testing-observability.md#T-06.12.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/account-menu.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/account-menu.spec.ts",
+          "sha256": "5f521c06434e1ea284bbe87cb1863af6d374324aa8434537bdf3bf4024ad96c4"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "3b484e904f53a2d21d1b2dd54ae3c87ed68ca500b76565ba3fc762dc1ecc5cf5"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "5b266f3ccec28e52f799283a4031b56da02bee1d0ae9872edb5b94cfd1c702cc"
+        },
+        {
+          "path": "apps/web/src/components/ProfileMenu.tsx",
+          "sha256": "82ecc67ce2bcc52b26bcca44cb4cba6a34ec75e0e53bc402248325fe56f10776"
+        },
+        {
+          "path": "apps/web/src/lib/auth-bootstrap-read.ts",
+          "sha256": "28f3d57a305a339ca4c1b6046bd4206a76e9afce0e0b4c3736bb0341ae4068fd"
+        },
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Exact browser run 42878628863 at a51b8b74 failed the desktop WebKit and Mobile Safari account-menu logout probes. Job 130048590615 recorded 366 expected, one unexpected and one flaky. Job 130048590774 recorded 364 expected, three unexpected and one flaky.",
+        "The desktop WebKit trace recorded a successful logout, an auth document read and auth bootstrap denial. The attempted protected document then aborted before committing while a second login document loaded. The original test treated loaded HTML as application readiness and scoped the request hold using the frame URL during navigation.",
+        "Wait for the mounted sign-in form. Hold the real protected-page request until its exact navigation commits and identify that request and 401 by the same-origin referrer for the unique probe URL. Assert return to the mounted login form. Retain both exact POST/CSRF assertions, the failed logout behavior, protected document identity and the actual fixture 401, and all menu and accessibility checks.",
+        "All 36 targeted production account-menu cases passed with retries disabled across the five browser projects, including three repeats for each staff/customer and Persian/English combination in both Safari projects. ESLint, Prettier and whitespace checks passed.",
+        "The separate coverage-mode Chromium build passed 24 targeted cases. It covered the 14 Chromium failures from manual CI 42751525133, all four account menu cases and six additional staff inbox variants. Push run 42857945735 used fast mode and did not collect combined coverage. The full final-source native and browser coverage, strict five-project browser rollup and operational receipts remain open.",
+        "Terminal readback for 42878628863 recorded 40/40 shards, 36 successful, and the four repaired shard failures. The rollup reported 14,585 expected, four unexpected, four flaky, 22 conditional skips and zero runner errors. The skips match sixteen forced textarea fallbacks scoped to Chromium and six coarse-pointer cases scoped to mobile projects. It listed all seven scheduled runs, with shard receipts for one and unavailable detailed receipts for six. A clean replacement and complete operational evidence remain required."
+      ],
+      "proof_logs": [
+        {
+          "file": "account-chromium.log",
+          "sha256": "8fd860bfcc390b3b2c455704597bf067a79d05fbe85a49fad4da72fea66d6fa8"
+        },
+        {
+          "file": "account-firefox.log",
+          "sha256": "0514cde1a538c98444fe7ec775a0279da5f13eae070b94e8b58140e9137b0820"
+        },
+        {
+          "file": "account-safari.log",
+          "sha256": "6a99571414d588a2bae999675b19be89a933b589dad7191df507074ccbb12bd3"
+        },
+        {
+          "file": "browser-webkit-1.log",
+          "sha256": "da266f8047cabbaaca2feff0fc3b9366e166724ac2b46202b827f3ebd9409bdb"
+        },
+        {
+          "file": "browser-mobile-safari-1.log",
+          "sha256": "3c5e2f8519dae7ff0269163629ab65a91478bf0d4dd66aff896e39f91433bf9b"
+        },
+        {
+          "file": "coverage-targeted.log",
+          "sha256": "a9fea20f4561c5833ae395a95f92f04dd5f3ff220d6f9cfa06d26643b056aca0"
+        },
+        {
+          "file": "coverage-targeted-build.log",
+          "sha256": "56a9593cc995077736b2dd6d08358feae102635505bb61e58af252f5e30bfb20"
+        },
+        {
+          "file": "reviewed-account-menu.patch",
+          "sha256": "1bb109ac557a3fd45c7b13078f20cf17d27f9b80d029290cea4828cd25842759"
+        },
+        {
+          "file": "browser-webkit-1/account-menu-account-menu--34b2e-ccount-actions-customer-fa--webkit/trace.zip",
+          "sha256": "8dad57e467306242ce44cd70d74c8c55caafbac3c68e1f6430e9f796d0c5d2c4"
+        },
+        {
+          "file": "terminal-browser-jobs.json",
+          "sha256": "fb3522845e1ca17cd01d79490507933b2bdccf4e39dd37a0bec89ce06f7ec647"
+        },
+        {
+          "file": "browser-terminal-rollup.log",
+          "sha256": "9b323fef2168752e02b10169b364d5bdc1e430f9a7d2ef688eed3a764c329a75"
         }
       ]
     }
