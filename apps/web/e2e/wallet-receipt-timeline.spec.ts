@@ -254,14 +254,15 @@ for (const locale of ['en', 'fa'] as const)
         const count = reads;
         const summary = details.locator(':scope > summary');
         await expect(summary).toBeVisible();
+        await summary.scrollIntoViewIfNeeded();
+        await expect(summary).toBeInViewport();
         if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
-          await summary.scrollIntoViewIfNeeded();
-          await expect(summary).toBeInViewport();
           const box = await summary.boundingBox();
           expect(box?.width).toBeGreaterThanOrEqual(44);
           expect(box?.height).toBeGreaterThanOrEqual(44);
         }
         await summary.focus();
+        await expect(summary).toBeFocused();
         await summary.press('Enter');
         await expect(details).toHaveAttribute('open', '');
         await expect(history.getByRole('table')).toHaveCount(0);

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T15:26:02+00:00",
-  "source_commit": "571e6ab71dad1b7f8e2a2076262cf0e4d8dcd116",
+  "updated": "2026-11-10T15:28:36+00:00",
+  "source_commit": "9d028d19f3a188de4e63a46c55d7196c628245a7",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5646,7 +5646,8 @@
           "release-0.6-isolated-live-scanner-and-safari-recovery",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": null
       }
@@ -5912,7 +5913,8 @@
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": null
       }
@@ -487550,7 +487552,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-registration-and-onboarding-browser-journeys",
-          "release-0.6-wallet-receipt-native-viewport"
+          "release-0.6-wallet-receipt-native-viewport",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -487582,7 +487585,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -487611,7 +487614,8 @@
             "Node 24 built both shells and the package wiring. Twenty-nine server cases passed. Nine native CSP browser cases and thirty affected production-build cases passed across Chromium, Firefox and WebKit. The latter exercised login, onboarding, toasts, confetti and wallet receipt scroll styling under enforcement. All 101 route and interaction bundle budgets passed without changing thresholds.",
             "The previous staging proxy checks and actual v0.5 response headers are retained. Live production-ingress TLS and HSTS and the report-only observation window remain open.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
-            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ]
         }
       }
@@ -501063,7 +501067,8 @@
         "batches": [
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-new-device-mfa-and-session-revocation-browser-journey",
@@ -501075,7 +501080,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
@@ -501118,7 +501123,8 @@
             "The implemented new-device MFA is password followed by the login OTP as defined in T-02.01.03. A clean browser submits exact credentials with public CSRF. The invalid OTP never issues a session, and a valid bound OTP completes MFA and opens the customer workspace. Persian code digits are normalized and device trust is left unselected.",
             "The session list identifies the current session and an existing separate browser. The customer must authorize destructive confirmation. The scoped DELETE demands step-up. The password step-up rotates the session and CSRF fixture, and the exact retry revokes only the older non-authenticating session reference after a fresh session list.",
             "The older browser was authenticated before revocation and returns to sign-in on a fresh navigation afterward. The current browser still loads its current session after reload. The six exact local production-build cases passed in Persian and English across Firefox, Mobile Chrome and Mobile Safari. Four existing customer and staff session-expiry cases also passed. Focused format, lint and diff checks passed. The browser uses controlled API responses and performs no live OTP or account mutation.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ]
         }
       }
@@ -502002,7 +502008,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-provider-loopback-boundary",
@@ -502034,7 +502041,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -502094,7 +502101,8 @@
             "The shared browser proxy blocks external HTTP requests, an actual loopback redirect to an external HTTP destination, and an unmocked external HTTPS tunnel. Explicit test routes still fulfill synthetic provider URLs. The regression passed in Firefox, Mobile Chrome and Mobile Safari.",
             "The real API and worker child processes used by browser fixtures load the socket guard. Local HTTP and its response bytes passed; external direct sockets, TLS and fetch failed at the fixture boundary. API forwarding in the settings fixture is limited to loopback URLs with redirects disabled. API Playwright discovers its test successfully; the full Docker-backed API browser test was not rerun locally.",
             "Twenty-seven targeted browser cases and twelve primary Mobile Chrome performance cases passed across the final boundary and its unchanged passing Persian Mobile Safari payment case. Existing storage uploads, wallet gateway fixtures, auth and language handoffs retained their assertions. Focused format, lint and diff checks passed. Product application code did not change; previously accepted product behavior remains source-bound and the exact hosted release matrix remains open.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ]
         }
       }
@@ -502347,7 +502355,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-wallet-receipt-native-viewport"
+          "release-0.6-wallet-receipt-native-viewport",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -502356,7 +502365,8 @@
             "GitHub Protect main ruleset 26844024 is active and requires Verify monorepo integrity from GitHub Actions app 15368. The required job depends on application quality. Exact preflight 42772013847 quality job 129681776193 passed critical accessibility and advisory steps; job 129684033530 passed the required integrity check. This is the CI gate receipt, not acceptance of the still-running full affected test job.",
             "Critical Axe assertions remain byte-identical and fail on any violation in their tested scope. Advisory warnings and JSON now retain Axe impact, including unrated incomplete results. A current production-browser run passed four Chromium cases, producing six RTL/LTR advisory records with zero automated violations. Both staff notification triage views retain serious contrast items for manual measurement.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "source_evidence": [
             {
@@ -502393,7 +502403,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/e2e/workspace-media-routes.spec.ts",
@@ -504660,7 +504670,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": null
       }
@@ -531015,7 +531026,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-wallet-receipt-native-viewport"
+          "release-0.6-wallet-receipt-native-viewport",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -531059,7 +531071,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/package.json",
@@ -531504,7 +531516,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-query-and-command-completion",
           "limitations": [
@@ -550370,7 +550383,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-wallet-receipt-native-viewport"
+          "release-0.6-wallet-receipt-native-viewport",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550386,7 +550400,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -550438,7 +550452,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/package.json",
@@ -550625,7 +550639,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-fallback-and-announcement",
           "limitations": [
@@ -550828,7 +550843,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-wallet-receipt-native-viewport"
+          "release-0.6-wallet-receipt-native-viewport",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550908,7 +550924,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/index.html",
@@ -551064,7 +551080,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-focus-and-contrast",
           "limitations": [
@@ -551292,7 +551309,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-wallet-receipt-native-viewport"
+          "release-0.6-wallet-receipt-native-viewport",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551372,7 +551390,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/index.html",
@@ -551528,7 +551546,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-focus-and-contrast",
           "limitations": [
@@ -551748,7 +551767,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-wallet-receipt-native-viewport"
+          "release-0.6-wallet-receipt-native-viewport",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551764,7 +551784,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -551816,7 +551836,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/package.json",
@@ -552003,7 +552023,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-fallback-and-announcement",
           "limitations": [
@@ -552244,7 +552265,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -552772,7 +552794,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/package.json",
@@ -553717,7 +553739,8 @@
             "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
             "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch.",
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
           "scope_dispositions": [
@@ -554861,7 +554884,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-wallet-receipt-native-viewport"
+          "release-0.6-wallet-receipt-native-viewport",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554941,7 +554965,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/index.html",
@@ -555097,7 +555121,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-focus-and-contrast",
           "limitations": [
@@ -555907,7 +555932,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556155,7 +556181,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/package.json",
@@ -556420,7 +556446,8 @@
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -556792,7 +556819,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557040,7 +557068,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/package.json",
@@ -557305,7 +557333,8 @@
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -558215,7 +558244,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558463,7 +558493,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/package.json",
@@ -558728,7 +558758,8 @@
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -559033,7 +559064,8 @@
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-wallet-receipt-native-viewport"
+          "release-0.6-wallet-receipt-native-viewport",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -559045,7 +559077,8 @@
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
-            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "source_evidence": [
             {
@@ -559074,7 +559107,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -607869,7 +607902,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -608549,7 +608583,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/package.json",
@@ -610676,7 +610710,8 @@
             "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
             "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch.",
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -632182,7 +632217,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-wallet-receipt-native-viewport"
+          "release-0.6-wallet-receipt-native-viewport",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -632226,7 +632262,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/package.json",
@@ -632671,7 +632707,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-query-and-command-completion",
           "limitations": [
@@ -651216,7 +651253,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -651420,7 +651458,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -651831,7 +651869,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "PasswordField retains four visual segments and an accessible numeric progress estimate, gray empty/red weak/orange fair/yellow strong/green very strong states, hidden empty idle feedback, visible focused or nonempty feedback, reserved layout space and reduced-motion-aware slide/fade transitions. Final FA/EN component and production browser checks include blur, empty, loading, stale input, download failure and recovery.",
           "limitations": [
@@ -652083,7 +652122,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -652287,7 +652327,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -652698,7 +652738,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "Owner approved local zxcvbn on2026-11-06 with all required UI. Original estimator factory, 0–4 score mapping and all ten original predictable/long-password assertions remain exact. No third-party request or password transmission; the interaction-only estimator and localized feedback preserve original initial/interaction budgets.",
           "limitations": [
@@ -652950,7 +652991,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -653154,7 +653196,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -653565,7 +653607,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "All five exact Persian/English display labels and level-specific improvement hints are verified independently against fixed expected strings, numeric scores and distinct segment colors. Locale and input own the current assessment; stale results cannot replace it.",
           "limitations": [
@@ -653817,7 +653860,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -654021,7 +654065,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -654432,7 +654476,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "Meter remains informational. Existing minimum-password function/backend validation unchanged; a predictable password meeting the minimum remains submittable with valid current consent. Original strength and backend password-policy assertions retained.",
           "limitations": [
@@ -654684,7 +654729,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -654888,7 +654934,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -655299,7 +655345,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "Existing trailing visibility toggle is type=button, switches password/text with aria-pressed and retains its accessible localized label. It does not submit forms or force estimator loading when disabled for login.",
           "limitations": [
@@ -667983,7 +668030,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -668187,7 +668235,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -668598,7 +668646,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "Existing AuthLayout uses two equal desktop columns, configured local brand/title/slogan, three localized value propositions with icons, centered constrained forms and root version. Reviewed desktop FA/EN captures and theme/keyboard/axe checks retain this layout.",
           "limitations": [
@@ -668850,7 +668899,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -669054,7 +669104,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -669465,7 +669515,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "Existing mobile layout stacks a compact linked brand above full-width constrained forms and hides desktop propositions. Final MobileChrome FA/EN light/dark screenshots, no-horizontal-overflow and touch/keyboard/auth journey checks passed.",
           "limitations": [
@@ -669717,7 +669768,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -669921,7 +669973,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -670332,7 +670384,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "Separate public auth entry and nested layout render no AppShell, sidebar/topbar/bottom tabs or account data. Delayed current-session and expired-session tests verify forms never render before the entry decision and private dashboard/profile/admin/financial reads do not occur for guests.",
           "limitations": [
@@ -670584,7 +670637,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -670788,7 +670842,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -671199,7 +671253,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "Existing language switch stays at the directional trailing edge before login/registration and updates lang/dir immediately without losing form state. Chosen language survives reload and later visits in an English browser; current FA/EN journeys and localized errors remain valid.",
           "limitations": [
@@ -671451,7 +671506,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -671655,7 +671711,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -672066,7 +672122,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "New current uncached session check precedes auth forms. Signed-in visitors to login/register/register-verify/forgot-password/activation enter canonical /app with unchanged role/terms/profile/onboarding gates; expired sessions retain public form access. Desktop/mobile tests cover delayed ownership and no private content flash.",
           "limitations": [
@@ -672318,7 +672375,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -672522,7 +672580,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -672933,7 +672991,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "Existing login accepts normalized email/mobile and preserves raw password, explicit errors/restart for uncertain results, current CSRF, captured requests and disabled states. Visibility, recovery/registration links, conditional OTP/trust-device stage, light/dark/FA/EN/keyboard/a11y and successful ownership handoff verified. Duplicate link-prompt copy corrected.",
           "limitations": [
@@ -673185,7 +673244,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -673389,7 +673449,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -673800,7 +673860,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "Existing registration keeps current immutable terms receipt, acceptance checkbox/exact link, username/password minimum and local meter, login/recovery links and subsequent owned OTP stage. Rejected/uncertain starts cannot duplicate or silently switch a captured submission; native and browser consent/security assertions remain intact.",
           "limitations": [
@@ -674052,7 +674113,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -674256,7 +674318,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -674667,7 +674729,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "Existing password recovery keeps generic start, owned OTP/reset capability, confirm/new-password meter, validation/cooldown, safe rejected-value retention, captured uncertain outcomes and accepted success redirect/toast to login. No automatic retry of possibly consumed reset authority.",
           "limitations": [
@@ -674919,7 +674982,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -675123,7 +675187,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -675534,7 +675598,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "Existing OtpInput preserves six digits, autofocus/advance, paste/backspace, numeric-keyboard normalization, LTR digit order in RTL and60-second resend. Registration auto-completion and explicit login Verify/trust opt-in remain distinct. Component, native and production browser checks preserve code/expiry/cooldown/uncertain-result safeguards.",
           "limitations": [
@@ -675786,7 +675851,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -675990,7 +676056,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -676401,7 +676467,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "Existing required-change stage remains in the public login layout, requires confirmation and minimum-valid password, shows meter, emits success toast, clears accepted credential/grant state and returns to login. Native tests retain one-use grant, old-session revocation and pre-session ownership/security safeguards.",
           "limitations": [
@@ -676653,7 +676720,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -676857,7 +676925,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -677268,7 +677336,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "Existing terms content/date/language/exact-version reader now includes public published-version history with20-row keyset pagination, immutable IDs/public labels/publication times only, draft/unknown cursor equivalence and malformed/repeated cursor400. History retry preserves document/prior rows and exact cursor; viewing creates zero acceptances. Existing current-version commercial guards and acceptance receipts unchanged.",
           "limitations": [
@@ -677520,7 +677589,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -677724,7 +677794,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "d5c318187976eaf515f7287f518fdc240940f7c03c0eaa26069eef88d05e5b87"
+              "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -678135,7 +678205,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "criterion_result": "Six OTP page messages now use conditional delivery wording with the same masked destinations. Existing generic start and backend challenge/registration/reset response boundaries unchanged; no provider acceptance claim or account-existence disclosure added. Actual OTP delivery remains on the protected contact path, not general inbox.",
           "limitations": [
@@ -753807,7 +753878,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.tsx",
@@ -753888,7 +753959,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope",
           "source_renewal": {
@@ -754063,7 +754135,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-wallet-receipt-native-viewport"
+          "release-0.6-wallet-receipt-native-viewport",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ]
       }
     },
@@ -774247,7 +774320,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -776159,7 +776232,8 @@
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
             "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
-            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch.",
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -776325,7 +776399,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-browser-stable-native-feedback",
-          "release-0.6-conversation-identity-rtl-native-checkboxes"
+          "release-0.6-conversation-identity-rtl-native-checkboxes",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ]
       }
     },
@@ -776584,7 +776659,8 @@
           "release-0.6-isolated-live-scanner-and-safari-recovery",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-native-auth-and-wallet-interaction-readiness"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -888502,6 +888578,74 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/native-safari-saving-shell-staff-team",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "fb4c5b9372378c9cc7a5110188b258a44492d92823925babc4395c5e36eaa265"
+    },
+    "release-0.6-native-auth-and-wallet-interaction-readiness": {
+      "batch": "release-0.6-native-auth-and-wallet-interaction-readiness",
+      "base_commit": "9d028d19f3a188de4e63a46c55d7196c628245a7",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.10.03.04",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.12.05.01",
+        "07-ui-ux-design.md#T-07.01.04.05",
+        "07-ui-ux-design.md#T-07.05.01.01",
+        "07-ui-ux-design.md#T-07.05.01.02",
+        "07-ui-ux-design.md#T-07.05.01.03",
+        "07-ui-ux-design.md#T-07.05.01.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.09",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.05",
+        "07-ui-ux-design.md#T-07.14.01.01",
+        "07-ui-ux-design.md#T-07.14.01.02",
+        "07-ui-ux-design.md#T-07.14.01.03",
+        "07-ui-ux-design.md#T-07.14.01.04",
+        "07-ui-ux-design.md#T-07.14.01.05",
+        "07-ui-ux-design.md#T-07.17.01.01",
+        "07-ui-ux-design.md#T-07.17.01.02",
+        "07-ui-ux-design.md#T-07.17.01.03",
+        "07-ui-ux-design.md#T-07.17.01.04",
+        "07-ui-ux-design.md#T-07.17.01.05",
+        "07-ui-ux-design.md#T-07.17.02.01",
+        "07-ui-ux-design.md#T-07.17.02.02",
+        "07-ui-ux-design.md#T-07.17.02.03",
+        "07-ui-ux-design.md#T-07.17.02.04",
+        "07-ui-ux-design.md#T-07.17.02.05",
+        "07-ui-ux-design.md#T-07.17.02.06",
+        "07-ui-ux-design.md#T-07.17.02.07",
+        "release-readiness#R-01.02",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/auth-entry-session.spec.ts",
+        "apps/web/e2e/wallet-receipt-timeline.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/auth-entry-session.spec.ts",
+          "sha256": "29633befb4880ba05b1db9e7e2d16ce44f518e481ea02d2b780c54693a8fe97a"
+        },
+        {
+          "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+          "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+        }
+      ],
+      "checks": [
+        "Hosted Chromium shard 1 (42834362257 job 129892516633) observed the OTP verify 200 and the workspace URL, then a settings navigation aborted before its request while the workspace was mounting. The exact test now waits for the authenticated dashboard landmark before the same navigation. All four Chromium MFA and selected-session revocation cases passed across two no-retry runs in both locales, retaining every OTP, CSRF, scoped revocation and surviving-session assertion.",
+        "Hosted desktop WebKit shard 8 (42834362257 job 129892516797) reached the receipt summary after responsive measurements but one first Enter left its native details closed. The existing test scrolls the real summary into view for both pointer types and asserts actual focus before Enter. All 16 Desktop WebKit and Mobile Safari receipt cases passed across two no-retry runs. The native open state, 44-pixel mobile targets, recorded dates, receipt privacy and read scope remain asserted.",
+        "Targeted lint, formatting and whitespace passed. Application source was unchanged by this batch."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/native-auth-and-wallet-interaction-readiness",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "1d597c823f443e5cd66d0ebfdd21a75812d1f235ab08a579df904c1e8829c38d"
     }
   },
   "historical_improvements": [

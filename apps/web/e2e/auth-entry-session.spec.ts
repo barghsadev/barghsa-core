@@ -295,6 +295,7 @@ for (const locale of ['fa', 'en'] as const) {
       await digits.first().fill(locale === 'fa' ? '۱۲۳۴۵۶' : '123456');
       await submitLogin.click();
       await expect(page).toHaveURL(/\/app$/);
+      await expect(page.locator('main#main-content[data-area="dashboard"]')).toBeVisible();
 
       await page.goto('/settings/security');
       const revoke = t('settings.security.revoke', locale);
