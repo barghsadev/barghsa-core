@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T15:55:59+00:00",
-  "source_commit": "79b01faebd991984447f17faaac912a478dff0d3",
+  "updated": "2026-11-10T16:03:57+00:00",
+  "source_commit": "47341532fb93142328ef094fcb546cb51e9f37df",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5649,7 +5649,8 @@
           "release-0.6-native-safari-saving-shell-staff-team",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
-          "release-0.6-native-csp-and-combobox-recovery"
+          "release-0.6-native-csp-and-combobox-recovery",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": null
       }
@@ -5918,7 +5919,8 @@
           "release-0.6-native-safari-saving-shell-staff-team",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
-          "release-0.6-native-csp-and-combobox-recovery"
+          "release-0.6-native-csp-and-combobox-recovery",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": null
       }
@@ -14177,7 +14179,8 @@
           "release-0.6-solar-request-touch-target",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-wallet-keyboard-before-responsive-probe",
-          "release-0.6-native-csp-and-combobox-recovery"
+          "release-0.6-native-csp-and-combobox-recovery",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": null
       }
@@ -30419,7 +30422,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -30679,7 +30683,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -31111,7 +31115,8 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/step-up-action-audit",
           "limitations": [
@@ -44401,7 +44406,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -44465,7 +44471,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -44863,7 +44869,8 @@
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -45792,7 +45799,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -45856,7 +45864,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -46254,7 +46262,8 @@
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -47191,7 +47200,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -47255,7 +47265,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -47653,7 +47663,8 @@
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -62505,7 +62516,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -62669,7 +62681,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -63038,7 +63050,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -63627,7 +63640,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -63791,7 +63805,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -64160,7 +64174,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -64749,7 +64764,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -64913,7 +64929,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -65282,7 +65298,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -66344,7 +66361,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -66440,7 +66458,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -66797,7 +66815,8 @@
             "Current provider tester injection was verified in the compiled app. All 11 HTTP and 60 native provider self-test cases passed. The step-up, contact, guard, activation, receipt and secret handling assertions remain enforced.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "limitations": [
             "Before deployed producer rollout, publish reviewed active profile.verification_status email and SMS templates in both languages using messageFa/messageEn, and activate verified SMS mappings for the corresponding approved provider parameters. Record exact template/mapping versions and actual authorized deployment/delivery evidence. Existing customized families are preserved by import; schema migration or a successful local transport fixture does not satisfy this gate. No historical resend/backfill or external customer message is authorized or performed."
@@ -68746,7 +68765,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "accepted-verified-branding-editor-assets",
@@ -68814,7 +68834,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -68884,7 +68904,8 @@
             "The current real admin suite passed 52 cases on each of Chromium, Firefox, WebKit, Mobile Chrome and Mobile Safari in hosted run 42670364943. Each receipt contains zero unexpected, flaky, skipped or runner-error outcomes. These are diagnostic job results for the admin suite only.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "criterion_result": "Complete editor verified including logo/favicon native uploads, localized titles/colors, light/dark preview, versioned save/activate and owner-approved same-origin no-store assets. Fresh and upgrade history repaired; original privacy, integrity and concurrency checks retained.",
           "limitations": [
@@ -70187,7 +70208,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70303,7 +70325,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -70463,7 +70485,8 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -70878,7 +70901,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70994,7 +71018,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -71154,7 +71178,8 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -71569,7 +71594,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -71685,7 +71711,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -71846,7 +71872,8 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -72259,7 +72286,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -72375,7 +72403,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -72535,7 +72563,8 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-geography-terms",
           "limitations": [
@@ -99963,7 +99992,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -100127,7 +100157,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -100496,7 +100526,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -101017,7 +101048,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -101181,7 +101213,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -101550,7 +101582,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -102077,7 +102110,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -102241,7 +102275,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -102610,7 +102644,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -103197,7 +103232,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-database-protection-export-leases",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -103557,7 +103593,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
@@ -103926,7 +103962,8 @@
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "criterion_result": "Wallet/invoice/provider/refund exception producers and protected filter/detail/assignee/investigate/resolve/close/audit flows accepted with current native and production-browser recovery checks. Owner-approved refund inequality preserves legacy residuals and uses the ordinary paid original as the sole refund budget. All89 original budgets pass. Historical development-only bootstrap failure retained; no recurrence in current production-built cases and no claim to its old root cause or to the later operational launch rehearsal.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.3-closure",
@@ -105190,7 +105227,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -105242,7 +105280,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/failed-jobs.spec.ts",
@@ -105368,7 +105406,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks."
+            "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
           "limitations": [
@@ -105597,7 +105636,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -105649,7 +105689,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/failed-jobs.spec.ts",
@@ -105775,7 +105815,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks."
+            "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-operational-triage",
           "limitations": [
@@ -107399,7 +107440,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -107547,7 +107589,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/contract-templates.spec.ts",
@@ -107840,7 +107882,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
           "limitations": [
@@ -108261,7 +108304,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -108409,7 +108453,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/contract-templates.spec.ts",
@@ -108702,7 +108746,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
           "limitations": [
@@ -113087,7 +113132,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -113295,7 +113341,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -113453,7 +113499,8 @@
             "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "The current real admin suite passed 52 cases on each of Chromium, Firefox, WebKit, Mobile Chrome and Mobile Safari in hosted run 42670364943. Each receipt contains zero unexpected, flaky, skipped or runner-error outcomes. These are diagnostic job results for the admin suite only.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
@@ -113826,7 +113873,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -114034,7 +114082,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -114191,7 +114239,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
@@ -114549,7 +114598,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-promotion-policy-and-partial-financial-reconciliation",
@@ -114829,7 +114879,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
@@ -115132,7 +115182,8 @@
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "limitations": [],
           "order_submission_scoped_renewal": {
@@ -115575,7 +115626,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -115723,7 +115775,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/contract-templates.spec.ts",
@@ -116016,7 +116068,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/service-configuration-readiness",
           "limitations": [
@@ -116437,7 +116490,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -116645,7 +116699,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -116802,7 +116856,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Browser-origin delta: exact origin/Referer gate is additive; headerless callers still require the previous proofs. Relevant auth, step-up, staff permission, payment confirmation and signed callback checks passed. Unchanged original source evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/admin-catalogue-vat-upload",
           "limitations": [
@@ -500799,7 +500854,8 @@
         "batches": [
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -500823,7 +500879,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -500861,7 +500917,8 @@
           "checks": [
             "Playwright configures five browser projects, a Persian default locale, per-test browser contexts and an explicit loopback environment. Auth helpers establish controlled sessions and public CSRF. The real API fixture owns a unique disposable PostgreSQL database with migrations and seeded test data, while pure browser cases keep per-test state in route fixtures.",
             "The scheduled run used 40 separate shard jobs. Six Persian and English Mobile Safari storage, provider and AI configuration cases passed against the migrated real API in job 129738700024. The stricter current loopback fixture was verified separately in the provider-isolation batch. The prior full run failed overall and the exact candidate matrix remains open.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ]
         }
       }
@@ -502030,7 +502087,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-provider-loopback-boundary",
@@ -502058,7 +502116,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
@@ -502123,7 +502181,8 @@
             "The real API and worker child processes used by browser fixtures load the socket guard. Local HTTP and its response bytes passed; external direct sockets, TLS and fetch failed at the fixture boundary. API forwarding in the settings fixture is limited to loopback URLs with redirects disabled. API Playwright discovers its test successfully; the full Docker-backed API browser test was not rerun locally.",
             "Twenty-seven targeted browser cases and twelve primary Mobile Chrome performance cases passed across the final boundary and its unchanged passing Persian Mobile Safari payment case. Existing storage uploads, wallet gateway fixtures, auth and language handoffs retained their assertions. Focused format, lint and diff checks passed. Product application code did not change; previously accepted product behavior remains source-bound and the exact hosted release matrix remains open.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ]
         }
       }
@@ -556001,7 +556060,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-native-safari-saving-shell-staff-team",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
-          "release-0.6-wallet-keyboard-before-responsive-probe"
+          "release-0.6-wallet-keyboard-before-responsive-probe",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556021,7 +556081,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
@@ -556516,7 +556576,8 @@
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
             "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
-            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -556890,7 +556951,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-native-safari-saving-shell-staff-team",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
-          "release-0.6-wallet-keyboard-before-responsive-probe"
+          "release-0.6-wallet-keyboard-before-responsive-probe",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556910,7 +556972,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
@@ -557405,7 +557467,8 @@
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
             "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
-            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -558317,7 +558380,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-native-safari-saving-shell-staff-team",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
-          "release-0.6-wallet-keyboard-before-responsive-probe"
+          "release-0.6-wallet-keyboard-before-responsive-probe",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558337,7 +558401,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
@@ -558832,7 +558896,8 @@
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
             "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
-            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -748261,7 +748326,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "current_acceptance": {
           "kind": "accepted-verified-branding-editor-assets",
@@ -748329,7 +748395,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -748398,7 +748464,8 @@
             "Renewed the auth specification binding after reconciling the older meter visibility wording with the documented v0.5 display policy. Other auth requirements remain unchanged.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "criterion_result": "Complete editor verified including logo/favicon native uploads, localized titles/colors, light/dark preview, versioned save/activate and owner-approved same-origin no-store assets. Fresh and upgrade history repaired; original privacy, integrity and concurrency checks retained.",
           "limitations": [
@@ -760218,7 +760285,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -763126,7 +763193,8 @@
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
-            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
+            "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/staff-order-detail-authority",
@@ -764747,7 +764815,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-reconciliation-accepted-filter-page"
         ]
       }
     },
@@ -776726,7 +776795,7 @@
       "launch_required": true,
       "remaining": [
         "Reconcile every epic-01 and epic-06 criterion with current source and operational evidence. Apply the approved direct-main workflow while preserving all production gates.",
-        "Finish the full exact candidate browser matrix, source coverage and receipt review. The simple and advanced electricity, saving, consultation and solar journeys have local browser receipts. The actual scheduled matrix reported all shards and failed correctly. Residual fixes and exact candidate evidence remain open. Local Firefox wallet accessibility crashes at the native content process, and needs the exact hosted Linux browser matrix. The delivery-window toast overlay is repaired and the notification editor passed all six focused browser cases. Verify the repair on the exact matrix.",
+        "Run the full hosted browser matrix against the exact next candidate and retain the seven-day report. The prior c20816f0 matrix finished and failed. Focused native checks cover its diagnosed failures, including the pinned Firefox runtime, receipt details, CSP provenance, combobox validation focus and migrated reconciliation queue.",
         "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "The primary mobile populated-paint measurement now excludes demonstrated test-runner polling delay. All 12 focused cases passed with unchanged budgets. Verify the repaired hosted integrity check before closing the release gate.",
         "Nightly 42817801007 exposed additional login and electricity timing/overlay flakes and Linux WebKit Terms selection failures. The focused repairs pass locally; the hosted candidate rerun and other matrix outcomes remain open."
@@ -776883,7 +776952,8 @@
           "release-0.6-native-safari-saving-shell-staff-team",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
-          "release-0.6-native-csp-and-combobox-recovery"
+          "release-0.6-native-csp-and-combobox-recovery",
+          "release-0.6-reconciliation-accepted-filter-page"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -889036,6 +889106,65 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/browser-native-csp-combobox",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "21932407b3158b669706005530b072dba5a20e219329323d9c21aa05df71b1fc"
+    },
+    "release-0.6-reconciliation-accepted-filter-page": {
+      "batch": "release-0.6-reconciliation-accepted-filter-page",
+      "base_commit": "47341532fb93142328ef094fcb546cb51e9f37df",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "02-auth-users-admin.md#T-06.01.01",
+        "02-auth-users-admin.md#T-06.01.02",
+        "02-auth-users-admin.md#T-06.01.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.01.01",
+        "02-auth-users-admin.md#T-09.02.01",
+        "02-auth-users-admin.md#T-09.02.02",
+        "02-auth-users-admin.md#T-09.03.01",
+        "02-auth-users-admin.md#T-09.03.02",
+        "02-auth-users-admin.md#T-09.08.01",
+        "02-auth-users-admin.md#T-09.08.02",
+        "02-auth-users-admin.md#T-09.08.03",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.09.02",
+        "02-auth-users-admin.md#T-09.09.03",
+        "02-auth-users-admin.md#T-09.10.02",
+        "02-auth-users-admin.md#T-09.10.03",
+        "02-auth-users-admin.md#T-09.12.01",
+        "02-auth-users-admin.md#T-09.12.02",
+        "02-auth-users-admin.md#T-09.12.03",
+        "02-auth-users-admin.md#T-09.12.04",
+        "02-auth-users-admin.md#T-09.12.05",
+        "06-security-testing-observability.md#T-06.10.03.01",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.30.02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/admin-settings-live.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+        }
+      ],
+      "checks": [
+        "Hosted Firefox shard 1 on c20816f0 (42834362257 job 129892517427) clicked a retained open-list row before the investigating-list response finished; the later route state cleared that stale selection. The test now awaits the exact filtered GET, verifies 200 and waits for the queue to finish loading before opening the row.",
+        "Both English and Persian Firefox reconciliation journeys passed without retries with the compiled API and fresh production migrations on the same disposable Linux network. Only the fixture startup was adapted to a protected SSH bridge. The original large exact amount, investigate, resolve, persisted reload, close and audit assertions remain. Four existing Firefox URL filter/independent draft cases passed. The first attempt with PostgreSQL forwarded across SSH timed out before reaching the changed filter step."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/reconciliation-filter-accepted-page",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "d231c51725d04af2591254050324c045be141a780cd0b94e85d7c867ff0a67a1"
     }
   },
   "historical_improvements": [

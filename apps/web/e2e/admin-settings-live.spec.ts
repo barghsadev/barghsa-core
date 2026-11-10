@@ -852,6 +852,26 @@ for (const locale of ['en', 'fa'])
     });
     const fa = locale === 'fa',
       description = `Reconciliation live ${locale}`;
+    async function applyStatus(status: 'investigating' | 'resolved') {
+      await page.getByLabel(fa ? 'وضعیت' : 'Status', { exact: true }).selectOption(status);
+      const filtered = page.waitForResponse((response) => {
+        const url = new URL(response.url());
+        return (
+          response.request().method() === 'GET' &&
+          url.pathname === '/api/admin/reconciliation/items' &&
+          url.searchParams.get('status') === status
+        );
+      });
+      await page
+        .getByRole('button', { name: fa ? 'اعمال فیلترها' : 'Apply filters', exact: true })
+        .click();
+      expect((await filtered).status()).toBe(200);
+      // The queue retains earlier rows while a URL-backed filter is loading.
+      await expect(page.locator('[data-slot="list-content"]')).not.toHaveAttribute(
+        'aria-busy',
+        'true'
+      );
+    }
     await page.goto('/admin/reconciliation');
     await page.getByRole('button', { name: description, exact: true }).click();
     await expect(page.getByRole('dialog')).toContainText('9007199254740993');
@@ -863,10 +883,7 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
       .click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
-    await page.getByLabel(fa ? 'وضعیت' : 'Status', { exact: true }).selectOption('investigating');
-    await page
-      .getByRole('button', { name: fa ? 'اعمال فیلترها' : 'Apply filters', exact: true })
-      .click();
+    await applyStatus('investigating');
     await page.getByRole('button', { name: description, exact: true }).click();
     await page.getByLabel(fa ? 'توضیح' : 'Explanation', { exact: true }).fill(`Reviewed ${locale}`);
     await page.getByRole('button', { name: fa ? 'رفع مغایرت' : 'Resolve', exact: true }).click();
@@ -877,10 +894,7 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await settleLiveRequests();
     await page.reload();
-    await page.getByLabel(fa ? 'وضعیت' : 'Status', { exact: true }).selectOption('resolved');
-    await page
-      .getByRole('button', { name: fa ? 'اعمال فیلترها' : 'Apply filters', exact: true })
-      .click();
+    await applyStatus('resolved');
     await page.getByRole('button', { name: description, exact: true }).click();
     await expect(page.getByRole('dialog')).toContainText(`Reviewed ${locale}`);
     await page.screenshot({ path: `/tmp/reconciliation-${locale}.png`, fullPage: true });
