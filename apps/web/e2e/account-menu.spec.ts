@@ -223,19 +223,31 @@ for (const locale of ['en', 'fa'] as const) {
       // Settle the logout document before starting the next protected navigation.
       await expect(page.locator('script[type="module"][src^="/auth/assets/"]')).toHaveCount(1);
       await page.waitForLoadState('load');
-      // The guard can replace the protected navigation before WebKit reports its commit.
-      await Promise.all([
-        page.waitForRequest(
-          (request) => request.isNavigationRequest() && new URL(request.url()).pathname === '/app'
-        ),
-        page.waitForEvent(
-          'framenavigated',
-          (frame) => frame === page.mainFrame() && new URL(frame.url()).pathname === '/login'
-        ),
-        page.evaluate(() => {
-          requestAnimationFrame(() => window.location.assign('/app'));
-        }),
-      ]);
+      const protectedProbe = '/app?loggedOutProbe=1';
+      let releaseProbe!: () => void;
+      const probeGate = new Promise<void>((resolve) => {
+        releaseProbe = resolve;
+      });
+      await page.route('**/api/auth/user', async (route) => {
+        // Let the protected document commit before delivering its real fixture denial.
+        if (new URL(route.request().frame().url()).pathname === '/app') await probeGate;
+        await route.fallback();
+      });
+      try {
+        const response = await page.goto(protectedProbe, { waitUntil: 'commit' });
+        expect(response?.request().isNavigationRequest()).toBe(true);
+        expect(new URL(response!.url()).pathname + new URL(response!.url()).search).toBe(
+          protectedProbe
+        );
+        const denied = page.waitForResponse(
+          (value) => new URL(value.url()).pathname === '/api/auth/user' && value.status() === 401
+        );
+        const login = page.waitForURL(/\/login$/);
+        releaseProbe();
+        await Promise.all([denied, login]);
+      } finally {
+        releaseProbe();
+      }
       await expect(page).toHaveURL(/\/login$/);
       await expect(page.locator('script[type="module"][src^="/auth/assets/"]')).toHaveCount(1);
     });

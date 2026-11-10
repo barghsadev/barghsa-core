@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T17:58:41+00:00",
-  "source_commit": "c6378fb77154de49ee95206e00f8fe0039f5ba93",
+  "updated": "2026-11-10T17:59:52+00:00",
+  "source_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5595,7 +5595,8 @@
       "remaining": [
         "Verify hosted run 42864645557 at 820405f4 across all five browser projects and all 40 shards, retain the current clean strict rollup and seven-day history, and reconcile any source changes before final promotion.",
         "Chromium shard 5 of run 42864645557 failed the strict gate on a Persian consent-click flake. The focused fix has eight passing cases. Reconcile the other hosted shards before dispatching the next exact full matrix.",
-        "Mobile Chrome shard 1 of 42864645557 flaked on reverse-arrow navigation before the Home selection committed. Twelve focused checks passed after waiting for the current selection. Read back remaining hosted outcomes before the next exact run."
+        "Mobile Chrome shard 1 of 42864645557 flaked on reverse-arrow navigation before the Home selection committed. Twelve focused checks passed after waiting for the current selection. Read back remaining hosted outcomes before the next exact run.",
+        "Firefox shard 1 of 42864645557 flaked on protected-navigation event timing after logout. Five focused checks passed with the committed navigation and explicit denied-auth proof. Reconcile remaining hosted shards before the next exact matrix."
       ],
       "owner": null,
       "depends_on": [],
@@ -5680,7 +5681,8 @@
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-registration-proof-callers-and-browser-readback",
           "release-0.6-registration-consent-layout-readiness",
-          "release-0.6-catalogue-committed-keyboard-selection"
+          "release-0.6-catalogue-committed-keyboard-selection",
+          "release-0.6-account-logout-committed-probe"
         ],
         "current_acceptance": null
       }
@@ -5873,7 +5875,8 @@
         "Verify hosted run 42864645557 at 820405f4 across all five browser projects and all 40 shards, retain the current clean strict rollup and seven-day history, and reconcile any source changes before final promotion.",
         "Record the strict promotion report from the accepted candidate in the production approval package.",
         "Chromium shard 5 of run 42864645557 failed the strict gate on a Persian consent-click flake. The focused fix has eight passing cases. Reconcile the other hosted shards before dispatching the next exact full matrix.",
-        "Mobile Chrome shard 1 of 42864645557 flaked on reverse-arrow navigation before the Home selection committed. Twelve focused checks passed after waiting for the current selection. Read back remaining hosted outcomes before the next exact run."
+        "Mobile Chrome shard 1 of 42864645557 flaked on reverse-arrow navigation before the Home selection committed. Twelve focused checks passed after waiting for the current selection. Read back remaining hosted outcomes before the next exact run.",
+        "Firefox shard 1 of 42864645557 flaked on protected-navigation event timing after logout. Five focused checks passed with the committed navigation and explicit denied-auth proof. Reconcile remaining hosted shards before the next exact matrix."
       ],
       "owner": null,
       "depends_on": [],
@@ -5956,7 +5959,8 @@
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-registration-proof-callers-and-browser-readback",
           "release-0.6-registration-consent-layout-readiness",
-          "release-0.6-catalogue-committed-keyboard-selection"
+          "release-0.6-catalogue-committed-keyboard-selection",
+          "release-0.6-account-logout-committed-probe"
         ],
         "current_acceptance": null
       }
@@ -535513,7 +535517,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/ai-catalogue-tables.spec.ts",
@@ -535782,6 +535786,16 @@
               "batch": "release-0.5-component-direction-matrix",
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         },
@@ -544180,7 +544194,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -544595,6 +544609,14 @@
                 "apps/api/src/user-settings/user-settings.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -544779,7 +544801,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -545194,6 +545216,14 @@
                 "apps/api/src/user-settings/user-settings.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -545378,7 +545408,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -545793,6 +545823,14 @@
                 "apps/api/src/user-settings/user-settings.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -545977,7 +546015,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -546392,6 +546430,14 @@
                 "apps/api/src/user-settings/user-settings.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -546576,7 +546622,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -546991,6 +547037,14 @@
                 "apps/api/src/user-settings/user-settings.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -547175,7 +547229,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -547590,6 +547644,14 @@
                 "apps/api/src/user-settings/user-settings.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -547774,7 +547836,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -548189,6 +548251,14 @@
                 "apps/api/src/user-settings/user-settings.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -548373,7 +548443,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -548788,6 +548858,14 @@
                 "apps/api/src/user-settings/user-settings.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -548972,7 +549050,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -549387,6 +549465,14 @@
                 "apps/api/src/user-settings/user-settings.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -549571,7 +549657,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -549986,6 +550072,14 @@
                 "apps/api/src/user-settings/user-settings.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -550170,7 +550264,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -550585,6 +550679,14 @@
                 "apps/api/src/user-settings/user-settings.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -550769,7 +550871,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -551184,6 +551286,14 @@
                 "apps/api/src/user-settings/user-settings.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -551368,7 +551478,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -551783,6 +551893,14 @@
                 "apps/api/src/user-settings/user-settings.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -551967,7 +552085,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -552382,6 +552500,14 @@
                 "apps/api/src/user-settings/user-settings.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -552456,7 +552582,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -552981,6 +553107,16 @@
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -553060,7 +553196,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -553585,6 +553721,16 @@
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -553664,7 +553810,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -554189,6 +554335,16 @@
               "base_commit": "996c4d1e63b4e0c474fe287e2abcd2ff073b536c",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-essential-control-contrast/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -554603,7 +554759,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -554945,6 +555101,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -555035,7 +555201,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -555377,6 +555543,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -555465,7 +555641,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -555807,6 +555983,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -555895,7 +556081,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -556236,6 +556422,16 @@
               "batch": "release-0.5-component-direction-matrix",
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         },
@@ -590121,7 +590317,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -590463,6 +590659,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -590551,7 +590757,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -590893,6 +591099,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -590981,7 +591197,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -591323,6 +591539,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -591411,7 +591637,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -591753,6 +591979,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -591846,7 +592082,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -592188,6 +592424,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -592282,7 +592528,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -592624,6 +592870,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -592712,7 +592968,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -593054,6 +593310,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -593142,7 +593408,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -593484,6 +593750,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -593573,7 +593849,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -593915,6 +594191,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -594005,7 +594291,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -594347,6 +594633,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -594435,7 +594731,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -594777,6 +595073,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            }
           ]
         },
         "acceptance_history": [
@@ -594866,7 +595172,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -595207,6 +595513,16 @@
               "batch": "release-0.5-component-direction-matrix",
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         },
@@ -620069,7 +620385,7 @@
             },
             {
               "path": "apps/web/e2e/account-menu.spec.ts",
-              "sha256": "8f0f3990a30485b02a597f8581b1ccde1b2516e0e928905ffccc52d8985ae2c5"
+              "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
             },
             {
               "path": "apps/web/e2e/account-recovery-closure.spec.ts",
@@ -622906,6 +623222,14 @@
                 "apps/web/e2e/onboarding-wizard.spec.ts"
               ],
               "scope": "Wait for actual password scoring and preserve original trusted native consent, registration and profile assertions. The eight affected journeys passed."
+            },
+            {
+              "batch": "release-0.6-account-logout-committed-probe",
+              "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+              "paths": [
+                "apps/web/e2e/account-menu.spec.ts"
+              ],
+              "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
             }
           ]
         }
@@ -791889,7 +792213,8 @@
         "Read back full hosted native and combined coverage on the revised auth and financial fixtures. Earlier run 42857945735 failed these older callers; targeted fixes have passing receipts.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "Chromium shard 5 of run 42864645557 failed the strict gate on a Persian consent-click flake. The focused fix has eight passing cases. Reconcile the other hosted shards before dispatching the next exact full matrix.",
-        "Mobile Chrome shard 1 of 42864645557 flaked on reverse-arrow navigation before the Home selection committed. Twelve focused checks passed after waiting for the current selection. Read back remaining hosted outcomes before the next exact run."
+        "Mobile Chrome shard 1 of 42864645557 flaked on reverse-arrow navigation before the Home selection committed. Twelve focused checks passed after waiting for the current selection. Read back remaining hosted outcomes before the next exact run.",
+        "Firefox shard 1 of 42864645557 flaked on protected-navigation event timing after logout. Five focused checks passed with the committed navigation and explicit denied-auth proof. Reconcile remaining hosted shards before the next exact matrix."
       ],
       "owner": null,
       "depends_on": [],
@@ -792052,7 +792377,8 @@
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-registration-proof-callers-and-browser-readback",
           "release-0.6-registration-consent-layout-readiness",
-          "release-0.6-catalogue-committed-keyboard-selection"
+          "release-0.6-catalogue-committed-keyboard-selection",
+          "release-0.6-account-logout-committed-probe"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -906577,6 +906903,44 @@
           }
         ]
       }
+    },
+    "release-0.6-account-logout-committed-probe": {
+      "batch": "release-0.6-account-logout-committed-probe",
+      "base_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/account-menu.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/account-menu.spec.ts",
+          "sha256": "6a176827ea15fcb045f76091c68ff74f2c3c9a1c221428956ca066a3a02f3b60"
+        }
+      ],
+      "checks": [
+        "Hosted Firefox shard 1 in run 42864645557 timed out waiting for the logout probe navigation request and passed the retry. The trace recorded the unauthenticated 401 and return to login but no intercepted protected document event. A fresh URL alone reproduced the waiter failure in one local Firefox case.",
+        "The revised test holds only the existing synthetic 401 until the fresh protected main document commits. It verifies that the navigation response is for the exact protected probe, then verifies the actual auth 401, return to login and the login bundle. The existing failed and successful logout, CSRF, keyboard, focus and layout assertions are retained.",
+        "The exact English staff case passed three repeats on pinned local Firefox revision 1575, plus desktop WebKit and Mobile Safari. No browser budget, retry setting or production source was changed. The hosted strict matrix remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "proof_logs": [
+        {
+          "file": "browser-42864645557-firefox-1.log",
+          "sha256": "aadc4f6d056f65f3312ae46e1052a2219fa5cc8a6f71d477ce7cef24c046fcd9"
+        },
+        {
+          "file": "browser-account-logout-gated-firefox.log",
+          "sha256": "679e2d1fa5af0bc71c574701347635352dd6271e99b23c811a462589985ae7a7"
+        },
+        {
+          "file": "browser-account-logout-gated-webkit.log",
+          "sha256": "4d38e586b767951766ede7f6e51bb49ee0f504ab60207a11c6f92f45382271a8"
+        }
+      ]
     }
   },
   "historical_improvements": [
