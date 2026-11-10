@@ -358,6 +358,35 @@ it('shows the current refundable balance and resumable wallet requests to financ
   });
 });
 
+it('limits standalone refund requests without blocking replay or settlement', async () => {
+  const f = await invoice();
+  const body = requestBody(f.id, '40');
+  const accepted = await request(body);
+  const key = `wallet:refund-request:profile:${f.profile}`;
+  for (let count = 2; count <= 10; count++) {
+    const seeded = await http.pool.query(
+      'SELECT count FROM rate_limit_rolling(true, $1, 60000, 10, true)',
+      [key]
+    );
+    expect(seeded.rows).toEqual([{ count }]);
+  }
+
+  const denied = await post('wallet-refunds', requestBody(f.id, '10'));
+  expect(denied.status, await denied.clone().text()).toBe(429);
+  expect(Number(denied.headers.get('Retry-After'))).toBeGreaterThan(0);
+  expect((await request(body)).id).toBe(accepted.id);
+  expect((await decide(accepted.id, 'approve')).status).toBe(200);
+  expect((await decide(accepted.id, 'process')).status).toBe(200);
+  expect(await balances(f)).toEqual({
+    refunded_amount: '40',
+    state: 'PartiallyRefunded',
+    posted_balance: '40',
+  });
+  expect(
+    (await http.pool.query('SELECT id FROM refunds WHERE invoice_id=$1', [f.id])).rows
+  ).toEqual([{ id: accepted.id }]);
+});
+
 it('posts partial and full refunds once and links their original payment evidence', async () => {
   const f = await invoice(),
     body = requestBody(f.id, '40');

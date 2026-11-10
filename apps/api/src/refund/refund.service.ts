@@ -36,6 +36,7 @@ import { notifyRefundOutcome } from './refund-notifications.js';
 import { assertRefundTransition, type RefundState } from './refund-state.model.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import { readInvoiceFinancialDetails } from '../finance/invoice-review.js';
+import { enforceProfileFinancialRateLimit } from '../finance/profile-financial-rate-limit.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 interface InvoiceRow {
@@ -455,6 +456,10 @@ export class RefundService {
         );
         if (input.expectedReviewHash)
           this.snapshots.assertConfirmed(financialReview, input.expectedReviewHash);
+        // Standalone finance requests share a quota. Caller-owned workflow
+        // transactions may need to create all required refund allocations.
+        if (!transaction)
+          await enforceProfileFinancialRateLimit(client, 'refund-request', invoice.profile_id);
         const row = (
           await client.query<RefundRow>(
             'INSERT INTO refunds(invoice_id,profile_id,amount,destination,staff_id,idempotency_key) VALUES ($1,$2,$3,$6,$4,$5) RETURNING *',

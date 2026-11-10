@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T07:06:18+00:00",
-  "source_commit": "166799faa500cf7f63df63622fb92fb4568f448b",
+  "updated": "2026-11-10T07:09:37+00:00",
+  "source_commit": "2b9f027b9ec747b1a6dbe8fbab1ccbdbf04f1dad",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5428,7 +5428,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "native-postgresql-fixture-and-mandatory-financial-concurrency",
@@ -5448,7 +5449,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
@@ -5496,7 +5497,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+              "sha256": "6958e74ff732dd57cdc6559d1c16fa38d60b51cae80108d0ad5b49647b0092c3"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -11319,7 +11320,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "source-bound-postgresql-cache-and-wallet-proof",
@@ -11347,7 +11349,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "d376bb2f377c48c7c578fd2ce8261f31224410ba1e349d6988dfa211808923da"
+              "sha256": "de79035948269739df0b8091f059bda6388de19d6fa0c9f1f0ddd142839b738a"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -29995,7 +29997,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -30119,11 +30122,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -58747,7 +58750,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-additive-agent-permissions-across-current-business-consumers",
@@ -58899,7 +58903,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/orders/orders.service.ts",
@@ -74410,7 +74414,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-consultation-isolation-pagination-fixture"
+          "release-0.6-consultation-isolation-pagination-fixture",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -75114,7 +75119,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "packages/db/drizzle/production/0269_wallet_low_balance_signals.sql",
@@ -96177,7 +96182,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-dual-approval-and-emergency-evidence",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -96289,7 +96295,7 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -96329,7 +96335,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "d376bb2f377c48c7c578fd2ce8261f31224410ba1e349d6988dfa211808923da"
+              "sha256": "de79035948269739df0b8091f059bda6388de19d6fa0c9f1f0ddd142839b738a"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -97607,7 +97613,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-dual-approval-and-emergency-evidence",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -97719,7 +97726,7 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -97759,7 +97766,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "d376bb2f377c48c7c578fd2ce8261f31224410ba1e349d6988dfa211808923da"
+              "sha256": "de79035948269739df0b8091f059bda6388de19d6fa0c9f1f0ddd142839b738a"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -102214,7 +102221,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -102434,7 +102442,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
@@ -102542,7 +102550,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+              "sha256": "6958e74ff732dd57cdc6559d1c16fa38d60b51cae80108d0ad5b49647b0092c3"
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-balance-http.integration.test.ts",
@@ -105013,7 +105021,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-dual-approval-and-emergency-evidence",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -105125,7 +105134,7 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -105165,7 +105174,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "d376bb2f377c48c7c578fd2ce8261f31224410ba1e349d6988dfa211808923da"
+              "sha256": "de79035948269739df0b8091f059bda6388de19d6fa0c9f1f0ddd142839b738a"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -147427,7 +147436,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -147451,7 +147461,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "d376bb2f377c48c7c578fd2ce8261f31224410ba1e349d6988dfa211808923da"
+              "sha256": "de79035948269739df0b8091f059bda6388de19d6fa0c9f1f0ddd142839b738a"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
@@ -148000,7 +148010,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -148032,7 +148043,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
-              "sha256": "927a0ad1c7605437aee58278b6f08aa3c0cd5432ea92ef19c8c3ee52f2650844"
+              "sha256": "efe5f788b0fd7a75b8c0ba42737114524bec90982412321229159cb74e6af9d2"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -149366,7 +149377,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -149386,7 +149398,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "d376bb2f377c48c7c578fd2ce8261f31224410ba1e349d6988dfa211808923da"
+              "sha256": "de79035948269739df0b8091f059bda6388de19d6fa0c9f1f0ddd142839b738a"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -149769,7 +149781,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -149785,7 +149798,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "d376bb2f377c48c7c578fd2ce8261f31224410ba1e349d6988dfa211808923da"
+              "sha256": "de79035948269739df0b8091f059bda6388de19d6fa0c9f1f0ddd142839b738a"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -150388,7 +150401,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -150428,11 +150442,11 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
-              "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
+              "sha256": "2edca218d40d08cd484390739e20e75210c467874305eed9ce5fed840519114f"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+              "sha256": "6958e74ff732dd57cdc6559d1c16fa38d60b51cae80108d0ad5b49647b0092c3"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -151262,7 +151276,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -151294,11 +151309,11 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
-              "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
+              "sha256": "2edca218d40d08cd484390739e20e75210c467874305eed9ce5fed840519114f"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+              "sha256": "6958e74ff732dd57cdc6559d1c16fa38d60b51cae80108d0ad5b49647b0092c3"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -151590,7 +151605,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -151626,11 +151642,11 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
-              "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
+              "sha256": "2edca218d40d08cd484390739e20e75210c467874305eed9ce5fed840519114f"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+              "sha256": "6958e74ff732dd57cdc6559d1c16fa38d60b51cae80108d0ad5b49647b0092c3"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -151915,7 +151931,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -151943,11 +151960,11 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
-              "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
+              "sha256": "2edca218d40d08cd484390739e20e75210c467874305eed9ce5fed840519114f"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+              "sha256": "6958e74ff732dd57cdc6559d1c16fa38d60b51cae80108d0ad5b49647b0092c3"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -153518,7 +153535,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -153570,11 +153588,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+              "sha256": "e9db3df65c0dc85ae044af3e7cc86a418bfe401280b1913323e07ff4391ae2aa"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -154096,7 +154114,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -154168,11 +154187,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+              "sha256": "e9db3df65c0dc85ae044af3e7cc86a418bfe401280b1913323e07ff4391ae2aa"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -154718,7 +154737,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -154798,11 +154818,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+              "sha256": "e9db3df65c0dc85ae044af3e7cc86a418bfe401280b1913323e07ff4391ae2aa"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -155373,7 +155393,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -155453,11 +155474,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+              "sha256": "e9db3df65c0dc85ae044af3e7cc86a418bfe401280b1913323e07ff4391ae2aa"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -156123,7 +156144,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -156203,11 +156225,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+              "sha256": "e9db3df65c0dc85ae044af3e7cc86a418bfe401280b1913323e07ff4391ae2aa"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -156661,7 +156683,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -156713,11 +156736,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+              "sha256": "e9db3df65c0dc85ae044af3e7cc86a418bfe401280b1913323e07ff4391ae2aa"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -157149,7 +157172,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -157201,11 +157225,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+              "sha256": "e9db3df65c0dc85ae044af3e7cc86a418bfe401280b1913323e07ff4391ae2aa"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -157638,7 +157662,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -157690,11 +157715,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+              "sha256": "e9db3df65c0dc85ae044af3e7cc86a418bfe401280b1913323e07ff4391ae2aa"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -158128,7 +158153,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -158180,11 +158206,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+              "sha256": "e9db3df65c0dc85ae044af3e7cc86a418bfe401280b1913323e07ff4391ae2aa"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -158626,7 +158652,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -158678,11 +158705,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+              "sha256": "e9db3df65c0dc85ae044af3e7cc86a418bfe401280b1913323e07ff4391ae2aa"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -159116,7 +159143,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -159168,11 +159196,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+              "sha256": "e9db3df65c0dc85ae044af3e7cc86a418bfe401280b1913323e07ff4391ae2aa"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -159610,7 +159638,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -159670,11 +159699,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -160656,7 +160685,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -160716,11 +160746,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -161675,7 +161705,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-exact-coverage",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -161775,11 +161806,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -162249,7 +162280,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-exact-coverage",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -162349,11 +162381,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -162850,7 +162882,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -162910,11 +162943,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -163897,7 +163930,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -163957,11 +163991,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -164941,7 +164975,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -165001,11 +165036,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -165985,7 +166020,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -166045,11 +166081,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -167003,7 +167039,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-exact-coverage",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -167103,11 +167140,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -167601,7 +167638,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -167661,11 +167699,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -168644,7 +168682,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -168704,11 +168743,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -169687,7 +169726,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -169747,11 +169787,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -196146,7 +196186,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -196194,7 +196235,7 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
@@ -196896,7 +196937,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -196944,7 +196986,7 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
@@ -197646,7 +197688,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -197694,7 +197737,7 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
@@ -198396,7 +198439,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -198444,7 +198488,7 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
@@ -199146,7 +199190,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -199194,7 +199239,7 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
@@ -199899,7 +199944,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-price-decrease-paid-source-refund-acceptance",
@@ -199915,7 +199961,7 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -356306,7 +356352,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -356370,7 +356417,7 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/test/cancellation-request-notification-proof.ts",
@@ -357403,7 +357450,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -357451,7 +357499,7 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
@@ -358153,7 +358201,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -358201,7 +358250,7 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
@@ -358904,7 +358953,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -358952,7 +359002,7 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
@@ -381194,7 +381244,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -381298,11 +381349,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -382495,7 +382546,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -382599,11 +382651,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -383796,7 +383848,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -383900,11 +383953,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -385097,7 +385150,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -385201,11 +385255,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -386399,7 +386453,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -386503,11 +386558,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -481020,7 +481075,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "source-bound-mfa-and-device-verification",
@@ -481056,7 +481112,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -481477,7 +481533,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "source-bound-mfa-and-device-verification",
@@ -481513,7 +481570,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -485320,7 +485377,8 @@
         "batches": [
           "release-0.6-high-risk-staff-step-up",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -485414,7 +485472,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -485617,7 +485675,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -485657,7 +485716,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -485759,7 +485818,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -485815,7 +485875,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -486263,7 +486323,8 @@
         "batches": [
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -486337,11 +486398,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
@@ -486353,7 +486414,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             }
           ]
         }
@@ -486382,7 +486443,8 @@
         "batches": [
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -486456,11 +486518,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
@@ -486472,7 +486534,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             }
           ]
         }
@@ -486501,7 +486563,8 @@
         "batches": [
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -486575,11 +486638,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
@@ -486591,7 +486654,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             }
           ]
         }
@@ -489173,9 +489236,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the mounted PostgreSQL HTTP 429, Retry-After and accepted replay on the exact candidate and cover the shared boundary with independent authorized actors.",
-        "Apply and verify the required profile limit to customer-initiated invoice payment and refund requests. Keep accepted retries, mandatory refund execution, settlement and verified provider callbacks independent of customer admission.",
-        "Verify stricter provider and anomaly controls with source-bound negative cases and staging evidence."
+        "Run mounted PostgreSQL HTTP regressions for canonical profile scope, 429/Retry-After, accepted retries, independent actors and refund settlement, with exact staging candidate evidence.",
+        "Verify provider rate limits and anomaly alert delivery on the staged candidate with synthetic funds and controlled provider context. Preserve signed callback and independent money recovery."
       ],
       "owner": null,
       "depends_on": [],
@@ -489183,7 +489245,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": null
       }
@@ -489753,7 +489816,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -489881,7 +489945,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -490203,7 +490267,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -490263,7 +490328,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -490314,7 +490379,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -490363,7 +490429,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -490569,7 +490635,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -490649,7 +490716,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -492310,7 +492377,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -492318,7 +492386,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             },
             {
               "path": "docs/threat-model.md",
@@ -492468,7 +492536,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -492476,7 +492545,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -492592,7 +492661,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -492600,7 +492670,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -492664,7 +492734,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -492680,7 +492751,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             }
           ],
           "checks": [
@@ -492750,7 +492821,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -492810,7 +492882,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -493567,7 +493639,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-idempotency-and-refund-calculation-evidence"
+          "release-0.6-idempotency-and-refund-calculation-evidence",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "source-bound-domain-unit-tests",
@@ -493595,11 +493668,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -493611,11 +493684,11 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
-              "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
+              "sha256": "2edca218d40d08cd484390739e20e75210c467874305eed9ce5fed840519114f"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+              "sha256": "6958e74ff732dd57cdc6559d1c16fa38d60b51cae80108d0ad5b49647b0092c3"
             },
             {
               "path": "apps/web/package.json",
@@ -494876,7 +494949,8 @@
           "release-0.6-postgresql-finance-outbox-test-evidence",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-source-matching-native-postgresql-tests",
@@ -494904,7 +494978,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+              "sha256": "6958e74ff732dd57cdc6559d1c16fa38d60b51cae80108d0ad5b49647b0092c3"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -494943,7 +495017,8 @@
         "batches": [
           "release-0.6-postgresql-finance-outbox-test-evidence",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-source-matching-native-postgresql-tests",
@@ -494959,7 +495034,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+              "sha256": "6958e74ff732dd57cdc6559d1c16fa38d60b51cae80108d0ad5b49647b0092c3"
             },
             {
               "path": "apps/api/src/wallet/wallet-optimistic-lock.integration.test.ts",
@@ -495298,7 +495373,8 @@
           "release-0.6-postgresql-finance-outbox-test-evidence",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-source-matching-native-postgresql-tests",
@@ -495330,7 +495406,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+              "sha256": "6958e74ff732dd57cdc6559d1c16fa38d60b51cae80108d0ad5b49647b0092c3"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -495372,7 +495448,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-native-and-hosted-concurrency-matrix",
@@ -495400,11 +495477,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -495432,7 +495509,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+              "sha256": "6958e74ff732dd57cdc6559d1c16fa38d60b51cae80108d0ad5b49647b0092c3"
             },
             {
               "path": "apps/api/src/wallet/staff-wallet-ledger-http.integration.test.ts",
@@ -496174,7 +496251,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -496190,7 +496268,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             }
           ],
           "checks": [
@@ -496252,7 +496330,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -496260,7 +496339,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "373a28683aa864160db365b367bb85e80c0b8c60e5fd11b0cb37506160f60828"
+              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -500347,7 +500426,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-ai-inference-metrics",
           "release-0.6-runtime-failure-log-redaction",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_acceptance": {
           "kind": "verified-payment-idempotency-conflict-p1",
@@ -500359,15 +500439,15 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "d376bb2f377c48c7c578fd2ce8261f31224410ba1e349d6988dfa211808923da"
+              "sha256": "de79035948269739df0b8091f059bda6388de19d6fa0c9f1f0ddd142839b738a"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
-              "sha256": "927a0ad1c7605437aee58278b6f08aa3c0cd5432ea92ef19c8c3ee52f2650844"
+              "sha256": "efe5f788b0fd7a75b8c0ba42737114524bec90982412321229159cb74e6af9d2"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+              "sha256": "6958e74ff732dd57cdc6559d1c16fa38d60b51cae80108d0ad5b49647b0092c3"
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.test.ts",
@@ -500379,7 +500459,7 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
-              "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
+              "sha256": "2edca218d40d08cd484390739e20e75210c467874305eed9ce5fed840519114f"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -746017,7 +746097,7 @@
             },
             {
               "path": "apps/api/src/wallet/online-topup.service.ts",
-              "sha256": "d376bb2f377c48c7c578fd2ce8261f31224410ba1e349d6988dfa211808923da"
+              "sha256": "de79035948269739df0b8091f059bda6388de19d6fa0c9f1f0ddd142839b738a"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
@@ -746057,7 +746137,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
-              "sha256": "927a0ad1c7605437aee58278b6f08aa3c0cd5432ea92ef19c8c3ee52f2650844"
+              "sha256": "efe5f788b0fd7a75b8c0ba42737114524bec90982412321229159cb74e6af9d2"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -746213,11 +746293,11 @@
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
-              "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
+              "sha256": "2edca218d40d08cd484390739e20e75210c467874305eed9ce5fed840519114f"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
-              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+              "sha256": "6958e74ff732dd57cdc6559d1c16fa38d60b51cae80108d0ad5b49647b0092c3"
             },
             {
               "path": "apps/api/src/wallet/wallet.module.ts",
@@ -746373,11 +746453,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+              "sha256": "e9db3df65c0dc85ae044af3e7cc86a418bfe401280b1913323e07ff4391ae2aa"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "8b2ac42e90e9e5d703c6669f67c044cb959bb29cc0d654d2b690d0a8a1b31249"
+              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -746609,11 +746689,11 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/refund/wallet-refund.controller.ts",
@@ -749359,7 +749439,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-dual-approval-and-emergency-evidence",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-profile-payment-refund-admission"
         ]
       }
     },
@@ -749991,7 +750072,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/orders/orders.service.ts",
@@ -750715,7 +750796,7 @@
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
-              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+              "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
             },
             {
               "path": "apps/web/e2e/electricity-price-adjustment-form-fixture.ts",
@@ -754043,7 +754124,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-consultation-isolation-pagination-fixture"
+          "release-0.6-consultation-isolation-pagination-fixture",
+          "release-0.6-profile-payment-refund-admission"
         ]
       }
     },
@@ -754895,7 +754977,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/saving/saving-fulfillment.service.ts",
@@ -758046,7 +758128,8 @@
           "release-0.6-ai-quotas-and-budget-evidence",
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-consultation-isolation-pagination-fixture"
+          "release-0.6-consultation-isolation-pagination-fixture",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -758907,7 +758990,7 @@
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
-              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+              "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
             },
             {
               "path": "apps/api/src/saving/saving-fulfillment.service.ts",
@@ -761940,7 +762023,8 @@
           "release-0.6-ai-quotas-and-budget-evidence",
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-consultation-isolation-pagination-fixture"
+          "release-0.6-consultation-isolation-pagination-fixture",
+          "release-0.6-profile-payment-refund-admission"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -871064,6 +871148,110 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/wallet-profile-topup-admission",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "59a55dcd061ef8e6f77d17dc04acf5a96f1d05c225d29fc60132c0963d16c6be"
+    },
+    "release-0.6-profile-payment-refund-admission": {
+      "batch": "release-0.6-profile-payment-refund-admission",
+      "base_commit": "2b9f027b9ec747b1a6dbe8fbab1ccbdbf04f1dad",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.05.02.06"
+      ],
+      "changed_paths": [
+        "apps/api/src/finance/profile-financial-rate-limit.ts",
+        "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+        "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+        "apps/api/src/refund/refund.service.ts",
+        "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+        "apps/api/src/wallet/active-profile.ts",
+        "apps/api/src/wallet/bank-receipt-topup.service.ts",
+        "apps/api/src/wallet/online-topup.service.ts",
+        "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+        "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/consultation/consultation-workflow.service.ts",
+          "sha256": "b8f02aecb2b7284223420f7d4eb33ba88fb6ff596efc01600cf2c9b7938035da"
+        },
+        {
+          "path": "apps/api/src/finance/profile-financial-rate-limit.ts",
+          "sha256": "c778478bb21adbfc0d4ecaf71a92b96b8511fc681d1b5c82dedfd3f4f715c274"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+          "sha256": "e9db3df65c0dc85ae044af3e7cc86a418bfe401280b1913323e07ff4391ae2aa"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+          "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
+        },
+        {
+          "path": "apps/api/src/refund/refund.service.ts",
+          "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
+        },
+        {
+          "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+          "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+        },
+        {
+          "path": "apps/api/src/wallet/active-profile.ts",
+          "sha256": "9ef2f4d5dd437510479c54aa15af5655c6447c53cb05d4c2482dbf496572f5ce"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
+          "sha256": "efe5f788b0fd7a75b8c0ba42737114524bec90982412321229159cb74e6af9d2"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.ts",
+          "sha256": "242c8aa29c7d189561edb92ac4f8f972e709639b8943a97036ecb94944343911"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.controller.ts",
+          "sha256": "86bcd985f89f752ac881e69f93e9c359233cf93e8ad8cad2e385b5ac7da5245f"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "20fee196398310157afd7bc3f4e5e0d05bd2320019a3f8ebe9c58b50613be93f"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-http.integration.test.ts",
+          "sha256": "61bf9f59757e26f10541605d73288b91fe137e598e011991c17066aa5abe02f6"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup.service.ts",
+          "sha256": "de79035948269739df0b8091f059bda6388de19d6fa0c9f1f0ddd142839b738a"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+          "sha256": "2edca218d40d08cd484390739e20e75210c467874305eed9ce5fed840519114f"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "6958e74ff732dd57cdc6559d1c16fa38d60b51cae80108d0ad5b49647b0092c3"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+        },
+        {
+          "path": "packages/db/drizzle/production/0120_rolling_rate_limits.sql",
+          "sha256": "0715c4c8dbd6979196a02c54b18b9b5b74952bd6077abaf7c58a5b5457219416"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
+          "sha256": "2bc415b8fc2d7d5e5f73ef9702c1ab0889da624a7754eaf781068bdfe3ad1857"
+        }
+      ],
+      "checks": [
+        "Two baseline regression cases showed wallet invoice payment and customer invoice receipt submission continued when the canonical profile payment quota was exhausted.",
+        "The same PostgreSQL transaction-scoped limiter charges wallet debit and invoice receipt submissions against a payment quota, separate from top-up admission. Existing top-up keys, persisted history and behavior carry forward unchanged. Cached, receipt and ledger replays avoid another charge. New intents are admitted only after current authority, payable state and financial review checks.",
+        "Standalone wallet and external-bank refund requests use a separate canonical profile quota after replay and review checks. Consultation allocations on caller-owned workflow transactions, refund decisions, completion, retry workers and authenticated provider settlement do not consume this quota. The added mounted regression asserts HTTP 429 and Retry-After, a single request row, successful accepted replay and exact settlement on a full quota.",
+        "The 154 targeted service, ledger, input, callback and controller cases passed. API typecheck, scoped ESLint, Prettier and diff checks passed. Mounted HTTP and staging evidence remain required.",
+        "Existing provider limits and stricter controls use a separate provider callback namespace, signature and merchant verification, replay window and verified server status. Unmatched callbacks generate a deduplicated review report; chargebacks route an independent finance alert. The local callback tests and earlier PostgreSQL rate-limit boundary support this scope, with staging evidence pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/profile-payment-refund-admission",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "8c37b8aa6734d4c97761ae744998c1dd92686131225a2dd047dc51a5968a8cb0"
     }
   },
   "historical_improvements": [

@@ -65,6 +65,7 @@ function makeReceiptRow(overrides: Record<string, unknown> = {}) {
 }
 
 type ScriptOptions = {
+  paymentCount?: number;
   invoice?: {
     id: string;
     profile_id: string;
@@ -86,6 +87,9 @@ type ScriptOptions = {
 
 function scriptClient(opts: ScriptOptions = {}) {
   mockClient.query.mockImplementation(async (sql: string, params?: unknown[]) => {
+    if (sql.includes('rate_limit_rolling')) {
+      return { rows: [{ count: opts.paymentCount ?? 1, reset_ms: '42000' }] };
+    }
     if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
       return { rows: [] };
     }
@@ -277,6 +281,24 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
     ).toBe(false);
   });
 
+  it('rolls back a new receipt before storage when the shared payment quota is exhausted', async () => {
+    scriptClient({ paymentCount: 11 });
+    await expect(service.submit(submitInput())).rejects.toMatchObject({
+      status: 429,
+      response: { retryAfterMs: 42_000 },
+    });
+    expect(mockClient.query).toHaveBeenCalledWith(expect.stringContaining('rate_limit_rolling'), [
+      true,
+      `wallet:payment:profile:${PROFILE_ID}`,
+      60_000,
+      10,
+      true,
+    ]);
+    expect(storage.getObject).not.toHaveBeenCalled();
+    expect(storage.putObject).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+  });
+
   it('rejects a missing storage record so fabricated keys cannot insert', async () => {
     scriptClient({ storageStatus: null });
     const rejection = await service.submit(submitInput()).catch((error: unknown) => error);
@@ -402,10 +424,14 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
   });
 
   it('returns the original Submitted row when the same attachment is retried', async () => {
-    scriptClient({ existing: makeReceiptRow() });
+    scriptClient({ existing: makeReceiptRow(), paymentCount: 11 });
     const result = await service.submit(submitInput());
     expect(result.receiptId).toBe(RECEIPT_ID);
     expect(result.state).toBe('Submitted');
+    expect(mockClient.query).not.toHaveBeenCalledWith(
+      expect.stringContaining('rate_limit_rolling'),
+      expect.any(Array)
+    );
     expect(
       mockClient.query.mock.calls.some(([sql]) => String(sql).includes('INSERT INTO bank_receipts'))
     ).toBe(false);

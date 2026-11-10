@@ -1,5 +1,6 @@
 import { lockWalletProfile, assertWalletProfileWritable } from './profile-lock.js';
 import { observePaymentKeyConflict } from '../metrics/payment-idempotency-metrics.js';
+import { enforceProfileFinancialRateLimit } from '../finance/profile-financial-rate-limit.js';
 /**
  * PayInvoiceWithWalletService — settle an invoice with a single full
  * wallet debit (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.03 / S-04.2.03).
@@ -264,6 +265,7 @@ export class PayInvoiceWithWalletService {
               available
             );
       if (financialReview) reviews.assertConfirmed(financialReview, options.expectedReviewHash!);
+      await enforceProfileFinancialRateLimit(client, 'payment', invoice.profile_id);
       const debit = await this.debitExactRemaining(client, {
         invoice,
         remaining,

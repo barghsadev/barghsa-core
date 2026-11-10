@@ -1,6 +1,7 @@
 import { InputFieldException } from '../common/input-field.exception.js';
 import { v7 as uuidv7 } from 'uuid';
 import { receiptActivityActor } from '../finance/receipt-activity-actor.js';
+import { enforceProfileFinancialRateLimit } from '../finance/profile-financial-rate-limit.js';
 import {
   sealBankReceiptAttachment,
   persistSealedBankReceipt,
@@ -326,6 +327,7 @@ export class InvoiceBankReceiptUploadService {
 
       const review = this.financialReview(invoice, profileId, amountIrR, receipt, storageRow);
       if (expectedReviewHash) this.reviews.assertConfirmed(review, expectedReviewHash);
+      await enforceProfileFinancialRateLimit(client, 'payment', invoice.profile_id);
 
       const sealed = await sealBankReceiptAttachment(
         client,
