@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T18:26:18+00:00",
-  "source_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+  "updated": "2026-11-10T18:28:52+00:00",
+  "source_commit": "eaa09018b8a1ff3f5f30e657fa715bf0119c55a3",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -14385,7 +14385,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify a complete manual invocation of the exact published workflow and read back its seven-path report. Reconcile the prerequisite nightly gate and record the next actual weekly receipt."
+        "Reconcile the prerequisite nightly gate and record the first actual Sunday 03:00 UTC schedule receipt. The exact seven-path manual invocation and durable report passed."
       ],
       "owner": null,
       "depends_on": [],
@@ -14423,10 +14423,11 @@
         "batches": [
           "release-0.6-weekly-isolated-load-scenarios",
           "release-0.6-load-client-address-fixture",
-          "release-0.6-load-regression-and-durable-count-receipt"
+          "release-0.6-load-regression-and-durable-count-receipt",
+          "release-0.6-exact-hosted-load-receipt"
         ],
         "current_acceptance": {
-          "kind": "source-bound-compiled-load-scenario-smoke",
+          "kind": "source-bound-hosted-isolated-load",
           "base_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
           "source_evidence": [
             {
@@ -14484,6 +14485,14 @@
             {
               "path": "docs/operations/service-objectives.md",
               "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             }
           ],
           "checks": [
@@ -14497,7 +14506,10 @@
             "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication.",
             "Exact 4c3552e1 performed all 1,000 attempts per operation with zero request failures on the pinned disposable PostgreSQL and compiled API. The 50-address fixture preserved the invoice quota. The regression gate failed on electricity preview at 395.893 ms p95, order submission at 922.761 ms and CRM search at 682.026 ms. Wallet payment at 588.812 ms and invoice list at 319.535 ms also missed the underlying rehearsal targets while remaining within the 20% regression tolerance.",
             "The run used a one-CPU PostgreSQL container and two CPUs for the API and load runner. One concurrent cgroup snapshot showed 1,073 throttled PostgreSQL periods out of 1,397. This is an isolated load result. The report does not establish production-equivalent capacity or the sole cause of each latency miss.",
-            "The initial full run exited at the latency gate before the durable-count assertions. The revised harness verifies and writes financial and queue counts before failing latency when all samples completed. The genuine four-iteration native smoke verified the persisted counts. A separate injected latency-regression receipt after genuine synthetic requests retained those counts and still failed the gate. No full-load durable-count pass is claimed for the earlier run."
+            "The initial full run exited at the latency gate before the durable-count assertions. The revised harness verifies and writes financial and queue counts before failing latency when all samples completed. The genuine four-iteration native smoke verified the persisted counts. A separate injected latency-regression receipt after genuine synthetic requests retained those counts and still failed the gate. No full-load durable-count pass is claimed for the earlier run.",
+            "GitHub run 42874780003 succeeded at 1ba0726b111345a9456cb65428e084dffdd46117. It built the exact API, installed the pinned k6 binary and completed 7,000 synthetic operations at eight virtual users with zero failed checks. Every operation met its strict read or write p95 budget and emitted p50, p95 and p99.",
+            "Electricity preview, submission and CRM search measured 72.25, 174.82 and 103.64 ms p95 on the hosted runner. The retained postconditions verify 1,000 orders, paid invoices, wallet debits, upload reservations and alerts, 3,000 alert outbox rows and 50 admitted invoice client addresses.",
+            "The GitHub workflow is active on main and schedules Sunday at 03:00 UTC. The observed run was a manual invocation on an isolated hosted runner. The capped local run used different resources, so the timings cannot isolate the effect of an individual change. Production-equivalent capacity and the first scheduled run remain separate."
           ],
           "source_renewals": [
             {
@@ -14519,7 +14531,12 @@
               ],
               "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
             }
-          ]
+          ],
+          "hosted_load_receipt": {
+            "run": "https://github.com/barghsadev/barghsa-core/actions/runs/42874780003",
+            "candidate": "1ba0726b111345a9456cb65428e084dffdd46117",
+            "batch": "release-0.6-exact-hosted-load-receipt"
+          }
         }
       }
     },
@@ -512876,8 +512893,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read back the exact full hosted workload on isolated runner resources. Investigate electricity preview, order submission and CRM search if they still exceed 360/600/360 ms p95. Retain the real database and queue counts even if latency fails.",
-        "Prove the strict rehearsal targets, declared dataset/index cardinality and capacity on the production-equivalent environment."
+        "Prove the strict rehearsal targets, declared dataset and index cardinality, and capacity on the production-equivalent environment. The isolated hosted run met every strict target with verified durable counts."
       ],
       "owner": null,
       "depends_on": [],
@@ -512895,10 +512911,11 @@
           "release-0.6-load-client-address-fixture",
           "release-0.6-crm-page-before-profile-summaries",
           "release-0.6-load-regression-and-durable-count-receipt",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-exact-hosted-load-receipt"
         ],
         "current_acceptance": {
-          "kind": "source-bound-compiled-load-scenario-smoke",
+          "kind": "source-bound-hosted-isolated-load",
           "base_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
           "source_evidence": [
             {
@@ -512960,6 +512977,14 @@
             {
               "path": "apps/api/src/crm/crm.service.ts",
               "sha256": "a840cf69d1b241d3e29c1d613e2c277c25faa1d0ad8fa500e087954af00c2d84"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             }
           ],
           "checks": [
@@ -512977,7 +513002,10 @@
             "Exact 4c3552e1 performed all 1,000 attempts per operation with zero request failures on the pinned disposable PostgreSQL and compiled API. The 50-address fixture preserved the invoice quota. The regression gate failed on electricity preview at 395.893 ms p95, order submission at 922.761 ms and CRM search at 682.026 ms. Wallet payment at 588.812 ms and invoice list at 319.535 ms also missed the underlying rehearsal targets while remaining within the 20% regression tolerance.",
             "The run used a one-CPU PostgreSQL container and two CPUs for the API and load runner. One concurrent cgroup snapshot showed 1,073 throttled PostgreSQL periods out of 1,397. This is an isolated load result. The report does not establish production-equivalent capacity or the sole cause of each latency miss.",
             "The initial full run exited at the latency gate before the durable-count assertions. The revised harness verifies and writes financial and queue counts before failing latency when all samples completed. The genuine four-iteration native smoke verified the persisted counts. A separate injected latency-regression receipt after genuine synthetic requests retained those counts and still failed the gate. No full-load durable-count pass is claimed for the earlier run.",
-            "Electricity preview and submission now resolve all priced-line VAT in one statement. Real PostgreSQL and compiled HTTP checks preserve rate precedence, financial snapshots and submission safeguards. Measure the exact changed candidate before assessing either latency miss."
+            "Electricity preview and submission now resolve all priced-line VAT in one statement. Real PostgreSQL and compiled HTTP checks preserve rate precedence, financial snapshots and submission safeguards. Measure the exact changed candidate before assessing either latency miss.",
+            "GitHub run 42874780003 succeeded at 1ba0726b111345a9456cb65428e084dffdd46117. It built the exact API, installed the pinned k6 binary and completed 7,000 synthetic operations at eight virtual users with zero failed checks. Every operation met its strict read or write p95 budget and emitted p50, p95 and p99.",
+            "Electricity preview, submission and CRM search measured 72.25, 174.82 and 103.64 ms p95 on the hosted runner. The retained postconditions verify 1,000 orders, paid invoices, wallet debits, upload reservations and alerts, 3,000 alert outbox rows and 50 admitted invoice client addresses.",
+            "The GitHub workflow is active on main and schedules Sunday at 03:00 UTC. The observed run was a manual invocation on an isolated hosted runner. The capped local run used different resources, so the timings cannot isolate the effect of an individual change. Production-equivalent capacity and the first scheduled run remain separate."
           ],
           "source_renewals": [
             {
@@ -512999,7 +513027,12 @@
               ],
               "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
             }
-          ]
+          ],
+          "hosted_load_receipt": {
+            "run": "https://github.com/barghsadev/barghsa-core/actions/runs/42874780003",
+            "candidate": "1ba0726b111345a9456cb65428e084dffdd46117",
+            "batch": "release-0.6-exact-hosted-load-receipt"
+          }
         }
       }
     },
@@ -513283,7 +513316,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read back the actual weekly schedule and its report, and verify the accepted staging or authorized isolated equivalent executes the same seven-path workload."
+        "Read back the first actual Sunday 03:00 UTC scheduled run and its report. The active workflow and the isolated equivalent manual workload are verified."
       ],
       "owner": null,
       "depends_on": [],
@@ -513299,10 +513332,11 @@
         "batches": [
           "release-0.6-weekly-isolated-load-scenarios",
           "release-0.6-load-client-address-fixture",
-          "release-0.6-load-regression-and-durable-count-receipt"
+          "release-0.6-load-regression-and-durable-count-receipt",
+          "release-0.6-exact-hosted-load-receipt"
         ],
         "current_acceptance": {
-          "kind": "source-bound-compiled-load-scenario-smoke",
+          "kind": "source-bound-hosted-isolated-load",
           "base_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
           "source_evidence": [
             {
@@ -513360,6 +513394,14 @@
             {
               "path": "docs/operations/service-objectives.md",
               "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             }
           ],
           "checks": [
@@ -513373,7 +513415,10 @@
             "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication.",
             "Exact 4c3552e1 performed all 1,000 attempts per operation with zero request failures on the pinned disposable PostgreSQL and compiled API. The 50-address fixture preserved the invoice quota. The regression gate failed on electricity preview at 395.893 ms p95, order submission at 922.761 ms and CRM search at 682.026 ms. Wallet payment at 588.812 ms and invoice list at 319.535 ms also missed the underlying rehearsal targets while remaining within the 20% regression tolerance.",
             "The run used a one-CPU PostgreSQL container and two CPUs for the API and load runner. One concurrent cgroup snapshot showed 1,073 throttled PostgreSQL periods out of 1,397. This is an isolated load result. The report does not establish production-equivalent capacity or the sole cause of each latency miss.",
-            "The initial full run exited at the latency gate before the durable-count assertions. The revised harness verifies and writes financial and queue counts before failing latency when all samples completed. The genuine four-iteration native smoke verified the persisted counts. A separate injected latency-regression receipt after genuine synthetic requests retained those counts and still failed the gate. No full-load durable-count pass is claimed for the earlier run."
+            "The initial full run exited at the latency gate before the durable-count assertions. The revised harness verifies and writes financial and queue counts before failing latency when all samples completed. The genuine four-iteration native smoke verified the persisted counts. A separate injected latency-regression receipt after genuine synthetic requests retained those counts and still failed the gate. No full-load durable-count pass is claimed for the earlier run.",
+            "GitHub run 42874780003 succeeded at 1ba0726b111345a9456cb65428e084dffdd46117. It built the exact API, installed the pinned k6 binary and completed 7,000 synthetic operations at eight virtual users with zero failed checks. Every operation met its strict read or write p95 budget and emitted p50, p95 and p99.",
+            "Electricity preview, submission and CRM search measured 72.25, 174.82 and 103.64 ms p95 on the hosted runner. The retained postconditions verify 1,000 orders, paid invoices, wallet debits, upload reservations and alerts, 3,000 alert outbox rows and 50 admitted invoice client addresses.",
+            "The GitHub workflow is active on main and schedules Sunday at 03:00 UTC. The observed run was a manual invocation on an isolated hosted runner. The capped local run used different resources, so the timings cannot isolate the effect of an individual change. Production-equivalent capacity and the first scheduled run remain separate."
           ],
           "source_renewals": [
             {
@@ -513395,7 +513440,12 @@
               ],
               "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
             }
-          ]
+          ],
+          "hosted_load_receipt": {
+            "run": "https://github.com/barghsadev/barghsa-core/actions/runs/42874780003",
+            "candidate": "1ba0726b111345a9456cb65428e084dffdd46117",
+            "batch": "release-0.6-exact-hosted-load-receipt"
+          }
         }
       }
     },
@@ -908133,6 +908183,210 @@
         {
           "file": "definition-of-done-checks.json",
           "sha256": "c3aa1407125b32b2701936d17f820dd4b5745644a301a0153139363f53f776c4"
+        }
+      ]
+    },
+    "release-0.6-exact-hosted-load-receipt": {
+      "batch": "release-0.6-exact-hosted-load-receipt",
+      "base_commit": "eaa09018b8a1ff3f5f30e657fa715bf0119c55a3",
+      "tested_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.02",
+        "06-security-testing-observability.md#T-06.11.03.03",
+        "06-security-testing-observability.md#T-06.11.03.06"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/load-weekly.yml",
+          "sha256": "b37e2f752efb04c2e5aa8bf27c38176b300e99b5045d0b90fee52e4dbb1e5f6f"
+        },
+        {
+          "path": "apps/api/performance/weekly.k6.mjs",
+          "sha256": "7efde50d28bf3f6675815bbc0d145fa441b2cde064bdd2eb9ff609e4a882a5aa"
+        },
+        {
+          "path": "apps/api/performance/weekly.perf.ts",
+          "sha256": "362954082d235cd4d684a4fe3519197f6d25a4c8682146c03b8132c7cc4445cb"
+        },
+        {
+          "path": "apps/api/scripts/http-test-server.cjs",
+          "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+        },
+        {
+          "path": "apps/api/src/crm/crm.controller.ts",
+          "sha256": "72494a67b32246e58c55c4e603ba629fe5d2457be8b89833b68203ba8c689a43"
+        },
+        {
+          "path": "apps/api/src/crm/crm.service.ts",
+          "sha256": "a840cf69d1b241d3e29c1d613e2c277c25faa1d0ad8fa500e087954af00c2d84"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+          "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.controller.ts",
+          "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice.controller.ts",
+          "sha256": "d4d075d1cad4cab0145e0ea60f51236cc68a00c7a92607a9993e18cd55cdfd39"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+        },
+        {
+          "path": "apps/api/src/test/postgres-setup.ts",
+          "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+        },
+        {
+          "path": "apps/api/src/upload/upload.controller.ts",
+          "sha256": "b8d54439a4ddd2abe6a8b2e527895660e334fec1a6f5953c820b6f96b74b8842"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "825a0178bf5564db4c72f8c7279f72123d53b03c70b0a9d666e410b5562359a7"
+        },
+        {
+          "path": "apps/api/vitest.performance.config.ts",
+          "sha256": "5b9b4379173b7e543723998d9523d4c6f4a6011e94240a19afc51c449624753f"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
+        },
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
+        }
+      ],
+      "checks": [
+        "GitHub run 42874780003 succeeded at 1ba0726b111345a9456cb65428e084dffdd46117. It built the exact API, installed the pinned k6 binary and completed 7,000 synthetic operations at eight virtual users with zero failed checks. Every operation met its strict read or write p95 budget and emitted p50, p95 and p99.",
+        "Electricity preview, submission and CRM search measured 72.25, 174.82 and 103.64 ms p95 on the hosted runner. The retained postconditions verify 1,000 orders, paid invoices, wallet debits, upload reservations and alerts, 3,000 alert outbox rows and 50 admitted invoice client addresses.",
+        "The GitHub workflow is active on main and schedules Sunday at 03:00 UTC. The observed run was a manual invocation on an isolated hosted runner. The capped local run used different resources, so the timings cannot isolate the effect of an individual change. Production-equivalent capacity and the first scheduled run remain separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/hosted-load-42874780003",
+      "hosted_load": {
+        "run": "https://github.com/barghsadev/barghsa-core/actions/runs/42874780003",
+        "job": 130035084427,
+        "report": {
+          "source": "1ba0726b111345a9456cb65428e084dffdd46117",
+          "environment": "isolated-load",
+          "concurrency": 8,
+          "requestedSamples": 1000,
+          "warmupIterations": 0,
+          "dataset": {
+            "customerAccounts": 1000,
+            "backgroundProfiles": 5000,
+            "seededInvoices": 13000,
+            "operationsRecipients": 3,
+            "clientAddresses": 50
+          },
+          "failedChecks": 0,
+          "operations": [
+            {
+              "operation": "electricity_preview",
+              "completed": 1000,
+              "budgetP95Ms": 300,
+              "regressionThresholdMs": 360,
+              "p50Ms": 52.2818775,
+              "p95Ms": 72.24729430000001,
+              "p99Ms": 96.08437994999983,
+              "withinBudget": true,
+              "regression": false
+            },
+            {
+              "operation": "order_submission",
+              "completed": 1000,
+              "budgetP95Ms": 500,
+              "regressionThresholdMs": 600,
+              "p50Ms": 130.0650245,
+              "p95Ms": 174.81871239999998,
+              "p99Ms": 224.25530130999994,
+              "withinBudget": true,
+              "regression": false
+            },
+            {
+              "operation": "wallet_payment",
+              "completed": 1000,
+              "budgetP95Ms": 500,
+              "regressionThresholdMs": 600,
+              "p50Ms": 82.618887,
+              "p95Ms": 109.20805659999999,
+              "p99Ms": 145.24316094999995,
+              "withinBudget": true,
+              "regression": false
+            },
+            {
+              "operation": "invoice_list",
+              "completed": 1000,
+              "budgetP95Ms": 300,
+              "regressionThresholdMs": 360,
+              "p50Ms": 41.7070525,
+              "p95Ms": 56.65877455,
+              "p99Ms": 66.2211899,
+              "withinBudget": true,
+              "regression": false
+            },
+            {
+              "operation": "crm_search",
+              "completed": 1000,
+              "budgetP95Ms": 300,
+              "regressionThresholdMs": 360,
+              "p50Ms": 68.06876199999999,
+              "p95Ms": 103.63801515,
+              "p99Ms": 127.38201585,
+              "withinBudget": true,
+              "regression": false
+            },
+            {
+              "operation": "upload_authorization",
+              "completed": 1000,
+              "budgetP95Ms": 500,
+              "regressionThresholdMs": 600,
+              "p50Ms": 49.1256305,
+              "p95Ms": 66.59053019999999,
+              "p99Ms": 80.07733057,
+              "withinBudget": true,
+              "regression": false
+            },
+            {
+              "operation": "notification_fanout",
+              "completed": 1000,
+              "budgetP95Ms": 500,
+              "regressionThresholdMs": 600,
+              "p50Ms": 14.49251,
+              "p95Ms": 28.18226399999999,
+              "p99Ms": 36.61822018999999,
+              "withinBudget": true,
+              "regression": false
+            }
+          ],
+          "durableCounts": {
+            "orders": 1000,
+            "paid": 1000,
+            "debits": 1000,
+            "reservations": 1000,
+            "alerts": 1000,
+            "alerts_enqueued": 3000,
+            "invoice_client_addresses": 50
+          }
+        }
+      },
+      "proof_logs": [
+        {
+          "file": "github-run.json",
+          "sha256": "7f7f514bc86ffd471bc0da99bee23fd7cab9f56041abc500c52cf299026fad7a"
+        },
+        {
+          "file": "barghsa-performance.json",
+          "sha256": "1866e45f7bd9048e817f278e7393c4ef67e6337fa66a7d110a8571df2de1b5fb"
         }
       ]
     }
