@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T01:42:10+00:00",
-  "source_commit": "1c1a51196d02df9ad295f45ca9eee7426dfad35b",
+  "updated": "2026-11-10T01:46:58+00:00",
+  "source_commit": "f2c33db9f740c63e5746ca63aca79667988b11f1",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -482580,20 +482580,82 @@
         "story": "06-security-testing-observability.md#spec-07c59e0b9397"
       },
       "requirement": "| T-06.05.02.01 | Configure OTP send limits: 1/dest/60s, 5/hour, 10/day; IP+device aggregates | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-verify-auth-rate-controls"
+        ],
+        "current_acceptance": {
+          "kind": "verified-auth-rate-controls",
+          "base_commit": "f2c33db9f740c63e5746ca63aca79667988b11f1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e6259b86d8c18d3c68d7fcde66f11b560b5302075f9cb9daedf2f9f0e171ab5c"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
+            },
+            {
+              "path": "apps/api/src/auth/dto/forgot-password.dto.ts",
+              "sha256": "4bdea6ed916af76c2a9d12b059fefebc967f19621625795f78d781c8818f016f"
+            },
+            {
+              "path": "apps/api/src/auth/dto/login.dto.ts",
+              "sha256": "444e3445b545774cbd51cf1c5bee1a6375885431ac94dae306738f977c01d032"
+            },
+            {
+              "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+            },
+            {
+              "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
+              "sha256": "c5cdcc69344e8ee66a2a0f8344714615054e51880cb7ef39ce4bac4431e328ad"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+              "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+              "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The OTP send path applies 1 per normalized destination per minute, 5 per hour and 10 per day, with separate IP and hashed browser-device aggregates.",
+            "Reused the source-bound OTP device quota proof, including the concurrent final device slot and equal enforcement for known and unknown reset identities. Current compiled HTTP checks also verified the real destination denial, Persian Retry-After and independent device spray protection."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.05.02.02",
@@ -482606,20 +482668,86 @@
         "story": "06-security-testing-observability.md#spec-07c59e0b9397"
       },
       "requirement": "| T-06.05.02.02 | Configure OTP verify limits: 5 failed attempts per challenge → invalidate | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-verify-auth-rate-controls"
+        ],
+        "current_acceptance": {
+          "kind": "verified-auth-rate-controls",
+          "base_commit": "f2c33db9f740c63e5746ca63aca79667988b11f1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e6259b86d8c18d3c68d7fcde66f11b560b5302075f9cb9daedf2f9f0e171ab5c"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
+            },
+            {
+              "path": "apps/api/src/auth/dto/forgot-password.dto.ts",
+              "sha256": "4bdea6ed916af76c2a9d12b059fefebc967f19621625795f78d781c8818f016f"
+            },
+            {
+              "path": "apps/api/src/auth/dto/login.dto.ts",
+              "sha256": "444e3445b545774cbd51cf1c5bee1a6375885431ac94dae306738f977c01d032"
+            },
+            {
+              "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+              "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "34c04a34dd33e2b828c03f2f7f775a18b05cf437b85baf25e9f0ff2b384369b0"
+            },
+            {
+              "path": "packages/db/src/schema/otp-challenge.ts",
+              "sha256": "8d807533a9009649a0f7c083bf16cd1074cabd62ed45cc4f32920261110b8d77"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+              "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The login OTP challenge is invalidated after five failed verifications. The exact current compiled case exhausts the challenge concurrently and rejects a correct code after exhaustion.",
+            "Reused the accepted attempt-counter proof from T-06.01.02.03; the current native run confirms the same limit with the strict auth DTO."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.05.02.03",
@@ -482632,20 +482760,70 @@
         "story": "06-security-testing-observability.md#spec-07c59e0b9397"
       },
       "requirement": "| T-06.05.02.03 | Configure login limits: progressive delay after 5 failures per account+IP in 15min; IP/device spray detection | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-verify-auth-rate-controls"
+        ],
+        "current_acceptance": {
+          "kind": "verified-auth-rate-controls",
+          "base_commit": "f2c33db9f740c63e5746ca63aca79667988b11f1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e6259b86d8c18d3c68d7fcde66f11b560b5302075f9cb9daedf2f9f0e171ab5c"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
+            },
+            {
+              "path": "apps/api/src/auth/dto/forgot-password.dto.ts",
+              "sha256": "4bdea6ed916af76c2a9d12b059fefebc967f19621625795f78d781c8818f016f"
+            },
+            {
+              "path": "apps/api/src/auth/dto/login.dto.ts",
+              "sha256": "444e3445b545774cbd51cf1c5bee1a6375885431ac94dae306738f977c01d032"
+            },
+            {
+              "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+              "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+              "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The normalized account plus IP security counter uses a 15-minute window and applies the progressive delay beginning after five prior credential failures. IP and opaque-device spray limits apply independently.",
+            "The exact current compiled suite passed the sixth-failure delay, normalization and account isolation, concurrent atomic failure accounting, window expiry, broad IP spraying, and independent device overage."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.05.02.04",
@@ -482658,20 +482836,82 @@
         "story": "06-security-testing-observability.md#spec-07c59e0b9397"
       },
       "requirement": "| T-06.05.02.04 | Configure password reset: 5 starts per account or dest/hour; separate IP limits | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-verify-auth-rate-controls"
+        ],
+        "current_acceptance": {
+          "kind": "verified-auth-rate-controls",
+          "base_commit": "f2c33db9f740c63e5746ca63aca79667988b11f1",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/auth/auth.controller.ts",
+              "sha256": "e6259b86d8c18d3c68d7fcde66f11b560b5302075f9cb9daedf2f9f0e171ab5c"
+            },
+            {
+              "path": "apps/api/src/auth/auth.service.ts",
+              "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
+            },
+            {
+              "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+              "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
+            },
+            {
+              "path": "apps/api/src/auth/dto/forgot-password.dto.ts",
+              "sha256": "4bdea6ed916af76c2a9d12b059fefebc967f19621625795f78d781c8818f016f"
+            },
+            {
+              "path": "apps/api/src/auth/dto/login.dto.ts",
+              "sha256": "444e3445b545774cbd51cf1c5bee1a6375885431ac94dae306738f977c01d032"
+            },
+            {
+              "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+              "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+            },
+            {
+              "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
+              "sha256": "c5cdcc69344e8ee66a2a0f8344714615054e51880cb7ef39ce4bac4431e328ad"
+            },
+            {
+              "path": "apps/api/src/auth/otp-http.integration.test.ts",
+              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.spec.ts",
+              "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
+            },
+            {
+              "path": "apps/api/src/auth/otp.service.ts",
+              "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
+            },
+            {
+              "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+              "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+              "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Password reset initiation applies five starts per normalized destination per hour and a separate five-per-hour IP guard, with device and OTP send limits layered onto delivery.",
+            "The current compiled HTTP checks verify independent destination denial, a positive Retry-After and zero OTP challenges when the start quota is exhausted. The existing source-bound device proof covers known and unknown reset identities."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.05.02.05",
@@ -855436,6 +855676,85 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/strict-auth-dtos",
       "source_scope_proof": "strict-auth-source-proof.json",
       "source_scope_proof_sha256": "58eec3012117ed6b7d314bacae57b4827beb61c765116465a226193d9c9126ff"
+    },
+    "release-0.6-verify-auth-rate-controls": {
+      "batch": "release-0.6-verify-auth-rate-controls",
+      "base_commit": "f2c33db9f740c63e5746ca63aca79667988b11f1",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.05.02.01",
+        "06-security-testing-observability.md#T-06.05.02.02",
+        "06-security-testing-observability.md#T-06.05.02.03",
+        "06-security-testing-observability.md#T-06.05.02.04"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "e6259b86d8c18d3c68d7fcde66f11b560b5302075f9cb9daedf2f9f0e171ab5c"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
+        },
+        {
+          "path": "apps/api/src/auth/dto/forgot-password.dto.ts",
+          "sha256": "4bdea6ed916af76c2a9d12b059fefebc967f19621625795f78d781c8818f016f"
+        },
+        {
+          "path": "apps/api/src/auth/dto/login.dto.ts",
+          "sha256": "444e3445b545774cbd51cf1c5bee1a6375885431ac94dae306738f977c01d032"
+        },
+        {
+          "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
+          "sha256": "f83be79d7a0419258700b52fc9d9dfc71a94b1c5b5206182c90bc87c2a041ea8"
+        },
+        {
+          "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
+          "sha256": "c5cdcc69344e8ee66a2a0f8344714615054e51880cb7ef39ce4bac4431e328ad"
+        },
+        {
+          "path": "apps/api/src/auth/otp-http.integration.test.ts",
+          "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.spec.ts",
+          "sha256": "7c984fe3d18875bf1e993f583584d9fd532b9d9d74f54b3a94c12213ba157094"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+          "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "34c04a34dd33e2b828c03f2f7f775a18b05cf437b85baf25e9f0ff2b384369b0"
+        },
+        {
+          "path": "packages/db/src/schema/otp-challenge.ts",
+          "sha256": "8d807533a9009649a0f7c083bf16cd1074cabd62ed45cc4f32920261110b8d77"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+          "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Six exact compiled PostgreSQL HTTP cases passed at the original assertions and limits. Earlier OTP send and attempt proofs were reused after verifying their current source hashes."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/auth-rate-controls",
+      "source_scope_proof": "auth-rate-controls-source-proof.json",
+      "source_scope_proof_sha256": "ba1d15a158429f79c4305b8e194d53286c853bf76b14e2d139f3d93eb0e16f77"
     }
   },
   "historical_improvements": [
