@@ -904,18 +904,13 @@ for (const locale of ['en', 'fa'] as const)
       );
       state.saveStatus = 503;
       await quantity.getByRole('button').click();
-      await expect(
-        page.getByRole('alert').filter({ hasText: confirmationText('unconfirmed', locale) })
-      ).toBeVisible();
+      const recoveryNotice = page
+        .getByRole('alert')
+        .filter({ hasText: confirmationText('unconfirmed', locale) });
+      await expect(recoveryNotice).toBeVisible();
       await expect(page).toHaveURL(/step=5$/);
       await expect(quantity).toBeVisible();
-      if (mode === 'advanced') {
-        await expectNoticeBelowPageHeader(
-          page.locator('[data-sonner-toast][data-type="error"]').filter({
-            hasText: confirmationText('unconfirmed', locale),
-          })
-        );
-      }
+      if (mode === 'advanced') await expectNoticeBelowPageHeader(recoveryNotice);
       state.saveStatus = 200;
       await checkDraft(page, locale).click();
       await retryDraft(page, locale).click();

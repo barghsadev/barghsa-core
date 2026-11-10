@@ -16,7 +16,11 @@ import type { Locale } from '@barghsa/i18n/app';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { useCatalogueScope, useCatalogueResource } from '../hooks/useCatalogueResource.js';
-import { catalogueRootMessage, CatalogueSaveButton } from './CatalogueEditorFeedback.js';
+import {
+  CatalogueFieldFeedback,
+  catalogueRootMessage,
+  CatalogueSaveButton,
+} from './CatalogueEditorFeedback.js';
 import {
   windowValues,
   windowBody,
@@ -261,13 +265,11 @@ export default function DeliveryWindowConfigPanel({
     }
   }
   const feedback = (name: keyof WindowDraft) => (
-    <p
+    <CatalogueFieldFeedback
       id={editor.errorId(name)}
-      role={editor.errors[name] ? 'alert' : undefined}
-      className={`min-h-5 text-sm text-destructive ${editor.errors[name] ? '' : 'invisible'}`}
-    >
-      {editor.errors[name]?.message ?? '\u00a0'}
-    </p>
+      error={editor.errors[name]}
+      message={messages[name]}
+    />
   );
   const busy = saving || editor.pending || !!command;
   return (

@@ -135,9 +135,24 @@ for (const challenge of [42, { invalid: true }, '   ']) {
     await page.locator('#username').fill('retry@example.test');
     await page.locator('#username').press('Tab');
     await page.locator('#password').fill('Browser-registration-password-123!');
-    await page.getByRole('checkbox').click();
-    await page.locator('button[type="submit"]').click();
-    await expect(page.getByRole('alert').first()).toBeVisible();
+    const consent = page.getByRole('checkbox');
+    await consent.check();
+    await expect(consent).toBeChecked();
+    const [response] = await Promise.all([
+      page.waitForResponse(
+        (candidate) =>
+          candidate.url().endsWith('/api/auth/register') && candidate.request().method() === 'POST'
+      ),
+      page.locator('button[type="submit"]').click(),
+    ]);
+    expect(response.status()).toBe(200);
+    expect(attempts).toBe(1);
+    await expect(
+      page
+        .locator('form')
+        .getByRole('alert')
+        .filter({ hasText: registrationFormText('uncertain', 'fa') })
+    ).toBeVisible();
     await expect(page).toHaveURL(/\/register$/);
     await expect(page.locator('#password')).toHaveValue('Browser-registration-password-123!');
     await expect(page.locator('button[type="submit"]')).toBeDisabled();
