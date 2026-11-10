@@ -47,7 +47,6 @@ import { tSolar } from '@barghsa/i18n/solar';
 import { tConsultation } from '@barghsa/i18n/consultation';
 import { TosBanner } from '../components/TosBanner.js';
 import { useLocale } from '../hooks/useLocale.js';
-import { tMaintenance } from '@barghsa/i18n/maintenance';
 import { AppShell, type NavigationGroup } from '../components/AppShell.js';
 import { NotificationBell } from '../components/NotificationBell.js';
 import { AdminSettingsLayout } from '../components/AdminSettingsLayout.js';
@@ -132,7 +131,7 @@ export default function AdminLayout() {
         { to: '/admin/failed-jobs', label: t('admin.jobs.title', locale), icon: Activity },
         {
           to: '/admin/maintenance',
-          label: tMaintenance('adminTitle', locale),
+          label: t('admin.nav.maintenance', locale),
           icon: SlidersHorizontal,
         },
       ],

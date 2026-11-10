@@ -51,6 +51,28 @@ async function render(scope: ConfigAuditScope = 'otp', refreshKey = 0, onDenied?
     )
   );
 }
+async function renderAuthorizationPage(account: string, allowed = true) {
+  await act(async () =>
+    root.render(
+      <QueryProvider>
+        <AccountUserProvider value={account}>
+          <NavigationProvider
+            revision={getProfileContextRevision()}
+            configuration={{
+              version: 1,
+              area: 'staff',
+              profileId: null,
+              profileType: null,
+              paths: allowed ? ['/admin/authorization-audit'] : [],
+            }}
+          >
+            <AdminAuthorizationAudit />
+          </NavigationProvider>
+        </AccountUserProvider>
+      </QueryProvider>
+    )
+  );
+}
 async function click(label: string) {
   const button = [...host.querySelectorAll('button')].find(
     (node) => node.textContent?.trim() === label
@@ -73,75 +95,66 @@ it('loads on demand and exposes expandable field values, date and author without
   expect(host.textContent).toContain('Old title');
   expect(host.querySelector('time')?.dateTime).toBe('2026-09-30T12:00:00.000001Z');
 });
-it('shows denial fields and clears them when the dashboard grant is withdrawn', async () => {
-  const fixture = configAuditPage();
-  const details = {
-    resource: '/api/admin/config/audit',
-    action: 'GET',
-    reason: 'AUTHZ:FORBIDDEN',
-    correlationId: '01900000-0000-7000-8000-000000000003',
-  };
-  data = {
-    scope: 'authorization',
-    nextCursor: null,
-    items: [
-      {
-        ...fixture.items[0]!,
-        event: 'authorization_denied',
-        version: null,
-        changes: Object.entries(details).map(([field, value]) => ({
-          field,
-          previous: { recorded: false, value: null },
-          current: { recorded: true, value },
-        })),
-      },
-    ],
-  };
-  await render('authorization');
-  await click('View denials');
-  expect(calls).toEqual(['/api/admin/config/audit?scope=authorization']);
-  expect(host.querySelector('summary')?.textContent).toContain('Access denied');
-  const row = host.querySelector('details')!;
-  row.open = true;
-  for (const value of Object.values(details)) expect(row.textContent).toContain(value);
-  expect(row.querySelector('time')?.dateTime).toBe(fixture.items[0]!.createdAt);
-  status = 403;
-  await click('Refresh denials');
-  expect(host.textContent).toContain('You do not have access to authorization denials.');
-  expect(host.querySelector('details')).toBeNull();
-});
+it.each([
+  [
+    'en',
+    'View denials',
+    'Access denied',
+    'Refresh denials',
+    'You do not have access to authorization denials.',
+  ],
+  ['fa', 'نمایش سوابق', 'دسترسی رد شد', 'تازه‌سازی سوابق', 'دسترسی به سوابق رد دسترسی مجاز نیست.'],
+])(
+  'shows %s denial fields and clears them when the dashboard grant is withdrawn',
+  async (locale, open, denied, refresh, forbidden) => {
+    document.documentElement.lang = locale;
+    const fixture = configAuditPage();
+    const details = {
+      resource: '/api/admin/config/audit',
+      action: 'GET',
+      reason: 'AUTHZ:FORBIDDEN',
+      correlationId: '01900000-0000-7000-8000-000000000003',
+    };
+    data = {
+      scope: 'authorization',
+      nextCursor: null,
+      items: [
+        {
+          ...fixture.items[0]!,
+          event: 'authorization_denied',
+          version: null,
+          changes: Object.entries(details).map(([field, value]) => ({
+            field,
+            previous: { recorded: false, value: null },
+            current: { recorded: true, value },
+          })),
+        },
+      ],
+    };
+    await renderAuthorizationPage('admin');
+    await click(open);
+    expect(calls).toEqual(['/api/admin/config/audit?scope=authorization']);
+    expect(host.querySelector('summary')?.textContent).toContain(denied);
+    const row = host.querySelector('details')!;
+    row.open = true;
+    for (const value of Object.values(details)) expect(row.textContent).toContain(value);
+    expect(row.querySelector('time')?.dateTime).toBe(fixture.items[0]!.createdAt);
+    status = 403;
+    await click(refresh);
+    expect(host.textContent).toContain(forbidden);
+    expect(host.querySelector('details')).toBeNull();
+  }
+);
 it('discards an open authorization audit on account or navigation authority changes', async () => {
-  const renderPage = async (account: string, paths: string[]) =>
-    act(async () =>
-      root.render(
-        <QueryProvider>
-          <AccountUserProvider value={account}>
-            <NavigationProvider
-              revision={getProfileContextRevision()}
-              configuration={{
-                version: 1,
-                area: 'staff',
-                profileId: null,
-                profileType: null,
-                paths,
-              }}
-            >
-              <AdminAuthorizationAudit />
-            </NavigationProvider>
-          </AccountUserProvider>
-        </QueryProvider>
-      )
-    );
-  const path = '/admin/authorization-audit';
   data = { scope: 'authorization', nextCursor: null, items: [] };
-  await renderPage('first-admin', [path]);
+  await renderAuthorizationPage('first-admin');
   await click('View denials');
   expect(host.textContent).toContain('No authorization denials recorded.');
-  await renderPage('second-admin', [path]);
+  await renderAuthorizationPage('second-admin');
   expect(host.textContent).not.toContain('No authorization denials recorded.');
   expect(host.querySelector('button[aria-expanded]')?.getAttribute('aria-expanded')).toBe('false');
   expect(calls).toHaveLength(1);
-  await renderPage('second-admin', []);
+  await renderAuthorizationPage('second-admin', false);
   expect(host.querySelector('button[aria-expanded]')).toBeNull();
   expect(host.textContent).toContain('You do not have access to authorization denials.');
 });

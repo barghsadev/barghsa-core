@@ -1,4 +1,6 @@
 import { randomUUID } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { Pool } from 'pg';
 import { expect, it } from 'vitest';
 import { getTableName } from 'drizzle-orm';
@@ -137,9 +139,10 @@ it('preserves pre-upgrade drafts and versions subsequent legacy writes and delet
         [profile]
       )
     ).rows[0];
-    expect(await runMigrations({ connection })).toEqual({
+    const clockMigration = '0282_electricity_draft_revision_clock';
+    expect(await runMigrationPrefix(clockMigration, { connection })).toEqual({
       ok: true,
-      applied: ['0282_electricity_draft_revision_clock'],
+      applied: [clockMigration],
     });
     expect(
       (
@@ -168,6 +171,16 @@ it('preserves pre-upgrade drafts and versions subsequent legacy writes and delet
         )
       ).rows[0].updated_at
     ).toEqual(explicit);
+    const journal = JSON.parse(
+      readFileSync(resolve(__dirname, '../drizzle/production/meta/_journal.json'), 'utf8')
+    ) as { entries: Array<{ tag: string }> };
+    const tags = journal.entries.map(({ tag }) => tag);
+    const clockIndex = tags.indexOf(clockMigration);
+    expect(clockIndex).toBeGreaterThanOrEqual(0);
+    expect(await runMigrations({ connection })).toEqual({
+      ok: true,
+      applied: tags.slice(clockIndex + 1),
+    });
     expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
     expect(await revisions()).toEqual(next);
   } finally {

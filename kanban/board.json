@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T00:42:57+00:00",
-  "source_commit": "6d6993d5321c1ab6aae334ab3729eeee386296bf",
+  "updated": "2026-11-10T00:49:30+00:00",
+  "source_commit": "fe3417a8d8d445cb3be7110e93a8089709c1957e",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -13252,7 +13252,8 @@
           "release-0.6-current-ci-definition-contract-and-coverage-controls",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13280,7 +13281,7 @@
             },
             {
               "path": "packages/db/src/electricity-draft-revision-upgrade.migrated.test.ts",
-              "sha256": "96c00384860108bcc15daafac86d17fcac0bb356478f3528c46d7b89f0b36eeb"
+              "sha256": "9fc532e42477ecf57e85029a3fbcfb4dbc79ba8cc2c22372f3bfe0d91f73a101"
             },
             {
               "path": "packages/db/src/test/migration-prefix.ts",
@@ -13289,7 +13290,8 @@
           ],
           "checks": [
             "The CI database suites cover clean and upgrade PostgreSQL states. The existing native clean snapshot comparison passed for 181 tables. The exact source-matched upgrade starts from the deployed v0.5.0 migration history, applies the single new 0282 clock migration, and verifies existing revision data and subsequent clock behavior. The staging migration gate remains separate.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "The hosted upgrade fixture expected only 0282 but the production journal applied 0282, 0283 and 0284. The fixture now proves the exact historical clock migration through 0282, then asserts the complete ordered remaining journal tail and an empty replay. All existing row, constraint and clock assertions remain. The native migrated database passed 3 cases across the upgrade and baseline suites."
           ]
         }
       }
@@ -42492,7 +42494,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -42592,7 +42595,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -42948,7 +42951,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Renewed only the stable catalogue binding after a four-value AI severity metadata repair. Existing error codes, HTTP response metadata and affected consumer tests match.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -43859,7 +43863,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -43959,7 +43964,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -44315,7 +44320,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Renewed only the stable catalogue binding after a four-value AI severity metadata repair. Existing error codes, HTTP response metadata and affected consumer tests match.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -45234,7 +45240,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -45334,7 +45341,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
@@ -45690,7 +45697,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Renewed only the stable catalogue binding after a four-value AI severity metadata repair. Existing error codes, HTTP response metadata and affected consumer tests match.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -51858,7 +51866,8 @@
           "release-0.5-final-gates",
           "release-0.5-crm-profile-loading-heading",
           "release-0.5-crm-archive-touch-targets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -51906,7 +51915,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
@@ -51963,7 +51972,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Renewed the auth specification binding after reconciling the older meter visibility wording with the documented v0.5 display policy. Other auth requirements remain unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
           "limitations": [
@@ -479535,7 +479545,8 @@
         ],
         "batches": [
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authenticated-staging-zap-integration"
+          "release-0.6-authenticated-staging-zap-integration",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -479563,11 +479574,11 @@
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.test.tsx",
-              "sha256": "fd852fac98917453a6cadd72ade2194518ae7a94897f27e7436a38c1ae497313"
+              "sha256": "8469e48fd86692bc89e69c585ae81a2f2f467195aa9d5fdfbed5b01383f8eb28"
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
-              "sha256": "c937299c6ac38fb463976d9b247849f8ffc3f2ad0272956f5ff6c71c389716a5"
+              "sha256": "292e9f0ff27130eff4b21844052329f2652022c6c790adaa06921d0fb2e78753"
             },
             {
               "path": "apps/web/src/lib/admin-settings-navigation.ts",
@@ -479575,11 +479586,11 @@
             },
             {
               "path": "apps/web/src/pages/AdminAuthorizationAudit.tsx",
-              "sha256": "02556fae52263baa4a62fca761ac213fe205f1659018d7af0cfca247588899ba"
+              "sha256": "10dfb6391b81568e43f7e890b201a83e4f4a984af830f10829ce7da90172242d"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/routeTree.gen.ts",
@@ -479595,7 +479606,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "9e46cda9659aead884932a9174dd678190496064fb441103c2a9a242759499c1"
+              "sha256": "82ad0b844ac3ead149d7e362511e02758d0af035c9b6db29604268b63a1c8837"
             },
             {
               "path": "packages/shared/src/admin/config-audit.ts",
@@ -479610,7 +479621,8 @@
             "The compiled API regression verifies that the actual persisted denial can be read through the dashboard endpoint, that customer and scoped staff cannot read it, and that only the authorized administrator gets the navigation item.",
             "All 23 targeted web cases passed across the viewer, admin settings navigation, layout and account context. The initial local disk error interrupted discovery. A serial run passed 20 cases and the interrupted layout suite passed its two cases separately after disposing of generated API output. The revised viewer suite passed ten cases, including the account and navigation authority reset.",
             "The viewer exercises the same bounded response contract, displays the stored decision fields and clears details on a 403. API, worker and web type checks, shared package exports, contract drift, changed-file lint, navigation and formatting passed.",
-            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ]
         }
       },
@@ -507668,7 +507680,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -507716,7 +507729,7 @@
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
-              "sha256": "c937299c6ac38fb463976d9b247849f8ffc3f2ad0272956f5ff6c71c389716a5"
+              "sha256": "292e9f0ff27130eff4b21844052329f2652022c6c790adaa06921d0fb2e78753"
             },
             {
               "path": "apps/web/src/components/CatalogueEditorFeedback.tsx",
@@ -508285,7 +508298,8 @@
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -509422,7 +509436,8 @@
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -509458,7 +509473,7 @@
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
-              "sha256": "c937299c6ac38fb463976d9b247849f8ffc3f2ad0272956f5ff6c71c389716a5"
+              "sha256": "292e9f0ff27130eff4b21844052329f2652022c6c790adaa06921d0fb2e78753"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -509798,7 +509813,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -509854,7 +509869,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "9e46cda9659aead884932a9174dd678190496064fb441103c2a9a242759499c1"
+              "sha256": "82ad0b844ac3ead149d7e362511e02758d0af035c9b6db29604268b63a1c8837"
             },
             {
               "path": "packages/i18n/src/workspace-admin.ts",
@@ -510102,7 +510117,8 @@
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
             "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures.",
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "limitations": [
             "No query-key/read/mutation page adoption, all-page cancellation, complete milestone, live providers, deployment or production acceptance is certified."
@@ -514329,7 +514345,8 @@
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -514365,7 +514382,7 @@
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
-              "sha256": "c937299c6ac38fb463976d9b247849f8ffc3f2ad0272956f5ff6c71c389716a5"
+              "sha256": "292e9f0ff27130eff4b21844052329f2652022c6c790adaa06921d0fb2e78753"
             },
             {
               "path": "apps/web/src/components/BankReceiptFinancialReview.tsx",
@@ -514705,7 +514722,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -514761,7 +514778,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "9e46cda9659aead884932a9174dd678190496064fb441103c2a9a242759499c1"
+              "sha256": "82ad0b844ac3ead149d7e362511e02758d0af035c9b6db29604268b63a1c8837"
             },
             {
               "path": "packages/i18n/src/workspace-admin.ts",
@@ -515009,7 +515026,8 @@
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
             "Renewed the affected browser fixture binding with the exact passed journey scope recorded in release-0.6-nightly-auth-and-finance-browser-fixtures.",
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "limitations": [
             "No query-key/read/mutation page adoption, all-page cancellation, complete milestone, live providers, deployment or production acceptance is certified."
@@ -529747,7 +529765,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -530099,7 +530118,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -530261,7 +530280,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Customer primary tabs are Home/Electricity orders/Wallet/Profile plus More when authorized; staff tabs prioritize actual operation grants. All granted remaining pages remain reachable exactly once. Native server grants and client allowlist prevent manufacturing missing links. Initial compact bar, deferred More/error fallback and exact active-page markers verified in FA/EN and both browser projects.",
           "limitations": [
@@ -530552,7 +530572,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -530904,7 +530925,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -531066,7 +531087,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Compact topbar retains linked brand icon, hamburger, notification bell and account avatar/profile identity with the required operating-context marker. Theme/language and secondary account actions remain in the account menu. Eight-width no-overflow, permission/context and keyboard checks pass.",
           "limitations": [
@@ -531356,7 +531378,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -531708,7 +531731,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -531870,7 +531893,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Tablet768–1023px uses a60px rail with accessible labels and at least44x44 targets. It expands by tap/menu, keyboard focus and hover on hover-capable devices. Phone drawer and full desktop sidebar remain available; current page and focus/More recovery are retained.",
           "limitations": [
@@ -564141,7 +564165,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -564645,7 +564670,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -565567,7 +565592,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -566025,7 +566051,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -566529,7 +566556,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -567451,7 +567478,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -567910,7 +567938,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -568414,7 +568443,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -569336,7 +569365,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -569764,7 +569794,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -570268,7 +570299,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -571190,7 +571221,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -571644,7 +571676,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -572148,7 +572181,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -573070,7 +573103,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -573533,7 +573567,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -574037,7 +574072,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -574959,7 +574994,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -575395,7 +575431,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -575899,7 +575936,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -576821,7 +576858,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -577221,7 +577259,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577725,7 +577764,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -578647,7 +578686,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -579047,7 +579087,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -579551,7 +579592,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -580473,7 +580514,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -580874,7 +580916,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -581378,7 +581421,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -582300,7 +582343,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -582700,7 +582744,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583204,7 +583249,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -584126,7 +584171,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -618429,7 +618475,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -618933,7 +618980,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -619855,7 +619902,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -620251,7 +620299,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -620755,7 +620804,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -621677,7 +621726,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -622073,7 +622123,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -622577,7 +622628,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -623499,7 +623550,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -623895,7 +623947,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -624399,7 +624452,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -625321,7 +625374,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -625717,7 +625771,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -626221,7 +626276,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -627143,7 +627198,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -627539,7 +627595,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -628043,7 +628100,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -628965,7 +629022,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -629361,7 +629419,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -629865,7 +629924,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -630787,7 +630846,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -635361,7 +635421,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -635713,7 +635774,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -635875,7 +635936,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Rich profile dropdown shows active initials/name/type, current accessible choices with avatar/name/type/verification badges, checked selection and profile-management link. Fresh account/revision-owned reads use the existing strict parser and cancel obsolete reads. Lazy-choice failure preserves context and offers explicit reload; no POST occurs during this failure.",
           "limitations": [
@@ -636165,7 +636227,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -636517,7 +636580,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -636679,7 +636742,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Compact ProfileBadge uses the same account-owned directory as the picker, shows current initials/type icon/name, truncates safely with full-name title and preserves the separate visible customer/staff marker. Missing/unavailable profile metadata is withheld rather than borrowing another scope.",
           "limitations": [
@@ -636969,7 +637033,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -637321,7 +637386,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -637483,7 +637548,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "A captured, target-bound switch blocks the workspace with a full-page non-dismissible loading/recovery view, including inert fallback before modal code loads. Exact response plus fresh current directory must confirm the target. Unknown replies hold without replay, recheck usesGET only, accepted changes persist backend preference and reset private queries/requests/tabs. Existing default-setting and invitation CSRF tests retained.",
           "limitations": [
@@ -637773,7 +637839,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -638125,7 +638192,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -638287,7 +638354,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Unverified profiles can be selected/read while existing verification banner and server commercial-order guards remain authoritative. Status badges expose verified/unverified without granting permissions. Native profile verification/context cases and existing verification sources retained; no commercial gate changed.",
           "limitations": [
@@ -638581,7 +638649,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -638933,7 +639002,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -639095,7 +639164,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Owner approved on2026-11-06 the existing explicit-ID or server-owned active-preference representation. Current ownership/active-agent checks, exact target receipt plus fresh confirmation, old-response suppression and cross-tab reset verified. Native foreign/suspended/agent contexts and late old wallet/notification values remain isolated; no profile header migration or financial-rule change.",
           "limitations": [
@@ -639385,7 +639455,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -639737,7 +639808,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -639899,7 +639970,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "AppShell retains shared directional flex layout, existing sidebar/topbar CSS variables, scrollable bounded main content, skip link and account banners. Desktop sidebar and responsive rail/phone surfaces verified; event/media/Escape logic retained byte-exact.",
           "limitations": [
@@ -640189,7 +640261,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -640541,7 +640614,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -640703,7 +640776,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Sidebar now includes brand at its head, profile picker below when expanded, grouped permitted links, directional icons, active marker and responsive expansion. Labels remain accessible in collapsed mode. Administrative links reflect actual backend grants rather than a frontend role-name assumption.",
           "limitations": [
@@ -640994,7 +641068,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -641346,7 +641421,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -641508,7 +641583,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Topbar retains language/theme controls, current notification bell and account popover, with compact preferences in that popover. Current profile identity is supplied through a customer-only slot; staff does not fetch customer profile authority. Root auth BrandMark default rendering remains exact and login light/dark FA/EN checks pass.",
           "limitations": [
@@ -641799,7 +641875,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -642151,7 +642228,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -642313,7 +642390,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "ProfileMenu keeps current account avatar/name/email/mobile, My Profile/settings/logout, explicit operating-context indicator and authorized staff/customer switch. Current authority/error recovery and session CSRF/one-context behavior remain unchanged; native and both browser contexts pass.",
           "limitations": [
@@ -642604,7 +642682,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -642956,7 +643035,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -643118,7 +643197,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Bottom bar shows up to four granted primary destinations plus More, reflects the true active route, preserves every remaining granted link, closes on navigation/desktop transition and restores focus. Phone/desktop/keyboard/RTL and failed bar/sheet recovery pass. Its initial payload remains counted under original page limits.",
           "limitations": [
@@ -643409,7 +643489,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -643761,7 +643842,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -643923,7 +644004,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Existing BreadcrumbBar keeps current route/path, localized root and safe detail label, collapsed parent disclosure, Escape/focus restoration and true list-return links. Raw record IDs never appear as breadcrumb labels. Real route/consent recovery tests retained across both projects.",
           "limitations": [
@@ -644214,7 +644296,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -644566,7 +644649,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -644728,7 +644811,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Navigation is resolved from current server grants and profile type. Client local labels/icons only filter known routes from that configuration; missing or wrong-area configuration fails closed and can refresh. Native per-permission/operating-context tests and restricted-menu browser cases pass.",
           "limitations": [
@@ -645019,7 +645103,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -645371,7 +645456,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -645533,7 +645618,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Customer service/account destinations and staff operations/settings groups remain backend-filtered, including all four services, CRM, document templates and finance/administration where granted. Personal customer work and staff operations retain their explicit authorized operating-context boundary.",
           "limitations": [
@@ -645824,7 +645910,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -646176,7 +646263,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -646338,7 +646425,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Legal profiles expose legal-profile/team/agent routes only with corresponding current grants; Individual profiles expose personal-profile/saving routes. Shared service links retain their own server permission boundaries. Current backend navigation tests and FA/EN customer/staff menu checks pass.",
           "limitations": [
@@ -646629,7 +646717,8 @@
           "release-0.5-required-input-semantics",
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -646981,7 +647070,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/DashboardLayout.tsx",
@@ -647143,7 +647232,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Owner approved current router-context reuse with fresh authority on navigation/profile/permission changes instead of immutable session-long grants. Existing current-session/navigation parsers/providers and backend permission resolution remain byte-exact. Revocation, restricted configuration and context change tests pass.",
           "limitations": [
@@ -724335,7 +724425,8 @@
           "release-0.5-forms-confirmation-journey",
           "release-0.5-critical-accessibility",
           "release-0.5-final-ui-evidence",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "verified-admin-settings-adoption",
@@ -724359,7 +724450,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             }
           ],
           "checks": [
@@ -724368,7 +724459,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Twelve permission-filtered categories, bounded desktop navigation, grouped mobile select, safe destinations, active state and destination focus. Eight bilingual/light-dark desktop/mobile journeys and nine component cases verify actual shell adoption.",
           "limitations": [
@@ -724793,7 +724885,8 @@
           "release-0.5-essential-control-contrast",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-profile-isolation-and-read-only-audit-tests",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "verified-admin-settings-adoption",
@@ -724817,11 +724910,11 @@
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.test.tsx",
-              "sha256": "fd852fac98917453a6cadd72ade2194518ae7a94897f27e7436a38c1ae497313"
+              "sha256": "8469e48fd86692bc89e69c585ae81a2f2f467195aa9d5fdfbed5b01383f8eb28"
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
-              "sha256": "c937299c6ac38fb463976d9b247849f8ffc3f2ad0272956f5ff6c71c389716a5"
+              "sha256": "292e9f0ff27130eff4b21844052329f2652022c6c790adaa06921d0fb2e78753"
             },
             {
               "path": "apps/web/src/components/OtpConfigPanel.tsx",
@@ -724854,7 +724947,8 @@
             "Bindings renewed by release-0.5-protected-staff-browser-closure: one validated OTP toast and bounded geography dialog. 32 distinct native cases and 61 related unit tests passed, retaining current staff confirmation, authority, focus and exact response assertions.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "The six-case compiled audit HTTP suite passed after adding one read-only route regression. Existing audit assertions and all runtime code match the previous accepted source. Final API typecheck and emitted-test equivalence passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Expandable config timeline with allowlisted old/new values, actor, localized time and version. Native scope permission/session rechecks, private no-store and bound microsecond cursors pass. Twelve browser recovery/denial/isolation journeys and eight component cases pass.",
           "limitations": [
@@ -726091,7 +726185,8 @@
           "release-0.5-final-ui-evidence",
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-ai-tab-intrinsic-widths",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ],
         "current_acceptance": {
           "kind": "accepted-admin-communications-ai-ui",
@@ -726171,7 +726266,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "9e46cda9659aead884932a9174dd678190496064fb441103c2a9a242759499c1"
+              "sha256": "82ad0b844ac3ead149d7e362511e02758d0af035c9b6db29604268b63a1c8837"
             },
             {
               "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
@@ -726186,7 +726281,8 @@
             "Bindings renewed by release-0.5-critical-accessibility: audited canonical landmarks, retained command calls and validated auth-entry authority. Exact targeted unit/browser and original performance evidence passes.",
             "Bindings renewed by release-0.5-staff-workspace-read-closure: the bounded model and agent reads retain current authority and recover on the exact staff route. 44 distinct native cases and 53 related unit tests passed, including unchanged slot guard assertions.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "criterion_result": "Five route-owned nested tabs added over existing models, knowledge, policies, agents and slots pages. Only current server-offered staff paths appear. Manual keyboard activation, destination-owned selection/focus, back navigation, bilingual desktop/mobile themes and full Axe/overflow checks pass. Existing CRUD, KB upload/status, policy/group editors, agent test chat and slot assignment remain guarded. UI acceptance does not close the external Telegram slot runtime gate.",
           "limitations": [
@@ -749291,7 +749387,8 @@
             "The route matrix identifies original shared keyboard, forms, table/filter, responsive, configuration and stale-context criteria, plus current scoped evidence for all 91 production source changes since the route layout proof.",
             "Wallet verification renders above workspace navigation, retains the reviewed receipt, announces the heading, cycles focus with Tab/Shift+Tab, preserves error and confirmation semantics, and keeps all three interactive targets at least 44px.",
             "Passed 72 targeted units and 28 Chromium and mobile Safari production-bundle cases using controlled API responses. Critical source coverage passed with 440/477 lines and 492/564 branches. All 101 transfer budgets, formatting, lint and web typecheck passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "source_evidence": [
             {
@@ -749336,7 +749433,7 @@
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
-              "sha256": "c937299c6ac38fb463976d9b247849f8ffc3f2ad0272956f5ff6c71c389716a5"
+              "sha256": "292e9f0ff27130eff4b21844052329f2652022c6c790adaa06921d0fb2e78753"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -750572,7 +750669,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "9e46cda9659aead884932a9174dd678190496064fb441103c2a9a242759499c1"
+              "sha256": "82ad0b844ac3ead149d7e362511e02758d0af035c9b6db29604268b63a1c8837"
             },
             {
               "path": "packages/ui/src/components/ui/button.tsx",
@@ -750825,7 +750922,8 @@
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ]
       }
     },
@@ -750961,7 +751059,7 @@
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
-              "sha256": "c937299c6ac38fb463976d9b247849f8ffc3f2ad0272956f5ff6c71c389716a5"
+              "sha256": "292e9f0ff27130eff4b21844052329f2652022c6c790adaa06921d0fb2e78753"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -751809,7 +751907,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
-              "sha256": "b39178b305a77d0d4e5fb6a2e9e30673ad68b158738e28def2f15a94d50ff4a8"
+              "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
@@ -752557,7 +752655,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "9e46cda9659aead884932a9174dd678190496064fb441103c2a9a242759499c1"
+              "sha256": "82ad0b844ac3ead149d7e362511e02758d0af035c9b6db29604268b63a1c8837"
             },
             {
               "path": "apps/api/src/crm/verification-case.controller.ts",
@@ -752818,7 +752916,8 @@
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -752943,7 +753042,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-route-budget-and-upgrade-fixture-repair"
         ]
       }
     },
@@ -850785,6 +850885,105 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/authenticated-dast",
       "source_scope_proof": "staging-zap-0.5.0.json",
       "source_scope_proof_sha256": "d1d15c632eec4f2d87a4b52e88b8efc9a0a7aba43511db811c4fcc12d31ab885"
+    },
+    "release-0.6-route-budget-and-upgrade-fixture-repair": {
+      "batch": "release-0.6-route-budget-and-upgrade-fixture-repair",
+      "base_commit": "fe3417a8d8d445cb3be7110e93a8089709c1957e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.02",
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "02-auth-users-admin.md#T-05.02.05",
+        "06-security-testing-observability.md#T-06.03.01.10",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.04.01",
+        "07-ui-ux-design.md#T-07.01.04.06",
+        "07-ui-ux-design.md#T-07.04.02.01",
+        "07-ui-ux-design.md#T-07.04.02.02",
+        "07-ui-ux-design.md#T-07.04.02.03",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.15.01.01",
+        "07-ui-ux-design.md#T-07.15.01.02",
+        "07-ui-ux-design.md#T-07.15.01.03",
+        "07-ui-ux-design.md#T-07.15.01.04",
+        "07-ui-ux-design.md#T-07.15.01.05",
+        "07-ui-ux-design.md#T-07.16.01.01",
+        "07-ui-ux-design.md#T-07.16.01.02",
+        "07-ui-ux-design.md#T-07.16.01.03",
+        "07-ui-ux-design.md#T-07.16.01.04",
+        "07-ui-ux-design.md#T-07.16.01.05",
+        "07-ui-ux-design.md#T-07.16.01.06",
+        "07-ui-ux-design.md#T-07.16.01.07",
+        "07-ui-ux-design.md#T-07.16.02.01",
+        "07-ui-ux-design.md#T-07.16.02.02",
+        "07-ui-ux-design.md#T-07.16.02.03",
+        "07-ui-ux-design.md#T-07.30.01.01",
+        "07-ui-ux-design.md#T-07.30.01.05",
+        "07-ui-ux-design.md#T-07.30.02.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/components/AuditLogViewer.test.tsx",
+        "apps/web/src/components/AuditLogViewer.tsx",
+        "apps/web/src/pages/AdminAuthorizationAudit.tsx",
+        "apps/web/src/pages/AdminLayout.tsx",
+        "packages/db/src/electricity-draft-revision-upgrade.migrated.test.ts",
+        "packages/i18n/src/workspace-admin-messages.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/AuditLogViewer.test.tsx",
+          "sha256": "8469e48fd86692bc89e69c585ae81a2f2f467195aa9d5fdfbed5b01383f8eb28"
+        },
+        {
+          "path": "apps/web/src/components/AuditLogViewer.tsx",
+          "sha256": "292e9f0ff27130eff4b21844052329f2652022c6c790adaa06921d0fb2e78753"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAuthorizationAudit.tsx",
+          "sha256": "10dfb6391b81568e43f7e890b201a83e4f4a984af830f10829ce7da90172242d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminLayout.tsx",
+          "sha256": "9b75418e266306b32851c363577310a36139b45a45cb589c3ae7d9e89390fa6a"
+        },
+        {
+          "path": "packages/db/src/electricity-draft-revision-upgrade.migrated.test.ts",
+          "sha256": "9fc532e42477ecf57e85029a3fbcfb4dbc79ba8cc2c22372f3bfe0d91f73a101"
+        },
+        {
+          "path": "packages/i18n/src/workspace-admin-messages.ts",
+          "sha256": "82ad0b844ac3ead149d7e362511e02758d0af035c9b6db29604268b63a1c8837"
+        }
+      ],
+      "checks": [
+        "The corrected production build passed all 102 original default-gzip and Size Limit checks. Wallet receipts are 498178 bytes and authorization audit 330318 bytes against their unchanged 500000-byte limits. Hosted run 42729816208 found 500.29 KB for wallet receipts before the repair.",
+        "The authorization-only bilingual labels are loaded by the lazy page. The shared navigation reads the exact original Persian and English maintenance label without pulling the full maintenance dictionary into unrelated routes. 63 viewer and settings cases passed, then 391 current admin shell cases and the compiled translation parity checks passed.",
+        "The hosted upgrade fixture expected only 0282 but the production journal applied 0282, 0283 and 0284. The fixture now proves the exact historical clock migration through 0282, then asserts the complete ordered remaining journal tail and an empty replay. All existing row, constraint and clock assertions remain. The native migrated database passed 3 cases across the upgrade and baseline suites.",
+        "API/worker runtime and migration SQL are unchanged in the repair. Scoped web/database typechecks, changed-file lint, formatting and diff checks passed. Exact hosted application and affected-suite checks are still required for the repair commit."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/authorization-audit-route-budget",
+      "source_scope_proof": "repair-source-proof.json",
+      "source_scope_proof_sha256": "c1d64a3c49eb4b103c9753e654b4ca508cd66b6b6f34321ef33226393caa802a"
     }
   },
   "historical_improvements": [

@@ -22,33 +22,23 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 
-export function AuditLogViewer(props: {
+type AuditLogViewerProps = {
   scope: ConfigAuditScope;
   refreshKey?: string | number;
   onDenied?: (status?: 401 | 403) => void;
-}) {
+  labels?: Readonly<Record<string, string>>;
+};
+
+export function AuditLogViewer(props: AuditLogViewerProps) {
   return <AuditTimeline key={props.scope} {...props} />;
 }
-function AuditTimeline({
-  scope: kind,
-  refreshKey,
-  onDenied,
-}: {
-  scope: ConfigAuditScope;
-  refreshKey?: string | number;
-  onDenied?: (status?: 401 | 403) => void;
-}) {
+function AuditTimeline({ scope: kind, refreshKey, onDenied, labels }: AuditLogViewerProps) {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale),
     time = useAccountTime(),
     id = useId();
   const isAuthorization = kind === 'authorization';
-  const word = (key: string) => {
-    const scoped = `admin.audit.authorization.${key}`;
-    return isAuthorization && authorizationCopy.has(key)
-      ? t(scoped, locale)
-      : t(`admin.audit.${key}`, locale);
-  };
+  const word = (key: string) => labels?.[key] ?? t(`admin.audit.${key}`, locale);
   const [open, setOpen] = useState(false),
     [cursor, setCursor] = useState<string | null>(null);
   const [items, setItems] = useState<ConfigAuditEntry[]>([]),
@@ -226,22 +216,3 @@ function AuditTimeline({
     </section>
   );
 }
-
-const authorizationCopy = new Set([
-  'title',
-  'description',
-  'show',
-  'hide',
-  'loading',
-  'empty',
-  'denied',
-  'error',
-  'retry',
-  'refresh',
-  'more',
-  'authorization_denied',
-  'field.resource',
-  'field.action',
-  'field.reason',
-  'field.correlationId',
-]);
