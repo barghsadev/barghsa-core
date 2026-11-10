@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T18:28:52+00:00",
-  "source_commit": "eaa09018b8a1ff3f5f30e657fa715bf0119c55a3",
+  "updated": "2026-11-10T18:31:47+00:00",
+  "source_commit": "5933315b319bbd3f3108450a5b45215314c947fd",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -503649,12 +503649,10 @@
         "story": "06-security-testing-observability.md#spec-ff557ea04904"
       },
       "requirement": "| T-06.06.01.07 | Write tests: valid upload, invalid extension, mismatched MIME, oversized, malware detected, quarantine alert | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "The previous exact hosted native suite passed 45 compiled document and 19 policy cases. Verify the changed quota and scan admission boundary in the new exact hosted affected suite before closing the combined test criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -503685,9 +503683,109 @@
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-isolated-live-scanner-and-safari-recovery"
+          "release-0.6-isolated-live-scanner-and-safari-recovery",
+          "release-0.6-hosted-upload-admission-and-scanner-tests"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "hosted-native-upload-regression-test-verification",
+          "base_commit": "5933315b319bbd3f3108450a5b45215314c947fd",
+          "tested_commit": "27e484c138315c4c67f417afe402d55366f58a09",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
+            },
+            {
+              "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+              "sha256": "8fa1f5d324136e314f1a57a78ceb9dbed9510d3b526138d7df0ea96ea2a827c1"
+            },
+            {
+              "path": "apps/api/src/storage/verified-attachments.service.ts",
+              "sha256": "d731ec560a48a64872b8beadbc4b86d27734780a3d47830f7118f99464e8e991"
+            },
+            {
+              "path": "apps/api/src/storage/read-capped-bytes.ts",
+              "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+              "sha256": "ca88c470cb4a74dfdd6cf07085024c2c50136b04849f7f68258d00507fa51f99"
+            },
+            {
+              "path": "apps/api/src/upload/upload-admission.test.ts",
+              "sha256": "7451a9256e8dfc5d57aaad622e33df2648fd296ac8abd9d94703d8ebf2e20db3"
+            },
+            {
+              "path": "apps/api/src/upload/multipart-http.integration.test.ts",
+              "sha256": "0ee98fc4cf227e14756ddae7f3625ef888af7631412c26c4a35ae66ec3d817e6"
+            },
+            {
+              "path": "apps/api/src/upload/upload.service.ts",
+              "sha256": "ca91e1eac627ead097ecb64e10559e234ad14eb038ddd29fe6fa0938232a7642"
+            },
+            {
+              "path": "apps/api/src/upload/upload-reservations.ts",
+              "sha256": "6b0d4d612d4b056473d2d0ec5eac8453cbf7cf8c61b4a45609abe76c6d516ebd"
+            },
+            {
+              "path": "apps/api/src/upload/upload-quota.ts",
+              "sha256": "808e2c8593ba46dd2f054c6dbce60e3f40ef44163b806e9e8ef80c3276e1c06e"
+            },
+            {
+              "path": "apps/api/test/upload.controller.spec.ts",
+              "sha256": "693f391ed36b083990d11c83f8c4c4f1b4e76433dbb2d8ec7cc575cfe39e0341"
+            },
+            {
+              "path": "apps/worker/src/documents/clamav.test.ts",
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
+            },
+            {
+              "path": "apps/worker/src/documents/scan-runner.ts",
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
+            },
+            {
+              "path": "apps/worker/src/documents/upload-scan-job.ts",
+              "sha256": "25f822c23ff6e31fbc42d44c622357a7961eecb53de5107ad79425f8a2ea53d5"
+            },
+            {
+              "path": "packages/shared/src/storage/read-capped-bytes.ts",
+              "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.ts",
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+            },
+            {
+              "path": "packages/shared/src/storage/s3-storage-provider.ts",
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+            },
+            {
+              "path": "packages/db/drizzle/production/0286_upload_scope_quotas.sql",
+              "sha256": "d6835daa6795c272399011dd2abf6462052f44e7108034998acd16945db3fdc0"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "9dbce91a0519f6081e756b4dbbb6bbfbc633ca87b11e6d74e3054ca7f52c13dd"
+            }
+          ],
+          "checks": [
+            "GitHub run 42838242571 and its Run tests job 129914620408 passed at exact 27e484c138315c4c67f417afe402d55366f58a09. The report lists 45 document, 26 storage-record, 19 upload-policy, 34 upload-controller, five admission, two multipart and seven ClamAV cases.",
+            "Reviewed the exercised source for valid sealed bytes, denied extensions and MIME mismatches, oversized claims and forged stored sizes, configured clean and infected scanner outcomes, quarantine download denial, and durable private quarantine notifications. The upload quota, scanner workers, test fixtures and migrations are unchanged from that hosted run.",
+            "The shared byte-reader relocation preserves its storage behavior byte for byte. The intervening protected S3 origin guard has its own exact 31 compiled PostgreSQL HTTP cases plus the authenticated isolated MinIO read/write and signing proof. This accepts the regression test criterion. Live deployment and scanner operations remain separate gates."
+          ]
+        }
       },
       "blocker": null
     },
@@ -908387,6 +908485,140 @@
         {
           "file": "barghsa-performance.json",
           "sha256": "1866e45f7bd9048e817f278e7393c4ef67e6337fa66a7d110a8571df2de1b5fb"
+        }
+      ]
+    },
+    "release-0.6-hosted-upload-admission-and-scanner-tests": {
+      "batch": "release-0.6-hosted-upload-admission-and-scanner-tests",
+      "base_commit": "5933315b319bbd3f3108450a5b45215314c947fd",
+      "tested_commit": "27e484c138315c4c67f417afe402d55366f58a09",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.01.07"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+        },
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
+        },
+        {
+          "path": "apps/api/src/documents/document.service.ts",
+          "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+          "sha256": "8fa1f5d324136e314f1a57a78ceb9dbed9510d3b526138d7df0ea96ea2a827c1"
+        },
+        {
+          "path": "apps/api/src/storage/verified-attachments.service.ts",
+          "sha256": "d731ec560a48a64872b8beadbc4b86d27734780a3d47830f7118f99464e8e991"
+        },
+        {
+          "path": "apps/api/src/storage/read-capped-bytes.ts",
+          "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
+        },
+        {
+          "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+          "sha256": "ca88c470cb4a74dfdd6cf07085024c2c50136b04849f7f68258d00507fa51f99"
+        },
+        {
+          "path": "apps/api/src/upload/upload-admission.test.ts",
+          "sha256": "7451a9256e8dfc5d57aaad622e33df2648fd296ac8abd9d94703d8ebf2e20db3"
+        },
+        {
+          "path": "apps/api/src/upload/multipart-http.integration.test.ts",
+          "sha256": "0ee98fc4cf227e14756ddae7f3625ef888af7631412c26c4a35ae66ec3d817e6"
+        },
+        {
+          "path": "apps/api/src/upload/upload.service.ts",
+          "sha256": "ca91e1eac627ead097ecb64e10559e234ad14eb038ddd29fe6fa0938232a7642"
+        },
+        {
+          "path": "apps/api/src/upload/upload-reservations.ts",
+          "sha256": "6b0d4d612d4b056473d2d0ec5eac8453cbf7cf8c61b4a45609abe76c6d516ebd"
+        },
+        {
+          "path": "apps/api/src/upload/upload-quota.ts",
+          "sha256": "808e2c8593ba46dd2f054c6dbce60e3f40ef44163b806e9e8ef80c3276e1c06e"
+        },
+        {
+          "path": "apps/api/test/upload.controller.spec.ts",
+          "sha256": "693f391ed36b083990d11c83f8c4c4f1b4e76433dbb2d8ec7cc575cfe39e0341"
+        },
+        {
+          "path": "apps/worker/src/documents/clamav.test.ts",
+          "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
+        },
+        {
+          "path": "apps/worker/src/documents/scan-runner.ts",
+          "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
+        },
+        {
+          "path": "apps/worker/src/documents/upload-scan-job.ts",
+          "sha256": "25f822c23ff6e31fbc42d44c622357a7961eecb53de5107ad79425f8a2ea53d5"
+        },
+        {
+          "path": "packages/shared/src/storage/read-capped-bytes.ts",
+          "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.ts",
+          "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+        },
+        {
+          "path": "packages/db/drizzle/production/0286_upload_scope_quotas.sql",
+          "sha256": "d6835daa6795c272399011dd2abf6462052f44e7108034998acd16945db3fdc0"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "9dbce91a0519f6081e756b4dbbb6bbfbc633ca87b11e6d74e3054ca7f52c13dd"
+        }
+      ],
+      "checks": [
+        "GitHub run 42838242571 and its Run tests job 129914620408 passed at exact 27e484c138315c4c67f417afe402d55366f58a09. The report lists 45 document, 26 storage-record, 19 upload-policy, 34 upload-controller, five admission, two multipart and seven ClamAV cases.",
+        "Reviewed the exercised source for valid sealed bytes, denied extensions and MIME mismatches, oversized claims and forged stored sizes, configured clean and infected scanner outcomes, quarantine download denial, and durable private quarantine notifications. The upload quota, scanner workers, test fixtures and migrations are unchanged from that hosted run.",
+        "The shared byte-reader relocation preserves its storage behavior byte for byte. The intervening protected S3 origin guard has its own exact 31 compiled PostgreSQL HTTP cases plus the authenticated isolated MinIO read/write and signing proof. This accepts the regression test criterion. Live deployment and scanner operations remain separate gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "hosted_job": "https://github.com/barghsadev/barghsa-core/actions/runs/42838242571/job/129914620408",
+      "suite_cases": {
+        "src/documents/document-http.integration.test.ts": 45,
+        "src/storage/storage-record-http.integration.test.ts": 26,
+        "src/admin/upload-policy-http.integration.test.ts": 19,
+        "test/upload.controller.spec.ts": 34,
+        "src/upload/upload-admission.test.ts": 5,
+        "src/upload/multipart-http.integration.test.ts": 2,
+        "src/documents/clamav.test.ts": 7
+      },
+      "supporting_batches": [
+        "release-0.6-upload-storage-scope-quotas",
+        "release-0.6-protected-storage-origins",
+        "release-0.6-provider-redirects-and-response-caps"
+      ],
+      "proof_logs": [
+        {
+          "file": "hosted-upload-quota-129914620408.log",
+          "sha256": "bf6e8efd55e3b038fdaa27b2ad2c7a7ea08fb8e286509f7d99e2c4df74eefd51"
+        },
+        {
+          "file": "storage-origin-native.log",
+          "sha256": "86f9d231a9db59094a32bc9bd97ab116a88169f9a562b78b6040928cdba3d0d3"
+        },
+        {
+          "file": "hosted-upload-quota-run-42838242571.json",
+          "sha256": "e1b6e9e1797191bd908313b0635cd2e17d42f18a31801428c430631e688f01ed"
         }
       ]
     }

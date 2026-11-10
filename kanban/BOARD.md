@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T18:28:52+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T18:31:47+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1190 | Accepted with unchanged source bindings. |
-| verify | 114 | Existing work may be complete; inspect evidence before building. |
+| done | 1191 | Accepted with unchanged source bindings. |
+| verify | 113 | Existing work may be complete; inspect evidence before building. |
 | partial | 56 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1205,7 +1205,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.06.01.04` | done | Recorded batch work | Implement malware scanning integration (ClamAV socket or cloud API) with Quarantine state on detection |
 | `06-security-testing-observability.md#T-06.06.01.05` | done | Recorded batch work | Implement download disposition: potentially active formats → `Content-Disposition: attachment`; safe formats → inline only after sandbox preview |
 | `06-security-testing-observability.md#T-06.06.01.06` | done | Recorded batch work | Ensure uploads are private by default; access via short-lived authorized URLs or backend streaming after auth check |
-| `06-security-testing-observability.md#T-06.06.01.07` | verify | Recorded batch work | Write tests: valid upload, invalid extension, mismatched MIME, oversized, malware detected, quarantine alert |
+| `06-security-testing-observability.md#T-06.06.01.07` | done | Recorded batch work | Write tests: valid upload, invalid extension, mismatched MIME, oversized, malware detected, quarantine alert |
 | `06-security-testing-observability.md#T-06.06.01.08` | done | Recorded batch work | Security review: file path traversal, double extension, magic byte manipulation, zip bombs |
 | `06-security-testing-observability.md#T-06.06.02.01` | done | Recorded batch work | Implement generic webhook verification service: signature/HMAC verification, replay window (e.g. ±5 min), event ID dedup |
 | `06-security-testing-observability.md#T-06.06.02.02` | done | Recorded batch work | Build payment provider callback adapter: verify provider signature, merchant context, server-side status check; browser redirect ignored |
