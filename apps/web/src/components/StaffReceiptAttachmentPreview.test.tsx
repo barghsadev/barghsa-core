@@ -27,6 +27,16 @@ it('shows only the raster preview inline and links the signed original separatel
   expect(host.querySelector('a')?.href).toBe(props.url);
   expect(host.querySelector('iframe,object,embed')).toBeNull();
 });
+it.each([
+  'data:text/html,<script>alert(1)</script>',
+  'file:///tmp/receipt.pdf',
+  'javascript:alert(1)',
+  'https://user:password@storage.example.test/signed',
+])('keeps the safe raster preview without linking an invalid original %s', async (url) => {
+  await act(async () => root.render(<StaffReceiptAttachmentPreview {...props} url={url} />));
+  expect(host.querySelector('img')?.getAttribute('src')).toBe(props.previewUrl);
+  expect(host.querySelector('a')).toBeNull();
+});
 it('keeps the original link when the preview fails and shows a newly selected preview', async () => {
   await act(async () => root.render(<StaffReceiptAttachmentPreview {...props} />));
   await act(async () => host.querySelector('img')!.dispatchEvent(new Event('error')));

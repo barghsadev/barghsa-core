@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T05:12:09+00:00",
-  "source_commit": "94fc2d4dcee122ab8888a3f852eb26562cb9574c",
+  "updated": "2026-11-10T05:16:51+00:00",
+  "source_commit": "b21e57234b87dfe4e558dcdd3759135b792dd02b",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -485211,19 +485211,230 @@
         "story": "06-security-testing-observability.md#spec-7fcfecab2097"
       },
       "requirement": "| T-06.04.03.04 | Ensure all user-provided data in React is rendered as text (not HTML) by default | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-react-output-safety-and-receipt-urls"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "b21e57234b87dfe4e558dcdd3759135b792dd02b",
+          "checks": [
+            "The production React/UI sink inventory found only the shared Markdown renderer using dangerouslySetInnerHTML. It escapes raw HTML and image syntax and sanitizes parsed output through the established DOMPurify allowlist. Plain display names, comments, labels, notes and assistant responses use React text rendering.",
+            "The 188 web and 49 UI cases exercised sanitizer vectors, URL parameters and typed routes, display names, rich comments, attachment URLs, and literal staff/customer content. The earlier passing hosted source scan applies to the unchanged web/UI paths. The new link guard does not add an HTML insertion sink.",
+            "The staff receipt renderer originally linked four malformed or executable URLs. The shared document URL validator now gates the original link, preserves the signed URL string on success and leaves the fixed raster preview available. Wallet and invoice callers obtain signed originals from the storage provider.",
+            "The 111 targeted receipt and document URL cases passed, along with web typecheck, lint, formatting and diff checks. Fresh production and auth builds passed all 102 original route and interaction budgets. Deployed CSP and authenticated DAST remain separate acceptance gates."
+          ],
+          "source_evidence": [
+            {
+              "path": ".semgrep/security.yml",
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
+            },
+            {
+              "path": ".size-limit.json",
+              "sha256": "7fe0e2dcf8f3b937679e7563754addaf625ef5f5477447f69f499f93e6db6fd9"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "9c3a4ab9dfb398cba8c771cb17b72491d6b6715ba449aaf2a549820875cb1208"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+              "sha256": "fb502f00bb64c8a334231bf86aba40c3c1346d924abde96b7713a49aa7539ff9"
+            },
+            {
+              "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
+              "sha256": "8e14d8e867c5d86331b7947ec4169dd495c79979e21a215aef641db5a13eb73b"
+            },
+            {
+              "path": "apps/web/src/components/AssistantChatComponents.tsx",
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
+            },
+            {
+              "path": "apps/web/src/components/AuditLogViewer.test.tsx",
+              "sha256": "8469e48fd86692bc89e69c585ae81a2f2f467195aa9d5fdfbed5b01383f8eb28"
+            },
+            {
+              "path": "apps/web/src/components/AuditLogViewer.tsx",
+              "sha256": "292e9f0ff27130eff4b21844052329f2652022c6c790adaa06921d0fb2e78753"
+            },
+            {
+              "path": "apps/web/src/components/ContractStatusTimeline.test.tsx",
+              "sha256": "f9ab0555dc6c157de12929b6f528e94640f7a81df7fb1328f3aec3042f562b15"
+            },
+            {
+              "path": "apps/web/src/components/ContractStatusTimeline.tsx",
+              "sha256": "81c88ce3997b79bffd2af5de08308c084907ff855346c83031a08380a5848116"
+            },
+            {
+              "path": "apps/web/src/components/CrmLegalDocuments.tsx",
+              "sha256": "bcbf611a881e6ebfca1a89b44436f4f55d95704db8f8cbf8d28ea8e6007b115a"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.test.tsx",
+              "sha256": "674e18a415cb1089a291dbed541953ed652b6c65c1228413e2f1f9f959e926ed"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.tsx",
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
+              "sha256": "766293803611c2ff992a2f3d5343e3e834c74ce9df1e692e22d49de6a2a6e312"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
+              "sha256": "56d348c4b3b2ea8c2aeccd89421c4e149f1b28e4f57d94b65d1faf20e47b00c7"
+            },
+            {
+              "path": "apps/web/src/components/LegalProfileDocuments.tsx",
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
+            },
+            {
+              "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
+              "sha256": "99704d3b939ff56f9fa5a3cc2d54894255cad4967770cb7a72ef62962b478382"
+            },
+            {
+              "path": "apps/web/src/components/StaffReceiptAttachmentPreview.test.tsx",
+              "sha256": "5541bc660408d434522ef7815c40007bf5af4f8f9d5ade4754abb2a8f2f7434b"
+            },
+            {
+              "path": "apps/web/src/components/StaffReceiptAttachmentPreview.tsx",
+              "sha256": "c2efe94d3776b53df163454361f8966e1bf87da70d447e459783ff0933339c82"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.test.tsx",
+              "sha256": "3ac6d6cfe0cc97c56e4979dfd4a31dd34724385096a447c9d0252bda0461e745"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.tsx",
+              "sha256": "e9e4a954f1508fbbfba065377cab3e2a118ed0b4d8e3b8d08bc0820b82eded33"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
+              "sha256": "6afbf2a7735bbb3644ab601b7d17697dca083e53e84d52b202ce9f1f50379770"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.tsx",
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.test.tsx",
+              "sha256": "591ef5f465e1c1ffa0f6d94fca7c9fd4dd660ea984f7ed1a5f5391ba03071204"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.tsx",
+              "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+            },
+            {
+              "path": "apps/web/src/components/response-metadata-panel.test.tsx",
+              "sha256": "810bf5bf95716c791fb296ceccb051947bf031141f1e550f6b73db91d54f7ff4"
+            },
+            {
+              "path": "apps/web/src/lib/decision-queue-query.test.ts",
+              "sha256": "f24a88c4eced5dfa0f7a7f1fbea4c5c10808436acc8b3ffe6e34b3f15cbeaec9"
+            },
+            {
+              "path": "apps/web/src/lib/decision-queue-query.ts",
+              "sha256": "b6fddaf736108be1f59ba3f4f8d759d262ab0e1a61a5edb6c6242091163c049a"
+            },
+            {
+              "path": "apps/web/src/lib/documents.test.ts",
+              "sha256": "4faba31abafe63e32971e82bb0a60513640bd016996fd5b536bc4e80826a68c4"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/solar-staff-query.test.ts",
+              "sha256": "2fc31d69cac27e99a77bdecb069f99ee8abd7bbe3b6d17ce1dcdc8544fb339fc"
+            },
+            {
+              "path": "apps/web/src/lib/solar-staff-query.ts",
+              "sha256": "a10abe83a651221ef4995cfbfb900bdf23c29170d938e63f6fb81326ae85b67a"
+            },
+            {
+              "path": "apps/web/src/lib/staff-access-query.test.ts",
+              "sha256": "874889b0484d84a44f3b4d330c9dacecca1fe8573f0d50f9f992d0af301ca9f3"
+            },
+            {
+              "path": "apps/web/src/lib/staff-access-query.ts",
+              "sha256": "c11acbd3b6103af9b698bb3eecabbed42e791de6ac8135ad4b2c8bdf7ba9e3b8"
+            },
+            {
+              "path": "apps/web/src/lib/telegram-link.test.ts",
+              "sha256": "28ae8827a468a635cb9fe45ee1cdffddc08f0abc507eb551400c701961f9f74f"
+            },
+            {
+              "path": "apps/web/src/lib/telegram-link.ts",
+              "sha256": "bdf763e1ea26ef4131cc153ce17bc16b2cb24acfdc936e69158903def5acc843"
+            },
+            {
+              "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
+              "sha256": "55f491ea5dd397a16a3f2f99b9c203c1304b4f06dd29c4df5b033fae8932252b"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+              "sha256": "5fee160ba3fc78dc9a28754117ea75938e7c02b4496d55c2ab6d9266e71cd67a"
+            },
+            {
+              "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+              "sha256": "37206fd46d5fbdc864f9bd7847bf9a745c2ad94fa15ce778a65f1eb77edfed63"
+            },
+            {
+              "path": "apps/web/src/pages/TicketsPage.tsx",
+              "sha256": "957cdaefba5bb88d77ef2ec2062ed9ad3a87379a3b34dbd09416629d6b20b98e"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+            },
+            {
+              "path": "apps/web/vite.config.ts",
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/data-table-cells.tsx",
+              "sha256": "2e265aa10126fc210a378ef37540844f3e57f2056f5e82fc9f555c09e84f465a"
+            },
+            {
+              "path": "packages/ui/src/data-table-cells.test.tsx",
+              "sha256": "aa3d784c4e4474c3c844b50209fb33658591bab2d44bf4d9b329e164c59e79c4"
+            },
+            {
+              "path": "packages/ui/src/data-table.test.tsx",
+              "sha256": "a0d0422024579d3f8954c63ee7dbf041e21a91ae17040e2cd9da4a9d1d8e60e6"
+            },
+            {
+              "path": "packages/ui/src/workflow.test.tsx",
+              "sha256": "16e5999f5fdf7a41dc47333feb91806ca5f36ae21b96d7a0b093e94348952ddb"
+            },
+            {
+              "path": "scripts/check-route-budgets.mjs",
+              "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+            },
+            {
+              "path": "scripts/check-route-budgets.test.mjs",
+              "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+            }
+          ]
+        }
       }
     },
     {
@@ -485237,19 +485448,230 @@
         "story": "06-security-testing-observability.md#spec-7fcfecab2097"
       },
       "requirement": "| T-06.04.03.05 | Write unit tests: XSS vectors through sanitizer, URL params, user display names, rich text fields | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-react-output-safety-and-receipt-urls"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "b21e57234b87dfe4e558dcdd3759135b792dd02b",
+          "checks": [
+            "The production React/UI sink inventory found only the shared Markdown renderer using dangerouslySetInnerHTML. It escapes raw HTML and image syntax and sanitizes parsed output through the established DOMPurify allowlist. Plain display names, comments, labels, notes and assistant responses use React text rendering.",
+            "The 188 web and 49 UI cases exercised sanitizer vectors, URL parameters and typed routes, display names, rich comments, attachment URLs, and literal staff/customer content. The earlier passing hosted source scan applies to the unchanged web/UI paths. The new link guard does not add an HTML insertion sink.",
+            "The staff receipt renderer originally linked four malformed or executable URLs. The shared document URL validator now gates the original link, preserves the signed URL string on success and leaves the fixed raster preview available. Wallet and invoice callers obtain signed originals from the storage provider.",
+            "The 111 targeted receipt and document URL cases passed, along with web typecheck, lint, formatting and diff checks. Fresh production and auth builds passed all 102 original route and interaction budgets. Deployed CSP and authenticated DAST remain separate acceptance gates."
+          ],
+          "source_evidence": [
+            {
+              "path": ".semgrep/security.yml",
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
+            },
+            {
+              "path": ".size-limit.json",
+              "sha256": "7fe0e2dcf8f3b937679e7563754addaf625ef5f5477447f69f499f93e6db6fd9"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "9c3a4ab9dfb398cba8c771cb17b72491d6b6715ba449aaf2a549820875cb1208"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+              "sha256": "fb502f00bb64c8a334231bf86aba40c3c1346d924abde96b7713a49aa7539ff9"
+            },
+            {
+              "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
+              "sha256": "8e14d8e867c5d86331b7947ec4169dd495c79979e21a215aef641db5a13eb73b"
+            },
+            {
+              "path": "apps/web/src/components/AssistantChatComponents.tsx",
+              "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
+            },
+            {
+              "path": "apps/web/src/components/AuditLogViewer.test.tsx",
+              "sha256": "8469e48fd86692bc89e69c585ae81a2f2f467195aa9d5fdfbed5b01383f8eb28"
+            },
+            {
+              "path": "apps/web/src/components/AuditLogViewer.tsx",
+              "sha256": "292e9f0ff27130eff4b21844052329f2652022c6c790adaa06921d0fb2e78753"
+            },
+            {
+              "path": "apps/web/src/components/ContractStatusTimeline.test.tsx",
+              "sha256": "f9ab0555dc6c157de12929b6f528e94640f7a81df7fb1328f3aec3042f562b15"
+            },
+            {
+              "path": "apps/web/src/components/ContractStatusTimeline.tsx",
+              "sha256": "81c88ce3997b79bffd2af5de08308c084907ff855346c83031a08380a5848116"
+            },
+            {
+              "path": "apps/web/src/components/CrmLegalDocuments.tsx",
+              "sha256": "bcbf611a881e6ebfca1a89b44436f4f55d95704db8f8cbf8d28ea8e6007b115a"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.test.tsx",
+              "sha256": "674e18a415cb1089a291dbed541953ed652b6c65c1228413e2f1f9f959e926ed"
+            },
+            {
+              "path": "apps/web/src/components/DocumentRecords.tsx",
+              "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
+              "sha256": "766293803611c2ff992a2f3d5343e3e834c74ce9df1e692e22d49de6a2a6e312"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
+              "sha256": "56d348c4b3b2ea8c2aeccd89421c4e149f1b28e4f57d94b65d1faf20e47b00c7"
+            },
+            {
+              "path": "apps/web/src/components/LegalProfileDocuments.tsx",
+              "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
+            },
+            {
+              "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
+              "sha256": "99704d3b939ff56f9fa5a3cc2d54894255cad4967770cb7a72ef62962b478382"
+            },
+            {
+              "path": "apps/web/src/components/StaffReceiptAttachmentPreview.test.tsx",
+              "sha256": "5541bc660408d434522ef7815c40007bf5af4f8f9d5ade4754abb2a8f2f7434b"
+            },
+            {
+              "path": "apps/web/src/components/StaffReceiptAttachmentPreview.tsx",
+              "sha256": "c2efe94d3776b53df163454361f8966e1bf87da70d447e459783ff0933339c82"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.test.tsx",
+              "sha256": "3ac6d6cfe0cc97c56e4979dfd4a31dd34724385096a447c9d0252bda0461e745"
+            },
+            {
+              "path": "apps/web/src/components/TicketCommentThread.tsx",
+              "sha256": "e9e4a954f1508fbbfba065377cab3e2a118ed0b4d8e3b8d08bc0820b82eded33"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
+              "sha256": "6afbf2a7735bbb3644ab601b7d17697dca083e53e84d52b202ce9f1f50379770"
+            },
+            {
+              "path": "apps/web/src/components/TicketQueueRecords.tsx",
+              "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.test.tsx",
+              "sha256": "591ef5f465e1c1ffa0f6d94fca7c9fd4dd660ea984f7ed1a5f5391ba03071204"
+            },
+            {
+              "path": "apps/web/src/components/TosContent.tsx",
+              "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+            },
+            {
+              "path": "apps/web/src/components/response-metadata-panel.test.tsx",
+              "sha256": "810bf5bf95716c791fb296ceccb051947bf031141f1e550f6b73db91d54f7ff4"
+            },
+            {
+              "path": "apps/web/src/lib/decision-queue-query.test.ts",
+              "sha256": "f24a88c4eced5dfa0f7a7f1fbea4c5c10808436acc8b3ffe6e34b3f15cbeaec9"
+            },
+            {
+              "path": "apps/web/src/lib/decision-queue-query.ts",
+              "sha256": "b6fddaf736108be1f59ba3f4f8d759d262ab0e1a61a5edb6c6242091163c049a"
+            },
+            {
+              "path": "apps/web/src/lib/documents.test.ts",
+              "sha256": "4faba31abafe63e32971e82bb0a60513640bd016996fd5b536bc4e80826a68c4"
+            },
+            {
+              "path": "apps/web/src/lib/documents.ts",
+              "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+            },
+            {
+              "path": "apps/web/src/lib/solar-staff-query.test.ts",
+              "sha256": "2fc31d69cac27e99a77bdecb069f99ee8abd7bbe3b6d17ce1dcdc8544fb339fc"
+            },
+            {
+              "path": "apps/web/src/lib/solar-staff-query.ts",
+              "sha256": "a10abe83a651221ef4995cfbfb900bdf23c29170d938e63f6fb81326ae85b67a"
+            },
+            {
+              "path": "apps/web/src/lib/staff-access-query.test.ts",
+              "sha256": "874889b0484d84a44f3b4d330c9dacecca1fe8573f0d50f9f992d0af301ca9f3"
+            },
+            {
+              "path": "apps/web/src/lib/staff-access-query.ts",
+              "sha256": "c11acbd3b6103af9b698bb3eecabbed42e791de6ac8135ad4b2c8bdf7ba9e3b8"
+            },
+            {
+              "path": "apps/web/src/lib/telegram-link.test.ts",
+              "sha256": "28ae8827a468a635cb9fe45ee1cdffddc08f0abc507eb551400c701961f9f74f"
+            },
+            {
+              "path": "apps/web/src/lib/telegram-link.ts",
+              "sha256": "bdf763e1ea26ef4131cc153ce17bc16b2cb24acfdc936e69158903def5acc843"
+            },
+            {
+              "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
+              "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
+              "sha256": "55f491ea5dd397a16a3f2f99b9c203c1304b4f06dd29c4df5b033fae8932252b"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+              "sha256": "5fee160ba3fc78dc9a28754117ea75938e7c02b4496d55c2ab6d9266e71cd67a"
+            },
+            {
+              "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+              "sha256": "37206fd46d5fbdc864f9bd7847bf9a745c2ad94fa15ce778a65f1eb77edfed63"
+            },
+            {
+              "path": "apps/web/src/pages/TicketsPage.tsx",
+              "sha256": "957cdaefba5bb88d77ef2ec2062ed9ad3a87379a3b34dbd09416629d6b20b98e"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+            },
+            {
+              "path": "apps/web/vite.config.ts",
+              "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/data-table-cells.tsx",
+              "sha256": "2e265aa10126fc210a378ef37540844f3e57f2056f5e82fc9f555c09e84f465a"
+            },
+            {
+              "path": "packages/ui/src/data-table-cells.test.tsx",
+              "sha256": "aa3d784c4e4474c3c844b50209fb33658591bab2d44bf4d9b329e164c59e79c4"
+            },
+            {
+              "path": "packages/ui/src/data-table.test.tsx",
+              "sha256": "a0d0422024579d3f8954c63ee7dbf041e21a91ae17040e2cd9da4a9d1d8e60e6"
+            },
+            {
+              "path": "packages/ui/src/workflow.test.tsx",
+              "sha256": "16e5999f5fdf7a41dc47333feb91806ca5f36ae21b96d7a0b093e94348952ddb"
+            },
+            {
+              "path": "scripts/check-route-budgets.mjs",
+              "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+            },
+            {
+              "path": "scripts/check-route-budgets.test.mjs",
+              "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+            }
+          ]
+        }
       }
     },
     {
@@ -487030,7 +487452,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-runtime-failure-log-redaction",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-react-output-safety-and-receipt-urls"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -487130,11 +487553,11 @@
             },
             {
               "path": "apps/web/src/components/StaffReceiptAttachmentPreview.test.tsx",
-              "sha256": "1361ca0a5aeef0296af879ff019d41432685c290a5e34c12e051265e13b79876"
+              "sha256": "5541bc660408d434522ef7815c40007bf5af4f8f9d5ade4754abb2a8f2f7434b"
             },
             {
               "path": "apps/web/src/components/StaffReceiptAttachmentPreview.tsx",
-              "sha256": "b51ccddcfa34519e8c2931428862d70e8b3e19ce10dcbf61aee94edf0c842120"
+              "sha256": "c2efe94d3776b53df163454361f8966e1bf87da70d447e459783ff0933339c82"
             },
             {
               "path": "apps/web/src/lib/bank-receipt-confirmation.test.ts",
@@ -540835,7 +541258,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-react-output-safety-and-receipt-urls"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -541639,7 +542063,7 @@
             },
             {
               "path": "apps/web/src/components/StaffReceiptAttachmentPreview.tsx",
-              "sha256": "b51ccddcfa34519e8c2931428862d70e8b3e19ce10dcbf61aee94edf0c842120"
+              "sha256": "c2efe94d3776b53df163454361f8966e1bf87da70d447e459783ff0933339c82"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
@@ -542376,7 +542800,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-react-output-safety-and-receipt-urls"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542520,7 +542945,7 @@
             },
             {
               "path": "apps/web/src/components/StaffReceiptAttachmentPreview.tsx",
-              "sha256": "b51ccddcfa34519e8c2931428862d70e8b3e19ce10dcbf61aee94edf0c842120"
+              "sha256": "c2efe94d3776b53df163454361f8966e1bf87da70d447e459783ff0933339c82"
             },
             {
               "path": "apps/web/src/components/TicketCommentThread.tsx",
@@ -543859,7 +544284,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-react-output-safety-and-receipt-urls"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -544003,7 +544429,7 @@
             },
             {
               "path": "apps/web/src/components/StaffReceiptAttachmentPreview.tsx",
-              "sha256": "b51ccddcfa34519e8c2931428862d70e8b3e19ce10dcbf61aee94edf0c842120"
+              "sha256": "c2efe94d3776b53df163454361f8966e1bf87da70d447e459783ff0933339c82"
             },
             {
               "path": "apps/web/src/components/TicketCommentThread.tsx",
@@ -546097,7 +546523,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-react-output-safety-and-receipt-urls"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546241,7 +546668,7 @@
             },
             {
               "path": "apps/web/src/components/StaffReceiptAttachmentPreview.tsx",
-              "sha256": "b51ccddcfa34519e8c2931428862d70e8b3e19ce10dcbf61aee94edf0c842120"
+              "sha256": "c2efe94d3776b53df163454361f8966e1bf87da70d447e459783ff0933339c82"
             },
             {
               "path": "apps/web/src/components/TicketCommentThread.tsx",
@@ -864888,6 +865315,229 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/worker-scan-failure-logs",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "30819e3077fe4dbffd4e17f5a4d35a7a331203c7b31a2deb243f6540c30f7198"
+    },
+    "release-0.6-react-output-safety-and-receipt-urls": {
+      "batch": "release-0.6-react-output-safety-and-receipt-urls",
+      "base_commit": "b21e57234b87dfe4e558dcdd3759135b792dd02b",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.03.04",
+        "06-security-testing-observability.md#T-06.04.03.05"
+      ],
+      "changed_paths": [
+        "apps/web/src/components/StaffReceiptAttachmentPreview.test.tsx",
+        "apps/web/src/components/StaffReceiptAttachmentPreview.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": ".semgrep/security.yml",
+          "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
+        },
+        {
+          "path": ".size-limit.json",
+          "sha256": "7fe0e2dcf8f3b937679e7563754addaf625ef5f5477447f69f499f93e6db6fd9"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "9c3a4ab9dfb398cba8c771cb17b72491d6b6715ba449aaf2a549820875cb1208"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "fb502f00bb64c8a334231bf86aba40c3c1346d924abde96b7713a49aa7539ff9"
+        },
+        {
+          "path": "apps/web/src/components/AssistantChatComponents.test.tsx",
+          "sha256": "8e14d8e867c5d86331b7947ec4169dd495c79979e21a215aef641db5a13eb73b"
+        },
+        {
+          "path": "apps/web/src/components/AssistantChatComponents.tsx",
+          "sha256": "69844c34f14b37192465ba506d0e47b49b11913b5851b5159d869f177c8a186d"
+        },
+        {
+          "path": "apps/web/src/components/AuditLogViewer.test.tsx",
+          "sha256": "8469e48fd86692bc89e69c585ae81a2f2f467195aa9d5fdfbed5b01383f8eb28"
+        },
+        {
+          "path": "apps/web/src/components/AuditLogViewer.tsx",
+          "sha256": "292e9f0ff27130eff4b21844052329f2652022c6c790adaa06921d0fb2e78753"
+        },
+        {
+          "path": "apps/web/src/components/ContractStatusTimeline.test.tsx",
+          "sha256": "f9ab0555dc6c157de12929b6f528e94640f7a81df7fb1328f3aec3042f562b15"
+        },
+        {
+          "path": "apps/web/src/components/ContractStatusTimeline.tsx",
+          "sha256": "81c88ce3997b79bffd2af5de08308c084907ff855346c83031a08380a5848116"
+        },
+        {
+          "path": "apps/web/src/components/CrmLegalDocuments.tsx",
+          "sha256": "bcbf611a881e6ebfca1a89b44436f4f55d95704db8f8cbf8d28ea8e6007b115a"
+        },
+        {
+          "path": "apps/web/src/components/DocumentRecords.test.tsx",
+          "sha256": "674e18a415cb1089a291dbed541953ed652b6c65c1228413e2f1f9f959e926ed"
+        },
+        {
+          "path": "apps/web/src/components/DocumentRecords.tsx",
+          "sha256": "d1f92b5203b97619ce35d95b3ddb9d17493230d760d3d868da6c109d194fe586"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
+          "sha256": "766293803611c2ff992a2f3d5343e3e834c74ce9df1e692e22d49de6a2a6e312"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
+          "sha256": "56d348c4b3b2ea8c2aeccd89421c4e149f1b28e4f57d94b65d1faf20e47b00c7"
+        },
+        {
+          "path": "apps/web/src/components/LegalProfileDocuments.tsx",
+          "sha256": "d23294b7236db525922a96757df59d1a398f1c9bb5d2f6b9dcf6e30a3a6b9678"
+        },
+        {
+          "path": "apps/web/src/components/ResponseMetadataPanel.tsx",
+          "sha256": "99704d3b939ff56f9fa5a3cc2d54894255cad4967770cb7a72ef62962b478382"
+        },
+        {
+          "path": "apps/web/src/components/StaffReceiptAttachmentPreview.test.tsx",
+          "sha256": "5541bc660408d434522ef7815c40007bf5af4f8f9d5ade4754abb2a8f2f7434b"
+        },
+        {
+          "path": "apps/web/src/components/StaffReceiptAttachmentPreview.tsx",
+          "sha256": "c2efe94d3776b53df163454361f8966e1bf87da70d447e459783ff0933339c82"
+        },
+        {
+          "path": "apps/web/src/components/TicketCommentThread.test.tsx",
+          "sha256": "3ac6d6cfe0cc97c56e4979dfd4a31dd34724385096a447c9d0252bda0461e745"
+        },
+        {
+          "path": "apps/web/src/components/TicketCommentThread.tsx",
+          "sha256": "e9e4a954f1508fbbfba065377cab3e2a118ed0b4d8e3b8d08bc0820b82eded33"
+        },
+        {
+          "path": "apps/web/src/components/TicketQueueRecords.test.tsx",
+          "sha256": "6afbf2a7735bbb3644ab601b7d17697dca083e53e84d52b202ce9f1f50379770"
+        },
+        {
+          "path": "apps/web/src/components/TicketQueueRecords.tsx",
+          "sha256": "9f51c742e9daf033506db947590e02a6ceb8d33f200a4226d92f0baaadca7305"
+        },
+        {
+          "path": "apps/web/src/components/TosContent.test.tsx",
+          "sha256": "591ef5f465e1c1ffa0f6d94fca7c9fd4dd660ea984f7ed1a5f5391ba03071204"
+        },
+        {
+          "path": "apps/web/src/components/TosContent.tsx",
+          "sha256": "4a04ed74640a531a6f59921dabbc7705b0bec6df3fa421dbd9b5892779c65769"
+        },
+        {
+          "path": "apps/web/src/components/response-metadata-panel.test.tsx",
+          "sha256": "810bf5bf95716c791fb296ceccb051947bf031141f1e550f6b73db91d54f7ff4"
+        },
+        {
+          "path": "apps/web/src/lib/decision-queue-query.test.ts",
+          "sha256": "f24a88c4eced5dfa0f7a7f1fbea4c5c10808436acc8b3ffe6e34b3f15cbeaec9"
+        },
+        {
+          "path": "apps/web/src/lib/decision-queue-query.ts",
+          "sha256": "b6fddaf736108be1f59ba3f4f8d759d262ab0e1a61a5edb6c6242091163c049a"
+        },
+        {
+          "path": "apps/web/src/lib/documents.test.ts",
+          "sha256": "4faba31abafe63e32971e82bb0a60513640bd016996fd5b536bc4e80826a68c4"
+        },
+        {
+          "path": "apps/web/src/lib/documents.ts",
+          "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+        },
+        {
+          "path": "apps/web/src/lib/solar-staff-query.test.ts",
+          "sha256": "2fc31d69cac27e99a77bdecb069f99ee8abd7bbe3b6d17ce1dcdc8544fb339fc"
+        },
+        {
+          "path": "apps/web/src/lib/solar-staff-query.ts",
+          "sha256": "a10abe83a651221ef4995cfbfb900bdf23c29170d938e63f6fb81326ae85b67a"
+        },
+        {
+          "path": "apps/web/src/lib/staff-access-query.test.ts",
+          "sha256": "874889b0484d84a44f3b4d330c9dacecca1fe8573f0d50f9f992d0af301ca9f3"
+        },
+        {
+          "path": "apps/web/src/lib/staff-access-query.ts",
+          "sha256": "c11acbd3b6103af9b698bb3eecabbed42e791de6ac8135ad4b2c8bdf7ba9e3b8"
+        },
+        {
+          "path": "apps/web/src/lib/telegram-link.test.ts",
+          "sha256": "28ae8827a468a635cb9fe45ee1cdffddc08f0abc507eb551400c701961f9f74f"
+        },
+        {
+          "path": "apps/web/src/lib/telegram-link.ts",
+          "sha256": "bdf763e1ea26ef4131cc153ce17bc16b2cb24acfdc936e69158903def5acc843"
+        },
+        {
+          "path": "apps/web/src/pages/AccountRecoveryPage.tsx",
+          "sha256": "b60a6a8d933d095170a0aea17ee963fa5df152d93913592158c37a832619f390"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.test.tsx",
+          "sha256": "55f491ea5dd397a16a3f2f99b9c203c1304b4f06dd29c4df5b033fae8932252b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "5fee160ba3fc78dc9a28754117ea75938e7c02b4496d55c2ab6d9266e71cd67a"
+        },
+        {
+          "path": "apps/web/src/pages/CrmCorrectionsPage.tsx",
+          "sha256": "37206fd46d5fbdc864f9bd7847bf9a745c2ad94fa15ce778a65f1eb77edfed63"
+        },
+        {
+          "path": "apps/web/src/pages/TicketsPage.tsx",
+          "sha256": "957cdaefba5bb88d77ef2ec2062ed9ad3a87379a3b34dbd09416629d6b20b98e"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.test.tsx",
+          "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "21b7a955911fa34c4fad21dc67bc2087b37b16de503a5efbce1942ff99b6a2fc"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/data-table-cells.tsx",
+          "sha256": "2e265aa10126fc210a378ef37540844f3e57f2056f5e82fc9f555c09e84f465a"
+        },
+        {
+          "path": "packages/ui/src/data-table-cells.test.tsx",
+          "sha256": "aa3d784c4e4474c3c844b50209fb33658591bab2d44bf4d9b329e164c59e79c4"
+        },
+        {
+          "path": "packages/ui/src/data-table.test.tsx",
+          "sha256": "a0d0422024579d3f8954c63ee7dbf041e21a91ae17040e2cd9da4a9d1d8e60e6"
+        },
+        {
+          "path": "packages/ui/src/workflow.test.tsx",
+          "sha256": "16e5999f5fdf7a41dc47333feb91806ca5f36ae21b96d7a0b093e94348952ddb"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        },
+        {
+          "path": "scripts/check-route-budgets.test.mjs",
+          "sha256": "351382a501857a2b4b5168e80e0b8cd791cdbd5984a7b9c46e3e8faf4f23bc38"
+        }
+      ],
+      "checks": [
+        "The production React/UI sink inventory found only the shared Markdown renderer using dangerouslySetInnerHTML. It escapes raw HTML and image syntax and sanitizes parsed output through the established DOMPurify allowlist. Plain display names, comments, labels, notes and assistant responses use React text rendering.",
+        "The 188 web and 49 UI cases exercised sanitizer vectors, URL parameters and typed routes, display names, rich comments, attachment URLs, and literal staff/customer content. The earlier passing hosted source scan applies to the unchanged web/UI paths. The new link guard does not add an HTML insertion sink.",
+        "The staff receipt renderer originally linked four malformed or executable URLs. The shared document URL validator now gates the original link, preserves the signed URL string on success and leaves the fixed raster preview available. Wallet and invoice callers obtain signed originals from the storage provider.",
+        "The 111 targeted receipt and document URL cases passed, along with web typecheck, lint, formatting and diff checks. Fresh production and auth builds passed all 102 original route and interaction budgets. Deployed CSP and authenticated DAST remain separate acceptance gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/react-output-safety",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "12f8a39c397241ff80e9b644d36ab942fd530cd4cf5906972f21c5279cabc42f"
     }
   },
   "historical_improvements": [

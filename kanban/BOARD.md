@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T05:12:09+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T05:16:51+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1118 | Accepted with unchanged source bindings. |
-| verify | 196 | Existing work may be complete; inspect evidence before building. |
+| done | 1120 | Accepted with unchanged source bindings. |
+| verify | 194 | Existing work may be complete; inspect evidence before building. |
 | partial | 46 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1173,8 +1173,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.04.03.01` | done | Recorded batch work | Implement or integrate DOM purify / allowlist HTML sanitizer for rich text content |
 | `06-security-testing-observability.md#T-06.04.03.02` | done | Recorded batch work | Audit all `dangerouslySetInnerHTML` usage; replace with sanitizer or remove |
 | `06-security-testing-observability.md#T-06.04.03.03` | done | Recorded batch work | Add lint rule: ban `eval`, `new Function`, string `setTimeout`/`setInterval`, `document.write` |
-| `06-security-testing-observability.md#T-06.04.03.04` | verify | Inventory needed | Ensure all user-provided data in React is rendered as text (not HTML) by default |
-| `06-security-testing-observability.md#T-06.04.03.05` | verify | Inventory needed | Write unit tests: XSS vectors through sanitizer, URL params, user display names, rich text fields |
+| `06-security-testing-observability.md#T-06.04.03.04` | done | Recorded batch work | Ensure all user-provided data in React is rendered as text (not HTML) by default |
+| `06-security-testing-observability.md#T-06.04.03.05` | done | Recorded batch work | Write unit tests: XSS vectors through sanitizer, URL params, user display names, rich text fields |
 | `06-security-testing-observability.md#T-06.04.04.01` | partial | Recorded batch work | Implement SSRF guard middleware: intercept all outbound HTTP requests from the application |
 | `06-security-testing-observability.md#T-06.04.04.02` | partial | Recorded batch work | Build allowlist-based URL validator: permit only configured HTTPS hosts, reject IP literals when hostname expected |
 | `06-security-testing-observability.md#T-06.04.04.03` | partial | Recorded batch work | Block private/link-local/metadata IP ranges (127.0.0.0/8, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16, ::1, fd00::/8) |
