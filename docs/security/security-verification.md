@@ -57,6 +57,13 @@ Upload reservations record the original name as metadata. The object key uses
 the server-selected category and a random UUID, with a final alphanumeric
 extension when present. A path-shaped suffix stays in the metadata alone.
 
+For constrained categories, the final extension selects the eligible MIME
+types. Verification compares them with stored bytes, so a name such as
+`report.exe.pdf` still requires PDF bytes. Office detection runs in a worker
+with bounded concurrency and a deadline. DOCX template and knowledge-base
+extraction cap the entry count and expanded text. Generic ZIP uploads remain
+opaque storage objects.
+
 ## Authorization audit
 
 In the staff workspace, open **Settings → Security → Authorization audit**

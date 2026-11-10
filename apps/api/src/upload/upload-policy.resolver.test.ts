@@ -185,6 +185,10 @@ describe('effective policy check helpers (T-09.12.05)', () => {
     expect(helpers.effectiveAllowsExtension(policy, 'report.pdf')).toBe(true);
     expect(helpers.effectiveAllowsExtension(policy, 'draft.DOCX')).toBe(true);
     expect(helpers.effectiveAllowsExtension(policy, 'malware.exe')).toBe(false);
+    expect(helpers.effectiveAllowsExtension(policy, 'report.pdf.exe')).toBe(false);
+    expect(helpers.effectiveMimeTypesForFile(policy, 'report.exe.pdf')).toEqual([
+      'application/pdf',
+    ]);
     expect(helpers.effectiveAllowsExtension(policy, 'noext')).toBe(false);
   });
 

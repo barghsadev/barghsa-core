@@ -66,6 +66,14 @@ describe('document template extraction', () => {
     );
   });
 
+  it('rejects a small compressed DOCX whose text entry exceeds the expansion limit', async () => {
+    const bytes = await docx(`<w:document>${'x'.repeat(2 * 1024 * 1024)}</w:document>`);
+    expect(bytes.length).toBeLessThan(16 * 1024);
+    await expect(extractTemplatePlaceholders(bytes, DOCX_MIME)).rejects.toThrow(
+      'DOCX text is too large'
+    );
+  });
+
   it('extracts placeholders from a real PDF', async () => {
     const found = await extractTemplatePlaceholders(
       await pdf('Contract for {{customerName}} on {{date}}'),

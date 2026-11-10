@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T02:17:01+00:00",
-  "source_commit": "1057dc5dd1c909951858e5406958371b3a4739f2",
+  "updated": "2026-11-10T02:18:43+00:00",
+  "source_commit": "a4947d147657afbd1dd6c57509bec37e9644312d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -110769,7 +110769,8 @@
           "release-0.5-route-census-closure",
           "release-0.6-browser-origin-security",
           "release-0.6-nightly-real-admin-journeys",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -110941,7 +110942,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -111493,7 +111494,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
           "release-0.6-browser-origin-security",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -111665,7 +111667,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -114070,7 +114072,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
           "release-0.6-browser-origin-security",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -114242,7 +114245,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -198524,7 +198527,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -198688,7 +198692,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
@@ -199452,7 +199456,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -199616,7 +199621,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
@@ -200382,7 +200387,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
@@ -200482,7 +200488,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -201458,7 +201464,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -201614,7 +201621,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -203421,7 +203428,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -203577,7 +203585,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -205361,7 +205369,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -205525,7 +205534,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
@@ -448574,7 +448583,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448606,7 +448616,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
-              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+              "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
@@ -448853,7 +448863,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448885,7 +448896,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
-              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+              "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
@@ -449134,7 +449145,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -449166,7 +449178,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
-              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+              "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
@@ -449413,7 +449425,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -449445,7 +449458,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
-              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+              "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
@@ -449693,7 +449706,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -449725,7 +449739,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
-              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+              "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
@@ -450801,7 +450815,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -450833,7 +450848,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload.config.ts",
@@ -451301,7 +451316,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451333,7 +451349,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload.config.ts",
@@ -452090,7 +452106,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -452122,7 +452139,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload.config.ts",
@@ -452586,7 +452603,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -452650,7 +452668,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -453420,7 +453438,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453452,7 +453471,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload.config.ts",
@@ -453914,7 +453933,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -453946,7 +453966,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload.config.ts",
@@ -454432,7 +454452,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -454464,7 +454485,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload.config.ts",
@@ -454950,7 +454971,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -454982,7 +455004,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload.config.ts",
@@ -455468,7 +455490,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -455500,7 +455523,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload.config.ts",
@@ -455985,7 +456008,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456017,7 +456041,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload.config.ts",
@@ -480946,7 +480970,8 @@
           "release-0.6-authenticated-staging-zap-integration",
           "release-0.6-suppress-api-framework-header",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -480986,7 +481011,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
+              "sha256": "f472b1a476c8dfb1d48cb5f3ad816b02efb586ecd531b32b8f6c302f7ef8640e"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -481068,7 +481093,8 @@
           "release-0.6-suppress-api-framework-header",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -481124,7 +481150,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
+              "sha256": "f472b1a476c8dfb1d48cb5f3ad816b02efb586ecd531b32b8f6c302f7ef8640e"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -483734,7 +483760,8 @@
         "batches": [
           "release-0.6-verify-private-upload-boundaries",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -483794,7 +483821,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -484001,7 +484028,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -484129,7 +484157,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
+              "sha256": "f472b1a476c8dfb1d48cb5f3ad816b02efb586ecd531b32b8f6c302f7ef8640e"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -484182,7 +484210,8 @@
         "batches": [
           "release-0.6-verify-private-upload-boundaries",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -484242,7 +484271,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -484302,7 +484331,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-upload-key-and-scanner-tests",
@@ -484330,7 +484360,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload-reservations.ts",
@@ -484404,20 +484434,92 @@
         "story": "06-security-testing-observability.md#spec-ff557ea04904"
       },
       "requirement": "| T-06.06.01.08 | Security review: file path traversal, double extension, magic byte manipulation, zip bombs | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-upload-abuse-review"
+        ],
+        "current_acceptance": {
+          "kind": "verified-upload-abuse-review",
+          "base_commit": "a4947d147657afbd1dd6c57509bec37e9644312d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+              "sha256": "ca88c470cb4a74dfdd6cf07085024c2c50136b04849f7f68258d00507fa51f99"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-extraction.test.ts",
+              "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-extraction.ts",
+              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+            },
+            {
+              "path": "apps/api/src/upload/content-type-sniffer.test.ts",
+              "sha256": "1c26b87c137553904efbbc06ec7209466d94d3ac722b65d18e0134c89c33a394"
+            },
+            {
+              "path": "apps/api/src/upload/content-type-sniffer.ts",
+              "sha256": "98d4e9ee2dff6ec3168964cf7a42a137613cb4dc1e440b4124aadc16088d0b2f"
+            },
+            {
+              "path": "apps/api/src/upload/document-content-type.test.ts",
+              "sha256": "5b958573f28ac64b0d61990103e85ce7e29a652d12a85028b1b1702bc1659343"
+            },
+            {
+              "path": "apps/api/src/upload/document-content-type.ts",
+              "sha256": "addcd46a97e3c1e16fb33764fba7d33ef4365e0dad9e21863da905b674e0aba4"
+            },
+            {
+              "path": "apps/api/src/upload/document-parser.cjs",
+              "sha256": "c32bb44d54090d3ee7f4947f4a86dd22286095645f4b11da8e068c9c6f93e43c"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.ts",
+              "sha256": "caa6cfb8661b7a9203408463426bbe5a81a9e64314412b49e67029c5ad0156b6"
+            },
+            {
+              "path": "apps/api/src/upload/upload.service.ts",
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
+            },
+            {
+              "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
+              "sha256": "a5b2f85c5de12ff7eb35acb6e0593fd9901d737fc5539aac8456413edd6d484c"
+            },
+            {
+              "path": "apps/worker/src/knowledge-bases/extraction.ts",
+              "sha256": "24df42c0de53542b469ca0954979275a7936294e85cfc43509d3b0e2d1cb2f22"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "f472b1a476c8dfb1d48cb5f3ad816b02efb586ecd531b32b8f6c302f7ef8640e"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The compiled PostgreSQL comparison found and fixed the filename-suffix boundary. Fresh object keys and signed URLs contain only the server-selected category, one random UUID segment and an optional alphanumeric extension. Verification rejects incoming keys with extra segments or traversal markers.",
+            "The constrained categories test the final extension against eligible MIME types. A disallowed trailing executable extension fails the allowlist. An inner extension cannot widen the permitted type, and existing stored-signature checks reject executable, PNG and generic ZIP bytes when the claimed format requires PDF.",
+            "Reviewed the pinned Office detection dependency and its byte and entry limits, the two-worker inspection cap and deadline, and DOCX template and knowledge extraction entry/expanded-byte limits. General raw ZIP uploads remain opaque objects. A new low-compressed-size DOCX case exceeds 2 MiB when expanded and is rejected before extraction.",
+            "Forty-nine targeted API unit cases and two knowledge extraction cases passed. The 14 resolver cases passed after formatting. Lint and whitespace checks passed. This review leaves the separate live scanner and broad-purpose malware pipeline criteria open."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.06.02.01",
@@ -486213,7 +486315,8 @@
           "release-0.6-authenticated-staging-zap-integration",
           "release-0.6-suppress-api-framework-header",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -486221,7 +486324,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
+              "sha256": "f472b1a476c8dfb1d48cb5f3ad816b02efb586ecd531b32b8f6c302f7ef8640e"
             },
             {
               "path": "docs/threat-model.md",
@@ -486353,7 +486456,8 @@
           "release-0.6-authenticated-staging-zap-integration",
           "release-0.6-suppress-api-framework-header",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -486361,7 +486465,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
+              "sha256": "f472b1a476c8dfb1d48cb5f3ad816b02efb586ecd531b32b8f6c302f7ef8640e"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -486459,7 +486563,8 @@
           "release-0.6-authenticated-staging-zap-integration",
           "release-0.6-suppress-api-framework-header",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -486467,7 +486572,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
+              "sha256": "f472b1a476c8dfb1d48cb5f3ad816b02efb586ecd531b32b8f6c302f7ef8640e"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -486513,7 +486618,8 @@
           "release-0.6-authenticated-staging-zap-integration",
           "release-0.6-suppress-api-framework-header",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -486529,7 +486635,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
+              "sha256": "f472b1a476c8dfb1d48cb5f3ad816b02efb586ecd531b32b8f6c302f7ef8640e"
             }
           ],
           "checks": [
@@ -486579,7 +486685,8 @@
           "release-0.6-suppress-api-framework-header",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -486639,7 +486746,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
+              "sha256": "f472b1a476c8dfb1d48cb5f3ad816b02efb586ecd531b32b8f6c302f7ef8640e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -489429,7 +489536,8 @@
           "release-0.6-authenticated-staging-zap-integration",
           "release-0.6-suppress-api-framework-header",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -489445,7 +489553,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
+              "sha256": "f472b1a476c8dfb1d48cb5f3ad816b02efb586ecd531b32b8f6c302f7ef8640e"
             }
           ],
           "checks": [
@@ -489488,7 +489596,8 @@
           "release-0.6-suppress-api-framework-header",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -489496,7 +489605,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
+              "sha256": "f472b1a476c8dfb1d48cb5f3ad816b02efb586ecd531b32b8f6c302f7ef8640e"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -709362,7 +709471,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -709406,7 +709516,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
-              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+              "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
@@ -709950,7 +710060,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -709994,7 +710105,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
-              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+              "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
@@ -710537,7 +710648,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -710581,7 +710693,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
-              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+              "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
@@ -711126,7 +711238,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -711170,7 +711283,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
-              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+              "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
@@ -711713,7 +711826,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -711757,7 +711871,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
-              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+              "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
@@ -712300,7 +712414,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-upload-abuse-review"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -712344,7 +712459,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
-              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+              "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
@@ -746165,7 +746280,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
-              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+              "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
@@ -746761,7 +746876,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -749651,7 +749766,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -750140,7 +750256,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
-              "sha256": "f2e85c761df912ef008a02d5e6d8af4b88730f2060e92151efb7ac532fa7f637"
+              "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
@@ -750732,7 +750848,7 @@
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -753508,7 +753624,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-verify-upload-key-and-scanner-tests"
+          "release-0.6-verify-upload-key-and-scanner-tests",
+          "release-0.6-upload-abuse-review"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -857758,6 +857875,89 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/upload-key-segments",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "6d408f52e9bea47697e821bcad1b0b626e9ea8b46efc09a5d0ec735df27a7223"
+    },
+    "release-0.6-upload-abuse-review": {
+      "batch": "release-0.6-upload-abuse-review",
+      "base_commit": "a4947d147657afbd1dd6c57509bec37e9644312d",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.01.08"
+      ],
+      "changed_paths": [
+        "apps/api/src/documents/document-template-extraction.test.ts",
+        "apps/api/src/upload/upload-policy.resolver.test.ts",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+          "sha256": "ca88c470cb4a74dfdd6cf07085024c2c50136b04849f7f68258d00507fa51f99"
+        },
+        {
+          "path": "apps/api/src/documents/document-template-extraction.test.ts",
+          "sha256": "611cc3bda10c1408bdc40f6263c15dbfddf0097b9af2909ffe5ffb817db0f7a6"
+        },
+        {
+          "path": "apps/api/src/documents/document-template-extraction.ts",
+          "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+        },
+        {
+          "path": "apps/api/src/upload/content-type-sniffer.test.ts",
+          "sha256": "1c26b87c137553904efbbc06ec7209466d94d3ac722b65d18e0134c89c33a394"
+        },
+        {
+          "path": "apps/api/src/upload/content-type-sniffer.ts",
+          "sha256": "98d4e9ee2dff6ec3168964cf7a42a137613cb4dc1e440b4124aadc16088d0b2f"
+        },
+        {
+          "path": "apps/api/src/upload/document-content-type.test.ts",
+          "sha256": "5b958573f28ac64b0d61990103e85ce7e29a652d12a85028b1b1702bc1659343"
+        },
+        {
+          "path": "apps/api/src/upload/document-content-type.ts",
+          "sha256": "addcd46a97e3c1e16fb33764fba7d33ef4365e0dad9e21863da905b674e0aba4"
+        },
+        {
+          "path": "apps/api/src/upload/document-parser.cjs",
+          "sha256": "c32bb44d54090d3ee7f4947f4a86dd22286095645f4b11da8e068c9c6f93e43c"
+        },
+        {
+          "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
+          "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
+        },
+        {
+          "path": "apps/api/src/upload/upload-policy.resolver.ts",
+          "sha256": "caa6cfb8661b7a9203408463426bbe5a81a9e64314412b49e67029c5ad0156b6"
+        },
+        {
+          "path": "apps/api/src/upload/upload.service.ts",
+          "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
+        },
+        {
+          "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
+          "sha256": "a5b2f85c5de12ff7eb35acb6e0593fd9901d737fc5539aac8456413edd6d484c"
+        },
+        {
+          "path": "apps/worker/src/knowledge-bases/extraction.ts",
+          "sha256": "24df42c0de53542b469ca0954979275a7936294e85cfc43509d3b0e2d1cb2f22"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "f472b1a476c8dfb1d48cb5f3ad816b02efb586ecd531b32b8f6c302f7ef8640e"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "The compiled PostgreSQL comparison found and fixed the filename-suffix boundary. Fresh object keys and signed URLs contain only the server-selected category, one random UUID segment and an optional alphanumeric extension. Verification rejects incoming keys with extra segments or traversal markers.",
+        "The constrained categories test the final extension against eligible MIME types. A disallowed trailing executable extension fails the allowlist. An inner extension cannot widen the permitted type, and existing stored-signature checks reject executable, PNG and generic ZIP bytes when the claimed format requires PDF.",
+        "Reviewed the pinned Office detection dependency and its byte and entry limits, the two-worker inspection cap and deadline, and DOCX template and knowledge extraction entry/expanded-byte limits. General raw ZIP uploads remain opaque objects. A new low-compressed-size DOCX case exceeds 2 MiB when expanded and is rejected before extraction.",
+        "Forty-nine targeted API unit cases and two knowledge extraction cases passed. The 14 resolver cases passed after formatting. Lint and whitespace checks passed. This review leaves the separate live scanner and broad-purpose malware pipeline criteria open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/upload-key-segments",
+      "source_scope_proof": "upload-abuse-review-source-proof.json",
+      "source_scope_proof_sha256": "fae87c28839792f25637fb5ff654daf039d8e46fd23add9f36863b4f0099d18f"
     }
   },
   "historical_improvements": [
