@@ -232,7 +232,7 @@ export class EmailProviderConfigController {
   @HttpCode(200)
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
-  @ApiOperation({ summary: 'Roll back to a superseded/disabled version' })
+  @ApiOperation({ summary: 'Restore a historical email provider version as a draft' })
   rollback(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string

@@ -1,11 +1,16 @@
-import { providerOtpSend, startProviderOtp, providerOtpProof } from './provider-otp-fixture';
+import {
+  providerOtpSend,
+  startProviderOtp,
+  providerOtpProof,
+  pressProviderControl,
+} from './provider-otp-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { providerFormText } from '@barghsa/i18n/provider-forms';
 import { crmShell } from './crm-shell-fixture';
 import { cookieResponse } from './cookie-response';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 test.use({ viewport: { width: 390, height: 844 } });
 
@@ -336,7 +341,9 @@ for (const locale of ['en', 'fa'] as const) {
   test(`SMS previews every test and guards activation, recovery and rollback acknowledgements (${locale})`, async ({
     page,
     baseURL,
+    isMobile,
   }) => {
+    const press = (control: Locator) => pressProviderControl(control, isMobile);
     await shell(page, locale, baseURL!);
     let row = provider(),
       verified = false,
@@ -394,14 +401,14 @@ for (const locale of ['en', 'fa'] as const) {
       if (path.endsWith('/rollback')) {
         rollbacks++;
         if (rollbacks === 1) return route.fulfill({ json: { ...row, status: 'active' } });
-        row = { ...row, id: 'rollback-version', status: 'active' };
+        row = { ...row, id: 'rollback-version', status: 'draft', lastTestStatus: 'pending' };
       }
       return route.fulfill({ json: row });
     });
-    await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
+    await press(page.getByRole('tab', { name: 'SMS.ir', exact: true }));
     const panel = page.locator('section[aria-labelledby="sms-title"]');
     await expect(panel.getByRole('button', { name: text('activate'), exact: true })).toBeDisabled();
-    await panel.getByRole('button', { name: text('preview'), exact: true }).click();
+    await press(panel.getByRole('button', { name: text('preview'), exact: true }));
     await page.locator('#sms-test-event').selectOption('invoice.created');
     const preview = page.locator('section[aria-labelledby="sms-preview-title"]');
     await expect(preview).toContainText(
@@ -412,69 +419,80 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await expect(preview).toContainText('INVOICE_CODE');
     await expect(preview).toContainText('test-code');
-    await preview.getByRole('button', { name: text('test'), exact: true }).click();
+    await press(preview.getByRole('button', { name: text('test'), exact: true }));
     const dialog = page.getByRole('dialog');
-    await startProviderOtp(page, locale);
+    await startProviderOtp(page, locale, isMobile);
     await dialog.locator('input[autocomplete=one-time-code]').fill('000000');
-    await dialog.locator('button[type=submit]').click();
+    await press(dialog.locator('button[type=submit]'));
     await expect(dialog.getByRole('alert')).toBeVisible();
     expect(tests).toBe(0);
     await dialog.locator('input[autocomplete=one-time-code]').fill('123456');
-    await dialog.locator('button[type=submit]').click();
+    await press(dialog.locator('button[type=submit]'));
     await expect(dialog).toHaveCount(0);
     await expect(panel.getByRole('alert')).toContainText(text('failed'));
     await expect(panel.getByRole('button', { name: text('activate'), exact: true })).toBeDisabled();
-    await preview.getByRole('button', { name: text('test'), exact: true }).click();
+    await press(preview.getByRole('button', { name: text('test'), exact: true }));
     await expect(panel.getByRole('status').filter({ hasText: text('passed') })).toHaveText(
       text('passed')
     );
     const activate = panel.getByRole('button', { name: text('activate'), exact: true });
     const refresh = panel.getByRole('button', { name: text('refresh'), exact: true });
     const reviewed = panel.getByRole('button', { name: providerFormText('reviewChange', locale) });
-    await activate.click();
-    await dialog.locator('button[type=submit]').click();
+    await press(activate);
+    await press(dialog.locator('button[type=submit]'));
     await expect(dialog.getByRole('alert')).toBeVisible();
     await expect(dialog.locator('button[type=submit]')).toBeDisabled();
     await page.keyboard.press('Escape');
     await expect(activate).toBeDisabled();
     await expect(reviewed).toBeDisabled();
-    await refresh.click();
+    await press(refresh);
     await expect(reviewed).toBeEnabled();
     expect(activations).toBe(1);
-    await reviewed.click();
-    await activate.click();
-    await dialog.locator('button[type=submit]').click();
+    await press(reviewed);
+    await press(activate);
+    await press(dialog.locator('button[type=submit]'));
     await expect(dialog).toHaveCount(0);
-    await panel.getByRole('button', { name: text('disable'), exact: true }).click();
+    await press(panel.getByRole('button', { name: text('disable'), exact: true }));
     const disable = dialog.locator('button[type=submit]');
     await expect(disable).toBeDisabled();
     await approveRiskConfirmation(page, locale, 'destructive');
-    await disable.click();
+    await press(disable);
     await expect(dialog.getByRole('alert')).toBeVisible();
     await page.keyboard.press('Escape');
     row = { ...row, status: 'superseded' };
-    await page.getByRole('tab', { name: text('email'), exact: true }).click();
-    await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
-    await panel.getByRole('button', { name: text('rollback'), exact: true }).click();
+    await press(page.getByRole('tab', { name: text('email'), exact: true }));
+    await press(page.getByRole('tab', { name: 'SMS.ir', exact: true }));
+    await press(panel.getByRole('button', { name: text('rollback'), exact: true }));
     await expect(dialog).toContainText(text('rollbackNotice'));
-    await dialog.locator('button[type=submit]').click();
+    await press(dialog.locator('button[type=submit]'));
     await expect(dialog.getByRole('alert')).toBeVisible();
     await expect(dialog.locator('button[type=submit]')).toBeDisabled();
     await page.keyboard.press('Escape');
     await expect(reviewed).toBeDisabled();
-    await refresh.click();
+    await press(refresh);
     await expect(reviewed).toBeEnabled();
     expect(rollbacks).toBe(1);
-    await reviewed.click();
-    await panel.getByRole('button', { name: text('rollback'), exact: true }).click();
-    await dialog.locator('button[type=submit]').click();
+    await press(reviewed);
+    await press(panel.getByRole('button', { name: text('rollback'), exact: true }));
+    await press(dialog.locator('button[type=submit]'));
     await expect(dialog).toHaveCount(0);
-    await expect(panel.getByRole('status').filter({ hasText: text('changed') })).toHaveText(
-      text('changed')
+    await expect(panel.getByRole('status').filter({ hasText: text('restoredDraft') })).toHaveText(
+      text('restoredDraft')
     );
+    await expect(activate).toBeDisabled();
     expect(tests).toBe(2);
     expect(activations).toBe(2);
     expect(rollbacks).toBe(2);
+    await press(panel.getByRole('button', { name: text('preview'), exact: true }));
+    await page.locator('#sms-test-event').selectOption('invoice.created');
+    await press(preview.getByRole('button', { name: text('test'), exact: true }));
+    await expect(activate).toBeEnabled();
+    await press(activate);
+    await press(dialog.locator('button[type=submit]'));
+    await expect(dialog).toHaveCount(0);
+    await expect(panel.getByRole('button', { name: text('disable'), exact: true })).toBeVisible();
+    expect(tests).toBe(3);
+    expect(activations).toBe(3);
   });
 
   test(`SMS editor supports mobile, direction and accessible controls (${locale})`, async ({

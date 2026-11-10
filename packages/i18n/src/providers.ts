@@ -67,8 +67,9 @@ const fa = {
   'admin.providers.disableConfirm': 'این ارائه‌دهنده غیرفعال شود؟',
   'admin.providers.disableWarn':
     'هشدار: تنها یک ارائه‌دهنده فعال وجود دارد و ایمیل بازیابی (OTP) به آن وابسته است.',
-  'admin.providers.rollback': 'بازگشت به این نسخه',
-  'admin.providers.rollbackConfirm': 'از این نسخه نسخه‌ای جدید فعال ساخته شود؟',
+  'admin.providers.rollback': 'بازیابی به‌صورت پیش‌نویس',
+  'admin.providers.rollbackConfirm':
+    'این نسخه به‌صورت پیش‌نویس بازیابی می‌شود. برای فعال‌سازی آن ابتدا آزمایش ارسال را انجام دهید.',
   'admin.providers.supersededNote': 'نسخه‌های جایگزین‌شده فقط‌خواندنی هستند.',
   'admin.providers.meta.activatedAt': 'زمان فعال‌سازی',
   'admin.providers.meta.createdBy': 'ایجادکننده',
@@ -167,8 +168,9 @@ const en: Record<keyof typeof fa, string> = {
   'admin.providers.disableConfirm': 'Disable this provider?',
   'admin.providers.disableWarn':
     'Warning: this is the only active provider and OTP recovery email depends on it.',
-  'admin.providers.rollback': 'Rollback to this version',
-  'admin.providers.rollbackConfirm': 'Create a new active version from this one?',
+  'admin.providers.rollback': 'Restore as draft',
+  'admin.providers.rollbackConfirm':
+    'Restore this version as a draft. Run a delivery test before activating it.',
   'admin.providers.supersededNote': 'Superseded versions are read-only.',
   'admin.providers.meta.activatedAt': 'Activated at',
   'admin.providers.meta.createdBy': 'Created by',
@@ -272,10 +274,10 @@ const smsEn = {
   version: 'Created',
   activate: 'Activate',
   disable: 'Disable',
-  rollback: 'Roll back',
+  rollback: 'Restore as draft',
   confirm: 'Confirm this change to SMS delivery.',
-  rollbackNotice:
-    'Rollback creates a new version and sends tests for all its mappings to your verified mobile before activation.',
+  rollbackNotice: 'Restore this version as a draft. Test all its mappings before activating it.',
+  restoredDraft: 'SMS provider restored as a draft.',
   recovery: 'An active, tested recovery channel must remain available for sign-in.',
   unavailable:
     'Operation failed. Refresh the configuration and check its status, mappings and recovery channel.',
@@ -363,10 +365,11 @@ const smsFa: Record<keyof typeof smsEn, string> = {
   version: 'زمان ایجاد',
   activate: 'فعال‌سازی',
   disable: 'غیرفعال‌سازی',
-  rollback: 'بازگشت به نسخه قبلی',
+  rollback: 'بازیابی به‌صورت پیش‌نویس',
   confirm: 'این تغییر در ارسال پیامک را تأیید کنید.',
   rollbackNotice:
-    'بازگشت، نسخه جدیدی ایجاد می‌کند و پیش از فعال‌سازی پیامک آزمایشی همه نگاشت‌های آن را به موبایل تأییدشده شما می‌فرستد.',
+    'این نسخه به‌صورت پیش‌نویس بازیابی می‌شود. پیش از فعال‌سازی همه نگاشت‌ها را آزمایش کنید.',
+  restoredDraft: 'تأمین‌کننده پیامک به‌صورت پیش‌نویس بازیابی شد.',
   recovery: 'برای ورود باید یک کانال بازیابی فعال و آزمایش‌شده در دسترس بماند.',
   unavailable:
     'عملیات ناموفق بود. پیکربندی را تازه کنید و وضعیت، نگاشت‌ها و کانال بازیابی آن را بررسی کنید.',

@@ -29,6 +29,7 @@ export interface SmsProvider {
   status: Status;
   lastTestStatus: TestStatus;
   createdAt: string;
+  activatedAt: string | null;
   degraded: boolean;
   degradedReason: string | null;
   breakerCooldownUntil: string | null;
@@ -109,6 +110,7 @@ export function readSmsProvider(
     status: row.status as Status,
     lastTestStatus: row.lastTestStatus as TestStatus,
     createdAt,
+    activatedAt: optionalDate(row.activatedAt),
     degraded: row.degraded === true,
     degradedReason: typeof row.degradedReason === 'string' ? row.degradedReason : null,
     breakerCooldownUntil: optionalDate(row.breakerCooldownUntil),

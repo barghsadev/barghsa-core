@@ -2089,7 +2089,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Roll back to a superseded/disabled version */
+        /** Restore a historical email provider version as a draft */
         post: operations["EmailProviderConfigController_rollback"];
         delete?: never;
         options?: never;
@@ -3951,7 +3951,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Roll back to a superseded/disabled SMS provider version */
+        /** Restore a historical SMS provider version as a draft */
         post: operations["SmsProviderConfigController_rollback"];
         delete?: never;
         options?: never;

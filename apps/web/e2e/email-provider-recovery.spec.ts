@@ -1,19 +1,24 @@
-import { providerOtpSend, startProviderOtp, providerOtpProof } from './provider-otp-fixture';
+import {
+  providerOtpSend,
+  startProviderOtp,
+  providerOtpProof,
+  pressProviderControl,
+} from './provider-otp-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
 import { providerFormText } from '@barghsa/i18n/provider-forms';
 import { providerText } from '@barghsa/i18n/providers';
 import { crmShell } from './crm-shell-fixture';
 import { cookieResponse } from './cookie-response';
-import { test, expect, type Page } from './coverage-fixture';
+import { test, expect, type Locator, type Page } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 
-async function confirmProviderChange(page: Page, locale: 'en' | 'fa') {
+async function confirmProviderChange(page: Page, locale: 'en' | 'fa', isMobile = false) {
   const confirm = page
     .getByRole('dialog')
     .getByRole('button', { name: t('team.confirm', locale), exact: true });
   await expect(confirm).toBeDisabled();
   await approveRiskConfirmation(page, locale, 'destructive');
-  await confirm.click();
+  await pressProviderControl(confirm, isMobile);
 }
 
 for (const locale of ['en', 'fa'] as const) {
@@ -116,8 +121,10 @@ for (const locale of ['en', 'fa'] as const) {
 for (const locale of ['en', 'fa'] as const) {
   test(`provider lifecycle requires verified state acknowledgements (${locale})`, async ({
     page,
+    isMobile,
   }) => {
     const fa = locale === 'fa';
+    const press = (control: Locator) => pressProviderControl(control, isMobile);
     let provider = {
       id: 'provider-1',
       transport: 'smtp',
@@ -148,7 +155,7 @@ for (const locale of ['en', 'fa'] as const) {
       }
       if (path.endsWith('/disable')) provider = { ...provider, status: 'disabled' };
       if (path.endsWith('/rollback'))
-        provider = { ...provider, id: 'new-version', status: 'active' };
+        provider = { ...provider, id: 'new-version', status: 'draft', lastTestStatus: 'pending' };
       return route.fulfill({ json: provider });
     });
     await page.goto('/admin/providers');
@@ -170,7 +177,7 @@ for (const locale of ['en', 'fa'] as const) {
       exact: true,
     });
     const reviewedTest = page.getByRole('button', { name: providerFormText('reviewTest', locale) });
-    await connection.click();
+    await press(connection);
     await expect(page.getByRole('alert')).toContainText(
       providerFormText('testUnconfirmed', locale)
     );
@@ -178,7 +185,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(connection).toBeDisabled();
     await expect(reviewedTest).toBeDisabled();
     readFails = true;
-    await refresh.click();
+    await press(refresh);
     const retry = page.getByRole('button', {
       name: providerText('admin.providers.retry', locale),
       exact: true,
@@ -187,13 +194,13 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(reviewedTest).toBeDisabled();
     expect(testCalls).toBe(1);
     readFails = false;
-    await retry.click();
+    await press(retry);
     await expect(reviewedTest).toBeEnabled();
     await expect(connection).toBeDisabled();
-    await reviewedTest.click();
-    await connection.click();
+    await press(reviewedTest);
+    await press(connection);
     await expect(activate).toBeEnabled();
-    await activate.click();
+    await press(activate);
     const reviewedChange = page.getByRole('button', {
       name: providerFormText('reviewChange', locale),
     });
@@ -202,26 +209,36 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await expect(reviewedChange).toBeDisabled();
     await expect(activate).toBeDisabled();
-    await refresh.click();
+    await press(refresh);
     await expect(reviewedChange).toBeEnabled();
     expect(activateCalls).toBe(1);
-    await reviewedChange.click();
-    await activate.click();
-    await row.getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Disable', exact: true }).click();
-    await confirmProviderChange(page, locale);
-    await row
-      .getByRole('button', {
-        name: fa ? 'بازگشت به این نسخه' : 'Rollback to this version',
+    await press(reviewedChange);
+    await press(activate);
+    await press(row.getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Disable', exact: true }));
+    await confirmProviderChange(page, locale, isMobile);
+    await press(
+      row.getByRole('button', {
+        name: providerText('admin.providers.rollback', locale),
         exact: true,
       })
-      .click();
-    await confirmProviderChange(page, locale);
+    );
+    await confirmProviderChange(page, locale, isMobile);
     await expect(
-      row.getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Disable', exact: true })
-    ).toBeVisible();
+      page.getByRole('status').filter({ hasText: providerFormText('rolledBack', locale) })
+    ).toHaveText(providerFormText('rolledBack', locale));
+    await expect(activate).toBeDisabled();
     expect(provider.id).toBe('new-version');
     expect(testCalls).toBe(2);
     expect(activateCalls).toBe(2);
+    await row.locator('input[type=email]').fill('staff@example.test');
+    await press(connection);
+    await expect(activate).toBeEnabled();
+    await press(activate);
+    await expect(
+      row.getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Disable', exact: true })
+    ).toBeVisible();
+    expect(testCalls).toBe(3);
+    expect(activateCalls).toBe(3);
   });
 }
 
@@ -304,10 +321,13 @@ for (const locale of ['en', 'fa'] as const) {
 }
 
 for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] as const) {
-  test(`provider ${operation} resumes after OTP verification`, async ({ page }) => {
+  test(`provider ${operation} resumes after OTP verification`, async ({ page, isMobile }) => {
+    const press = (control: Locator) => pressProviderControl(control, isMobile);
     let verified = false;
     const initialState =
       operation === 'disable' ? 'active' : operation === 'rollback' ? 'disabled' : 'draft';
+    const finalState =
+      operation === 'disable' ? 'disabled' : operation === 'activate' ? 'active' : 'draft';
     let provider = {
       id: 'protected-row',
       transport: operation === 'test-connection' ? 'resend' : 'smtp',
@@ -328,13 +348,9 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
         return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
       provider = {
         ...provider,
-        status:
-          operation === 'disable'
-            ? 'disabled'
-            : operation === 'test-connection'
-              ? 'draft'
-              : 'active',
+        status: finalState,
         id: operation === 'rollback' ? 'new-protected-row' : provider.id,
+        lastTestStatus: operation === 'rollback' ? 'pending' : 'passed',
       };
       return route.fulfill({
         json:
@@ -353,32 +369,32 @@ for (const operation of ['test-connection', 'activate', 'disable', 'rollback'] a
       'test-connection': 'Send test email',
       activate: 'Activate',
       disable: 'Disable',
-      rollback: 'Rollback to this version',
+      rollback: providerText('admin.providers.rollback', 'en'),
     };
     const row = page
       .locator('table:visible tbody tr, ol[role=list]:visible > li')
       .filter({ hasText: 'Protected row' });
     if (operation === 'test-connection')
       await row.locator('input[type=email]').fill('staff@example.test');
-    await row
-      .getByRole('button', { name: names[operation], exact: operation !== 'test-connection' })
-      .click();
+    await press(
+      row.getByRole('button', { name: names[operation], exact: operation !== 'test-connection' })
+    );
     if (operation === 'disable' || operation === 'rollback') {
       expect(attempts).toEqual([]);
-      await confirmProviderChange(page, 'en');
+      await confirmProviderChange(page, 'en', isMobile);
     }
     const dialog = page.getByRole('dialog');
-    await startProviderOtp(page, 'en');
+    await startProviderOtp(page, 'en', isMobile);
     await dialog.locator('input[autocomplete=one-time-code]').fill('123456');
-    await dialog.getByRole('button', { name: t('admin.stepUp.verify', 'en'), exact: true }).click();
+    await press(dialog.getByRole('button', { name: t('admin.stepUp.verify', 'en'), exact: true }));
     await expect(dialog).toHaveCount(0);
     expect(attempts).toEqual(
       Array(2).fill(`/api/admin/email-providers/protected-row/${operation}`)
     );
     await expect(row).toBeVisible();
-    expect(provider.status).toBe(
-      operation === 'disable' ? 'disabled' : operation === 'test-connection' ? 'draft' : 'active'
-    );
+    expect(provider.status).toBe(finalState);
+    if (operation === 'rollback')
+      await expect(row.getByRole('button', { name: 'Activate', exact: true })).toBeDisabled();
   });
 }
 

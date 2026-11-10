@@ -298,11 +298,12 @@ export async function disableProvider(id: string) {
     id
   );
 }
-export async function rollbackProvider(id: string) {
-  const row = validateProviderResult(
-    await request(`/${encodeURIComponent(id)}/rollback`, 'POST'),
-    'active'
-  );
-  if (row.id === id) throw new ProviderRequestError(false, [], true);
+export function validateRestoredDraft(value: unknown, sourceId: string) {
+  const row = validateProviderResult(value, 'draft');
+  if (row.id === sourceId || row.lastTestStatus !== 'pending' || row.activatedAt != null)
+    throw new ProviderRequestError(false, [], true);
   return row;
+}
+export async function rollbackProvider(id: string) {
+  return validateRestoredDraft(await request(`/${encodeURIComponent(id)}/rollback`, 'POST'), id);
 }

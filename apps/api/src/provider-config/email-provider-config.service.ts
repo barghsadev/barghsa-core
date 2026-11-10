@@ -32,7 +32,7 @@ export type { PoolClient, ProviderPool };
  *   Draft ──(activate, test NOT passed)──▶ (blocked)
  *   Active ─(another config activates)──▶ Superseded
  *   Active ─(admin disables)────────────▶ Disabled   [blocked if the sole OTP provider]
- *   Superseded/Disabled ─(rollback)────▶ Active (cloned copy)
+ *   Superseded/Disabled ─(rollback)────▶ Draft (cloned copy)
  *
  * Guarantees:
  * - At most one `active` config per environment (enforced at the DB layer by
@@ -453,7 +453,7 @@ export class EmailProviderConfigService {
       }
 
       // Each channel has one active provider. Inactive history cannot deliver OTPs.
-      // Activate a tested replacement or roll back atomically to preserve delivery.
+      // Activate a tested replacement atomically to preserve delivery.
       if (existing.status === 'active') {
         throw new HttpException(ProviderErrors.soleOtpProvider(), 409);
       }
@@ -468,55 +468,48 @@ export class EmailProviderConfigService {
   }
 
   /**
-   * Rollback to a superseded/disabled version: clone its known-good params into
-   * a fresh row and activate it. The original row is preserved. This backs the
-   * UI's "Rollback to this version" action (T-05.00.04).
+   * Restore a previously active version as a fresh draft. A separate test and
+   * activation must succeed before the draft can replace the active provider.
    */
   async rollback(
     supersededId: string,
     createdBy: string,
     session: ProviderMutationSession
   ): Promise<EmailProviderConfigResult> {
-    return mutateProvider(this.db, createdBy, session, 'email', 'rolled_back', async (client) => {
-      const source = await this.findById(supersededId, client, true);
-      if (!source) throw new HttpException(ProviderErrors.notFound(), 404);
-      if (
-        (source.status !== 'superseded' && source.status !== 'disabled') ||
-        source.lastTestStatus !== 'passed' ||
-        !source.activatedAt
-      ) {
-        throw new HttpException(ProviderErrors.invalidRollbackSource(), 409);
-      }
+    return mutateProvider(
+      this.db,
+      createdBy,
+      session,
+      'email',
+      'rolled_back',
+      async (client) => {
+        const source = await this.findById(supersededId, client, true);
+        if (!source) throw new HttpException(ProviderErrors.notFound(), 404);
+        if (
+          (source.status !== 'superseded' && source.status !== 'disabled') ||
+          source.lastTestStatus !== 'passed' ||
+          !source.activatedAt
+        ) {
+          throw new HttpException(ProviderErrors.invalidRollbackSource(), 409);
+        }
 
-      const config = this.secrets.encryptConfig(
-        source.transport,
-        await this.readConfig(source.id, client)
-      );
-      const id = uuidv7();
-      await client.query(
-        `INSERT INTO email_provider_configs
+        const config = this.secrets.encryptConfig(
+          source.transport,
+          await this.readConfig(source.id, client)
+        );
+        const id = uuidv7();
+        await client.query(
+          `INSERT INTO email_provider_configs
          (id, transport, label, status, config, created_by, supersedes_id)
-         VALUES ($1, $2, $3, 'draft', $4, $5, $6)`,
-        [id, source.transport, `${source.label} (rollback)`, config, createdBy, null]
-      );
-      const tested = await this.testOnClient(id, undefined, client, session);
-      if (!tested.ok) throw new HttpException(ProviderErrors.testRequired(), 409);
-      const before = await client.query(
-        `UPDATE email_provider_configs SET status = 'superseded'
-          WHERE status = 'active' RETURNING id`
-      );
-      const priorActiveId = (before.rows[0] as { id?: string } | undefined)?.id ?? null;
-      await client.query(
-        `UPDATE email_provider_configs
-          SET status = 'active', activated_at = NOW(),
-              last_test_status = 'passed', supersedes_id = $2, activated_by = $3
-          WHERE id = $1`,
-        [id, priorActiveId, createdBy]
-      );
-      const row = await this.findById(id, client);
-      if (!row) throw new Error('Failed to read rolled-back provider config');
-      return row;
-    });
+         VALUES ($1, $2, $3, 'draft', $4, $5, NULL)`,
+          [id, source.transport, `${source.label} (rollback)`, config, createdBy]
+        );
+        const row = await this.findById(id, client);
+        if (!row) throw new Error('Failed to read restored provider draft');
+        return row;
+      },
+      supersededId
+    );
   }
 
   /* ---------------------------- Connection test ------------------------- */

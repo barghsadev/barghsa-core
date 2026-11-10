@@ -362,7 +362,8 @@ export default function AdminSmsProvidersPage() {
     const { current } = capture();
     setError(null);
     setNotice(null);
-    const status: Status = operation === 'disable' ? 'disabled' : 'active';
+    const status: Status =
+      operation === 'rollback' ? 'draft' : operation === 'disable' ? 'disabled' : 'active';
     setProtectedAction({
       basis,
       kind: 'change',
@@ -380,9 +381,13 @@ export default function AdminSmsProvidersPage() {
           status,
           ...(operation !== 'rollback' ? { id: row.id } : {}),
         });
-        if (operation === 'rollback' && saved.id === row.id) throw new ProviderRequestError();
+        if (
+          operation === 'rollback' &&
+          (saved.id === row.id || saved.lastTestStatus !== 'pending' || saved.activatedAt != null)
+        )
+          throw new ProviderRequestError(false, [], true);
         setSelected(null);
-        setNotice(text('changed'));
+        setNotice(text(operation === 'rollback' ? 'restoredDraft' : 'changed'));
         await refresh();
       },
     });

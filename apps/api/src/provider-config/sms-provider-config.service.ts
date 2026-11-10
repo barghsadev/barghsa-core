@@ -29,7 +29,7 @@ import { readProviderAlertHistory, type ProviderAlertEvent } from './provider-al
  *   Draft ──(activate, test NOT passed)──▶ (blocked)
  *   Active ─(another config activates)──▶ Superseded
  *   Active ─(admin disables)────────────▶ Disabled
- *   Superseded/Disabled ─(rollback)────▶ Active (cloned copy)
+ *   Superseded/Disabled ─(rollback)────▶ Draft (cloned copy)
  *
  * Guarantees:
  * - At most one `active` config per environment (partial unique index
@@ -564,52 +564,46 @@ export class SmsProviderConfigService {
     });
   }
 
-  /** Rollback to a superseded/disabled version: clone its known-good params and activate it. */
+  /** Restore a previously active version as a draft for a new delivery test. */
   async rollback(
     supersededId: string,
     createdBy: string,
     session: ProviderMutationSession
   ): Promise<SmsProviderConfigResult> {
-    return mutateProvider(this.db, createdBy, session, 'sms', 'rolled_back', async (client) => {
-      const source = await this.findById(supersededId, client, true);
-      if (!source) throw new HttpException(SmsProviderErrors.notFound(), 404);
-      if (
-        (source.status !== 'superseded' && source.status !== 'disabled') ||
-        source.lastTestStatus !== 'passed' ||
-        !source.activatedAt
-      ) {
-        throw new HttpException(SmsProviderErrors.invalidRollbackSource(), 409);
-      }
-      await this.validateTemplateMappings(source.id, client);
-      const config = this.secrets.encryptConfig(
-        SMS_PROVIDER_TRANSPORT,
-        await this.readConfig(source.id, client)
-      );
-      const id = uuidv7();
-      await client.query(
-        `INSERT INTO sms_provider_configs
+    return mutateProvider(
+      this.db,
+      createdBy,
+      session,
+      'sms',
+      'rolled_back',
+      async (client) => {
+        const source = await this.findById(supersededId, client, true);
+        if (!source) throw new HttpException(SmsProviderErrors.notFound(), 404);
+        if (
+          (source.status !== 'superseded' && source.status !== 'disabled') ||
+          source.lastTestStatus !== 'passed' ||
+          !source.activatedAt
+        ) {
+          throw new HttpException(SmsProviderErrors.invalidRollbackSource(), 409);
+        }
+        await this.validateTemplateMappings(source.id, client);
+        const config = this.secrets.encryptConfig(
+          SMS_PROVIDER_TRANSPORT,
+          await this.readConfig(source.id, client)
+        );
+        const id = uuidv7();
+        await client.query(
+          `INSERT INTO sms_provider_configs
          (id, transport, label, status, config, created_by, supersedes_id)
-         VALUES ($1, $2, $3, 'draft', $4, $5, $6)`,
-        [id, SMS_PROVIDER_TRANSPORT, `${source.label} (rollback)`, config, createdBy, null]
-      );
-      const tested = await this.testOnClient(id, undefined, undefined, client, session);
-      if (!tested.ok) throw new HttpException(SmsProviderErrors.testRequired(), 409);
-      const before = await client.query(
-        `UPDATE sms_provider_configs SET status = 'superseded'
-          WHERE status = 'active' RETURNING id`
-      );
-      const priorActiveId = (before.rows[0] as { id?: string } | undefined)?.id ?? null;
-      await client.query(
-        `UPDATE sms_provider_configs
-          SET status = 'active', activated_at = NOW(),
-              last_test_status = 'passed', supersedes_id = $2, activated_by = $3
-          WHERE id = $1`,
-        [id, priorActiveId, createdBy]
-      );
-      const row = await this.findById(id, client);
-      if (!row) throw new Error('Failed to read rolled-back provider config');
-      return row;
-    });
+         VALUES ($1, $2, $3, 'draft', $4, $5, NULL)`,
+          [id, SMS_PROVIDER_TRANSPORT, `${source.label} (rollback)`, config, createdBy]
+        );
+        const row = await this.findById(id, client);
+        if (!row) throw new Error('Failed to read restored SMS provider draft');
+        return row;
+      },
+      supersededId
+    );
   }
 
   /* ---------------------------- Connection test ------------------------- */

@@ -60,7 +60,7 @@ describe('provider response contracts', () => {
     {
       name: 'rollback',
       run: () => rollbackProvider(row.id),
-      expected: { ...row, id: 'replacement', status: 'active' },
+      expected: { ...row, id: 'replacement', status: 'draft' },
     },
   ];
   for (const action of mutations) {
@@ -81,9 +81,14 @@ describe('provider response contracts', () => {
     respond({ ...row, transport: 'resend' });
     await expect(createProvider('smtp', 'Provider', {})).rejects.toThrow();
   });
-  it('requires rollback to create a new version', async () => {
-    respond({ ...row, status: 'active' });
-    await expect(rollbackProvider(row.id)).rejects.toThrow();
+  it.each([
+    row,
+    { ...row, id: 'replacement', status: 'active' },
+    { ...row, id: 'replacement', lastTestStatus: 'passed' },
+    { ...row, id: 'replacement', activatedAt: '2026-11-10T00:00:00Z' },
+  ])('requires rollback to return a new untested draft %j', async (value) => {
+    respond(value);
+    await expect(rollbackProvider(row.id)).rejects.toMatchObject({ uncertain: true });
   });
   it.each([
     { test: { ok: 'true', error: null } },

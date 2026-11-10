@@ -316,7 +316,7 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
     expect(err.getResponse().message).toContain('unknown:event');
   });
 
-  it('rollback validates template mappings before re-activating a known-good version', async () => {
+  it('rollback validates template mappings before restoring a known-good version', async () => {
     // Activate with a live event, then the event loses its SMS template
     // (simulated by removing it from the live-template set).
     const sourceCfg = {
@@ -343,8 +343,7 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
     await svc.activate(replacement.id, 'a1', sessionFor('a1'));
     h.activeTemplateEvents.delete('otp:login');
 
-    // Rollbacks clone the stored config; without validation this would re-activate
-    // a config pointing at an event with no live template.
+    // Refuse to clone a configuration pointing at an event with no live template.
     const err = await svc.rollback(source.id, 'admin-1', sessionFor('admin-1')).catch((e) => e);
     expect(err).toBeInstanceOf(HttpException);
     expect(err.getResponse().message).toContain('otp:login');
@@ -377,6 +376,12 @@ describe('SmsProviderConfigService (T-09.06.02)', () => {
     await svc.recordTest(replacement.id, { passed: true, deliveryVerified: true });
     await svc.activate(replacement.id, 'a1', sessionFor('a1'));
     const rolledBack = await svc.rollback(source.id, 'admin-1', sessionFor('admin-1'));
-    expect(rolledBack.status).toBe('active');
+    expect(rolledBack).toMatchObject({
+      status: 'draft',
+      lastTestStatus: 'pending',
+      activatedAt: null,
+    });
+    expect(rolledBack.id).not.toBe(source.id);
+    expect((await svc.get(replacement.id)).status).toBe('active');
   });
 });

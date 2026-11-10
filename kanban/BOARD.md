@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1206 | Accepted with unchanged source bindings. |
-| verify | 95 | Existing work may be complete; inspect evidence before building. |
-| partial | 59 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 94 | Existing work may be complete; inspect evidence before building. |
+| partial | 60 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1069,7 +1069,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-07.01.04` | verify | Earlier deferred | Add environment indicator middleware |
 | `01-platform-infrastructure.md#T-07.02.01` | done | Earlier deferred | Create versioned configuration store in PostgreSQL |
 | `01-platform-infrastructure.md#T-07.02.02` | verify | Earlier deferred | Create configuration validation framework |
-| `01-platform-infrastructure.md#T-07.02.03` | verify | Earlier deferred | Implement configuration rollback |
+| `01-platform-infrastructure.md#T-07.02.03` | partial | Earlier deferred | Implement configuration rollback |
 | `01-platform-infrastructure.md#T-07.02.04` | done | Earlier deferred | Create secrets encryption and masking service |
 | `01-platform-infrastructure.md#T-07.02.05` | verify | Earlier deferred | Implement provider configuration lifecycle with test-send |
 | `01-platform-infrastructure.md#T-07.03.01` | done | Earlier deferred | Create shared ESLint configuration |

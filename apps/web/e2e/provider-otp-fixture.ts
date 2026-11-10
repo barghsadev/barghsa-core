@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { t } from '@barghsa/i18n/admin-ui';
 export async function providerOtpSend(page: Page) {
   await page.route('**/api/auth/step-up/otp/send', (route) =>
@@ -11,11 +11,16 @@ export async function providerOtpSend(page: Page) {
     })
   );
 }
-export async function startProviderOtp(page: Page, locale: 'en' | 'fa') {
-  await page
-    .getByRole('dialog')
-    .getByRole('button', { name: t('admin.stepUp.send', locale), exact: true })
-    .click();
+export function pressProviderControl(control: Locator, isMobile = false) {
+  return isMobile ? control.tap() : control.click();
+}
+export async function startProviderOtp(page: Page, locale: 'en' | 'fa', isMobile = false) {
+  await pressProviderControl(
+    page
+      .getByRole('dialog')
+      .getByRole('button', { name: t('admin.stepUp.send', locale), exact: true }),
+    isMobile
+  );
 }
 export const providerOtpProof = () => ({
   verified: true,

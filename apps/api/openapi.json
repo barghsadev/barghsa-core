@@ -15389,7 +15389,7 @@
             "bearer": []
           }
         ],
-        "summary": "Roll back to a superseded/disabled version",
+        "summary": "Restore a historical email provider version as a draft",
         "tags": [
           "Admin · Email Provider"
         ]
@@ -21073,7 +21073,7 @@
             "bearer": []
           }
         ],
-        "summary": "Roll back to a superseded/disabled SMS provider version",
+        "summary": "Restore a historical SMS provider version as a draft",
         "tags": [
           "Admin · SMS Provider"
         ]

@@ -26,7 +26,7 @@ const en = {
   saved: 'Provider draft saved.',
   activated: 'Provider activated.',
   disabled: 'Provider disabled.',
-  rolledBack: 'Provider restored as a new version.',
+  rolledBack: 'Provider restored as a draft.',
   changeUnconfirmed:
     'The provider change could not be verified. Refresh and review the saved provider state before making another change.',
   testUnconfirmed:
@@ -61,7 +61,7 @@ const fa: Record<keyof typeof en, string> = {
   saved: 'پیش‌نویس تأمین‌کننده ذخیره شد.',
   activated: 'تأمین‌کننده فعال شد.',
   disabled: 'تأمین‌کننده غیرفعال شد.',
-  rolledBack: 'تأمین‌کننده به‌صورت نسخه‌ای جدید بازیابی شد.',
+  rolledBack: 'تأمین‌کننده به‌صورت پیش‌نویس بازیابی شد.',
   changeUnconfirmed:
     'تغییر تأمین‌کننده تأیید نشد. پیش از تغییر دیگری، فهرست را تازه‌سازی و وضعیت ذخیره‌شده را بررسی کنید.',
   testUnconfirmed:

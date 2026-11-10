@@ -168,33 +168,44 @@ for (const channel of ['email', 'sms']) {
       expect((await write(id)).status).toBe(403);
       expect(await snapshot(table)).toEqual(before);
     });
-    if (action !== 'rollback')
-      it(`${channel} ${action}: commits one audit without exposing credentials`, async () => {
-        const id = await seed();
-        const response = await write(id);
-        expect(response.status).toBe(action === 'create' ? 201 : 200);
-        expect(await response.text()).not.toMatch(/fixture-password|fixture-api-key/);
-        const state = await snapshot(table);
-        expect(state.audits).toHaveLength(1);
-        const metadata = JSON.parse(state.audits[0].metadata);
-        expect(metadata).toMatchObject({ sessionId: session, stepUpVerified: true });
-        expect(metadata.stepUpVerifiedAt).toBe(
-          (
-            await http.pool.query('SELECT step_up_verified_at FROM sessions WHERE session_id=$1', [
-              session,
-            ])
-          ).rows[0].step_up_verified_at.toISOString()
+    it(`${channel} ${action}: commits one audit without exposing credentials`, async () => {
+      const id = await seed();
+      const response = await write(id);
+      expect(response.status).toBe(action === 'create' ? 201 : 200);
+      const raw = await response.text();
+      expect(raw).not.toMatch(/fixture-password|fixture-api-key/);
+      const state = await snapshot(table);
+      expect(state.audits).toHaveLength(1);
+      const metadata = JSON.parse(state.audits[0].metadata);
+      expect(metadata).toMatchObject({ sessionId: session, stepUpVerified: true });
+      expect(metadata.stepUpVerifiedAt).toBe(
+        (
+          await http.pool.query('SELECT step_up_verified_at FROM sessions WHERE session_id=$1', [
+            session,
+          ])
+        ).rows[0].step_up_verified_at.toISOString()
+      );
+      expect(state.audits[0].correlation_id).toBe(response.headers.get('x-correlation-id'));
+      expect(state.audits[0].event).toBe(
+        `${channel}_provider_${({ create: 'created', update: 'updated', activate: 'activated', disable: 'disabled', rollback: 'rolled_back', 'test-connection': 'tested' } as Record<string, string>)[action]}`
+      );
+      expect(JSON.stringify(state.audits)).not.toMatch(/fixture-password|fixture-api-key/);
+      if (action === 'create')
+        expect(state.providers[0].config[channel === 'email' ? 'password' : 'api_key']).toMatch(
+          /^v1:/
         );
-        expect(state.audits[0].correlation_id).toBe(response.headers.get('x-correlation-id'));
-        expect(state.audits[0].event).toBe(
-          `${channel}_provider_${({ create: 'created', update: 'updated', activate: 'activated', disable: 'disabled', rollback: 'rolled_back', 'test-connection': 'tested' } as Record<string, string>)[action]}`
-        );
-        expect(JSON.stringify(state.audits)).not.toMatch(/fixture-password|fixture-api-key/);
-        if (action === 'create')
-          expect(state.providers[0].config[channel === 'email' ? 'password' : 'api_key']).toMatch(
-            /^v1:/
-          );
-      });
+      if (action === 'rollback') {
+        const draft = JSON.parse(raw);
+        expect(draft).toMatchObject({
+          status: 'draft',
+          lastTestStatus: 'pending',
+          activatedAt: null,
+        });
+        expect(draft.id).not.toBe(id);
+        expect(metadata).toMatchObject({ sourceProviderId: id, providerId: draft.id });
+        expect(state.providers.find((provider) => provider.id === id)?.status).toBe('superseded');
+      }
+    });
     for (const change of ['expiry', 'csrf', 'step-up'] as const) {
       it(`${channel} ${action}: rejects ${change} changed after guards while waiting for the family lock`, async () => {
         const id = await seed(),
@@ -261,20 +272,19 @@ for (const channel of ['email', 'sms']) {
           }
         });
       }
-    if (action !== 'rollback')
-      it(`${channel} ${action}: rolls back when the audit cannot persist`, async () => {
-        const id = await seed(),
-          before = await snapshot(table);
-        await http.pool.query(
-          "CREATE OR REPLACE FUNCTION reject_provider_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'fixture audit failure'; END $$; CREATE TRIGGER reject_provider_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_provider_audit()"
-        );
-        try {
-          expect((await write(id)).status).toBe(500);
-          expect(await snapshot(table)).toEqual(before);
-        } finally {
-          await http.pool.query('DROP TRIGGER reject_provider_audit ON audit_log');
-        }
-      });
+    it(`${channel} ${action}: rolls back when the audit cannot persist`, async () => {
+      const id = await seed(),
+        before = await snapshot(table);
+      await http.pool.query(
+        "CREATE OR REPLACE FUNCTION reject_provider_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'fixture audit failure'; END $$; CREATE TRIGGER reject_provider_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_provider_audit()"
+      );
+      try {
+        expect((await write(id)).status).toBe(500);
+        expect(await snapshot(table)).toEqual(before);
+      } finally {
+        await http.pool.query('DROP TRIGGER reject_provider_audit ON audit_log');
+      }
+    });
     it(`${channel} ${action}: rejects revocation while waiting to write`, async () => {
       const id = await seed(),
         before = await snapshot(table);

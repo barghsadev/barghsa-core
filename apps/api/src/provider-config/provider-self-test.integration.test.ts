@@ -190,10 +190,10 @@ for (const transport of ['smtp', 'resend', 'smsir'] as const) {
             actor
           )
         : await service.create({ label: 'Self test', config, createdBy: actor.userId }, actor);
-    const test = (recipient?: string) =>
+    const test = (recipient?: string, providerId = row.id) =>
       service instanceof EmailProviderConfigService
-        ? service.testConnection(row.id, recipient, actor.userId, actor)
-        : service.testConnection(row.id, recipient, undefined, actor.userId, actor);
+        ? service.testConnection(providerId, recipient, actor.userId, actor)
+        : service.testConnection(providerId, recipient, undefined, actor.userId, actor);
     const snapshot = async () => ({
       provider: (
         await http.pool.query(`SELECT * FROM ${channel}_provider_configs WHERE id=$1`, [row.id])
@@ -305,7 +305,7 @@ for (const transport of ['smtp', 'resend', 'smsir'] as const) {
     });
   });
   for (const outcome of ['passed', 'failed', 'audit-failed'] as const) {
-    it(`${transport}: rollback ${outcome} retests legacy settings and preserves atomic recovery`, async () => {
+    it(`${transport}: restored draft ${outcome} preserves delivery and audit boundaries`, async () => {
       const { service, row, test, send } = await fixture();
       await test();
       await service.activate(row.id, actor.userId, actor);
@@ -327,33 +327,74 @@ for (const transport of ['smtp', 'resend', 'smsir'] as const) {
       });
       const before = await state();
       send.mockClear();
-      if (outcome === 'failed') send.mockResolvedValue({ ok: false });
       if (outcome === 'audit-failed')
         await http.pool
           .query(`CREATE FUNCTION reject_proof_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'fixture audit failure'; END $$;
         CREATE TRIGGER reject_proof_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_proof_audit()`);
       try {
+        if (outcome === 'audit-failed') {
+          await expect(service.rollback(row.id, actor.userId, actor)).rejects.toBeDefined();
+          expect(await state()).toEqual(before);
+          expect(send).not.toHaveBeenCalled();
+          return;
+        }
+        const restored = await service.rollback(row.id, actor.userId, actor);
+        expect(restored).toMatchObject({
+          status: 'draft',
+          lastTestStatus: 'pending',
+          activatedAt: null,
+          supersedesId: null,
+          maskedConfig: row.maskedConfig,
+        });
+        expect(restored.id).not.toBe(row.id);
+        expect(send).not.toHaveBeenCalled();
+        const afterRestore = await state();
+        expect(afterRestore.audit).toHaveLength(before.audit.length + 1);
+        expect(afterRestore.providers).toHaveLength(before.providers.length + 1);
+        const restoreAudit = afterRestore.audit.at(-1);
+        expect(restoreAudit?.event).toBe(`${channel}_provider_rolled_back`);
+        expect(JSON.parse(restoreAudit?.metadata)).toMatchObject({
+          sourceProviderId: row.id,
+          providerId: restored.id,
+          status: 'draft',
+          stepUpVerified: true,
+        });
+        expect(afterRestore.providers.find((p) => p.id === restored.id)).toMatchObject({
+          delivery_verified_at: null,
+          delivery_config_hash: null,
+        });
+        await expect(service.activate(restored.id, actor.userId, actor)).rejects.toMatchObject({
+          status: 409,
+        });
+        expect(await state()).toEqual(afterRestore);
+        const recipient = channel === 'email' ? email : mobile;
+        if (outcome === 'failed') send.mockResolvedValue({ ok: false });
+        expect((await test(recipient, restored.id)).ok).toBe(outcome === 'passed');
+        expect(send).toHaveBeenCalledOnce();
+        expect(send.mock.calls[0]?.[1]).toBe(recipient);
+        expect((await service.get(replacement.row.id)).status).toBe('active');
         if (outcome === 'passed') {
-          const restored = await service.rollback(row.id, actor.userId, actor);
-          expect(restored).toMatchObject({
+          expect(await service.activate(restored.id, actor.userId, actor)).toMatchObject({
             status: 'active',
             lastTestStatus: 'passed',
             supersedesId: replacement.row.id,
           });
-          expect(restored.id).not.toBe(row.id);
           expect((await service.get(replacement.row.id)).status).toBe('superseded');
-          const after = await state();
-          expect(after.audit).toHaveLength(before.audit.length + 1);
-          expect(after.providers).toHaveLength(before.providers.length + 1);
-          expect(after.providers.find((p) => p.id === row.id)).toEqual(
-            before.providers.find((p) => p.id === row.id)
-          );
         } else {
-          await expect(service.rollback(row.id, actor.userId, actor)).rejects.toBeDefined();
-          expect(await state()).toEqual(before);
+          await expect(service.activate(restored.id, actor.userId, actor)).rejects.toMatchObject({
+            status: 409,
+          });
+          expect(await service.get(restored.id)).toMatchObject({
+            status: 'draft',
+            lastTestStatus: 'failed',
+          });
+          expect((await service.get(replacement.row.id)).status).toBe('active');
         }
-        expect(send).toHaveBeenCalledOnce();
-        expect(send.mock.calls[0]?.[1]).toBe(channel === 'email' ? email : mobile);
+        const after = await state();
+        expect(after.audit).toHaveLength(before.audit.length + (outcome === 'passed' ? 3 : 2));
+        expect(after.providers.find((p) => p.id === row.id)).toEqual(
+          before.providers.find((p) => p.id === row.id)
+        );
       } finally {
         if (outcome === 'audit-failed')
           await http.pool.query(

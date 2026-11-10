@@ -16,7 +16,8 @@ export async function mutateProvider<T extends { id: string; status: string }>(
   session: ProviderMutationSession,
   channel: 'email' | 'sms',
   event: string,
-  work: (client: PoolClient) => Promise<T>
+  work: (client: PoolClient) => Promise<T>,
+  sourceProviderId?: string
 ): Promise<T> {
   if (!session || session.userId !== actorUserId) {
     throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
@@ -44,6 +45,7 @@ export async function mutateProvider<T extends { id: string; status: string }>(
           stepUpVerified: true,
           stepUpVerifiedAt: stepUpVerifiedAt.toISOString(),
           ...('lastTestStatus' in result ? { lastTestStatus: result.lastTestStatus } : {}),
+          ...(sourceProviderId ? { sourceProviderId } : {}),
         }),
         correlationIdStorage.getStore() ?? uuidv7(),
       ]

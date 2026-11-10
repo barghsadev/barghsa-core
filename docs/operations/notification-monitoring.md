@@ -18,6 +18,14 @@ Confirmed configuration failures instead set `degraded_reason=provider_configura
 
 Create a corrected draft, pass its configuration-bound connection and delivery tests, then activate it through the existing audited replacement flow. Waiting, a successful stale send, or an old binary's recovery probe cannot clear this pause. Migration0275 preserves all existing provider rows and adds database guards against clearing the pause or setting a probe deadline after application rollback. The existing provider-degraded metric and alert remain active until a healthy replacement becomes active. HTTP failures with no acceptance receipt remain uncertain even when their diagnostic proves a configuration problem; correcting configuration does not authorize resending them.
 
+To reuse a historical email or SMS configuration, select **Restore as draft**
+and complete staff step-up. The audit records the source and new draft IDs.
+The restored draft starts untested. The active provider serves traffic until
+activation. Run a separate delivery test to your verified staff contact,
+then activate the draft after the test passes. A failed test stays visible on
+the draft. Activation records the provider it replaced and preserves both
+historical versions.
+
 The worker exposes delivery metrics on its private `/metrics` endpoint. Import `deploy/monitoring/grafana-notifications-dashboard.json` and load `deploy/monitoring/notification-alerts.yml` in the monitoring stack's `rule_files`. The staging stack and protected receiver are defined below. Production monitoring still needs its own approved configuration and operational evidence.
 
 ## Protected staging operations receiver

@@ -46,6 +46,7 @@ import {
   ProviderStepUpError,
   validateProviderResult,
   validateConnectionResult,
+  validateRestoredDraft,
   rollbackProvider,
   testConnection,
   updateProvider,
@@ -455,13 +456,8 @@ export default function AdminEmailProvidersPage() {
         const outcome = validatedTest ?? validateConnectionResult(result, p.id);
         setTestOutcome((prev) => ({ ...prev, [p.id]: outcome }));
       } else {
-        const saved = validateProviderResult(
-          result,
-          operation === 'disable' ? 'disabled' : 'active',
-          operation === 'rollback' ? undefined : p.id
-        );
-        if (operation === 'rollback' && saved.id === p.id)
-          throw new ProviderRequestError(false, [], true);
+        if (operation === 'rollback') validateRestoredDraft(result, p.id);
+        else validateProviderResult(result, operation === 'disable' ? 'disabled' : 'active', p.id);
         setNotice(
           providerFormText(
             operation === 'activate'
@@ -1298,7 +1294,7 @@ function EmailTestRow({
         onChange={(e) => setRecipient(e.target.value)}
         aria-label={providerText('admin.providers.test.recipient', uiLocale)}
         placeholder={providerText('admin.providers.test.recipient', uiLocale)}
-        className="w-full border border-input rounded px-2 py-1 text-xs"
+        className="w-full border border-input rounded px-2 py-1 text-xs pointer-coarse:text-base"
       />
       <button
         onClick={() => onTest(provider, recipient.trim())}

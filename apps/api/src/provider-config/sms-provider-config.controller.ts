@@ -256,7 +256,7 @@ export class SmsProviderConfigController {
   @HttpCode(200)
   @UseGuards(StepUpGuard)
   @RequiresStepUp()
-  @ApiOperation({ summary: 'Roll back to a superseded/disabled SMS provider version' })
+  @ApiOperation({ summary: 'Restore a historical SMS provider version as a draft' })
   rollback(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string

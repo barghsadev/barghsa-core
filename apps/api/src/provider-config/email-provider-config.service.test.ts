@@ -526,7 +526,7 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
     ).rejects.toMatchObject({ status: 409 });
   });
 
-  it('rolls back to a superseded version', async () => {
+  it('restores a superseded version as an untested draft', async () => {
     const { service, rows } = buildHarness();
     const a = await service.create(
       {
@@ -553,10 +553,12 @@ describe('EmailProviderConfigService lifecycle (T-05.06.01)', () => {
     await service.activate(b.id, 'admin-1', sessionFor('admin-1'));
     // a is superseded
     const rolled = await service.rollback(a.id, 'admin-1', sessionFor('admin-1'));
-    expect(rolled.status).toBe('active');
+    expect(rolled).toMatchObject({ status: 'draft', lastTestStatus: 'pending', activatedAt: null });
+    expect(rolled.id).not.toBe(a.id);
     expect(rolled.label).toContain('rollback');
     const actives = [...rows.values()].filter((r) => r.status === 'active');
     expect(actives).toHaveLength(1);
+    expect(actives[0]?.id).toBe(b.id);
   });
 
   it('commits a transaction on activation', async () => {
