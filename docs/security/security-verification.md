@@ -112,6 +112,9 @@ Their retry records keep the same bounded diagnostics.
 Worker and inference process failures report the lifecycle stage. Production
 PostgreSQL pool errors report the event and level. These diagnostics omit
 exception text and connection details.
+Staff account and CRM action logs use opaque identifiers. Usernames and
+free-form CRM reasons remain available through their authorized response and
+audit paths.
 
 ## Provider callback contracts
 

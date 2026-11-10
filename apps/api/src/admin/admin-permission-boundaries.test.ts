@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { Logger } from '@nestjs/common';
 import { AdminController } from './admin.controller.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 
@@ -202,6 +203,24 @@ describe.each(operations)('$name capability boundary', ({ permission, invoke }) 
     );
     expect(call).toHaveBeenCalledTimes(1);
   });
+});
+
+it('retains the username in the authorized creation result and omits it from process logs', async () => {
+  const log = vi.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
+  const { controller } = fixture();
+  const username = 'staff@example.test';
+  try {
+    const result = await controller.createStaffUser(
+      { username, firstName: 'Test', lastName: 'Staff', activationMethod: 'link' },
+      request(['admin:users:create'])
+    );
+    expect(result.username).toBe('staff@example.com');
+    expect(log).toHaveBeenCalledWith(expect.stringContaining(target));
+    expect(JSON.stringify(log.mock.calls)).not.toContain(result.username);
+    expect(JSON.stringify(log.mock.calls)).not.toContain(username);
+  } finally {
+    log.mockRestore();
+  }
 });
 
 it('reports each staff capability independently and reflects revocation', () => {

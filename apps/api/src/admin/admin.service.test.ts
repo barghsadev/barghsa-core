@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { HttpException } from '@nestjs/common';
+import { HttpException, Logger } from '@nestjs/common';
 import type { AdminService as AdminServiceType } from './admin.service.js';
 import type { CreateStaffUserInput } from './admin.service.js';
 
@@ -88,7 +88,10 @@ beforeEach(() => {
   vi.restoreAllMocks();
 });
 
-afterEach(() => vi.unstubAllEnvs());
+afterEach(() => {
+  vi.unstubAllEnvs();
+  vi.restoreAllMocks();
+});
 
 // ─── Test data ────────────────────────────────────────────────────────
 
@@ -228,6 +231,7 @@ describe('AdminService.createStaffUser (tempPassword)', () => {
 
 describe('AdminService.createStaffUser (link)', () => {
   it('queues staff activation without returning its secret', async () => {
+    const log = vi.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
     const { pool, mockConnect } = mockPool();
     const { client, mockClientQuery, mockRelease } = mockClient();
 
@@ -253,6 +257,8 @@ describe('AdminService.createStaffUser (link)', () => {
     expect(result).toHaveProperty('deliveryStatus', 'queued');
     expect(result.message).toContain('queued');
     expect(mockRelease).toHaveBeenCalled();
+    expect(log).toHaveBeenCalledWith(expect.stringContaining(result.userId));
+    expect(JSON.stringify(log.mock.calls)).not.toContain(result.username);
   });
 
   it('creates a profile with INDIVIDUAL type and VERIFIED status', async () => {
@@ -895,6 +901,7 @@ describe('AdminService.listStaff', () => {
 
 describe('AdminService.disableStaff', () => {
   it('disables the account, revokes sessions/tokens, and records an audit entry', async () => {
+    const log = vi.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
     const { pool, mockConnect } = mockPool();
     const { client, mockClientQuery, mockRelease } = mockClient();
 
@@ -943,6 +950,8 @@ describe('AdminService.disableStaff', () => {
     expect(auditMetadata).toMatchObject({ actorUserId: 'u-admin' });
     expect(auditCall![1]![1]).toBe('u-target'); // audit_log.user_id = target
     expect(mockRelease).toHaveBeenCalled();
+    expect(log).toHaveBeenCalledWith(expect.stringContaining('u-target'));
+    expect(JSON.stringify(log.mock.calls)).not.toContain(result.username);
   });
 
   it('rejects disabling your own account', async () => {

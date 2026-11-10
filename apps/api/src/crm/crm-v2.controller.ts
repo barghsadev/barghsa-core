@@ -684,9 +684,7 @@ export class CrmV2Controller {
       );
     }
 
-    this.logger.debug(
-      `Password change forced: userId=${userId}, reason=${dto.reason}, actor=${req.session.userId}`
-    );
+    this.logger.debug(`Password change forced: userId=${userId}, actor=${req.session.userId}`);
 
     return result;
   }
@@ -786,9 +784,7 @@ export class CrmV2Controller {
       );
     }
 
-    this.logger.debug(
-      `Sessions expired: userId=${userId}, reason=${dto.reason}, actor=${req.session.userId}`
-    );
+    this.logger.debug(`Sessions expired: userId=${userId}, actor=${req.session.userId}`);
 
     return result;
   }
@@ -905,7 +901,7 @@ export class CrmV2Controller {
       );
     }
 
-    this.logger.debug(`Profile ${profileId} archived by ${req.session.userId}: ${dto.reason}`);
+    this.logger.debug(`Profile ${profileId} archived by ${req.session.userId}`);
 
     return { success: true, profileId, archivedAt: result.archivedAt };
   }

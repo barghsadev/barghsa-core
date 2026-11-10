@@ -489,7 +489,7 @@ export class AdminController {
     const result = await this.adminService.createStaffUser(parsed.data, req.session, ip);
 
     this.logger.log(
-      `Staff user created: userId=${result.userId}, username=${result.username}, ` +
+      `Staff user created: userId=${result.userId}, ` +
         `method=${result.activationMethod}, actor=${req.session.userId}`
     );
 

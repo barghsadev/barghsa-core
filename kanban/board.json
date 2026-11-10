@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T05:23:32+00:00",
-  "source_commit": "3c199bb16a908522a1540920ad3d4699958cee1b",
+  "updated": "2026-11-10T05:25:56+00:00",
+  "source_commit": "f924f47edf0b1e803c153fbaa1704bde53bf7e41",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -11296,7 +11296,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-postgresql-cache-and-wallet-proof",
@@ -11304,7 +11305,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/config-cache/config-cache.integration.test.ts",
@@ -29956,7 +29957,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-administrative-mutation-log-redaction",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -29964,7 +29966,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -48732,7 +48734,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -48764,7 +48767,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.test.ts",
@@ -49588,7 +49591,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -49628,7 +49632,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.test.ts",
@@ -50885,7 +50889,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -50901,7 +50906,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -52056,7 +52061,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -52080,7 +52086,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -53753,7 +53759,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -53781,7 +53788,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -54955,7 +54962,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -54963,15 +54971,15 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
-              "sha256": "3892aa181ab722f906b25e26eea9ee4b136523053df88c7d812fa67ffa8f1aff"
+              "sha256": "729f164473ece24ca2472514b76558e4538d8d85bbc58486bbcee3a006aab7cc"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -55706,7 +55714,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -55714,15 +55723,15 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
-              "sha256": "3892aa181ab722f906b25e26eea9ee4b136523053df88c7d812fa67ffa8f1aff"
+              "sha256": "729f164473ece24ca2472514b76558e4538d8d85bbc58486bbcee3a006aab7cc"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -60716,7 +60725,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -60732,7 +60742,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -61717,7 +61727,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -61725,11 +61736,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -62833,7 +62844,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -62841,11 +62853,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -63949,7 +63961,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -63957,11 +63970,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -65005,7 +65018,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-manual-verification-mode-and-unavailable-api",
@@ -65021,11 +65035,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
@@ -65527,7 +65541,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -65651,7 +65666,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/web/src/lib/entry-locale.ts",
@@ -67905,7 +67920,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "accepted-verified-branding-editor-assets",
@@ -67917,7 +67933,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -69332,7 +69348,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -69348,7 +69365,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/completion-authority-http.integration.test.ts",
@@ -70015,7 +70032,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70031,7 +70049,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/completion-authority-http.integration.test.ts",
@@ -70698,7 +70716,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70714,7 +70733,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/completion-authority-http.integration.test.ts",
@@ -71380,7 +71399,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -71396,7 +71416,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/completion-authority-http.integration.test.ts",
@@ -72093,7 +72113,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -72101,7 +72122,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
@@ -72647,7 +72668,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -72655,19 +72677,19 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
-              "sha256": "01a35987810c65b71d29f8690c91cc1c15f7818544d3da47597bdde23fd0f882"
+              "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
-              "sha256": "3892aa181ab722f906b25e26eea9ee4b136523053df88c7d812fa67ffa8f1aff"
+              "sha256": "729f164473ece24ca2472514b76558e4538d8d85bbc58486bbcee3a006aab7cc"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -72980,7 +73002,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -73012,7 +73035,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -74278,7 +74301,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -74322,7 +74346,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -76708,7 +76732,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -76744,7 +76769,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -78123,7 +78148,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -78179,7 +78205,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -81684,7 +81710,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -81696,11 +81723,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -82115,7 +82142,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -82127,11 +82155,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -82568,7 +82596,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -82580,11 +82609,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -83064,7 +83093,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -83072,7 +83102,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
@@ -83655,7 +83685,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -83663,7 +83694,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
@@ -84413,7 +84444,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -84421,7 +84453,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
@@ -85001,7 +85033,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -85009,7 +85042,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
@@ -85592,7 +85625,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -85600,7 +85634,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
@@ -95488,7 +95522,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -95500,11 +95535,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -95993,7 +96028,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -96001,7 +96037,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -96009,7 +96045,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -97417,7 +97453,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -97425,7 +97462,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -97433,7 +97470,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -98801,7 +98838,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -98809,11 +98847,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -99849,7 +99887,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -99857,11 +99896,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -100903,7 +100942,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -100911,11 +100951,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -104806,7 +104846,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -104814,7 +104855,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -104822,7 +104863,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -106185,7 +106226,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -106193,11 +106235,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
@@ -107041,7 +107083,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -107049,11 +107092,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
@@ -114288,7 +114331,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -114296,11 +114340,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
@@ -116080,7 +116124,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -116088,15 +116133,15 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
-              "sha256": "3892aa181ab722f906b25e26eea9ee4b136523053df88c7d812fa67ffa8f1aff"
+              "sha256": "729f164473ece24ca2472514b76558e4538d8d85bbc58486bbcee3a006aab7cc"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -116790,7 +116835,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -116798,15 +116844,15 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
-              "sha256": "3892aa181ab722f906b25e26eea9ee4b136523053df88c7d812fa67ffa8f1aff"
+              "sha256": "729f164473ece24ca2472514b76558e4538d8d85bbc58486bbcee3a006aab7cc"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -149032,7 +149078,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -149040,11 +149087,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/wallet/online-topup.integration.test.ts",
@@ -200088,7 +200135,8 @@
           "release-0.6-upload-abuse-review",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -200216,11 +200264,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -201020,7 +201068,8 @@
           "release-0.6-upload-abuse-review",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -201148,11 +201197,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -201954,7 +202003,8 @@
           "release-0.6-upload-abuse-review",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
@@ -201962,11 +202012,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -203035,7 +203085,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -203043,11 +203094,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -205003,7 +205054,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -205011,11 +205063,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -206947,7 +206999,8 @@
           "release-0.6-upload-abuse-review",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -207075,11 +207128,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -279915,7 +279968,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -279923,11 +279977,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -280893,7 +280947,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -280901,11 +280956,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -281871,7 +281926,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -281879,11 +281935,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -282849,7 +282905,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -282857,11 +282914,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -283827,7 +283884,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -283835,11 +283893,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -284805,7 +284863,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -284813,11 +284872,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -285783,7 +285842,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -285791,11 +285851,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -286761,7 +286821,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -286769,11 +286830,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -287739,7 +287800,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -287747,11 +287809,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -288717,7 +288779,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -288725,11 +288788,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -289695,7 +289758,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -289703,11 +289767,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -290673,7 +290737,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -290681,11 +290746,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -291652,7 +291717,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -291660,11 +291726,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -292630,7 +292696,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -292638,11 +292705,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -293608,7 +293675,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -293616,11 +293684,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -294586,7 +294654,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -294594,11 +294663,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -295564,7 +295633,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-worker-finance-scan-failure-logs"
+          "release-0.6-worker-finance-scan-failure-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -295572,11 +295642,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -478410,7 +478480,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -478418,7 +478489,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
@@ -478550,7 +478621,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -478566,7 +478638,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
@@ -481050,7 +481122,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-strict-otp-caller-preflight",
           "release-0.6-administrative-mutation-log-redaction",
-          "release-0.6-staging-pilot-proxy-log-redaction"
+          "release-0.6-staging-pilot-proxy-log-redaction",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-api-and-private-cutover-proof",
@@ -481062,7 +481135,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
@@ -483461,7 +483534,8 @@
         "batches": [
           "release-0.6-authorization-policy-and-staff-grants",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -483537,7 +483611,7 @@
             },
             {
               "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
-              "sha256": "01a35987810c65b71d29f8690c91cc1c15f7818544d3da47597bdde23fd0f882"
+              "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
             }
           ],
           "checks": [
@@ -483675,7 +483749,8 @@
         "batches": [
           "release-0.6-authorization-policy-and-staff-grants",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -483751,7 +483826,7 @@
             },
             {
               "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
-              "sha256": "01a35987810c65b71d29f8690c91cc1c15f7818544d3da47597bdde23fd0f882"
+              "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
             }
           ],
           "checks": [
@@ -483815,7 +483890,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -483823,7 +483899,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -483916,7 +483992,8 @@
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -483956,7 +484033,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "f76d7853e38b32ed15534c7d621896b2136f729f2a2c43acd7469a91723f6522"
+              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -484048,7 +484125,8 @@
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -484104,7 +484182,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "f76d7853e38b32ed15534c7d621896b2136f729f2a2c43acd7469a91723f6522"
+              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -487560,7 +487638,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-react-output-safety-and-receipt-urls",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -487688,7 +487767,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "f76d7853e38b32ed15534c7d621896b2136f729f2a2c43acd7469a91723f6522"
+              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -487996,7 +488075,8 @@
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -488056,7 +488136,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "f76d7853e38b32ed15534c7d621896b2136f729f2a2c43acd7469a91723f6522"
+              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -488097,7 +488177,8 @@
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -488146,7 +488227,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "f76d7853e38b32ed15534c7d621896b2136f729f2a2c43acd7469a91723f6522"
+              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -489959,7 +490040,8 @@
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -489967,7 +490049,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "f76d7853e38b32ed15534c7d621896b2136f729f2a2c43acd7469a91723f6522"
+              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
             },
             {
               "path": "docs/threat-model.md",
@@ -490107,7 +490189,8 @@
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -490115,7 +490198,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "f76d7853e38b32ed15534c7d621896b2136f729f2a2c43acd7469a91723f6522"
+              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -490221,7 +490304,8 @@
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -490229,7 +490313,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "f76d7853e38b32ed15534c7d621896b2136f729f2a2c43acd7469a91723f6522"
+              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -490283,7 +490367,8 @@
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -490299,7 +490384,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "f76d7853e38b32ed15534c7d621896b2136f729f2a2c43acd7469a91723f6522"
+              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
             }
           ],
           "checks": [
@@ -490359,7 +490444,8 @@
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -490419,7 +490505,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "f76d7853e38b32ed15534c7d621896b2136f729f2a2c43acd7469a91723f6522"
+              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -492223,7 +492309,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-source-bound-postgresql-and-http-invariants",
@@ -492235,7 +492322,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/config-audit-http.integration.test.ts",
@@ -493265,7 +493352,8 @@
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -493281,7 +493369,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "f76d7853e38b32ed15534c7d621896b2136f729f2a2c43acd7469a91723f6522"
+              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
             }
           ],
           "checks": [
@@ -493333,7 +493421,8 @@
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -493341,7 +493430,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "f76d7853e38b32ed15534c7d621896b2136f729f2a2c43acd7469a91723f6522"
+              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -495220,7 +495309,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Review remaining API identity logs, provider and worker poller diagnostics and persisted failure details, including reminder delivery and the other reconciliation scans. Keep fixed operation and bounded structured diagnostics.",
+        "Review remaining provider and worker poller diagnostics and persisted failure details, including reminder delivery and the other reconciliation scans. Keep fixed operation and bounded structured diagnostics.",
         "Rehearse representative token, identity and payment inputs against all configured production-equivalent sinks, including the isolated proxy failure cases, and retain the observed redacted receipts."
       ],
       "owner": null,
@@ -495277,7 +495366,8 @@
           "release-0.6-staging-pilot-proxy-log-redaction",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
@@ -522787,7 +522877,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -522807,7 +522898,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -523356,7 +523447,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -523376,7 +523468,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -523925,7 +524017,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -523945,7 +524038,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -524494,7 +524587,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524514,7 +524608,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -525063,7 +525157,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -525083,7 +525178,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -525632,7 +525727,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -525652,7 +525748,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -526201,7 +526297,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526221,7 +526318,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -526770,7 +526867,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526790,7 +526888,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -527339,7 +527437,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -527359,7 +527458,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -527908,7 +528007,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -527928,7 +528028,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -528477,7 +528577,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -528497,7 +528598,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -529046,7 +529147,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -529066,7 +529168,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -529615,7 +529717,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -529635,7 +529738,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -530184,7 +530287,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -530204,7 +530308,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -548133,7 +548237,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548149,7 +548254,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -549066,7 +549171,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549082,7 +549188,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -549999,7 +550105,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550015,7 +550122,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -550932,7 +551039,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550948,7 +551056,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -551865,7 +551973,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551881,7 +551990,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -552798,7 +552907,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552814,7 +552924,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -553731,7 +553841,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553747,7 +553858,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -554664,7 +554775,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554680,7 +554792,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -555597,7 +555709,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555613,7 +555726,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -556530,7 +556643,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556546,7 +556660,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -557463,7 +557577,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557479,7 +557594,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -558396,7 +558511,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558412,7 +558528,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -559329,7 +559445,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559345,7 +559462,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -560262,7 +560379,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560278,7 +560396,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -561195,7 +561313,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561211,7 +561330,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -562128,7 +562247,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -562144,7 +562264,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -563061,7 +563181,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -563077,7 +563198,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -563994,7 +564115,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -564010,7 +564132,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -564927,7 +565049,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -564943,7 +565066,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -565860,7 +565983,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565876,7 +566000,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -682913,7 +683037,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -682937,7 +683062,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -683567,7 +683692,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -683591,7 +683717,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -684221,7 +684347,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -684245,7 +684372,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -684873,7 +685000,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -684897,7 +685025,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -685525,7 +685653,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -685549,7 +685678,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -686179,7 +686308,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -686203,7 +686333,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -686832,7 +686962,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -686856,7 +686987,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -687485,7 +687616,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -687509,7 +687641,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -688138,7 +688270,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -688162,7 +688295,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -688791,7 +688924,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -688815,7 +688949,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -689444,7 +689578,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -689468,7 +689603,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -690097,7 +690232,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -690121,7 +690257,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
@@ -699726,7 +699862,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -699738,11 +699875,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -700413,7 +700550,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -700425,11 +700563,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -701099,7 +701237,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -701111,11 +701250,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -701787,7 +701926,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -701799,11 +701939,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -702475,7 +702615,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -702487,11 +702628,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -703160,7 +703301,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -703172,11 +703314,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -703845,7 +703987,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -703857,11 +704000,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -704531,7 +704674,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -704543,11 +704687,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -705216,7 +705360,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -705228,11 +705373,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -705902,7 +706047,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -705914,11 +706060,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -734679,7 +734825,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "accepted-verified-branding-editor-assets",
@@ -734691,7 +734838,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -737077,7 +737224,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-verification-settings",
@@ -737097,11 +737245,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
-              "sha256": "3892aa181ab722f906b25e26eea9ee4b136523053df88c7d812fa67ffa8f1aff"
+              "sha256": "729f164473ece24ca2472514b76558e4538d8d85bbc58486bbcee3a006aab7cc"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -737145,7 +737293,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
-              "sha256": "c7b03535531131c03c585c499885032ff7f944c4759df975cbc1c4a55697170c"
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.test.ts",
@@ -737595,7 +737743,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -737611,7 +737760,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -737619,7 +737768,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/service-targets-http.integration.test.ts",
@@ -738326,7 +738475,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -738342,7 +738492,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -738350,7 +738500,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/service-targets-http.integration.test.ts",
@@ -743105,11 +743255,11 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
@@ -746291,7 +746441,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ]
       }
     },
@@ -746319,11 +746470,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -746719,11 +746870,11 @@
             },
             {
               "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
-              "sha256": "01a35987810c65b71d29f8690c91cc1c15f7818544d3da47597bdde23fd0f882"
+              "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
-              "sha256": "3892aa181ab722f906b25e26eea9ee4b136523053df88c7d812fa67ffa8f1aff"
+              "sha256": "729f164473ece24ca2472514b76558e4538d8d85bbc58486bbcee3a006aab7cc"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -750966,7 +751117,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ]
       }
     },
@@ -751006,7 +751158,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -751014,7 +751166,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -754955,7 +755107,8 @@
           "release-0.6-immutable-staging-acceptance",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -755020,7 +755173,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/admin.module.ts",
@@ -755028,7 +755181,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -758835,7 +758988,8 @@
           "release-0.6-immutable-staging-acceptance",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-staff-and-crm-identity-logs"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -760603,7 +760757,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
-              "sha256": "c8cb37da1b19f418db976525f489845e1acfeef304e8d45d3ada9247553f41c6"
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
@@ -762706,7 +762860,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-critical-file-coverage-and-openapi"
+          "release-0.6-critical-file-coverage-and-openapi",
+          "release-0.6-staff-and-crm-identity-logs"
         ]
       }
     },
@@ -865734,6 +865889,72 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/runtime-log-safety",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "8817b98adbd19d772df30a9b554b8fca080f0098e8e77433b3625cdc614918fb"
+    },
+    "release-0.6-staff-and-crm-identity-logs": {
+      "batch": "release-0.6-staff-and-crm-identity-logs",
+      "base_commit": "f924f47edf0b1e803c153fbaa1704bde53bf7e41",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.02.06"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/admin-permission-boundaries.test.ts",
+        "apps/api/src/admin/admin.controller.ts",
+        "apps/api/src/admin/admin.service.test.ts",
+        "apps/api/src/admin/admin.service.ts",
+        "apps/api/src/crm/crm-action-log-safety.test.ts",
+        "apps/api/src/crm/crm-v2.controller.ts",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
+          "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.test.ts",
+          "sha256": "729f164473ece24ca2472514b76558e4538d8d85bbc58486bbcee3a006aab7cc"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
+        },
+        {
+          "path": "apps/api/src/admin/staff-audit.controller.test.ts",
+          "sha256": "58585ad632d85464782a70f023e4f733cd14c59a82f131e2efc1569961fb8c5b"
+        },
+        {
+          "path": "apps/api/src/crm/crm-action-log-safety.test.ts",
+          "sha256": "919dc6b25d53568104a53f617583850bb8cb8cc5ff4803fbc602b419ab3aa2ae"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.test.ts",
+          "sha256": "8aaa098e0e823a9684bd5c8feb79206f690e10b7805cdacbb0288d1fe06d7cf2"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
+        }
+      ],
+      "checks": [
+        "Six regression cases reproduced a fixture staff email in account creation and disablement process logs or private free-form reasons in CRM password, session and profile action logs.",
+        "General logs retain the operation, opaque actor and target, and known activation method where applicable. The authorized response, input passed to CRM domain decisions, audit records, session revocation and authority checks retain their existing behavior.",
+        "All 207 targeted staff controller, service and audit plus CRM controller and service tests passed. API typecheck, lint, format and diff checks passed. Native hosted suites and the production-equivalent sink readback remain separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-identity-logs",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "47814a4aad362d55e7cdd8283582c7ca7e2ea72e0450624b9c7ae43c9d18ab11"
     }
   },
   "historical_improvements": [

@@ -706,7 +706,7 @@ export class AdminService {
       await client.query('COMMIT');
 
       this.logger.log(
-        `Staff user created: userId=${userId}, username=${input.username}, ` +
+        `Staff user created: userId=${userId}, ` +
           `method=${input.activationMethod}, actor=${actorUserId}`
       );
 
@@ -3313,7 +3313,7 @@ export class AdminService {
       await client.query('COMMIT');
 
       this.logger.log(
-        `Staff user ${target.user_id} (${target.username}) disabled by ${actorUserId}; ${'all sessions revoked'}`
+        `Staff user ${target.user_id} disabled by ${actorUserId}; all sessions revoked`
       );
 
       return {
