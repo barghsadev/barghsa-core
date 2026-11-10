@@ -14682,7 +14682,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
+              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -14728,6 +14728,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
+            },
+            {
+              "batch": "release-0.6-api-health-by-build-revision",
+              "base_commit": "dd6b76c1a8acfa7e778b9c616742476545cb8219",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Add a private dashboard operation section only. Existing service objectives, budgets, schedules and alert priorities retain their exact text."
             }
           ],
           "hosted_load_receipt": {
@@ -20476,7 +20484,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
+              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
@@ -20548,6 +20556,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
+            },
+            {
+              "batch": "release-0.6-api-health-by-build-revision",
+              "base_commit": "dd6b76c1a8acfa7e778b9c616742476545cb8219",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Add a private dashboard operation section only. Existing service objectives, budgets, schedules and alert priorities retain their exact text."
             }
           ]
         }
@@ -20861,7 +20877,7 @@
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
-              "sha256": "d5d9a8477d85e7deb354e552c15fb63b43428c3d7ed39fb6817059adea65f2a6"
+              "sha256": "ba2a865f36d50bcd294542579486fc9570f87785246923a637cd6416fa037105"
             },
             {
               "path": "apps/api/src/metrics/metrics.controller.ts",
@@ -20879,6 +20895,16 @@
           "checks": [
             "All four compiled HTTP and telemetry integration cases passed against isolated migrated PostgreSQL. Public liveness and twenty concurrent readiness requests made no rate-window or ordinary audit writes. PostgreSQL readiness statistics and OTLP metrics remained available, and invalid schema metadata blocked readiness while liveness stayed up.",
             "Documented the public liveness and readiness endpoints and the protected sign-in, read-only current-account and logout synthetic flow. The exact compiled candidate exercised the synthetic sign-in, current account readback and logout through the private TLS edge. Deployed synthetic scheduling and alert receipt are separate operations gates."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-api-health-by-build-revision",
+              "base_commit": "dd6b76c1a8acfa7e778b9c616742476545cb8219",
+              "paths": [
+                "apps/api/src/metrics/http-request-metrics.integration.test.ts"
+              ],
+              "scope": "Publish a validated revision on the existing private registry and add its positive and negative assertions. The existing response observer, readiness, request privacy and HTTP assertions are preserved. All five compiled metrics cases passed."
+            }
           ]
         }
       }
@@ -515952,7 +515978,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
+              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -515983,6 +516009,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
+            },
+            {
+              "batch": "release-0.6-api-health-by-build-revision",
+              "base_commit": "dd6b76c1a8acfa7e778b9c616742476545cb8219",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Add a private dashboard operation section only. Existing service objectives, budgets, schedules and alert priorities retain their exact text."
             }
           ]
         }
@@ -516077,7 +516111,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
+              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
             }
           ],
           "checks": [
@@ -516112,6 +516146,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
+            },
+            {
+              "batch": "release-0.6-api-health-by-build-revision",
+              "base_commit": "dd6b76c1a8acfa7e778b9c616742476545cb8219",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Add a private dashboard operation section only. Existing service objectives, budgets, schedules and alert priorities retain their exact text."
             }
           ]
         }
@@ -516211,7 +516253,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
+              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
             },
             {
               "path": "apps/api/src/crm/crm.service.ts",
@@ -516265,6 +516307,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
+            },
+            {
+              "batch": "release-0.6-api-health-by-build-revision",
+              "base_commit": "dd6b76c1a8acfa7e778b9c616742476545cb8219",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Add a private dashboard operation section only. Existing service objectives, budgets, schedules and alert priorities retain their exact text."
             }
           ],
           "hosted_load_receipt": {
@@ -516651,7 +516701,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
+              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -516697,6 +516747,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
+            },
+            {
+              "batch": "release-0.6-api-health-by-build-revision",
+              "base_commit": "dd6b76c1a8acfa7e778b9c616742476545cb8219",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Add a private dashboard operation section only. Existing service objectives, budgets, schedules and alert priorities retain their exact text."
             }
           ],
           "hosted_load_receipt": {
@@ -518401,7 +518459,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
+              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -518432,6 +518490,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
+            },
+            {
+              "batch": "release-0.6-api-health-by-build-revision",
+              "base_commit": "dd6b76c1a8acfa7e778b9c616742476545cb8219",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Add a private dashboard operation section only. Existing service objectives, budgets, schedules and alert priorities retain their exact text."
             }
           ]
         }
@@ -520692,11 +520758,11 @@
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.ts",
-              "sha256": "b241f4da9e5018dbe75ba00c2090cd7adc5d9967786409b9e9e85ef44e9dba50"
+              "sha256": "5d3321f6c1f9e513be8b4370d32a668d821bf9191be81fb389ce2428b94ac29e"
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
-              "sha256": "d5d9a8477d85e7deb354e552c15fb63b43428c3d7ed39fb6817059adea65f2a6"
+              "sha256": "ba2a865f36d50bcd294542579486fc9570f87785246923a637cd6416fa037105"
             },
             {
               "path": "apps/api/src/test/http-fixture.ts",
@@ -520717,7 +520783,18 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
-          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/private-api-monitoring-proof.json"
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/private-api-monitoring-proof.json",
+          "source_renewals": [
+            {
+              "batch": "release-0.6-api-health-by-build-revision",
+              "base_commit": "dd6b76c1a8acfa7e778b9c616742476545cb8219",
+              "paths": [
+                "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+                "apps/api/src/metrics/http-request-metrics.ts"
+              ],
+              "scope": "Publish a validated revision on the existing private registry and add its positive and negative assertions. The existing response observer, readiness, request privacy and HTTP assertions are preserved. All five compiled metrics cases passed."
+            }
+          ]
         }
       }
     },
@@ -521417,19 +521494,83 @@
         "story": "06-security-testing-observability.md#spec-487bc630b048"
       },
       "requirement": "| T-06.14.02.02 | Create API Health dashboard: RED metrics, top slow routes, error breakdown by status, correlation with deploys | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+          "apps/api/src/metrics/http-request-metrics.ts",
+          "deploy/monitoring/grafana-api-health-dashboard.json",
+          "docs/operations/service-objectives.md"
+        ],
+        "batches": [
+          "release-0.6-api-health-by-build-revision"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-grafana-queries-and-native-http-metrics",
+          "base_commit": "dd6b76c1a8acfa7e778b9c616742476545cb8219",
+          "source_evidence": [
+            {
+              "path": "Dockerfile.base",
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+            },
+            {
+              "path": "apps/api/scripts/http-test-server.cjs",
+              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+            },
+            {
+              "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+              "sha256": "ba2a865f36d50bcd294542579486fc9570f87785246923a637cd6416fa037105"
+            },
+            {
+              "path": "apps/api/src/metrics/http-request-metrics.ts",
+              "sha256": "5d3321f6c1f9e513be8b4370d32a668d821bf9191be81fb389ce2428b94ac29e"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
+              "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics.service.ts",
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+            },
+            {
+              "path": "deploy/monitoring/grafana-api-health-dashboard.json",
+              "sha256": "04ecc1fd6f85b088e01befbf5b52a23d3f8ffe02e9c721604fd597ab22da789e"
+            },
+            {
+              "path": "deploy/monitoring/staging-prometheus.yml",
+              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+            },
+            {
+              "path": "deploy/staging/deploy.sh",
+              "sha256": "7ba145e0c0effd228d0222a1ce06ceb03a6eb9b956e13fe28f715720925f890c"
+            },
+            {
+              "path": "deploy/staging/nginx.conf",
+              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
+            },
+            {
+              "path": "docs/operations/service-objectives.md",
+              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
+            }
+          ],
+          "checks": [
+            "Added the private API Health Grafana dashboard with six panels: completed-response request rate, 5xx fraction, p50/p95/p99 latency, ten slowest routes, 4xx/5xx breakdown, and observed API replicas by immutable build SHA.",
+            "Promtool 3.15.0 passed all eight exact dashboard queries and both rollout observations on the pinned monitoring image. Assertions cover separate environments and databases, merged histograms, idle intervals, zero observed errors, status breakdown and overlapping revisions. The JSON data source and non-overlapping layout were checked.",
+            "The compiled Linux API passed all five native metrics HTTP cases with all 207 migrations. It published only a valid SHA on the private scrape, omitted the series for missing or invalid values, and retained the exact completed-response, route-collapse, privacy, readiness-exclusion and metrics outage-recovery assertions.",
+            "API TypeScript, changed-file ESLint, Prettier, whitespace and exact local-to-Linux source checks passed. The dashboard reads sampled revisions and completed responses. Deployment timestamp annotation, end-to-end availability and live Grafana import and readback have separate evidence."
+          ]
+        }
       }
     },
     {
@@ -521900,7 +522041,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
+              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -521943,6 +522084,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
+            },
+            {
+              "batch": "release-0.6-api-health-by-build-revision",
+              "base_commit": "dd6b76c1a8acfa7e778b9c616742476545cb8219",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Add a private dashboard operation section only. Existing service objectives, budgets, schedules and alert priorities retain their exact text."
             }
           ]
         }
@@ -522222,7 +522371,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
+              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
             },
             {
               "path": "architecture.md",
@@ -522269,6 +522418,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "Correct the documented calendar to the first Saturday of each quarter at the existing hour. The isolation, RPO/RTO and alert procedures retain their existing evidence."
+            },
+            {
+              "batch": "release-0.6-api-health-by-build-revision",
+              "base_commit": "dd6b76c1a8acfa7e778b9c616742476545cb8219",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Add a private dashboard operation section only. Existing service objectives, budgets, schedules and alert priorities retain their exact text."
             }
           ]
         }
@@ -524827,7 +524984,7 @@
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
-              "sha256": "d5d9a8477d85e7deb354e552c15fb63b43428c3d7ed39fb6817059adea65f2a6"
+              "sha256": "ba2a865f36d50bcd294542579486fc9570f87785246923a637cd6416fa037105"
             },
             {
               "path": "apps/api/src/metrics/metrics.controller.ts",
@@ -524882,6 +525039,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-api-health-by-build-revision",
+              "base_commit": "dd6b76c1a8acfa7e778b9c616742476545cb8219",
+              "paths": [
+                "apps/api/src/metrics/http-request-metrics.integration.test.ts"
+              ],
+              "scope": "Publish a validated revision on the existing private registry and add its positive and negative assertions. The existing response observer, readiness, request privacy and HTTP assertions are preserved. All five compiled metrics cases passed."
             }
           ]
         }
@@ -917090,6 +917255,101 @@
         {
           "file": "staging-favicon.png",
           "sha256": "c07a9231b098af0214279477ce0abbfa9bf29a8188885025dbeb415e24a24fda"
+        }
+      ]
+    },
+    "release-0.6-api-health-by-build-revision": {
+      "batch": "release-0.6-api-health-by-build-revision",
+      "base_commit": "dd6b76c1a8acfa7e778b9c616742476545cb8219",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.14.02.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+        "apps/api/src/metrics/http-request-metrics.ts",
+        "deploy/monitoring/grafana-api-health-dashboard.json",
+        "docs/operations/service-objectives.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "Dockerfile.base",
+          "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+        },
+        {
+          "path": "apps/api/scripts/http-test-server.cjs",
+          "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+        },
+        {
+          "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+          "sha256": "ba2a865f36d50bcd294542579486fc9570f87785246923a637cd6416fa037105"
+        },
+        {
+          "path": "apps/api/src/metrics/http-request-metrics.ts",
+          "sha256": "5d3321f6c1f9e513be8b4370d32a668d821bf9191be81fb389ce2428b94ac29e"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
+          "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.service.ts",
+          "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+        },
+        {
+          "path": "deploy/monitoring/grafana-api-health-dashboard.json",
+          "sha256": "04ecc1fd6f85b088e01befbf5b52a23d3f8ffe02e9c721604fd597ab22da789e"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "7ba145e0c0effd228d0222a1ce06ceb03a6eb9b956e13fe28f715720925f890c"
+        },
+        {
+          "path": "deploy/staging/nginx.conf",
+          "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
+        },
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
+        }
+      ],
+      "checks": [
+        "Added the private API Health Grafana dashboard with six panels: completed-response request rate, 5xx fraction, p50/p95/p99 latency, ten slowest routes, 4xx/5xx breakdown, and observed API replicas by immutable build SHA.",
+        "Promtool 3.15.0 passed all eight exact dashboard queries and both rollout observations on the pinned monitoring image. Assertions cover separate environments and databases, merged histograms, idle intervals, zero observed errors, status breakdown and overlapping revisions. The JSON data source and non-overlapping layout were checked.",
+        "The compiled Linux API passed all five native metrics HTTP cases with all 207 migrations. It published only a valid SHA on the private scrape, omitted the series for missing or invalid values, and retained the exact completed-response, route-collapse, privacy, readiness-exclusion and metrics outage-recovery assertions.",
+        "API TypeScript, changed-file ESLint, Prettier, whitespace and exact local-to-Linux source checks passed. The dashboard reads sampled revisions and completed responses. Deployment timestamp annotation, end-to-end availability and live Grafana import and readback have separate evidence."
+      ],
+      "proof_logs": [
+        {
+          "file": "api-health-native.log",
+          "sha256": "c74bcd9ff0eb8acb877adceac277c340ce4a93d186b23a170cb5378e1147c312"
+        },
+        {
+          "file": "api-health-promtool.json",
+          "sha256": "a0365c0f24cacc6a9bf7dbef915f20d88ec301813edc1e5885aeb654e16983b4"
+        },
+        {
+          "file": "api-health-promtool.log",
+          "sha256": "9528de27c38cfec37a39f8b1e3eac1c74dd6b222741600dc3d7cbdf56ba7fb9e"
+        },
+        {
+          "file": "api-health-source.sha256",
+          "sha256": "08756f5dc2d98c1b631efbab2e5847143ad02dc807cb7f65b99eea4226cf9eb8"
+        },
+        {
+          "file": "dashboard-source.sha256",
+          "sha256": "1c9503a506a6dd97ff6d27552b82f7e17eb6970f2200571ef3614d7c1155c90a"
+        },
+        {
+          "file": "reviewed-diff.patch",
+          "sha256": "b23d2ae0d9fdbfc0e157355b763d5917df7ae3c084fcc05a03e51c54759718fb"
         }
       ]
     }

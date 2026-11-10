@@ -1,0 +1,340 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Completed API responses per second over five minutes, split by method.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "min": 0,
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (environment, database, method) (rate(barghsa_http_request_duration_seconds_count[5m]))",
+          "legendFormat": "{{method}} · {{environment}} / {{database}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "API request rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "5xx responses divided by all completed responses. A period without observed responses has no value.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "min": 0,
+          "unit": "percentunit",
+          "max": 1
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "(sum by (environment, database) (rate(barghsa_http_request_duration_seconds_count{status=~\"5..\"}[5m])) or 0 * sum by (environment, database) (rate(barghsa_http_request_duration_seconds_count[5m]))) / (sum by (environment, database) (rate(barghsa_http_request_duration_seconds_count[5m])) > 0)",
+          "legendFormat": "{{environment}} / {{database}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Server error fraction",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "p50, p95 and p99 estimated from merged histograms. Use observed request rates to interpret low-volume windows.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "min": 0,
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum by (environment, database, le) (rate(barghsa_http_request_duration_seconds_bucket[5m]))) and on (environment, database) (sum by (environment, database) (rate(barghsa_http_request_duration_seconds_count[5m])) > 0)",
+          "legendFormat": "p50 · {{environment}} / {{database}}",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (environment, database, le) (rate(barghsa_http_request_duration_seconds_bucket[5m]))) and on (environment, database) (sum by (environment, database) (rate(barghsa_http_request_duration_seconds_count[5m])) > 0)",
+          "legendFormat": "p95 · {{environment}} / {{database}}",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum by (environment, database, le) (rate(barghsa_http_request_duration_seconds_bucket[5m]))) and on (environment, database) (sum by (environment, database) (rate(barghsa_http_request_duration_seconds_count[5m])) > 0)",
+          "legendFormat": "p99 · {{environment}} / {{database}}",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "Completed response latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Up to ten route and method combinations per environment and database in each five-minute window.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "min": 0,
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "topk by (environment, database) (10, histogram_quantile(0.95, sum by (environment, database, route, method, le) (rate(barghsa_http_request_duration_seconds_bucket[5m]))) and on (environment, database, route, method) (sum by (environment, database, route, method) (rate(barghsa_http_request_duration_seconds_count[5m])) > 0))",
+          "legendFormat": "{{method}} {{route}} · {{environment}} / {{database}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Slowest routes by p95",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Completed 4xx and 5xx responses per second. 4xx includes expected validation and authorization denials.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "min": 0,
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (environment, database, status) (rate(barghsa_http_request_duration_seconds_count{status=~\"[45]..\"}[5m]))",
+          "legendFormat": "{{status}} · {{environment}} / {{database}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Responses by error status",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Compare observed revisions with the response charts during rollout. Old and new revisions can overlap. The intervals come from scrape observations.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "min": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (environment, database, revision) (barghsa_api_release_info)",
+          "legendFormat": "{{revision}} · {{environment}} / {{database}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Observed API replicas by release",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["barghsa", "api", "observability"],
+  "templating": {
+    "list": [
+      {
+        "name": "DS_PROMETHEUS",
+        "label": "Prometheus",
+        "type": "datasource",
+        "query": "prometheus",
+        "refresh": 1,
+        "current": {},
+        "options": []
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "utc",
+  "title": "Barghsa — API Health",
+  "uid": "barghsa-api-health",
+  "version": 1,
+  "weekStart": ""
+}

@@ -13,6 +13,21 @@ The [architecture reliability targets](../../architecture.md#reliability-targets
 
 Exclude rejected invalid input and expected authorization denials from availability. Count a denial of an authorized critical action caused by a service failure as a failure. Report raw request, journey and job counts with the indicators. Keep unobserved periods visible.
 
+## API health dashboard
+
+Import the API Health dashboard into private Grafana and select the Prometheus
+data source that scrapes the API. Label each scrape target with its environment
+and database and keep each API replica as a distinct target. The response panels
+use five-minute rates by method, route template and HTTP status. Error ratios
+and latency percentiles show a gap during idle periods. Compare these completed
+response measurements with the separate synthetic journey availability checks
+to account for timeouts and failed connections.
+
+The release panel counts API replicas by the immutable source revision observed
+at each scrape. Compare it with request and error trends during rollout or
+rollback. Several revisions can appear during a rolling update. Use deployment
+receipts for exact deployment timestamps. [API Health dashboard](../../deploy/monitoring/grafana-api-health-dashboard.json).
+
 ## Latency budgets for release rehearsal
 
 Use these starting budgets per route and query class. The existing 300 ms

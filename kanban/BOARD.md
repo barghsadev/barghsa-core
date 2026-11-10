@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1205 | Accepted with unchanged source bindings. |
-| verify | 96 | Existing work may be complete; inspect evidence before building. |
+| done | 1206 | Accepted with unchanged source bindings. |
+| verify | 95 | Existing work may be complete; inspect evidence before building. |
 | partial | 59 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1373,7 +1373,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.14.01.07` | done | Recorded batch work | Instrument worker metrics: job processing rate, lease expiry, retry count, dead-letter count |
 | `06-security-testing-observability.md#T-06.14.01.08` | done | Recorded batch work | Instrument AI metrics: request count, token usage, latency, cost per model, concurrency |
 | `06-security-testing-observability.md#T-06.14.02.01` | verify | Inventory needed | Create Executive SLO dashboard: availability, latency (p95/p99), error budget, burn rate |
-| `06-security-testing-observability.md#T-06.14.02.02` | verify | Inventory needed | Create API Health dashboard: RED metrics, top slow routes, error breakdown by status, correlation with deploys |
+| `06-security-testing-observability.md#T-06.14.02.02` | done | Recorded batch work | Create API Health dashboard: RED metrics, top slow routes, error breakdown by status, correlation with deploys |
 | `06-security-testing-observability.md#T-06.14.02.03` | done | Recorded batch work | Create PostgreSQL/Pool dashboard: connection pool, query throughput, slow queries, replication lag, cache hit ratio |
 | `06-security-testing-observability.md#T-06.14.02.04` | done | Recorded batch work | Create Worker/Outbox dashboard: queue depth, oldest age, processing rate, retries, dead-letter count |
 | `06-security-testing-observability.md#T-06.14.02.05` | verify | Inventory needed | Create External Providers dashboard: latency, error rate, circuit-breaker state, quota usage |

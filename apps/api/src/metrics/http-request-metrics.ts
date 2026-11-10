@@ -9,6 +9,15 @@ const duration = new promClient.Histogram({
   buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10],
 });
 
+const revision = process.env.BARGHSA_RELEASE_SHA ?? '';
+if (/^[a-f0-9]{40}$/.test(revision)) {
+  new promClient.Gauge({
+    name: 'barghsa_api_release_info',
+    help: 'Source revision of the built API process',
+    labelNames: ['revision'] as const,
+  }).set({ revision }, 1);
+}
+
 export const observeHttpRequest: RequestHandler = (request, response, next) => {
   if (apiPath.test(request.path)) {
     const started = performance.now();

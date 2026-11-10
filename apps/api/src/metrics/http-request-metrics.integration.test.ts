@@ -1,10 +1,21 @@
-import { afterAll, beforeAll, expect, it } from 'vitest';
+import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let fixture: Awaited<ReturnType<typeof startHttpFixture>>;
+const revision = 'a3'.repeat(20);
+
+async function startWithRevision(value: string | undefined) {
+  const previous = process.env.BARGHSA_RELEASE_SHA;
+  vi.stubEnv('BARGHSA_RELEASE_SHA', value);
+  try {
+    return await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  } finally {
+    vi.stubEnv('BARGHSA_RELEASE_SHA', previous);
+  }
+}
 
 beforeAll(async () => {
-  fixture = await startHttpFixture(process.env.TEST_DATABASE_URL!);
+  fixture = await startWithRevision(revision);
 }, 60_000);
 afterAll(async () => {
   await fixture?.close();
@@ -48,4 +59,20 @@ it('counts completed HTTP outcomes with route templates and keeps request data o
     'barghsa_http_request_duration_seconds_bucket{le="+Inf",route="/api/profiles/:profileId/addresses",method="GET",status="401"} 2'
   );
   expect(metrics).not.toMatch(/private-profile|private-query|private-path|private-malformed-body/);
+  expect(metrics).toContain(`barghsa_api_release_info{revision="${revision}"} 1\n`);
 });
+
+it.each(['private-invalid-release', undefined])(
+  'omits the release series for an invalid or absent build revision (%s)',
+  async (value) => {
+    const isolated = await startWithRevision(value);
+    try {
+      const response = await fetch(`${isolated.base}/metrics`);
+      expect(response.status).toBe(200);
+      expect(await response.text()).not.toMatch(/barghsa_api_release_info|private-invalid-release/);
+    } finally {
+      await isolated.close();
+    }
+  },
+  40_000
+);
