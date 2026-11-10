@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T00:54:59+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T01:00:58+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1083 | Accepted with unchanged source bindings. |
-| verify | 242 | Existing work may be complete; inspect evidence before building. |
+| done | 1086 | Accepted with unchanged source bindings. |
+| verify | 239 | Existing work may be complete; inspect evidence before building. |
 | partial | 36 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1050,7 +1050,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-06.01.02` | verify | Earlier deferred | Create username validation and normalization helpers |
 | `01-platform-infrastructure.md#T-06.01.03` | verify | Earlier deferred | Create password validation with strength meter logic |
 | `01-platform-infrastructure.md#T-06.01.04` | done | Earlier acceptance_verified | Create stable error code enum with HTTP status mapping |
-| `01-platform-infrastructure.md#T-06.01.05` | verify | Earlier deferred | Create pagination helper schemas |
+| `01-platform-infrastructure.md#T-06.01.05` | done | Earlier deferred | Create pagination helper schemas |
 | `01-platform-infrastructure.md#T-06.02.01` | verify | Earlier deferred | Initialize `packages/i18n` with message dictionary structure |
 | `01-platform-infrastructure.md#T-06.02.02` | done | Earlier deferred | Create Jalali calendar date utilities |
 | `01-platform-infrastructure.md#T-06.02.03` | done | Earlier acceptance_verified | Create timezone-aware date/time display utilities |
@@ -1163,9 +1163,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.03.03.04` | verify | Inventory needed | Write integration tests: dual-approval flow, override flow, denial flow, alert triggers |
 | `06-security-testing-observability.md#T-06.04.01.01` | verify | Inventory needed | Audit existing Zod schemas for completeness: types, lengths, ranges, enums, pagination caps |
 | `06-security-testing-observability.md#T-06.04.01.02` | verify | Inventory needed | Add `z.strictObject()` or `stripUnknown: false` to all command DTOs to reject unknown fields |
-| `06-security-testing-observability.md#T-06.04.01.03` | verify | Inventory needed | Implement reusable pagination validation: max limit, cursor/offset constraints |
+| `06-security-testing-observability.md#T-06.04.01.03` | done | Recorded batch work | Implement reusable pagination validation: max limit, cursor/offset constraints |
 | `06-security-testing-observability.md#T-06.04.01.04` | verify | Inventory needed | Add Zod refinement for business-rule validation (e.g. date ranges, amount limits) |
-| `06-security-testing-observability.md#T-06.04.01.05` | verify | Inventory needed | Write unit tests: valid request, invalid type, out of range, extra field, pagination abuse |
+| `06-security-testing-observability.md#T-06.04.01.05` | done | Recorded batch work | Write unit tests: valid request, invalid type, out of range, extra field, pagination abuse |
 | `06-security-testing-observability.md#T-06.04.02.01` | verify | Inventory needed | Audit all database access for raw SQL; flag any untrusted interpolation |
 | `06-security-testing-observability.md#T-06.04.02.02` | verify | Inventory needed | Implement allowlist-based field mapping for dynamic `ORDER BY` / `WHERE` fields |
 | `06-security-testing-observability.md#T-06.04.02.03` | verify | Inventory needed | Add lint rule: forbid raw SQL interpolation of non-literal strings |

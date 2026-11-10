@@ -15,6 +15,7 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
+import { offsetPaginationQuerySchema } from '@barghsa/shared/pagination';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
@@ -23,20 +24,7 @@ import { FailedJobsService, type FailedJobDto } from './failed-jobs.service.js';
 import { BACKGROUND_JOB_STATUSES, BACKGROUND_JOB_TYPES } from '@barghsa/shared/admin';
 
 /** Strict validation for the list view's limit/offset query params. */
-const ListQuerySchema = z.object({
-  limit: z
-    .string()
-    .regex(/^[1-9]\d*$/)
-    .transform(Number)
-    .pipe(z.number().int().min(1).max(200))
-    .optional(),
-  offset: z
-    .string()
-    .regex(/^\d+$/)
-    .transform(Number)
-    .pipe(z.number().int().min(0).max(1000000))
-    .optional(),
-});
+const ListQuerySchema = offsetPaginationQuerySchema(200);
 
 /** Strict validation for the bulk-retry body. */
 const BulkRetrySchema = z

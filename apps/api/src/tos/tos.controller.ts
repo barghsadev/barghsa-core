@@ -15,6 +15,7 @@ import { ApiOperation, ApiQuery, ApiResponse, ApiTags, ApiBody, ApiParam } from 
 
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { cursorPaginationSchema } from '@barghsa/shared/pagination';
 import { TosService, type CurrentTosResponse } from './tos.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
@@ -59,12 +60,13 @@ export class TosController {
   })
   @ApiResponse({ status: 400, description: 'Invalid history cursor' })
   publishedHistory(@Query('before') before?: string) {
-    if (before !== undefined && !z.uuid().safeParse(before).success)
+    const query = cursorPaginationSchema.safeParse({ cursor: before });
+    if (!query.success)
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },
         400
       );
-    return this.tosService.publishedHistory(before);
+    return this.tosService.publishedHistory(query.data.cursor);
   }
 
   /**

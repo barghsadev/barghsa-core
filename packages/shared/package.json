@@ -250,6 +250,16 @@
         "default": "./dist/cjs/finance/invoices.js"
       }
     },
+    "./pagination": {
+      "import": {
+        "types": "./dist/pagination/index.d.ts",
+        "default": "./dist/pagination/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/pagination/index.d.ts",
+        "default": "./dist/cjs/pagination/index.js"
+      }
+    },
     "./catalogue-query": {
       "import": {
         "types": "./dist/catalogue-query/index.d.ts",
