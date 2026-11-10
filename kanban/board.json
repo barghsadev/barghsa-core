@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T09:48:03+00:00",
-  "source_commit": "e9e42d7239e72cc0fa5a4567d519a2cf41d3cbeb",
+  "updated": "2026-11-10T09:58:38+00:00",
+  "source_commit": "98dd4ecead556ce4ff9e55e3cca6b7d3308baf79",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5544,7 +5544,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read all 40 exact outcomes of actual scheduled run 42789410833. The run reaches browser assertions, and the first catalogue, tooltip, onboarding and form cases have targeted corrections. Staff invoice and wallet receipt previews, consultation and role cases still require diagnosis and exact checks.",
+        "Read all 40 exact outcomes of actual scheduled run 42789410833. Targeted catalogue, tooltip, onboarding, form and staff browser corrections have passing local evidence. Remaining scheduled WebKit dialog geometry and scrub interaction failures require diagnosis and exact checks.",
         "Bind current critical registration, MFA, legal onboarding, electricity and wallet, saving, solar construction and admin browser journeys to the accepted release source."
       ],
       "owner": null,
@@ -5605,7 +5605,8 @@
           "release-0.6-nightly-documents-timeout-repeat",
           "release-0.6-nightly-critical-browser-journeys",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": null
       }
@@ -5793,7 +5794,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify actual nightly browser outcome and quarantine receipts. Run 42789410833 recorded deterministic failures and flakes, and the first affected cases have local replay evidence. Complete the remaining browser corrections and preserve the strict flake guard.",
+        "Verify the complete scheduled outcome and quarantine receipts. Run 42789410833 recorded deterministic failures and flakes. The first cohorts and staff receipt, consultation and role cases have passing local evidence. Complete the remaining browser corrections and preserve the strict flake guard.",
         "Record the strict promotion report from the exact accepted candidate in the production approval package. The CLI and manual CI release path enforce the guard and the synthetic controls passed."
       ],
       "owner": null,
@@ -5858,7 +5859,8 @@
           "release-0.6-nightly-hosted-portable-browser-captures",
           "release-0.6-nightly-documents-timeout-repeat",
           "release-0.6-nightly-critical-browser-journeys",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": null
       }
@@ -14001,7 +14003,7 @@
       "launch_required": true,
       "remaining": [
         "Read back a complete actual scheduled 40-shard run across Chromium, Firefox, WebKit and both mobile projects. GitHub started run 42789410833 on November 10 at 09:17 UTC for the configured 02:00 UTC schedule. All 40 jobs were created and complete outcomes are pending.",
-        "Read back the advisory, Drizzle drift, navigation and seven-day outcome reports from an actual scheduled run. The rollup publishes internally in GitHub Actions and reports missing outcomes explicitly.",
+        "The actual scheduled job 129738699584 verified dependency advisories, Drizzle drift and 178 literal/template navigation destinations. Read the completed seven-day outcome report. The rollup publishes internally in GitHub Actions and reports missing outcomes explicitly.",
         "Verify runtime-generated navigation destinations against current complete journey evidence and configure an authorized dedicated results receiver. The registered shell and literal/template JSX links have local evidence."
       ],
       "owner": null,
@@ -14048,7 +14050,8 @@
           "release-0.6-nightly-hosted-portable-browser-captures",
           "release-0.6-nightly-documents-timeout-repeat",
           "release-0.6-nightly-critical-browser-journeys",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": null
       }
@@ -203947,7 +203950,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -204227,7 +204231,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -205924,7 +205928,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -206204,7 +206209,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -262776,7 +262781,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -262968,7 +262974,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -263929,7 +263935,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -264121,7 +264128,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -265078,7 +265085,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -265270,7 +265278,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -266226,7 +266234,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -266418,7 +266427,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -267375,7 +267384,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -267567,7 +267577,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -268524,7 +268534,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -268716,7 +268727,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -269678,7 +269689,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -269870,7 +269882,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -270830,7 +270842,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -271022,7 +271035,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -271980,7 +271993,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -272172,7 +272186,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -273133,7 +273147,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -273325,7 +273340,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -274288,7 +274303,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -274480,7 +274496,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -275438,7 +275454,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -275630,7 +275647,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -276587,7 +276604,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -276779,7 +276797,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -277737,7 +277755,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -277929,7 +277948,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -278887,7 +278906,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -279079,7 +279099,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -280038,7 +280058,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -280230,7 +280251,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -434031,7 +434052,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "accepted-all-applicable-order-review-wallet-disclosure",
@@ -434191,7 +434213,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -490879,7 +490901,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -490963,11 +490986,11 @@
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
-              "sha256": "c39fd83cb68633349c5b1524a070d534185f51befc4fd944c45b4c08983ecf1e"
+              "sha256": "0977f5616fdd903e2554f3d36c0e20361d8cde582896c6e4766c3a829792b23a"
             },
             {
               "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
-              "sha256": "418b0bbb7a94dd3a185a781e565e52f978968b9e49b111436eb5a03d5f154c57"
+              "sha256": "3ce84e6d9f8d5a240fd6f714dc8aade1c06cdbd52635a4d1df2357518838e927"
             },
             {
               "path": "apps/web/src/components/InvoiceBankReceiptQueue.test.tsx",
@@ -520258,7 +520281,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -520514,7 +520538,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -522027,7 +522051,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-transaction-provider-static-guard",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -522503,7 +522528,7 @@
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
-              "sha256": "c39fd83cb68633349c5b1524a070d534185f51befc4fd944c45b4c08983ecf1e"
+              "sha256": "0977f5616fdd903e2554f3d36c0e20361d8cde582896c6e4766c3a829792b23a"
             },
             {
               "path": "apps/web/e2e/ui-navigation.spec.ts",
@@ -523447,7 +523472,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -523499,7 +523525,7 @@
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
-              "sha256": "c39fd83cb68633349c5b1524a070d534185f51befc4fd944c45b4c08983ecf1e"
+              "sha256": "0977f5616fdd903e2554f3d36c0e20361d8cde582896c6e4766c3a829792b23a"
             },
             {
               "path": "apps/web/e2e/staff-receipt-rejection-forms.spec.ts",
@@ -524357,7 +524383,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524409,7 +524436,7 @@
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
-              "sha256": "c39fd83cb68633349c5b1524a070d534185f51befc4fd944c45b4c08983ecf1e"
+              "sha256": "0977f5616fdd903e2554f3d36c0e20361d8cde582896c6e4766c3a829792b23a"
             },
             {
               "path": "apps/web/e2e/staff-receipt-rejection-forms.spec.ts",
@@ -525208,7 +525235,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -525260,7 +525288,7 @@
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
-              "sha256": "c39fd83cb68633349c5b1524a070d534185f51befc4fd944c45b4c08983ecf1e"
+              "sha256": "0977f5616fdd903e2554f3d36c0e20361d8cde582896c6e4766c3a829792b23a"
             },
             {
               "path": "apps/web/e2e/staff-receipt-rejection-forms.spec.ts",
@@ -526109,7 +526137,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526365,7 +526394,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -526975,7 +527004,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-transaction-provider-static-guard",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -527451,7 +527481,7 @@
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
-              "sha256": "c39fd83cb68633349c5b1524a070d534185f51befc4fd944c45b4c08983ecf1e"
+              "sha256": "0977f5616fdd903e2554f3d36c0e20361d8cde582896c6e4766c3a829792b23a"
             },
             {
               "path": "apps/web/e2e/ui-navigation.spec.ts",
@@ -538120,7 +538150,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -538244,7 +538275,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -541436,7 +541467,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -541640,7 +541672,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -542082,7 +542114,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -542326,7 +542359,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -545715,7 +545748,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545791,7 +545825,7 @@
             },
             {
               "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
-              "sha256": "418b0bbb7a94dd3a185a781e565e52f978968b9e49b111436eb5a03d5f154c57"
+              "sha256": "3ce84e6d9f8d5a240fd6f714dc8aade1c06cdbd52635a4d1df2357518838e927"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
@@ -546171,7 +546205,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546247,7 +546282,7 @@
             },
             {
               "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
-              "sha256": "418b0bbb7a94dd3a185a781e565e52f978968b9e49b111436eb5a03d5f154c57"
+              "sha256": "3ce84e6d9f8d5a240fd6f714dc8aade1c06cdbd52635a4d1df2357518838e927"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
@@ -549139,7 +549174,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -549283,7 +549319,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -549673,7 +549709,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549749,7 +549786,7 @@
             },
             {
               "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
-              "sha256": "418b0bbb7a94dd3a185a781e565e52f978968b9e49b111436eb5a03d5f154c57"
+              "sha256": "3ce84e6d9f8d5a240fd6f714dc8aade1c06cdbd52635a4d1df2357518838e927"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
@@ -550691,7 +550728,8 @@
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551027,7 +551065,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -551553,7 +551591,8 @@
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551889,7 +551928,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -552945,7 +552984,8 @@
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553281,7 +553321,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -577758,7 +577798,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -578226,7 +578267,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -579653,7 +579694,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -580121,7 +580163,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -581549,7 +581591,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582017,7 +582060,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -583414,7 +583457,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583882,7 +583926,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -585305,7 +585349,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585773,7 +585818,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -587205,7 +587250,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587673,7 +587719,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -589078,7 +589124,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -589546,7 +589593,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -590915,7 +590962,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -591383,7 +591431,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -592752,7 +592800,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -593220,7 +593269,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -594590,7 +594639,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -595058,7 +595108,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -596427,7 +596477,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -596895,7 +596946,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -602155,7 +602206,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -602711,11 +602763,11 @@
             },
             {
               "path": "apps/web/e2e/staff-directory-tables.spec.ts",
-              "sha256": "f9dc0de525bcd830b232f7da1d9e9af0a5fc4975f4b18a7d553983b659205b3e"
+              "sha256": "ab7ccdea5389fddf8c7f729be602b0a3263bcf76f45fc3e79f9ea005f70dd5c4"
             },
             {
               "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
-              "sha256": "c39fd83cb68633349c5b1524a070d534185f51befc4fd944c45b4c08983ecf1e"
+              "sha256": "0977f5616fdd903e2554f3d36c0e20361d8cde582896c6e4766c3a829792b23a"
             },
             {
               "path": "apps/web/e2e/staff-operation-tables.spec.ts",
@@ -602747,7 +602799,7 @@
             },
             {
               "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
-              "sha256": "418b0bbb7a94dd3a185a781e565e52f978968b9e49b111436eb5a03d5f154c57"
+              "sha256": "3ce84e6d9f8d5a240fd6f714dc8aade1c06cdbd52635a4d1df2357518838e927"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -604139,7 +604191,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -626297,7 +626349,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -626553,7 +626606,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -631037,7 +631090,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
@@ -631484,7 +631538,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -632368,7 +632422,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -632836,7 +632891,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -634201,7 +634256,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -634669,7 +634725,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -636034,7 +636090,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -636502,7 +636559,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -637867,7 +637924,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -638335,7 +638393,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -639700,7 +639758,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -640168,7 +640227,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -641533,7 +641592,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -642001,7 +642061,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -643366,7 +643426,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -643834,7 +643895,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -672151,7 +672212,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -672447,7 +672509,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -673300,7 +673362,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -673596,7 +673659,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -674449,7 +674512,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -674745,7 +674809,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -675601,7 +675665,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -675897,7 +675962,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -676753,7 +676818,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -677049,7 +677115,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -677932,7 +677998,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -678228,7 +678295,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -679080,7 +679147,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -679376,7 +679444,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -680228,7 +680296,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -680524,7 +680593,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -681377,7 +681446,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -681673,7 +681743,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -682544,7 +682614,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -682840,7 +682911,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -683694,7 +683765,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -683990,7 +684062,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -716144,7 +716216,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -716440,7 +716513,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -717291,7 +717364,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -717587,7 +717661,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -718438,7 +718512,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -718734,7 +718809,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -719585,7 +719660,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -719881,7 +719957,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -724291,7 +724367,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -724623,7 +724700,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -725145,7 +725222,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -725477,7 +725555,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -726001,7 +726079,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -726333,7 +726412,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -726855,7 +726934,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -727187,7 +727267,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -727709,7 +727789,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -728041,7 +728122,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -728567,7 +728648,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -728899,7 +728981,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -729425,7 +729507,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -729757,7 +729840,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -730279,7 +730362,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -730611,7 +730695,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -731133,7 +731217,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -731465,7 +731550,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -731988,7 +732073,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -732320,7 +732406,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -732848,7 +732934,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -733180,7 +733267,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -753550,7 +753637,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -757416,7 +757503,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ]
       }
     },
@@ -766070,7 +766158,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -767069,7 +767157,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-scheduled-staff-browser-corrections"
         ]
       }
     },
@@ -767985,7 +768074,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "ccb46e5cf22667a6ff7f81fbf8b5800d5a43bc4ffa4ddd2f7ad8a18c55f2f02b"
+              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -769217,7 +769306,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ]
       }
     },
@@ -769322,7 +769412,7 @@
       "launch_required": true,
       "remaining": [
         "Reconcile every epic-01 and epic-06 criterion with current source and operational evidence. Apply the approved direct-main workflow while preserving all production gates.",
-        "Finish the full exact candidate browser matrix, source coverage and receipt review. The first targeted corrections from scheduled run 42789410833 passed locally. Remaining scheduled failures include staff receipt previews, consultation controls and role comparisons.",
+        "Finish the full exact candidate browser matrix, source coverage and receipt review. Targeted local staff receipt, consultation and role cases passed. Remaining scheduled WebKit failures and exact release performance evidence are open.",
         "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
@@ -769434,7 +769524,8 @@
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-ai-and-payment-transport-boundaries",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-scheduled-staff-browser-corrections"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -876638,6 +876729,86 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-42789410833",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "450e4220cb4868b43730ea769ee2519e5f7f958fff27533d889f9e16a859bcc1"
+    },
+    "release-0.6-scheduled-staff-browser-corrections": {
+      "batch": "release-0.6-scheduled-staff-browser-corrections",
+      "base_commit": "98dd4ecead556ce4ff9e55e3cca6b7d3308baf79",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/staff-directory-tables.spec.ts",
+        "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
+        "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
+        "apps/web/src/pages/AdminConsultationsPage.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "d8fd9f966e5488307a2e91535b326ff64960f2d8c7f433e7a100c53089dfb1c2"
+        },
+        {
+          "path": "apps/web/e2e/route-presentation.ts",
+          "sha256": "3b8b1e8ea1c428bea8034336170811dd33171a51c028ece2fbabe6b2484f259b"
+        },
+        {
+          "path": "apps/web/e2e/staff-directory-tables.spec.ts",
+          "sha256": "ab7ccdea5389fddf8c7f729be602b0a3263bcf76f45fc3e79f9ea005f70dd5c4"
+        },
+        {
+          "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
+          "sha256": "0977f5616fdd903e2554f3d36c0e20361d8cde582896c6e4766c3a829792b23a"
+        },
+        {
+          "path": "apps/web/e2e/staff-operation-tables.spec.ts",
+          "sha256": "9b2bbca8cf4640b0d2d2072bab38d1596a7b6c4d13690a74d691e6ec238af039"
+        },
+        {
+          "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
+          "sha256": "3ce84e6d9f8d5a240fd6f714dc8aade1c06cdbd52635a4d1df2357518838e927"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
+          "sha256": "56d348c4b3b2ea8c2aeccd89421c4e149f1b28e4f57d94b65d1faf20e47b00c7"
+        },
+        {
+          "path": "apps/web/src/components/StaffReceiptAttachmentPreview.tsx",
+          "sha256": "c2efe94d3776b53df163454361f8966e1bf87da70d447e459783ff0933339c82"
+        },
+        {
+          "path": "apps/web/src/lib/documents.ts",
+          "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+        },
+        {
+          "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
+          "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+        },
+        {
+          "path": "apps/web/src/pages/AdminRolesPage.tsx",
+          "sha256": "e64bd84be187c538f8d071841dcc0683dd15527e3e58447e59bac1f3cad7e34b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "5fee160ba3fc78dc9a28754117ea75938e7c02b4496d55c2ab6d9266e71cd67a"
+        }
+      ],
+      "checks": [
+        "Scheduled Mobile Chrome shard 7 on exact main 55753b1c recorded 347 expected, 12 unexpected and two flaky outcomes without runner errors. Both finance screens correctly rejected relative fixture URLs at the existing signed HTTP(S) boundary. The corrected absolute test URLs preserve the exact link and same-origin raster preview assertions.",
+        "The production browser reproduced consultation main overflow of 7 px at 320 px. The explicit single grid track on narrow viewports fits the content while preserving the two-column desktop layout. The existing viewport, 44 px filter targets, localization, accessibility, no extra requests/writes and reason draft assertions passed.",
+        "The role test now awaits one grant after selecting the invoices module before checking its existing unchecked state. The disabled grants, breakpoint continuity and revoked catalogue assertions remain in the test.",
+        "Chromium and Mobile Chrome produced passing evidence for all 28 targeted cases. The first replay passed 26 and hit output storage exhaustion in the two English light consultation cases. Both passed in a separate RAM-backed retry without changing source or assertions. The four focused staff and receipt unit suites passed 71 tests. Production web build, typecheck, focused lint, formatting and diff checks passed.",
+        "The actual scheduled advisory and contract job passed with zero high or critical advisories, no Drizzle drift and 178 checked literal/template destinations. The complete browser matrix and rollup remain pending. Earlier exact preflight 232d3c4d did not pass the customer-history populated-render check. The 2.5 second budget still applies."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-42789410833",
+      "source_scope_proof": "staff-source-scope-proof.json",
+      "source_scope_proof_sha256": "97e70381b9ca847099e633077c74a86239d4be4e4f7089f202ce0d29742072b4"
     }
   },
   "historical_improvements": [

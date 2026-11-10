@@ -172,7 +172,9 @@ for (const locale of ['en', 'fa'] as const) {
     }
     const module = page.getByRole('combobox', { name: label('compare.module'), exact: true });
     await module.selectOption('invoices');
-    await expect(rows.nth(1).getByRole('checkbox')).not.toBeChecked();
+    const invoiceGrant = rows.nth(1).getByRole('checkbox');
+    await expect(invoiceGrant).toHaveCount(1);
+    await expect(invoiceGrant).not.toBeChecked();
     await page.setViewportSize({ width: 1100, height: 900 });
     await expect(module).toHaveValue('invoices');
     await expect(page.getByRole('table').getByRole('rowheader')).toHaveCount(3);

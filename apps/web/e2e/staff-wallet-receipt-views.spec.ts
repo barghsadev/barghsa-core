@@ -21,7 +21,7 @@ const receipt = {
   paymentDate: '2026-09-01',
   submittedAt: '2026-09-01T23:30:00.123456Z',
   attachmentKey: 'receipts/bank.png',
-  attachmentUrl: '/mock/bank-receipt.png?signed=1',
+  attachmentUrl: 'https://receipts.example.test/bank-receipt.png?signed=1',
   verificationTimeline: {
     events: [{ state: 'submitted', occurredAt: '2026-09-01T23:30:00.123456Z' }],
     awaiting: 'review',

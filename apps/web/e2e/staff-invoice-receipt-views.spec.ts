@@ -21,7 +21,7 @@ const receipt = {
   payerReference: 'BANK-REF',
   customerNote: null,
   submittedAt: stamp,
-  attachmentUrl: '/mock/invoice-receipt.png?signed=1',
+  attachmentUrl: 'https://receipts.example.test/invoice-receipt.png?signed=1',
   attachmentKey: 'receipts/invoice.png',
   canConfirm: false,
   canReject: true,
