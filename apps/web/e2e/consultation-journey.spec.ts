@@ -1,6 +1,9 @@
+import { createHash } from 'node:crypto';
 import { tConsultation as consultationCopy } from '@barghsa/i18n/consultation';
 import { t as appCopy } from '@barghsa/i18n/app';
 import { confirmationText } from '@barghsa/i18n/confirmation';
+import { tWalletInvoicePayment as walletCopy } from '@barghsa/i18n/wallet-invoice-payment';
+import type { WalletPaymentReviewData } from '@barghsa/shared/finance';
 import { fullNavigation } from './navigation-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -45,6 +48,7 @@ const profileId = '11111111-1111-4111-8111-111111111111';
 const productId = '22222222-2222-4222-8222-222222222222';
 const requestId = '33333333-3333-4333-8333-333333333333';
 const invoiceId = '44444444-4444-4444-8444-444444444444';
+const transactionId = '55555555-5555-4555-8555-555555555555';
 const submittedAt = '2026-09-23T10:00:00.000Z';
 const title = { en: 'Energy consultation', fa: 'مشاوره انرژی' };
 
@@ -81,6 +85,7 @@ for (const locale of ['en', 'fa'] as const)
     let offerReads = 0;
     const offerDecisions: Array<'accept' | 'decline'> = [];
     const acceptWrites: unknown[] = [];
+    const walletPayments: unknown[] = [];
     const offerReview = (decision: 'accept' | 'decline') => ({
       schemaVersion: 1,
       hash: (decision === 'accept' ? 'b' : 'c').repeat(64),
@@ -308,8 +313,129 @@ for (const locale of ['en', 'fa'] as const)
       }
       return route.fulfill({ json: offerReview(decision) });
     });
+    await page.route(`**/api/invoices/${invoiceId}`, (route) => {
+      if (!offer || !acceptedAt) return route.fulfill({ status: 404, json: {} });
+      const paid = invoiceState === 'Paid';
+      const invoice = {
+        invoiceId,
+        role: 'original',
+        state: invoiceState,
+        totalAmount: offer.fee,
+        paidAmount: paid ? offer.fee : '0',
+        refundedAmount: '0',
+        accountingAmount: offer.fee,
+        adjustmentKind: null,
+        issuedAt: submittedAt,
+        payableFrom: submittedAt,
+        dueAt: offer.validUntil,
+        cancelledAt: null,
+        createdAt: submittedAt,
+        replacesInvoiceId: null,
+        adjustmentForInvoiceId: null,
+        explanation: null,
+        lines: [],
+      };
+      return route.fulfill({
+        json: {
+          viewedInvoiceId: invoiceId,
+          originalInvoiceId: invoiceId,
+          consultationId: requestId,
+          invoice,
+          chain: [invoice],
+          payments: paid
+            ? [
+                {
+                  id: transactionId,
+                  source: 'wallet',
+                  amount: offer.fee,
+                  state: 'Confirmed',
+                  createdAt: submittedAt,
+                },
+              ]
+            : [],
+          bankReceipts: [],
+          refunds: [],
+        },
+      });
+    });
+    const walletReview = () => {
+      const paid = invoiceState === 'Paid';
+      const availableBalance = paid ? '400000' : '900000';
+      const data: WalletPaymentReviewData = {
+        currency: 'IRR',
+        profile: { id: profileId, title: 'Buyer Example', type: 'INDIVIDUAL' },
+        invoice: {
+          id: invoiceId,
+          state: invoiceState,
+          orderId: null,
+          serviceType: 'consultation',
+          issuedAt: submittedAt,
+          payableFrom: submittedAt,
+          dueAt: offer!.validUntil,
+          totalAmount: offer!.fee,
+          paidAmount: paid ? offer!.fee : '0',
+          remainingAmount: paid ? '0' : offer!.fee,
+        },
+        lines: [],
+        totals: null,
+        payment: {
+          source: 'wallet',
+          availableBefore: availableBalance,
+          availableAfter: '400000',
+        },
+        contracts: [],
+        cancellation: 'separate_review_required',
+      };
+      return {
+        schemaVersion: 1,
+        scope: { action: 'invoice.wallet-payment', profileId, resourceId: invoiceId },
+        data,
+        hash: createHash('sha256').update(JSON.stringify(data)).digest('hex'),
+      };
+    };
+    await page.route(`**/api/invoices/${invoiceId}/wallet-payment`, (route) => {
+      if (!offer || !acceptedAt) return route.fulfill({ status: 404, json: {} });
+      const review = walletReview();
+      if (route.request().method() === 'GET')
+        return route.fulfill({
+          json: {
+            invoiceId,
+            profileId,
+            remainingAmount: review.data.invoice.remainingAmount,
+            availableBalance: review.data.payment.availableBefore,
+            canPay: invoiceState === 'Unpaid',
+            review,
+          },
+        });
+      expect(route.request().method()).toBe('POST');
+      expect(route.request().headers()['x-csrf-token']).toBe('consultation-wallet-csrf');
+      expect(invoiceState).toBe('Unpaid');
+      expect(status).toBe('offer_pending');
+      const body = route.request().postDataJSON() as Record<string, unknown>;
+      expect(body).toEqual({
+        idempotencyKey: expect.stringMatching(/^[a-f0-9-]{36}$/),
+        expectedRemainingAmount: '500000',
+        expectedReviewHash: review.hash,
+      });
+      walletPayments.push(body);
+      invoiceState = 'Paid';
+      status = 'offer_accepted';
+      history.push({ status, actor_type: 'customer', reason: null, created_at: submittedAt });
+      return route.fulfill({
+        json: {
+          invoiceId,
+          profileId,
+          idempotencyKey: body.idempotencyKey,
+          state: invoiceState,
+          amount: offer.fee,
+          walletTransactionId: transactionId,
+          reviewHash: review.hash,
+        },
+      });
+    });
     await page.route(`**/api/admin/consultations/requests/${requestId}/complete`, (route) => {
       expect(status).toBe('offer_accepted');
+      expect(invoiceState).toBe('Paid');
       expect(route.request().postDataJSON()).toEqual({ reason: 'Consultation delivered' });
       status = 'completed';
       history.push({
@@ -514,14 +640,38 @@ for (const locale of ['en', 'fa'] as const)
       })
     ).toHaveAttribute('href', `/invoices/${invoiceId}`);
     await page.goto('/consultations');
+    const viewInvoice = page.getByRole('link', { name: consultationCopy('viewInvoice', locale) });
+    await expect(viewInvoice).toHaveAttribute('href', `/invoices/${invoiceId}`);
+    const paymentHash = walletReview().hash;
+    await page.context().addCookies([
+      {
+        name: 'barghsa_csrf',
+        value: 'consultation-wallet-csrf',
+        url: new URL(page.url()).origin,
+      },
+    ]);
+    await viewInvoice.click();
+    const wallet = page.locator('#wallet-invoice-payment');
+    await wallet.getByRole('button', { name: walletCopy('pay', locale), exact: true }).click();
+    const confirmWallet = page.getByRole('dialog').getByRole('button', {
+      name: appCopy('team.confirm', locale),
+      exact: true,
+    });
+    await expect(confirmWallet).toBeDisabled();
+    expect(walletPayments).toHaveLength(0);
+    await approveRiskConfirmation(page, locale, 'financial');
+    await confirmWallet.click();
+    await expect(wallet.getByRole('status')).toContainText(transactionId);
+    expect(walletPayments).toEqual([
+      {
+        idempotencyKey: expect.stringMatching(/^[a-f0-9-]{36}$/),
+        expectedRemainingAmount: '500000',
+        expectedReviewHash: paymentHash,
+      },
+    ]);
     await expect(
-      page.getByRole('link', { name: consultationCopy('viewInvoice', locale) })
-    ).toHaveAttribute('href', `/invoices/${invoiceId}`);
-
-    // Invoice settlement is covered by finance tests; this fixture resumes at its confirmed result.
-    invoiceState = 'Paid';
-    status = 'offer_accepted';
-    history.push({ status, actor_type: 'customer', reason: null, created_at: submittedAt });
+      page.getByRole('progressbar', { name: appCopy('invoices.payment.progress', locale) })
+    ).toHaveAttribute('aria-valuenow', '100');
     operatingContext = 'staff';
     await page.goto('/admin/consultations');
     await page.getByRole('button', { name: new RegExp(`${title[locale]}.*Buyer Example`) }).click();

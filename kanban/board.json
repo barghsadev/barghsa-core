@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T10:26:33+00:00",
-  "source_commit": "5092029ce83fb034f286bb01a708f49c76012186",
+  "updated": "2026-11-10T10:34:27+00:00",
+  "source_commit": "5e7409c3c09edc7a2e92b03c055412385db84a93",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5553,7 +5553,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read all 40 exact outcomes of actual scheduled run 42789410833. Targeted catalogue, tooltip, onboarding, form, staff, WebKit, saving agreement and ticket preview fixes passed locally. Staff comment, OTP settings and wallet receipt timeline results remain under review.",
+        "Read all 40 exact outcomes of actual scheduled run 42789410833. Targeted corrections and the current Mobile Safari staff comment, OTP and wallet replays have local evidence. Verify remaining scheduled cases and repeat the complete matrix on the exact candidate.",
         "Bind current critical registration, MFA, legal onboarding, electricity and wallet, saving, solar construction and admin browser journeys to the accepted release source. The saving payment and fulfillment journey has separate local acceptance."
       ],
       "owner": null,
@@ -5618,7 +5618,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": null
       }
@@ -204213,7 +204214,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -204493,7 +204495,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -206192,7 +206194,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -206472,7 +206475,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -263107,7 +263110,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -263223,7 +263227,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -263299,7 +263303,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -264262,7 +264266,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -264378,7 +264383,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -264454,7 +264459,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -265413,7 +265418,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -265529,7 +265535,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -265605,7 +265611,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -266563,7 +266569,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -266679,7 +266686,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -266755,7 +266762,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -267714,7 +267721,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -267830,7 +267838,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -267906,7 +267914,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -268865,7 +268873,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -268981,7 +268990,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -269057,7 +269066,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -270021,7 +270030,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -270137,7 +270147,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -270213,7 +270223,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -271175,7 +271185,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -271291,7 +271302,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -271367,7 +271378,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -272327,7 +272338,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -272443,7 +272455,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -272519,7 +272531,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -273482,7 +273494,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -273598,7 +273611,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -273674,7 +273687,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -274639,7 +274652,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -274755,7 +274769,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -274831,7 +274845,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -275791,7 +275805,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -275907,7 +275922,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -275983,7 +275998,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -276942,7 +276957,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -277058,7 +277074,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -277134,7 +277150,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -278094,7 +278110,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -278210,7 +278227,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -278286,7 +278303,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -279246,7 +279263,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -279362,7 +279380,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -279438,7 +279456,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -280399,7 +280417,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -280515,7 +280534,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -280591,7 +280610,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -434605,7 +434624,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-all-applicable-order-review-wallet-disclosure",
@@ -434765,7 +434785,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -498361,19 +498381,73 @@
         "story": "06-security-testing-observability.md#spec-a2575d616ae6"
       },
       "requirement": "| T-06.10.03.09 | Write E2E: consultation pricing → fee offer → accept → pay | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/web/e2e/consultation-journey.spec.ts",
+          "apps/web/src/pages/AdminConsultationsPage.tsx"
+        ],
+        "batches": [
+          "release-0.6-consultation-paid-browser-journey"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-consultation-paid-browser-journey",
+          "reviewed_sha": "5e7409c3c09edc7a2e92b03c055412385db84a93",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/confirmation-fixture.ts",
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+            },
+            {
+              "path": "apps/web/e2e/consultation-journey.spec.ts",
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "apps/web/src/components/InvoicePaymentSummary.tsx",
+              "sha256": "93d8b6443069032d549b373b099504b5f4eacfa04fcdb505e3d7b79068340d4e"
+            },
+            {
+              "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
+            },
+            {
+              "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
+            },
+            {
+              "path": "apps/web/src/pages/ConsultationsPage.tsx",
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "98ac0194357d870547c1abc3a340f3ac1a49b90e22cac09ed5fb4ceee2ad543e"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-payment-review.ts",
+              "sha256": "0d41b27f86956261051d124698778a07a8d9f4bea3d7fda7a6e11a966b175d9a"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "The existing bilingual browser flow creates an owned consultation request, reviews the staff fee, verifies the saved offer, and preserves acceptance and decline preview deadlines, exact review hashes, read-before-retry and profile isolation. The initial updated-browser replay exposed saved staff scope and deliverable overflow in all six cases.",
+            "The saved staff offer now wraps long scope and deliverable text while keeping direction and exact content. The production replay retains the 320 px text-fit and Axe checks in the staff, customer and confirmation views.",
+            "After the accepted offer, the same owned invoice processes one reviewed 500000 IRR wallet payment with the exact expected hash, UUID idempotency key and CSRF header. The browser reads back the transaction receipt and 100 percent funded invoice. Staff completion requires the paid invoice, and the customer reads the completed status and explanation on the same request.",
+            "All six English/Persian browser cases passed on Firefox, Mobile Chrome and Mobile Safari with local API fixtures and no retries. The related form suites passed 89 tests, all 103 bundle checks passed, and production build, web typecheck, lint, formatting and diff checks passed."
+          ]
+        }
       }
     },
     {
@@ -521092,7 +521166,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -521348,7 +521423,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -526958,7 +527033,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -527214,7 +527290,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -538991,7 +539067,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -538999,7 +539076,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -539115,7 +539192,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -542317,7 +542394,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542521,7 +542599,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -542966,7 +543044,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -542982,7 +543061,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/contract-review-signature-forms.spec.ts",
@@ -543210,7 +543289,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -550042,7 +550121,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -550054,7 +550134,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -550186,7 +550266,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityIncreasesPage.tsx",
@@ -551602,7 +551682,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551662,7 +551743,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-forms.spec.ts",
@@ -551938,7 +552019,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -552467,7 +552548,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552527,7 +552609,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-forms.spec.ts",
@@ -552803,7 +552885,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -553864,7 +553946,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553924,7 +554007,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-forms.spec.ts",
@@ -554200,7 +554283,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ElectricityOrdersPage.tsx",
@@ -578712,7 +578795,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -579180,7 +579264,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -580610,7 +580694,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -581078,7 +581163,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -582509,7 +582594,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582977,7 +583063,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -584377,7 +584463,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -584845,7 +584932,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -586271,7 +586358,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -586739,7 +586827,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -588174,7 +588262,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -588642,7 +588731,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -590050,7 +590139,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590518,7 +590608,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -591890,7 +591980,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592358,7 +592449,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -593730,7 +593821,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -594198,7 +594290,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -595571,7 +595663,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -596039,7 +596132,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -597411,7 +597504,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -597879,7 +597973,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -603147,7 +603241,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -603259,7 +603354,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -605131,7 +605226,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -627313,7 +627408,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -627569,7 +627665,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -632060,7 +632156,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
@@ -632507,7 +632604,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -633395,7 +633492,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -633863,7 +633961,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -635231,7 +635329,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -635699,7 +635798,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -637067,7 +637166,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -637535,7 +637635,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -638903,7 +639003,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -639371,7 +639472,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -640739,7 +640840,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -641207,7 +641309,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -642575,7 +642677,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -643043,7 +643146,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -644411,7 +644514,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -644879,7 +644983,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminDocumentTemplatesPage.test.tsx",
@@ -673231,7 +673335,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -673527,7 +673632,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -674383,7 +674488,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -674679,7 +674785,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -675535,7 +675641,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -675831,7 +675938,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -676690,7 +676797,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -676986,7 +677094,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -677845,7 +677953,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -678141,7 +678250,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -679027,7 +679136,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -679323,7 +679433,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -680178,7 +680288,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -680474,7 +680585,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -681329,7 +681440,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -681625,7 +681737,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -682481,7 +682593,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -682777,7 +682890,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -683651,7 +683764,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -683947,7 +684061,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -684804,7 +684918,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -685100,7 +685215,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -717318,7 +717433,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -717614,7 +717730,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -718468,7 +718584,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -718764,7 +718881,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -719618,7 +719735,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -719914,7 +720032,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -720768,7 +720886,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -721064,7 +721183,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractTemplatesPage.tsx",
@@ -725482,7 +725601,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -725814,7 +725934,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -726338,7 +726458,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -726670,7 +726791,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -727196,7 +727317,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -727528,7 +727650,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -728052,7 +728174,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -728384,7 +728507,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -728908,7 +729031,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -729240,7 +729364,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -729768,7 +729892,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -730100,7 +730225,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -730628,7 +730753,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -730960,7 +731086,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -731484,7 +731610,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -731816,7 +731943,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -732340,7 +732467,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -732672,7 +732800,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -733197,7 +733325,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -733529,7 +733658,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -734059,7 +734188,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -734391,7 +734521,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
@@ -746448,7 +746578,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -747636,7 +747766,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -748554,7 +748685,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -749730,7 +749861,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-consultation-paid-browser-journey"
         ]
       }
     },
@@ -754715,7 +754847,7 @@
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
-              "sha256": "b6a986ca425fbdb2f5ae548a30518ca9e15861b293eb84296d770a035633ac36"
+              "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
             },
             {
               "path": "apps/web/e2e/consultation-paid-resolution-form-fixture.ts",
@@ -754787,7 +754919,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
@@ -758657,7 +758789,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-consultation-paid-browser-journey"
         ]
       }
     },
@@ -767313,7 +767446,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -768315,7 +768448,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ]
       }
     },
@@ -769231,7 +769365,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
-              "sha256": "609467ebac15cf70710931066f638f48a81eefcc571c9ae06e89b5800a93f19d"
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
             },
             {
               "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
@@ -770466,7 +770600,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-consultation-paid-browser-journey"
         ]
       }
     },
@@ -770571,7 +770706,7 @@
       "launch_required": true,
       "remaining": [
         "Reconcile every epic-01 and epic-06 criterion with current source and operational evidence. Apply the approved direct-main workflow while preserving all production gates.",
-        "Finish the full exact candidate browser matrix, source coverage and receipt review. The saving wallet-payment and post-payment fulfillment journey passed in three local browsers. The complete scheduled and hosted candidate results remain open.",
+        "Finish the full exact candidate browser matrix, source coverage and receipt review. The saving and consultation payment journeys passed in three local browsers. The complete scheduled and hosted candidate results remain open.",
         "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
@@ -770687,7 +770822,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-consultation-paid-browser-journey"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -878243,6 +878379,71 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/saving-paid-journey",
       "source_scope_proof": "saving-paid-journey-source-scope-proof.json",
       "source_scope_proof_sha256": "27a6eb1de2f0dc976a33dbb0bce7e1c79259210750aa762c8a1135c6e8310565"
+    },
+    "release-0.6-consultation-paid-browser-journey": {
+      "batch": "release-0.6-consultation-paid-browser-journey",
+      "base_commit": "5e7409c3c09edc7a2e92b03c055412385db84a93",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.03.09",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/consultation-journey.spec.ts",
+        "apps/web/src/pages/AdminConsultationsPage.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+        },
+        {
+          "path": "apps/web/e2e/consultation-journey.spec.ts",
+          "sha256": "e599af5e820dd4a949e6883212323d87d8930c1fbd9d3c3284c0b5cdada98786"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/InvoicePaymentSummary.tsx",
+          "sha256": "93d8b6443069032d549b373b099504b5f4eacfa04fcdb505e3d7b79068340d4e"
+        },
+        {
+          "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+          "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
+        },
+        {
+          "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
+          "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
+        },
+        {
+          "path": "apps/web/src/pages/ConsultationsPage.tsx",
+          "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "98ac0194357d870547c1abc3a340f3ac1a49b90e22cac09ed5fb4ceee2ad543e"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-payment-review.ts",
+          "sha256": "0d41b27f86956261051d124698778a07a8d9f4bea3d7fda7a6e11a966b175d9a"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "The existing bilingual browser flow creates an owned consultation request, reviews the staff fee, verifies the saved offer, and preserves acceptance and decline preview deadlines, exact review hashes, read-before-retry and profile isolation. The initial updated-browser replay exposed saved staff scope and deliverable overflow in all six cases.",
+        "The saved staff offer now wraps long scope and deliverable text while keeping direction and exact content. The production replay retains the 320 px text-fit and Axe checks in the staff, customer and confirmation views.",
+        "After the accepted offer, the same owned invoice processes one reviewed 500000 IRR wallet payment with the exact expected hash, UUID idempotency key and CSRF header. The browser reads back the transaction receipt and 100 percent funded invoice. Staff completion requires the paid invoice, and the customer reads the completed status and explanation on the same request.",
+        "All six English/Persian browser cases passed on Firefox, Mobile Chrome and Mobile Safari with local API fixtures and no retries. The related form suites passed 89 tests, all 103 bundle checks passed, and production build, web typecheck, lint, formatting and diff checks passed.",
+        "The four staff comment and OTP cases and four wallet receipt disclosure cases passed on the updated Mobile Safari runtime with no source or assertion changes. Complete scheduled outcomes, the exact release candidate matrix and deployed operations remain separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/consultation-paid-journey",
+      "source_scope_proof": "consultation-paid-journey-source-scope-proof.json",
+      "source_scope_proof_sha256": "06cd08a4d320843da607bdba3421cce46c4eaa4e4115d11ede20f5a8256444b5"
     }
   },
   "historical_improvements": [

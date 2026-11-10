@@ -1703,12 +1703,18 @@ function OwnedAdminConsultationsPage({ queries }: { queries?: ConsultationListQu
                     </p>
                     {current.scope && (
                       <p>
-                        {copy('scope')}: <span dir="auto">{current.scope}</span>
+                        {copy('scope')}:{' '}
+                        <span dir="auto" className="wrap-anywhere">
+                          {current.scope}
+                        </span>
                       </p>
                     )}
                     {current.deliverables && (
                       <p>
-                        {copy('deliverables')}: <span dir="auto">{current.deliverables}</span>
+                        {copy('deliverables')}:{' '}
+                        <span dir="auto" className="wrap-anywhere">
+                          {current.deliverables}
+                        </span>
                       </p>
                     )}
                     {current.offer_valid_until && (
