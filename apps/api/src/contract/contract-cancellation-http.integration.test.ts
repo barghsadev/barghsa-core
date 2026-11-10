@@ -3,6 +3,11 @@ import { runWalletRefund } from '@barghsa/db/refund-processing';
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import {
+  seedCustomerProfile,
+  seedCustomerUser,
+  seedElectricityOrder,
+} from '../test/customer-finance-fixture.js';
 import type { ContractService } from './contract.service.js';
 import type { ContractCancellationService } from './contract-cancellation.service.js';
 import { GiftCodeService } from '../admin/gift-code.service.js';
@@ -83,10 +88,8 @@ async function fixture(
   const user = randomUUID(),
     profile = randomUUID(),
     invoice = randomUUID();
-  await http.pool.query("INSERT INTO users(user_id,username,password_hash) VALUES($1,$1,'test')", [
-    user,
-  ]);
-  await http.pool.query('INSERT INTO profiles(id,user_id) VALUES($1,$2)', [profile, user]);
+  await seedCustomerUser(http.pool, user, user, 'test');
+  await seedCustomerProfile(http.pool, profile, user);
   await http.pool.query('INSERT INTO wallets(profile_id) VALUES($1)', [profile]);
   let gift: { orderId: string; redemptionId: string; giftCodeId: string } | undefined;
   if (giftPolicy) {
@@ -98,12 +101,7 @@ async function fixture(
           "INSERT INTO products(type,system_key,title,price,status) VALUES('electricity','thermal','{\"en\":\"Gift cancellation test\"}',100,'active') ON CONFLICT(system_key) DO UPDATE SET status='active' RETURNING id"
         )
       ).rows[0].id;
-      const orderId = (
-        await client.query(
-          "INSERT INTO orders(user_id,profile_id,product_id,order_type,snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code) VALUES($1,$2,$3,'electricity','province','city','Street','1234567890') RETURNING id",
-          [user, profile, product]
-        )
-      ).rows[0].id;
+      const orderId = await seedElectricityOrder(client, user, profile, product);
       const code = 'CANCEL-' + randomUUID().toUpperCase();
       await client.query(
         "INSERT INTO gift_codes(code,discount_type,discount_value,total_limit,per_profile_limit,restore_on_cancel,restore_after_payment,valid_from,created_by) VALUES($1,'fixed_irr',10,1,1,$2,$3,'2026-01-01','cancel-legal')",

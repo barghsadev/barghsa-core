@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1204 | Accepted with unchanged source bindings. |
-| verify | 97 | Existing work may be complete; inspect evidence before building. |
+| done | 1205 | Accepted with unchanged source bindings. |
+| verify | 96 | Existing work may be complete; inspect evidence before building. |
 | partial | 59 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1276,7 +1276,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.01.03` | done | Recorded batch work | Implement test DB lifecycle: per-worker isolated schema or database for parallel runs |
 | `06-security-testing-observability.md#T-06.10.01.04` | done | Recorded batch work | Build fake adapter servers: SMTP fake, SMS.ir fake, payment gateway fake, document storage fake |
 | `06-security-testing-observability.md#T-06.10.01.05` | done | Recorded batch work | Implement deterministic signed webhook fixture builder |
-| `06-security-testing-observability.md#T-06.10.01.06` | verify | Inventory needed | Write helper utilities: create user, create profile, authenticate, create order, create invoice, add wallet funds |
+| `06-security-testing-observability.md#T-06.10.01.06` | done | Recorded batch work | Write helper utilities: create user, create profile, authenticate, create order, create invoice, add wallet funds |
 | `06-security-testing-observability.md#T-06.10.02.01` | done | Recorded batch work | Write migration integration tests: clean database apply, upgrade-path apply, rollback, data preservation |
 | `06-security-testing-observability.md#T-06.10.02.02` | done | Recorded batch work | Write constraint tests: unique indexes, foreign keys, NOT NULL, CHECK constraints, exclusion constraints |
 | `06-security-testing-observability.md#T-06.10.02.03` | done | Recorded batch work | Write transaction tests: atomic wallet debit + invoice settlement, atomic order+contract+invoice creation |

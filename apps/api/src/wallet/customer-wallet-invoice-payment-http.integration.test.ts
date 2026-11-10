@@ -1,6 +1,13 @@
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
+import {
+  fundCustomerWallet,
+  seedCustomerProfile,
+  seedCustomerSession,
+  seedCustomerUser,
+  seedPayableInvoice,
+} from '../test/customer-finance-fixture.js';
 import { SessionService } from '../session/session.service.js';
 import type { WalletPaymentReview } from '@barghsa/shared/finance';
 
@@ -17,39 +24,25 @@ async function fixture(
 ) {
   const userId = randomUUID(),
     profileId = randomUUID(),
-    invoiceId = randomUUID(),
-    sessionId = randomUUID(),
-    csrf = randomUUID();
-  await http.pool.query(
-    "INSERT INTO users(user_id,username,password_hash) VALUES($1,$2,'test-only')",
-    [userId, `${userId}@example.test`]
-  );
-  await http.pool.query(
-    "INSERT INTO profiles(id,user_id,is_default,profile_type) VALUES($1,$2,true,'LEGAL')",
-    [profileId, userId]
-  );
+    invoiceId = randomUUID();
+  await seedCustomerUser(http.pool, userId, `${userId}@example.test`);
+  await seedCustomerProfile(http.pool, profileId, userId, 'LEGAL', true);
   await http.pool.query(
     'INSERT INTO wallets(profile_id,posted_balance,reserved_balance) VALUES($1,$2,$3)',
     [profileId, options.posted ?? '150000', options.reserved ?? '0']
   );
-  await http.pool.query(
-    "INSERT INTO invoices(id,profile_id,state,total_amount,paid_amount,payable_from) VALUES($1,$2,$3,100000,$4,NOW()-INTERVAL '1 day')",
-    [invoiceId, profileId, options.state ?? 'Unpaid', options.paid ?? '0']
-  );
-  await http.pool.query(
-    "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES($1,$2,$3,$1,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW()-INTERVAL '1 second')",
-    [sessionId, userId, csrf]
-  );
+  await seedPayableInvoice(http.pool, {
+    id: invoiceId,
+    profileId,
+    total: '100000',
+    state: options.state ?? 'Unpaid',
+    paid: options.paid ?? '0',
+  });
   const result = {
     userId,
     profileId,
     invoiceId,
-    sessionId,
-    headers: {
-      Cookie: `barghsa_session=${sessionId}`,
-      'X-CSRF-Token': csrf,
-      'Content-Type': 'application/json',
-    },
+    ...(await seedCustomerSession(http.pool, userId, true)),
   };
   const review = await fetch(`${http.base}/api/invoices/${invoiceId}/wallet-payment`, {
     headers: result.headers,
@@ -146,6 +139,34 @@ it('requires an exact review and persists it through cache and durable-ledger re
   expect((await snapshot(f)).ledger).toHaveLength(1);
   await http.pool.query('DELETE FROM idempotency_keys WHERE entity_id=$1', [f.invoiceId]);
   expect((await pay(f, { ...body, expectedReviewHash: 'f'.repeat(64) })).status).toBe(409);
+});
+
+it('pays an invoice using an idempotent fixture credit posted to the durable wallet ledger', async () => {
+  const f = await fixture({ posted: '0' });
+  const key = randomUUID();
+  const credit = await fundCustomerWallet(http.pool, f.profileId, 150_000n, key);
+  expect(credit).toMatchObject({ wallet_id: f.profileId, amount: '150000', state: 'Completed' });
+  expect(await fundCustomerWallet(http.pool, f.profileId, 150_000n, key)).toEqual(credit);
+  const review = await context(f);
+  expect(review.status, http.logs()).toBe(200);
+  f.reviewHash = ((await review.json()) as { review: { hash: string } }).review.hash;
+  expect((await snapshot(f)).wallet.posted_balance).toBe('150000');
+  expect((await pay(f)).status).toBe(200);
+  const result = await snapshot(f);
+  expect(result.wallet.posted_balance).toBe('50000');
+  expect(result.invoice).toMatchObject({ state: 'Paid', paid_amount: '100000' });
+  expect(result.ledger).toHaveLength(2);
+  expect(result.ledger).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ type: 'topup', state: 'Completed', amount: '150000' }),
+      expect.objectContaining({
+        type: 'payment',
+        state: 'Completed',
+        amount: '-100000',
+        ref_id: f.invoiceId,
+      }),
+    ])
+  );
 });
 
 it('shows the issued line breakdown and rejects a changed profile or invoice date', async () => {

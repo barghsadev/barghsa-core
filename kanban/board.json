@@ -32642,7 +32642,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation.service.ts",
@@ -32838,7 +32838,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.test.ts",
@@ -34072,6 +34072,15 @@
                 "apps/api/src/wallet/wallet.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -62392,7 +62401,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -63449,6 +63458,14 @@
                 "apps/api/src/wallet/wallet.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -78766,7 +78783,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -80789,6 +80806,14 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -107063,7 +107088,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation.service.ts",
@@ -107874,6 +107899,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -118761,7 +118794,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation.service.ts",
@@ -119589,6 +119622,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -156446,7 +156487,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
@@ -157103,6 +157144,14 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -157337,7 +157386,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
@@ -157492,6 +157541,14 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -158010,7 +158067,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
@@ -158165,6 +158222,14 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -165912,7 +165977,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
@@ -166840,6 +166905,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -166981,7 +167054,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
@@ -167909,6 +167982,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -168018,7 +168099,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -168344,6 +168425,16 @@
               "base_commit": "beb9fa18969faea5429b8737f56f27875615d799",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-coverage/contrast-confirmation-proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
+            }
           ]
         },
         "implementation_checkpoint": {
@@ -168593,7 +168684,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -168919,6 +169010,16 @@
               "base_commit": "beb9fa18969faea5429b8737f56f27875615d799",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-coverage/contrast-confirmation-proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
+            }
           ]
         },
         "implementation_checkpoint": {
@@ -169200,7 +169301,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
@@ -170128,6 +170229,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -170270,7 +170379,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
@@ -171198,6 +171307,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -171337,7 +171454,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
@@ -172265,6 +172382,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -172404,7 +172529,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
@@ -173332,6 +173457,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -173440,7 +173573,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -173766,6 +173899,16 @@
               "base_commit": "beb9fa18969faea5429b8737f56f27875615d799",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-exact-coverage/contrast-confirmation-proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
+            }
           ]
         },
         "implementation_checkpoint": {
@@ -174044,7 +174187,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
@@ -174972,6 +175115,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -175110,7 +175261,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
@@ -176038,6 +176189,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -176176,7 +176335,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
@@ -177104,6 +177263,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -264830,7 +264997,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation.service.ts",
@@ -265780,6 +265947,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -265901,7 +266076,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation.service.ts",
@@ -266851,6 +267026,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -266973,7 +267156,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation.service.ts",
@@ -267923,6 +268106,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -346967,7 +347158,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-status.controller.ts",
@@ -347929,6 +348120,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -348064,7 +348263,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-status.controller.ts",
@@ -349026,6 +349225,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -349161,7 +349368,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-status.controller.ts",
@@ -350123,6 +350330,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -350258,7 +350473,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-status.controller.ts",
@@ -351220,6 +351435,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -351355,7 +351578,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-status.controller.ts",
@@ -352317,6 +352540,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -352452,7 +352683,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-status.controller.ts",
@@ -353414,6 +353645,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -353549,7 +353788,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-status.controller.ts",
@@ -354511,6 +354750,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -391370,7 +391617,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -392536,6 +392783,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -392705,7 +392960,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -393871,6 +394126,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -394040,7 +394303,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -395206,6 +395469,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -395375,7 +395646,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -396541,6 +396812,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -396711,7 +396990,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -397877,6 +398156,14 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -425662,7 +425949,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -426813,6 +427100,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -427043,7 +427338,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -428194,6 +428489,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -428425,7 +428728,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -429576,6 +429879,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -429806,7 +430117,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -430957,6 +431268,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -431187,7 +431506,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -432338,6 +432657,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -432569,7 +432896,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -433720,6 +434047,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -433952,7 +434287,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -435103,6 +435438,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -435334,7 +435677,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -436492,6 +436835,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -436691,7 +437042,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -437842,6 +438193,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -438071,7 +438430,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -439222,6 +439581,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -439450,7 +439817,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -440608,6 +440975,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -440803,7 +441178,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -441961,6 +442336,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -442156,7 +442539,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -443314,6 +443697,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -445990,7 +446381,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -447438,6 +447829,14 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -494167,7 +494566,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             }
           ],
           "checks": [
@@ -494193,6 +494592,14 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ]
         }
@@ -494741,7 +495148,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "docs/security/session-location.md",
@@ -494775,6 +495182,14 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ]
         }
@@ -499140,7 +499555,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation.service.ts",
@@ -499253,6 +499668,14 @@
                 "apps/api/src/admin/admin-permission-boundaries.test.ts"
               ],
               "scope": "Correct the single operator-log assertion while preserving authorization and all authorized creation fields."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ]
         }
@@ -501391,7 +501814,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
@@ -501451,6 +501874,16 @@
             "Existing strict wallet invoice commands validate positive decimal IRR strings and reject values above the PostgreSQL int8 bound. Shared wallet and electricity financial review schemas reject unsafe, altered and arithmetically inconsistent quotes, including component totals and mismatched scope.",
             "Thirty-four shared and 31 API unit cases passed. Five compiled PostgreSQL HTTP cases passed, including exact full and partial payments across retries and rejection of forged fields, malformed and oversized IRR values or changed authoritative amounts without new financial writes.",
             "The implementation already met this refinement criterion. Source and test assertions were preserved. The broader command strictness and schema inventory tasks remain independently open."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
+            }
           ]
         }
       },
@@ -509838,7 +510271,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
@@ -510000,6 +510433,14 @@
                 "apps/api/src/wallet/online-topup-callback.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ]
         }
@@ -511971,19 +512412,57 @@
         "story": "06-security-testing-observability.md#spec-6d621a69af5e"
       },
       "requirement": "| T-06.10.01.06 | Write helper utilities: create user, create profile, authenticate, create order, create invoice, add wallet funds | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-reusable-finance-http-fixtures"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-real-postgresql-finance-fixtures",
+          "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+          "checks": [
+            "Reusable disposable-database helpers seed a user, profile, authorized fixture session, electricity order and payable invoice. Login-specific callers retain the public auth bootstrap helper. The wallet helper acquires the profile lock and uses the existing ledger credit inside one transaction.",
+            "The real compiled HTTP application passed 45 wallet payment and contract cancellation cases against 207 production migrations in 77.66 seconds. The new case begins at zero, posts an exact 150,000 IRR credit, replays it with the same receipt, pays 100,000 IRR, and verifies one credit, one debit, the paid invoice and a 50,000 IRR balance. Existing approval, rollback, expiry, idempotency and ownership assertions passed.",
+            "API typechecking, changed-file ESLint, Prettier and whitespace checks passed. The native fixture, both callers and the reused ledger source match the repository. The product source and SQL constraints are preserved."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
+            },
+            {
+              "path": "apps/api/src/test/customer-finance-fixture.ts",
+              "sha256": "28a48fe7b09d9b7e2711b494b3b61d6c5d58329b03b11a25f0e19700680b03e0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+            },
+            {
+              "path": "apps/api/src/test/public-auth.ts",
+              "sha256": "41c4709c68110c251806fae863f105331e24e94de69ec4769f3713655144d045"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "packages/db/src/wallet-credit.ts",
+              "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+            }
+          ]
+        }
       }
     },
     {
@@ -512176,7 +512655,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
@@ -512204,6 +512683,14 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ]
         }
@@ -512244,7 +512731,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
@@ -512275,6 +512762,14 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ]
         }
@@ -512654,7 +513149,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -512686,6 +513181,14 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ]
         }
@@ -512729,7 +513232,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation.service.ts",
@@ -512824,6 +513327,14 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ]
         }
@@ -752469,7 +752980,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
@@ -753001,6 +753512,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -753339,7 +753858,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
@@ -753871,6 +754390,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -754211,7 +754738,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
@@ -754743,6 +755270,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -755081,7 +755616,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
@@ -755613,6 +756148,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -755951,7 +756494,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
@@ -756483,6 +757026,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -756825,7 +757376,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
@@ -757357,6 +757908,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -757699,7 +758258,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
@@ -758231,6 +758790,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -758569,7 +759136,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
@@ -759101,6 +759668,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -759439,7 +760014,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
@@ -759971,6 +760546,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -760310,7 +760893,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
@@ -760842,6 +761425,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -761186,7 +761777,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
@@ -761718,6 +762309,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -774109,7 +774708,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -775060,6 +775659,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -776247,7 +776854,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -777190,6 +777797,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -778521,7 +779136,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
@@ -778885,7 +779500,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
@@ -781443,6 +782058,15 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -782320,7 +782944,7 @@
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
-              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+              "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -783288,7 +783912,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-input-fields.test.ts",
@@ -786141,6 +786765,15 @@
                 "apps/web/src/pages/electricity-settings-forms.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+                "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -786959,7 +787592,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -790353,6 +790986,14 @@
                 "docs/operations/ai-inference.md"
               ],
               "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "presentation_renewals": [
@@ -791115,7 +791756,7 @@
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
-              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+              "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -794374,6 +795015,14 @@
                 "docs/operations/ai-inference.md"
               ],
               "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
+            },
+            {
+              "batch": "release-0.6-reusable-finance-http-fixtures",
+              "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+              "paths": [
+                "apps/api/src/contract/contract-cancellation-http.integration.test.ts"
+              ],
+              "scope": "Extract bound synthetic fixture rows into shared helpers and add an authoritative ledger credit case. Original workflow calls and financial assertions are preserved, and the full two affected native suites passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -916340,6 +916989,67 @@
         {
           "file": "sast-report-unit.log",
           "sha256": "e6ec182765cd965f2837d8eeaef5a64af48a104f245cd1a0b7281559194c57c1"
+        }
+      ]
+    },
+    "release-0.6-reusable-finance-http-fixtures": {
+      "batch": "release-0.6-reusable-finance-http-fixtures",
+      "base_commit": "2fca74af6b22d2721b1160065b3cbca7fcae4fe3",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.01.06"
+      ],
+      "changed_paths": [
+        "apps/api/src/test/customer-finance-fixture.ts",
+        "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+        "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+          "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
+        },
+        {
+          "path": "apps/api/src/test/customer-finance-fixture.ts",
+          "sha256": "28a48fe7b09d9b7e2711b494b3b61d6c5d58329b03b11a25f0e19700680b03e0"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+        },
+        {
+          "path": "apps/api/src/test/public-auth.ts",
+          "sha256": "41c4709c68110c251806fae863f105331e24e94de69ec4769f3713655144d045"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+          "sha256": "0b8b0a769eee75b5a023d4bd3ae619bc0acd8b054b6ca6c01be23fb288bd86e5"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "packages/db/src/wallet-credit.ts",
+          "sha256": "8758a15eee8fdd36460037a79010151a25fdb0805d94b693c74e5043090c1dfb"
+        }
+      ],
+      "checks": [
+        "Reusable disposable-database helpers seed a user, profile, authorized fixture session, electricity order and payable invoice. Login-specific callers retain the public auth bootstrap helper. The wallet helper acquires the profile lock and uses the existing ledger credit inside one transaction.",
+        "The real compiled HTTP application passed 45 wallet payment and contract cancellation cases against 207 production migrations in 77.66 seconds. The new case begins at zero, posts an exact 150,000 IRR credit, replays it with the same receipt, pays 100,000 IRR, and verifies one credit, one debit, the paid invoice and a 50,000 IRR balance. Existing approval, rollback, expiry, idempotency and ownership assertions passed.",
+        "API typechecking, changed-file ESLint, Prettier and whitespace checks passed. The native fixture, both callers and the reused ledger source match the repository. The product source and SQL constraints are preserved."
+      ],
+      "proof_logs": [
+        {
+          "file": "finance-fixtures-native.log",
+          "sha256": "69f6c0283e31846fd68236bce8f86637c1f242e137ea219240fc86214ab04fc1"
+        },
+        {
+          "file": "native-source.sha256",
+          "sha256": "bffcc25e160527d2d09615bc385cd9a39e8c9cd74909c05f7f52d50caa3318fe"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
         }
       ]
     }
