@@ -1,0 +1,59 @@
+name: Weekly isolated load checks
+
+on:
+  schedule:
+    - cron: '0 3 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: load-weekly-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  load:
+    name: Measure seven critical operations
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec turbo run build --filter=@barghsa/api
+      - name: Install verified k6 runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          asset=k6-v2.3.0-linux-amd64.tar.gz
+          curl --fail --silent --show-error --location --max-time 90 \
+            --proto '=https' --proto-redir '=https' \
+            "https://github.com/grafana/k6/releases/download/v2.3.0/$asset" --output "$asset"
+          printf '%s  %s\n' '39c3117b6af817592dcd0ce4242105c0a7af10948c2a425306f0be8f7a8a8ab1' "$asset" | sha256sum -c
+          tar -xzf "$asset"
+          test -x "$RUNNER_TEMP/k6-v2.3.0-linux-amd64/k6"
+          printf 'BARGHSA_K6_BIN=%s/k6-v2.3.0-linux-amd64/k6\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+      - name: Run the load gate with migrated synthetic data
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+          BARGHSA_PERFORMANCE_SHA: ${{ github.sha }}
+          BARGHSA_PERFORMANCE_SMOKE: '0'
+          BARGHSA_PERFORMANCE_REPORT: ${{ runner.temp }}/barghsa-performance.json
+        run: pnpm --filter @barghsa/api exec vitest run --config vitest.performance.config.ts
+      - name: Preserve measured latency and coverage counts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-load-report
+          path: ${{ runner.temp }}/barghsa-performance.json
+          if-no-files-found: error
+          retention-days: 30

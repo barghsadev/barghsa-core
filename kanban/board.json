@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T17:27:21+00:00",
-  "source_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+  "updated": "2026-11-10T17:36:29+00:00",
+  "source_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -14363,11 +14363,11 @@
         "story": "01-platform-infrastructure.md#spec-e250c6a91715"
       },
       "requirement": "- **T-05.05.02:** Create weekly load/performance regression test\n  - **Notes:** Cron: weekly on Sunday. Use k6 or artillery to run load tests against a staging environment (or isolated). Test paths: electricity price preview, order submission, wallet payment, invoice list, CRM search, file upload authorization, notification fan-out. Compare p50/p95/p99 latency against declared budgets (p95 reads <300ms, writes <500ms). Report regression if any path exceeds budget + 20% tolerance.\n  - **Dependencies:** T-05.05.01\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify a complete manual invocation of the exact published workflow and read back its seven-path report. Reconcile the prerequisite nightly gate and record the next actual weekly receipt."
       ],
       "owner": null,
       "depends_on": [],
@@ -14395,10 +14395,84 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          ".github/workflows/load-weekly.yml",
+          "apps/api/performance/weekly.k6.mjs",
+          "apps/api/performance/weekly.perf.ts",
+          "apps/api/vitest.performance.config.ts",
+          "audit/skipped-work-handoff.md",
+          "docs/operations/service-objectives.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-weekly-isolated-load-scenarios"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-compiled-load-scenario-smoke",
+          "base_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/load-weekly.yml",
+              "sha256": "b37e2f752efb04c2e5aa8bf27c38176b300e99b5045d0b90fee52e4dbb1e5f6f"
+            },
+            {
+              "path": "apps/api/performance/weekly.k6.mjs",
+              "sha256": "8ff2f015946c051bc7455b295db5f8c1a6674863fdca11de905703150b5d371d"
+            },
+            {
+              "path": "apps/api/performance/weekly.perf.ts",
+              "sha256": "d181218e802f3c507ade98cceb2807f1a861b92a2b3dd72a8b7bc46a2a09a70b"
+            },
+            {
+              "path": "apps/api/scripts/http-test-server.cjs",
+              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+            },
+            {
+              "path": "apps/api/src/crm/crm.controller.ts",
+              "sha256": "72494a67b32246e58c55c4e603ba629fe5d2457be8b89833b68203ba8c689a43"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice.controller.ts",
+              "sha256": "d4d075d1cad4cab0145e0ea60f51236cc68a00c7a92607a9993e18cd55cdfd39"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/upload/upload.controller.ts",
+              "sha256": "b8d54439a4ddd2abe6a8b2e527895660e334fec1a6f5953c820b6f96b74b8842"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "825a0178bf5564db4c72f8c7279f72123d53b03c70b0a9d666e410b5562359a7"
+            },
+            {
+              "path": "apps/api/vitest.performance.config.ts",
+              "sha256": "5b9b4379173b7e543723998d9523d4c6f4a6011e94240a19afc51c449624753f"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.ts",
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
+            },
+            {
+              "path": "docs/operations/service-objectives.md",
+              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
+            }
+          ],
+          "checks": [
+            "Found no existing executable weekly load workload after checking the current workflow and application fixture paths. Reused the reviewed latency budgets, compiled production API, exact migration template and real private operations receiver with isolated synthetic accounts.",
+            "The checksum-verified Grafana k6 v2.3.0 Linux binary passed the loopback-only origin guard and the compiled PostgreSQL smoke through all 207 migrations. Four fresh attempts per each of the seven scenarios completed with zero failed checks. The database verified exact counts for electricity orders, fully paid invoices, wallet debits, authorized storage reservations, alert receipts and three private delivery intents per alert.",
+            "The weekly full fixture is configured for 1,000 distinct synthetic customers, 5,000 background profiles, twelve historic invoices plus one payable invoice per customer, Persian and English payloads and eight concurrent users. The report keeps p99 unavailable below 1,000 completed samples. The schedule pins the executable SHA-256 and keeps all runtime traffic on loopback.",
+            "The reported p95 rehearsal budgets remain 300/500 ms. The scheduled regression guard applies the existing 20% tolerance and fails missing samples or an unsuccessful operation. The workflow passed actionlint and the touched files passed formatting, ESLint and diff validation. No full-load, staging or production-equivalent pass is claimed."
+          ]
+        }
       }
     },
     {
@@ -19100,7 +19174,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "24da43cec22202acb8e1f659365e359b2422f3f72b384307060f1e4e5a185d66"
+              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
@@ -19147,6 +19221,16 @@
             "Reviewed the documented P0–P3 response times, primary and secondary rotation, private channel and P0 phone response, protected evidence and credential revocation, Persian and English customer drafts, and five-working-day post-incident follow-up. Alert priorities are distinct from confirmed incident severities. The active on-call rota, destination and dead-man readback are separate deployment requirements.",
             "Reviewed current additions for read-only storage recovery, verified-contact OTP and blameless review. Existing incident documentation criteria and source links still pass.",
             "The general incident guide gained a link to the dedicated security runbook. Its existing operational procedure and evidence scope were retained."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-weekly-isolated-load-scenarios",
+              "base_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Add weekly fixture and report instructions only. Existing objective thresholds and incident guidance are unchanged."
+            }
           ]
         }
       }
@@ -511588,11 +511672,21 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "24da43cec22202acb8e1f659365e359b2422f3f72b384307060f1e4e5a185d66"
+              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
             },
             {
               "path": "packages/db/src/index.ts",
               "sha256": "b3f5d1610e70400a1bc2b267e871f177e992ce70ecdab2bab5c526440ce0178f"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-weekly-isolated-load-scenarios",
+              "base_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Add weekly fixture and report instructions only. Existing objective thresholds and incident guidance are unchanged."
             }
           ]
         }
@@ -511609,19 +511703,92 @@
         "story": "06-security-testing-observability.md#spec-fa8333966eb7"
       },
       "requirement": "| T-06.11.03.02 | Write performance test scenarios: electricity price preview, order submission, wallet payment, invoice lists, CRM search, file upload auth, notification fan-out | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          ".github/workflows/load-weekly.yml",
+          "apps/api/performance/weekly.k6.mjs",
+          "apps/api/performance/weekly.perf.ts",
+          "apps/api/vitest.performance.config.ts",
+          "docs/operations/service-objectives.md"
+        ],
+        "batches": [
+          "release-0.6-weekly-isolated-load-scenarios"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-compiled-load-scenario-smoke",
+          "base_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/load-weekly.yml",
+              "sha256": "b37e2f752efb04c2e5aa8bf27c38176b300e99b5045d0b90fee52e4dbb1e5f6f"
+            },
+            {
+              "path": "apps/api/performance/weekly.k6.mjs",
+              "sha256": "8ff2f015946c051bc7455b295db5f8c1a6674863fdca11de905703150b5d371d"
+            },
+            {
+              "path": "apps/api/performance/weekly.perf.ts",
+              "sha256": "d181218e802f3c507ade98cceb2807f1a861b92a2b3dd72a8b7bc46a2a09a70b"
+            },
+            {
+              "path": "apps/api/scripts/http-test-server.cjs",
+              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+            },
+            {
+              "path": "apps/api/src/crm/crm.controller.ts",
+              "sha256": "72494a67b32246e58c55c4e603ba629fe5d2457be8b89833b68203ba8c689a43"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice.controller.ts",
+              "sha256": "d4d075d1cad4cab0145e0ea60f51236cc68a00c7a92607a9993e18cd55cdfd39"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/upload/upload.controller.ts",
+              "sha256": "b8d54439a4ddd2abe6a8b2e527895660e334fec1a6f5953c820b6f96b74b8842"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "825a0178bf5564db4c72f8c7279f72123d53b03c70b0a9d666e410b5562359a7"
+            },
+            {
+              "path": "apps/api/vitest.performance.config.ts",
+              "sha256": "5b9b4379173b7e543723998d9523d4c6f4a6011e94240a19afc51c449624753f"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.ts",
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
+            },
+            {
+              "path": "docs/operations/service-objectives.md",
+              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
+            }
+          ],
+          "checks": [
+            "Found no existing executable weekly load workload after checking the current workflow and application fixture paths. Reused the reviewed latency budgets, compiled production API, exact migration template and real private operations receiver with isolated synthetic accounts.",
+            "The checksum-verified Grafana k6 v2.3.0 Linux binary passed the loopback-only origin guard and the compiled PostgreSQL smoke through all 207 migrations. Four fresh attempts per each of the seven scenarios completed with zero failed checks. The database verified exact counts for electricity orders, fully paid invoices, wallet debits, authorized storage reservations, alert receipts and three private delivery intents per alert.",
+            "The weekly full fixture is configured for 1,000 distinct synthetic customers, 5,000 background profiles, twelve historic invoices plus one payable invoice per customer, Persian and English payloads and eight concurrent users. The report keeps p99 unavailable below 1,000 completed samples. The schedule pins the executable SHA-256 and keeps all runtime traffic on loopback.",
+            "The reported p95 rehearsal budgets remain 300/500 ms. The scheduled regression guard applies the existing 20% tolerance and fails missing samples or an unsuccessful operation. The workflow passed actionlint and the touched files passed formatting, ESLint and diff validation. No full-load, staging or production-equivalent pass is claimed."
+          ]
+        }
       }
     },
     {
@@ -511635,19 +511802,94 @@
         "story": "06-security-testing-observability.md#spec-fa8333966eb7"
       },
       "requirement": "| T-06.11.03.03 | Run load test with realistic Persian/English payloads and production-like indexes | L |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Run all 1,000 samples per path with the declared fixture cardinality and inspect each operation’s p50, p95 and p99. Prove production-equivalent capacity and index/cardinality evidence separately."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          ".github/workflows/load-weekly.yml",
+          "apps/api/performance/weekly.k6.mjs",
+          "apps/api/performance/weekly.perf.ts",
+          "apps/api/vitest.performance.config.ts",
+          "docs/operations/service-objectives.md"
+        ],
+        "batches": [
+          "release-0.6-weekly-isolated-load-scenarios"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-compiled-load-scenario-smoke",
+          "base_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/load-weekly.yml",
+              "sha256": "b37e2f752efb04c2e5aa8bf27c38176b300e99b5045d0b90fee52e4dbb1e5f6f"
+            },
+            {
+              "path": "apps/api/performance/weekly.k6.mjs",
+              "sha256": "8ff2f015946c051bc7455b295db5f8c1a6674863fdca11de905703150b5d371d"
+            },
+            {
+              "path": "apps/api/performance/weekly.perf.ts",
+              "sha256": "d181218e802f3c507ade98cceb2807f1a861b92a2b3dd72a8b7bc46a2a09a70b"
+            },
+            {
+              "path": "apps/api/scripts/http-test-server.cjs",
+              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+            },
+            {
+              "path": "apps/api/src/crm/crm.controller.ts",
+              "sha256": "72494a67b32246e58c55c4e603ba629fe5d2457be8b89833b68203ba8c689a43"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice.controller.ts",
+              "sha256": "d4d075d1cad4cab0145e0ea60f51236cc68a00c7a92607a9993e18cd55cdfd39"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/upload/upload.controller.ts",
+              "sha256": "b8d54439a4ddd2abe6a8b2e527895660e334fec1a6f5953c820b6f96b74b8842"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "825a0178bf5564db4c72f8c7279f72123d53b03c70b0a9d666e410b5562359a7"
+            },
+            {
+              "path": "apps/api/vitest.performance.config.ts",
+              "sha256": "5b9b4379173b7e543723998d9523d4c6f4a6011e94240a19afc51c449624753f"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.ts",
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
+            },
+            {
+              "path": "docs/operations/service-objectives.md",
+              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
+            }
+          ],
+          "checks": [
+            "Found no existing executable weekly load workload after checking the current workflow and application fixture paths. Reused the reviewed latency budgets, compiled production API, exact migration template and real private operations receiver with isolated synthetic accounts.",
+            "The checksum-verified Grafana k6 v2.3.0 Linux binary passed the loopback-only origin guard and the compiled PostgreSQL smoke through all 207 migrations. Four fresh attempts per each of the seven scenarios completed with zero failed checks. The database verified exact counts for electricity orders, fully paid invoices, wallet debits, authorized storage reservations, alert receipts and three private delivery intents per alert.",
+            "The weekly full fixture is configured for 1,000 distinct synthetic customers, 5,000 background profiles, twelve historic invoices plus one payable invoice per customer, Persian and English payloads and eight concurrent users. The report keeps p99 unavailable below 1,000 completed samples. The schedule pins the executable SHA-256 and keeps all runtime traffic on loopback.",
+            "The reported p95 rehearsal budgets remain 300/500 ms. The scheduled regression guard applies the existing 20% tolerance and fails missing samples or an unsuccessful operation. The workflow passed actionlint and the touched files passed formatting, ESLint and diff validation. No full-load, staging or production-equivalent pass is claimed."
+          ]
+        }
       }
     },
     {
@@ -511926,19 +512168,94 @@
         "story": "06-security-testing-observability.md#spec-fa8333966eb7"
       },
       "requirement": "| T-06.11.03.06 | Schedule weekly performance regression run in staging | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Read back the actual weekly schedule and its report, and verify the accepted staging or authorized isolated equivalent executes the same seven-path workload."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          ".github/workflows/load-weekly.yml",
+          "apps/api/performance/weekly.k6.mjs",
+          "apps/api/performance/weekly.perf.ts",
+          "apps/api/vitest.performance.config.ts",
+          "docs/operations/service-objectives.md"
+        ],
+        "batches": [
+          "release-0.6-weekly-isolated-load-scenarios"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-compiled-load-scenario-smoke",
+          "base_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/load-weekly.yml",
+              "sha256": "b37e2f752efb04c2e5aa8bf27c38176b300e99b5045d0b90fee52e4dbb1e5f6f"
+            },
+            {
+              "path": "apps/api/performance/weekly.k6.mjs",
+              "sha256": "8ff2f015946c051bc7455b295db5f8c1a6674863fdca11de905703150b5d371d"
+            },
+            {
+              "path": "apps/api/performance/weekly.perf.ts",
+              "sha256": "d181218e802f3c507ade98cceb2807f1a861b92a2b3dd72a8b7bc46a2a09a70b"
+            },
+            {
+              "path": "apps/api/scripts/http-test-server.cjs",
+              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+            },
+            {
+              "path": "apps/api/src/crm/crm.controller.ts",
+              "sha256": "72494a67b32246e58c55c4e603ba629fe5d2457be8b89833b68203ba8c689a43"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice.controller.ts",
+              "sha256": "d4d075d1cad4cab0145e0ea60f51236cc68a00c7a92607a9993e18cd55cdfd39"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/upload/upload.controller.ts",
+              "sha256": "b8d54439a4ddd2abe6a8b2e527895660e334fec1a6f5953c820b6f96b74b8842"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "825a0178bf5564db4c72f8c7279f72123d53b03c70b0a9d666e410b5562359a7"
+            },
+            {
+              "path": "apps/api/vitest.performance.config.ts",
+              "sha256": "5b9b4379173b7e543723998d9523d4c6f4a6011e94240a19afc51c449624753f"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.ts",
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
+            },
+            {
+              "path": "docs/operations/service-objectives.md",
+              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
+            }
+          ],
+          "checks": [
+            "Found no existing executable weekly load workload after checking the current workflow and application fixture paths. Reused the reviewed latency budgets, compiled production API, exact migration template and real private operations receiver with isolated synthetic accounts.",
+            "The checksum-verified Grafana k6 v2.3.0 Linux binary passed the loopback-only origin guard and the compiled PostgreSQL smoke through all 207 migrations. Four fresh attempts per each of the seven scenarios completed with zero failed checks. The database verified exact counts for electricity orders, fully paid invoices, wallet debits, authorized storage reservations, alert receipts and three private delivery intents per alert.",
+            "The weekly full fixture is configured for 1,000 distinct synthetic customers, 5,000 background profiles, twelve historic invoices plus one payable invoice per customer, Persian and English payloads and eight concurrent users. The report keeps p99 unavailable below 1,000 completed samples. The schedule pins the executable SHA-256 and keeps all runtime traffic on loopback.",
+            "The reported p95 rehearsal budgets remain 300/500 ms. The scheduled regression guard applies the existing 20% tolerance and fails missing samples or an unsuccessful operation. The workflow passed actionlint and the touched files passed formatting, ESLint and diff validation. No full-load, staging or production-equivalent pass is claimed."
+          ]
+        }
       }
     },
     {
@@ -513320,11 +513637,21 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "24da43cec22202acb8e1f659365e359b2422f3f72b384307060f1e4e5a185d66"
+              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
               "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-weekly-isolated-load-scenarios",
+              "base_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Add weekly fixture and report instructions only. Existing objective thresholds and incident guidance are unchanged."
             }
           ]
         }
@@ -516634,7 +516961,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "24da43cec22202acb8e1f659365e359b2422f3f72b384307060f1e4e5a185d66"
+              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -516652,6 +516979,16 @@
           "checks": [
             "Reviewed P1 customer outage and financial integrity, P2 degradation and backlog, and P3 working-hours warning with separate response and ownership expectations. The specific owner-approved notification rule and staged readback confirm low SMS credit remains P2. Alert transport labels and deployment/routing remain separately assessed.",
             "Distinguished the unchanged alert-priority categories and SLO targets from confirmed incident severity; checked the new response-plan link."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-weekly-isolated-load-scenarios",
+              "base_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Add weekly fixture and report instructions only. Existing objective thresholds and incident guidance are unchanged."
+            }
           ]
         }
       }
@@ -516930,7 +517267,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "24da43cec22202acb8e1f659365e359b2422f3f72b384307060f1e4e5a185d66"
+              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
             },
             {
               "path": "architecture.md",
@@ -516944,6 +517281,16 @@
           "checks": [
             "Matched all six indicators to the unchanged reliability budgets and restore limits. Definitions cover authenticated eligible outcomes, route p95, representative mobile p75 LCP, due-to-claim job p99 and late misses, verified RPO and readiness-through-finance RTO. No SLO measurement or dashboard deployment is implied.",
             "Distinguished the unchanged alert-priority categories and SLO targets from confirmed incident severity; checked the new response-plan link."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-weekly-isolated-load-scenarios",
+              "base_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Add weekly fixture and report instructions only. Existing objective thresholds and incident guidance are unchanged."
+            }
           ]
         }
       }
@@ -904999,6 +905346,183 @@
           "sha": "820405f4a44efb5f795efd5c5144723fde29d9c7",
           "conclusion": null
         }
+      }
+    },
+    "release-0.6-weekly-isolated-load-scenarios": {
+      "batch": "release-0.6-weekly-isolated-load-scenarios",
+      "base_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.02",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.11.03.03",
+        "06-security-testing-observability.md#T-06.11.03.06"
+      ],
+      "changed_paths": [
+        ".github/workflows/load-weekly.yml",
+        "apps/api/performance/weekly.k6.mjs",
+        "apps/api/performance/weekly.perf.ts",
+        "apps/api/vitest.performance.config.ts",
+        "docs/operations/service-objectives.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/load-weekly.yml",
+          "sha256": "b37e2f752efb04c2e5aa8bf27c38176b300e99b5045d0b90fee52e4dbb1e5f6f"
+        },
+        {
+          "path": "apps/api/performance/weekly.k6.mjs",
+          "sha256": "8ff2f015946c051bc7455b295db5f8c1a6674863fdca11de905703150b5d371d"
+        },
+        {
+          "path": "apps/api/performance/weekly.perf.ts",
+          "sha256": "d181218e802f3c507ade98cceb2807f1a861b92a2b3dd72a8b7bc46a2a09a70b"
+        },
+        {
+          "path": "apps/api/scripts/http-test-server.cjs",
+          "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+        },
+        {
+          "path": "apps/api/src/crm/crm.controller.ts",
+          "sha256": "72494a67b32246e58c55c4e603ba629fe5d2457be8b89833b68203ba8c689a43"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.controller.ts",
+          "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice.controller.ts",
+          "sha256": "d4d075d1cad4cab0145e0ea60f51236cc68a00c7a92607a9993e18cd55cdfd39"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+        },
+        {
+          "path": "apps/api/src/test/postgres-setup.ts",
+          "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+        },
+        {
+          "path": "apps/api/src/upload/upload.controller.ts",
+          "sha256": "b8d54439a4ddd2abe6a8b2e527895660e334fec1a6f5953c820b6f96b74b8842"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "825a0178bf5564db4c72f8c7279f72123d53b03c70b0a9d666e410b5562359a7"
+        },
+        {
+          "path": "apps/api/vitest.performance.config.ts",
+          "sha256": "5b9b4379173b7e543723998d9523d4c6f4a6011e94240a19afc51c449624753f"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
+        },
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
+        }
+      ],
+      "checks": [
+        "Found no existing executable weekly load workload after checking the current workflow and application fixture paths. Reused the reviewed latency budgets, compiled production API, exact migration template and real private operations receiver with isolated synthetic accounts.",
+        "The checksum-verified Grafana k6 v2.3.0 Linux binary passed the loopback-only origin guard and the compiled PostgreSQL smoke through all 207 migrations. Four fresh attempts per each of the seven scenarios completed with zero failed checks. The database verified exact counts for electricity orders, fully paid invoices, wallet debits, authorized storage reservations, alert receipts and three private delivery intents per alert.",
+        "The weekly full fixture is configured for 1,000 distinct synthetic customers, 5,000 background profiles, twelve historic invoices plus one payable invoice per customer, Persian and English payloads and eight concurrent users. The report keeps p99 unavailable below 1,000 completed samples. The schedule pins the executable SHA-256 and keeps all runtime traffic on loopback.",
+        "The reported p95 rehearsal budgets remain 300/500 ms. The scheduled regression guard applies the existing 20% tolerance and fails missing samples or an unsuccessful operation. The workflow passed actionlint and the touched files passed formatting, ESLint and diff validation. No full-load, staging or production-equivalent pass is claimed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "native_log": "performance-smoke-final-native.log",
+      "native_log_sha256": "04092973a7fd35c336277e9c45cd9c3a04a62b613b97b1d50cb53ec075ec81d0",
+      "isolated_smoke": {
+        "source": "2629485641dc879ed804d315b92ec9bab62f0100",
+        "environment": "isolated-load",
+        "concurrency": 2,
+        "requestedSamples": 4,
+        "warmupIterations": 0,
+        "dataset": {
+          "customerAccounts": 4,
+          "backgroundProfiles": 12,
+          "seededInvoices": 52,
+          "operationsRecipients": 3
+        },
+        "failedChecks": 0,
+        "operations": [
+          {
+            "operation": "electricity_preview",
+            "completed": 4,
+            "budgetP95Ms": 300,
+            "regressionThresholdMs": 360,
+            "p50Ms": 156.7979095,
+            "p95Ms": 237.62332905,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": false
+          },
+          {
+            "operation": "order_submission",
+            "completed": 4,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 263.887507,
+            "p95Ms": 380.543249,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": false
+          },
+          {
+            "operation": "wallet_payment",
+            "completed": 4,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 117.049104,
+            "p95Ms": 145.1872725,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": false
+          },
+          {
+            "operation": "invoice_list",
+            "completed": 4,
+            "budgetP95Ms": 300,
+            "regressionThresholdMs": 360,
+            "p50Ms": 56.680076,
+            "p95Ms": 74.28449294999999,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": false
+          },
+          {
+            "operation": "crm_search",
+            "completed": 4,
+            "budgetP95Ms": 300,
+            "regressionThresholdMs": 360,
+            "p50Ms": 48.3264415,
+            "p95Ms": 56.9599596,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": false
+          },
+          {
+            "operation": "upload_authorization",
+            "completed": 4,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 122.631847,
+            "p95Ms": 185.48474065,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": false
+          },
+          {
+            "operation": "notification_fanout",
+            "completed": 4,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 47.719995999999995,
+            "p95Ms": 88.31999269999999,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": false
+          }
+        ]
       }
     }
   },

@@ -43,6 +43,30 @@ candidate, dataset size, concurrency, warm-up interval, sample counts,
 failures and timeouts. Keep p99 unverified for any operation with fewer than
 1,000 completed samples and report unsuccessful attempts separately.
 
+The weekly load workflow runs Sundays at 03:00 UTC and supports a manual run
+on a candidate ref. It builds the compiled API, applies production migrations
+to disposable PostgreSQL and uses 1,000 synthetic customer accounts, 5,000
+background profiles and eight concurrent k6 users. Each iteration uses a
+distinct customer and writes new orders, payments and upload reservations.
+The protected loopback operations receiver enqueues private inbox delivery for
+three synthetic staff recipients. The upload path measures authorization and signing.
+It issues no object upload. Provider delivery is outside this workload.
+
+The artifact names the source commit, fixture size, sample counts and p50,
+p95 and p99 for each path. It records the strict read and write budgets and
+fails the weekly regression check at 360 ms and 600 ms p95, respectively,
+or when any required operation fails or misses its sample count. The report
+marks any miss of the underlying 300 ms or 500 ms rehearsal target separately.
+The fixture verifies the final order, paid invoice, wallet debit, reservation
+and notification receipt counts. An isolated run establishes a regression
+baseline. Production-topology load and recovery require separate evidence.
+
+For a local smoke run, install k6 v2.3.0 and run the dedicated Vitest
+configuration with `BARGHSA_PERFORMANCE_SMOKE=1`,
+`BARGHSA_PERFORMANCE_SHA=$(git rev-parse HEAD)` and a local disposable Docker
+runtime. Set `BARGHSA_PERFORMANCE_REPORT` to retain the JSON artifact. Smoke
+mode uses four samples and leaves p99 unavailable.
+
 ## Alert priorities
 
 | Priority | When to use                                                                                                                                                                                                                         | Required response                                                                                                          |

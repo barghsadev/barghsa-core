@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T17:27:21+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T17:36:29+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1187 | Accepted with unchanged source bindings. |
-| verify | 120 | Existing work may be complete; inspect evidence before building. |
-| partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 1188 | Accepted with unchanged source bindings. |
+| verify | 116 | Existing work may be complete; inspect evidence before building. |
+| partial | 56 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1043,7 +1043,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.04.03` | verify | Earlier deferred | Implement post-deploy smoke tests and SLO comparison |
 | `01-platform-infrastructure.md#T-05.04.04` | partial | Earlier deferred | Create runbooks for rollback scenarios |
 | `01-platform-infrastructure.md#T-05.05.01` | partial | Earlier deferred | Create nightly CI schedule |
-| `01-platform-infrastructure.md#T-05.05.02` | verify | Earlier deferred | Create weekly load/performance regression test |
+| `01-platform-infrastructure.md#T-05.05.02` | partial | Earlier deferred | Create weekly load/performance regression test |
 | `01-platform-infrastructure.md#T-05.05.03` | verify | Earlier deferred | Create quarterly disaster-recovery and restore exercise |
 | `01-platform-infrastructure.md#T-05.05.04` | verify | Earlier deferred | Create quarterly access review and threat-model update |
 | `01-platform-infrastructure.md#T-06.01.01` | done | Earlier deferred | Initialize `packages/shared` with tsconfig and dependencies |
@@ -1313,11 +1313,11 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.11.02.03` | done | Recorded batch work | Configure Semgrep/CodeQL with security-focused rules for NestJS/Drizzle patterns |
 | `06-security-testing-observability.md#T-06.11.02.04` | done | Recorded batch work | Add CI gate: critical/high SAST findings block merge; medium triaged within sprint |
 | `06-security-testing-observability.md#T-06.11.03.01` | done | Recorded batch work | Establish query and route latency budgets (p50/p95/p99) before load testing |
-| `06-security-testing-observability.md#T-06.11.03.02` | verify | Inventory needed | Write performance test scenarios: electricity price preview, order submission, wallet payment, invoice lists, CRM search, file upload auth, notification fan-out |
-| `06-security-testing-observability.md#T-06.11.03.03` | verify | Inventory needed | Run load test with realistic Persian/English payloads and production-like indexes |
+| `06-security-testing-observability.md#T-06.11.03.02` | done | Recorded batch work | Write performance test scenarios: electricity price preview, order submission, wallet payment, invoice lists, CRM search, file upload auth, notification fan-out |
+| `06-security-testing-observability.md#T-06.11.03.03` | partial | Recorded batch work | Run load test with realistic Persian/English payloads and production-like indexes |
 | `06-security-testing-observability.md#T-06.11.03.04` | done | Recorded batch work | Configure database protection: request/statement/lock/idle-transaction timeouts, pool limits, pagination caps, export/report concurrency limits |
 | `06-security-testing-observability.md#T-06.11.03.05` | done | Recorded batch work | Set up CI performance budget: route JS size, Core Web Vitals regression check for primary mobile flows |
-| `06-security-testing-observability.md#T-06.11.03.06` | verify | Inventory needed | Schedule weekly performance regression run in staging |
+| `06-security-testing-observability.md#T-06.11.03.06` | partial | Recorded batch work | Schedule weekly performance regression run in staging |
 | `06-security-testing-observability.md#T-06.11.04.01` | done | Recorded batch work | Write failure-injection tests: provider timeout → circuit breaker → queue; Redis unavailable → fallback to PG |
 | `06-security-testing-observability.md#T-06.11.04.02` | done | Recorded batch work | Write worker reliability tests: crash during job → reprocess or dead-letter; duplicate delivery → idempotency |
 | `06-security-testing-observability.md#T-06.11.04.03` | done | Recorded batch work | Write DB connection exhaustion test: pool full → queue/backpressure → graceful degradation |
