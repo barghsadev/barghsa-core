@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T01:36:34+00:00",
-  "source_commit": "4a254aa92f05e494391fcceff246139beaceca89",
+  "updated": "2026-11-10T01:36:52+00:00",
+  "source_commit": "5ec59c507c34f8b52824a1f6b2fe9783946c7569",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -480868,20 +480868,96 @@
         "story": "06-security-testing-observability.md#spec-4a371f79ceb9"
       },
       "requirement": "| T-06.04.01.04 | Add Zod refinement for business-rule validation (e.g. date ranges, amount limits) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-verify-financial-business-refinements"
+        ],
+        "current_acceptance": {
+          "kind": "verified-existing-zod-financial-refinements",
+          "base_commit": "5ec59c507c34f8b52824a1f6b2fe9783946c7569",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+              "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-forms.controller.test.ts",
+              "sha256": "d1e7b2a8ae04c4ef348fbc2d9a6c5e13a897e2095855a3c71902d0bdfe37979d"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+              "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
+              "sha256": "e541d12f2dce38aa194c697c4b7690a8e348650b46de2669245c0d971d569d93"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+              "sha256": "8fa91fa11e9dd8460ffc736f8ad67a0527bb10bc9e1978bffe2ac30b0457eafc"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.test.ts",
+              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.ts",
+              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
+              "sha256": "b8c42d99e5a513318e0e29159f79287a8578a403080e94392d12f0ec58138971"
+            },
+            {
+              "path": "packages/shared/src/finance/electricity-price-adjustment-review.ts",
+              "sha256": "2d3e69a0cc77399317a4b6ce9f0d80f63a79e7751a958e3609ae421ed5211a14"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-payment-review.test.ts",
+              "sha256": "f92664d64a90769efaa1f19003722e85732ae879d8c5c5308484e532a41f6f2c"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-payment-review.ts",
+              "sha256": "0d41b27f86956261051d124698778a07a8d9f4bea3d7fda7a6e11a966b175d9a"
+            },
+            {
+              "path": "packages/shared/src/validation/date-range-filter.test.ts",
+              "sha256": "8896b9024e6f18ae906cccc1e1fe3738dc7d7be3adf35926d7011f2b2adcba05"
+            },
+            {
+              "path": "packages/shared/src/validation/date-range-filter.ts",
+              "sha256": "833c792b792925e89bfe8a1a423334720a974f213f1a6af22bcfe7e664d148cf"
+            },
+            {
+              "path": "packages/shared/src/validation/invoice-list-query.test.ts",
+              "sha256": "24b2dd110adc98b13c7887266eed853ffb0fec9d498423373b3f1c8d7e85f050"
+            },
+            {
+              "path": "packages/shared/src/validation/invoice-list-query.ts",
+              "sha256": "ee106923189511874186a17670506a5bf61d08c0a9ea60b19e9371f03c8b1041"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Existing Zod wallet-history refinements validate chronological bounds at full fractional precision, including equivalent timezone offsets, and reject conflicting inclusive and exclusive bounds and inverted exact IRR ranges. The shared range parser preserves existing half-open date behavior.",
+            "Existing strict wallet invoice commands validate positive decimal IRR strings and reject values above the PostgreSQL int8 bound. Shared wallet and electricity financial review schemas reject unsafe, altered and arithmetically inconsistent quotes, including component totals and mismatched scope.",
+            "Thirty-four shared and 31 API unit cases passed. Five compiled PostgreSQL HTTP cases passed, including exact full and partial payments across retries and rejection of forged fields, malformed and oversized IRR values or changed authoritative amounts without new financial writes.",
+            "The implementation already met this refinement criterion. Source and test assertions were preserved. The broader command strictness and schema inventory tasks remain independently open."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.04.01.05",
@@ -854345,6 +854421,89 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/agent-denial-replay",
       "source_scope_proof": "agent-denial-replay-source-proof.json",
       "source_scope_proof_sha256": "6cbacbd6b831270540f71fe1bbe1479c5e0e67c7e1eb40fe85d2d93a2927bd4b"
+    },
+    "release-0.6-verify-financial-business-refinements": {
+      "batch": "release-0.6-verify-financial-business-refinements",
+      "base_commit": "5ec59c507c34f8b52824a1f6b2fe9783946c7569",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.01.04"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+          "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-price-forms.controller.test.ts",
+          "sha256": "d1e7b2a8ae04c4ef348fbc2d9a6c5e13a897e2095855a3c71902d0bdfe37979d"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
+          "sha256": "a02646a52c16f69ae15427412c57f8ff842bf63bc74235aca82b9f724bb89292"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
+          "sha256": "e541d12f2dce38aa194c697c4b7690a8e348650b46de2669245c0d971d569d93"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+          "sha256": "8fa91fa11e9dd8460ffc736f8ad67a0527bb10bc9e1978bffe2ac30b0457eafc"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-history.test.ts",
+          "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-history.ts",
+          "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+        },
+        {
+          "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
+          "sha256": "b8c42d99e5a513318e0e29159f79287a8578a403080e94392d12f0ec58138971"
+        },
+        {
+          "path": "packages/shared/src/finance/electricity-price-adjustment-review.ts",
+          "sha256": "2d3e69a0cc77399317a4b6ce9f0d80f63a79e7751a958e3609ae421ed5211a14"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-payment-review.test.ts",
+          "sha256": "f92664d64a90769efaa1f19003722e85732ae879d8c5c5308484e532a41f6f2c"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-payment-review.ts",
+          "sha256": "0d41b27f86956261051d124698778a07a8d9f4bea3d7fda7a6e11a966b175d9a"
+        },
+        {
+          "path": "packages/shared/src/validation/date-range-filter.test.ts",
+          "sha256": "8896b9024e6f18ae906cccc1e1fe3738dc7d7be3adf35926d7011f2b2adcba05"
+        },
+        {
+          "path": "packages/shared/src/validation/date-range-filter.ts",
+          "sha256": "833c792b792925e89bfe8a1a423334720a974f213f1a6af22bcfe7e664d148cf"
+        },
+        {
+          "path": "packages/shared/src/validation/invoice-list-query.test.ts",
+          "sha256": "24b2dd110adc98b13c7887266eed853ffb0fec9d498423373b3f1c8d7e85f050"
+        },
+        {
+          "path": "packages/shared/src/validation/invoice-list-query.ts",
+          "sha256": "ee106923189511874186a17670506a5bf61d08c0a9ea60b19e9371f03c8b1041"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Existing Zod wallet-history refinements validate chronological bounds at full fractional precision, including equivalent timezone offsets, and reject conflicting inclusive and exclusive bounds and inverted exact IRR ranges. The shared range parser preserves existing half-open date behavior.",
+        "Existing strict wallet invoice commands validate positive decimal IRR strings and reject values above the PostgreSQL int8 bound. Shared wallet and electricity financial review schemas reject unsafe, altered and arithmetically inconsistent quotes, including component totals and mismatched scope.",
+        "Thirty-four shared and 31 API unit cases passed. Five compiled PostgreSQL HTTP cases passed, including exact full and partial payments across retries and rejection of forged fields, malformed and oversized IRR values or changed authoritative amounts without new financial writes.",
+        "The implementation already met this refinement criterion. Source and test assertions were preserved. The broader command strictness and schema inventory tasks remain independently open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/business-validation",
+      "source_scope_proof": "business-refinements-source-proof.json",
+      "source_scope_proof_sha256": "357093bf7dc5d0dc724a2997b2a24d88bda7d11cb4c0ffa0fc5b7221e70fda69"
     }
   },
   "historical_improvements": [
