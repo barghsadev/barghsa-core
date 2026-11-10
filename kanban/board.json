@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T06:39:46+00:00",
-  "source_commit": "15c37b5b62df0b4b8c8a8b6220e86defd7228df1",
+  "updated": "2026-11-10T06:41:15+00:00",
+  "source_commit": "1a5b2926b7ac815790f207fb5022977ced797ff3",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -493325,19 +493325,108 @@
         "story": "06-security-testing-observability.md#spec-5b8a34999cf1"
       },
       "requirement": "| T-06.09.02.04 | Author unit tests for idempotency: idempotency key verification, duplicate detection, refund-amount calculations | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-idempotency-and-refund-calculation-evidence"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-domain-unit-tests",
+          "reviewed_sha": "1a5b2926b7ac815790f207fb5022977ced797ff3",
+          "checks": [
+            "Unit cases cover claim and cached replay, different-intent collision, expired key reclaim, durable cache failure, exact debit/credit math and reconciliation of expected and actual refund allocations.",
+            "Hosted run 42759736897 job 129642496352 passed 85 source-matched unit cases and 89 matching PostgreSQL cases for claim races, wallet payment, and wallet/external refund amount, concurrency and repeat protection. Live payment sandbox and release evidence remain separate."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/idempotency/idempotency-keys.repository.integration.test.ts",
+              "sha256": "ed9ec6b98ed5651cd5fe2718e0c8b78fd7ff79b4b35b2a97c2a7c2c3ad92e605"
+            },
+            {
+              "path": "apps/api/src/idempotency/idempotency-keys.repository.test.ts",
+              "sha256": "0cc320eaddc8731850409d3c4f121bc2468404264a24da994f8c3effb0d10662"
+            },
+            {
+              "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
+              "sha256": "e374dd1a2166c843a594418060975674400d5dbcb837234844d5a05569716fa7"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "debe727fbe8223327b753f6d41f248d8e2081e8e033468429bdb9eb67ab90449"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+              "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+              "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+              "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
+            },
+            {
+              "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+              "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+            },
+            {
+              "path": "packages/shared/src/finance/consultation-paid-fee-review.test.ts",
+              "sha256": "a49ab65a4cf4aa0f4f4649e6176465877129462e6cc6e423539e6b9eb3400d58"
+            },
+            {
+              "path": "packages/shared/src/finance/consultation-paid-fee-review.ts",
+              "sha256": "2c1b9576b6e0dbc298233ac0d46a175efb92db4fe1c02f1e9a342ba171b50f28"
+            },
+            {
+              "path": "packages/shared/src/finance/consultation-paid-resolution-review.test.ts",
+              "sha256": "f96149fcbd339f7743c6bd3ea65e9b26d0eb15c1e6de17d9e9713bc35fe22e1f"
+            },
+            {
+              "path": "packages/shared/src/finance/consultation-paid-resolution-review.ts",
+              "sha256": "986c2b07a7276720c6169ee2c926be2b4a91ba143ce98f0cc032cac96d893ef5"
+            },
+            {
+              "path": "packages/shared/src/finance/pay-invoice-with-wallet.test.ts",
+              "sha256": "015d9586dc05141e7e8a8a3a78a84e8db2905100b76e685582748ab34c415c45"
+            },
+            {
+              "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
+              "sha256": "1470cd391ba0f2a595b29d40e1ece78ed99f8aabf75ce77a24daa6527c7e1242"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-reversal.test.ts",
+              "sha256": "4442fdf214314e87fe4892d232e955ae6e570366b36de3844ea9d9742f0f0edd"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-reversal.ts",
+              "sha256": "06f138304ced158ded6b6beea0171dd5b1dc5cf9891dac327c48112b07b13306"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "acc5f4df899fea132ed03121d10e205838e901ab9d31cfec30ab08129e1b3ba8"
+            }
+          ]
+        }
       }
     },
     {
@@ -870312,6 +870401,103 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/dual-approval-evidence",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "0cc70abc9fe4a52b9c1bca6499c2682d58ed793af55ad2e637e88f1238476891"
+    },
+    "release-0.6-idempotency-and-refund-calculation-evidence": {
+      "batch": "release-0.6-idempotency-and-refund-calculation-evidence",
+      "base_commit": "1a5b2926b7ac815790f207fb5022977ced797ff3",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.02.04"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/idempotency/idempotency-keys.repository.integration.test.ts",
+          "sha256": "ed9ec6b98ed5651cd5fe2718e0c8b78fd7ff79b4b35b2a97c2a7c2c3ad92e605"
+        },
+        {
+          "path": "apps/api/src/idempotency/idempotency-keys.repository.test.ts",
+          "sha256": "0cc320eaddc8731850409d3c4f121bc2468404264a24da994f8c3effb0d10662"
+        },
+        {
+          "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
+          "sha256": "e374dd1a2166c843a594418060975674400d5dbcb837234844d5a05569716fa7"
+        },
+        {
+          "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+          "sha256": "debe727fbe8223327b753f6d41f248d8e2081e8e033468429bdb9eb67ab90449"
+        },
+        {
+          "path": "apps/api/src/refund/refund.service.ts",
+          "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+        },
+        {
+          "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+          "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
+          "sha256": "03ce3c9d81710e9e96f1a164bb7216e1ef9be3463f58667d52be4655282d974e"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.integration.test.ts",
+          "sha256": "362e0b62d729883fece53034a143da8c58ec2104a283f72f341714757ebc55c8"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
+          "sha256": "21da392e75f793675a20027416b7beedd56e02146f620fe0e9e886bcf272628c"
+        },
+        {
+          "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
+          "sha256": "ed802d5c454a3e46836ccdfdff953914061fffe1acf78600a40ebb0a06d8943a"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+        },
+        {
+          "path": "packages/shared/src/finance/consultation-paid-fee-review.test.ts",
+          "sha256": "a49ab65a4cf4aa0f4f4649e6176465877129462e6cc6e423539e6b9eb3400d58"
+        },
+        {
+          "path": "packages/shared/src/finance/consultation-paid-fee-review.ts",
+          "sha256": "2c1b9576b6e0dbc298233ac0d46a175efb92db4fe1c02f1e9a342ba171b50f28"
+        },
+        {
+          "path": "packages/shared/src/finance/consultation-paid-resolution-review.test.ts",
+          "sha256": "f96149fcbd339f7743c6bd3ea65e9b26d0eb15c1e6de17d9e9713bc35fe22e1f"
+        },
+        {
+          "path": "packages/shared/src/finance/consultation-paid-resolution-review.ts",
+          "sha256": "986c2b07a7276720c6169ee2c926be2b4a91ba143ce98f0cc032cac96d893ef5"
+        },
+        {
+          "path": "packages/shared/src/finance/pay-invoice-with-wallet.test.ts",
+          "sha256": "015d9586dc05141e7e8a8a3a78a84e8db2905100b76e685582748ab34c415c45"
+        },
+        {
+          "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
+          "sha256": "1470cd391ba0f2a595b29d40e1ece78ed99f8aabf75ce77a24daa6527c7e1242"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-reversal.test.ts",
+          "sha256": "4442fdf214314e87fe4892d232e955ae6e570366b36de3844ea9d9742f0f0edd"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-reversal.ts",
+          "sha256": "06f138304ced158ded6b6beea0171dd5b1dc5cf9891dac327c48112b07b13306"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "acc5f4df899fea132ed03121d10e205838e901ab9d31cfec30ab08129e1b3ba8"
+        }
+      ],
+      "checks": [
+        "Unit cases cover claim and cached replay, different-intent collision, expired key reclaim, durable cache failure, exact debit/credit math and reconciliation of expected and actual refund allocations.",
+        "Hosted run 42759736897 job 129642496352 passed 85 source-matched unit cases and 89 matching PostgreSQL cases for claim races, wallet payment, and wallet/external refund amount, concurrency and repeat protection. Live payment sandbox and release evidence remain separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/idempotency-unit-evidence",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "4b1d9aa39c0b371108c93b377c94e62c011e24678fc6edb9f19f503d33582e22"
     }
   },
   "historical_improvements": [
