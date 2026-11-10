@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T06:49:47+00:00",
-  "source_commit": "5cdc3780be779414822d3659f9566d9e22a05e37",
+  "updated": "2026-11-10T06:57:04+00:00",
+  "source_commit": "69256159b707a325c5b171b67988e0a6535309ed",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -74408,7 +74408,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -74672,7 +74673,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -208374,7 +208375,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -208410,7 +208412,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -209740,7 +209742,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -209776,7 +209779,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -211106,7 +211109,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -211142,7 +211146,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -212473,7 +212477,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -212509,7 +212514,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -213799,7 +213804,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -213835,7 +213841,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -215125,7 +215131,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -215161,7 +215168,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -216451,7 +216458,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -216487,7 +216495,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -217777,7 +217785,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -217813,7 +217822,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -219103,7 +219112,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -219139,7 +219149,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -220429,7 +220439,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -220465,7 +220476,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -221756,7 +221767,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -221792,7 +221804,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -223082,7 +223094,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -223118,7 +223131,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -224409,7 +224422,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -224445,7 +224459,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -225735,7 +225749,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -225771,7 +225786,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -227061,7 +227076,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -227097,7 +227113,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -228387,7 +228403,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -228423,7 +228440,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -229713,7 +229730,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -229749,7 +229767,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -231039,7 +231057,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -231075,7 +231094,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -232366,7 +232385,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -232402,7 +232422,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -233692,7 +233712,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -233728,7 +233749,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -235018,7 +235039,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -235054,7 +235076,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -236344,7 +236366,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -236380,7 +236403,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -237670,7 +237693,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -237706,7 +237730,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -238996,7 +239020,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -239032,7 +239057,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -240323,7 +240348,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -240359,7 +240385,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -241650,7 +241676,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -241686,7 +241713,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -242977,7 +243004,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -243013,7 +243041,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -244303,7 +244331,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -244339,7 +244368,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -245629,7 +245658,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -245665,7 +245695,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -246955,7 +246985,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -246991,7 +247022,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -262202,7 +262233,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -262262,7 +262294,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -263353,7 +263385,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -263413,7 +263446,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -264500,7 +264533,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -264560,7 +264594,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -265646,7 +265680,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -265706,7 +265741,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -266793,7 +266828,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -266853,7 +266889,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -267940,7 +267976,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -268000,7 +268037,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -269092,7 +269129,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -269152,7 +269190,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -270242,7 +270280,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -270302,7 +270341,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -271390,7 +271429,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -271450,7 +271490,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -272541,7 +272581,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -272601,7 +272642,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -273694,7 +273735,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -273754,7 +273796,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -274842,7 +274884,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -274902,7 +274945,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -275989,7 +276032,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -276049,7 +276093,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -277137,7 +277181,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -277197,7 +277242,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -278285,7 +278330,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -278345,7 +278391,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -279434,7 +279480,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -279494,7 +279541,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -484943,7 +484990,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the saving, solar and consultation HTTP isolation regressions and the existing same-profile financial journeys on the exact hosted source and full production schema."
+        "Run the corrected consultation and saving financial isolation HTTP regressions on the exact compiled candidate and full production schema. Reuse the passing solar HTTP suite while its tested source remains matched."
       ],
       "owner": null,
       "depends_on": [],
@@ -484954,7 +485001,8 @@
           "release-0.6-authority-for-queued-and-private-results",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": null
       }
@@ -489033,7 +489081,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-submission-quota-and-replay-authority",
@@ -489041,7 +489090,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -490463,7 +490512,8 @@
         "batches": [
           "release-0.6-provider-webhook-storage-and-replay-evidence",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": null
       }
@@ -490614,7 +490664,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-provider-webhook-storage-and-replay-evidence"
+          "release-0.6-provider-webhook-storage-and-replay-evidence",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": null
       }
@@ -740034,7 +740085,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-verification-settings",
@@ -740090,7 +740142,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
@@ -741746,7 +741798,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-workflow.integration.test.ts",
@@ -742961,7 +743013,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -743845,7 +743898,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-workflow.integration.test.ts",
@@ -745048,7 +745101,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ]
       }
     },
@@ -749977,7 +750031,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -753956,7 +754010,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ]
       }
     },
@@ -754312,7 +754367,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -757958,7 +758013,8 @@
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-ai-quotas-and-budget-evidence",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -758323,7 +758379,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+              "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -761851,7 +761907,8 @@
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-ai-quotas-and-budget-evidence",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-consultation-isolation-pagination-fixture"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -870841,6 +870898,69 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/upload-profile-admission",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "25d12480e01df1ab7040466e98bb404b95e6993f7acc1545560ff93e6a6ab85d"
+    },
+    "release-0.6-consultation-isolation-pagination-fixture": {
+      "batch": "release-0.6-consultation-isolation-pagination-fixture",
+      "base_commit": "69256159b707a325c5b171b67988e0a6535309ed",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.06.02.05",
+        "06-security-testing-observability.md#T-06.06.02.07"
+      ],
+      "changed_paths": [
+        "apps/api/src/consultation/consultation-request.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/consultation/consultation-request.controller.ts",
+          "sha256": "b322a7fc20fd929aed9b0872082b6981661fbe8a5abfa991b0acca5b2e6a3ce7"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
+          "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-request.service.ts",
+          "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
+        },
+        {
+          "path": "apps/api/src/email-webhook/email-webhook-http.integration.test.ts",
+          "sha256": "edac8cec23d9d1e830ed458ad50cd55ecb9e39e7000182a18d93bf8087a43432"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.integration.test.ts",
+          "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.service.ts",
+          "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.integration.test.ts",
+          "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.service.ts",
+          "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.integration.test.ts",
+          "sha256": "9bb4909415662f0924b862d264c768db378ac51b8967b356dbe1e41dff7c1ff6"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-http.integration.test.ts",
+          "sha256": "f785f649de24f6fe13acf982d19f642afa7abf8700ff9e0da27e4d2b9ffdf2f0"
+        }
+      ],
+      "checks": [
+        "Preflight 42765289565 at efdf845d passed the integrity, static, secret, image and build checks. Its API job passed 7,844 cases and failed one consultation list assertion; the combined wrapper inherited that failure. The regression had already passed its detail assertions.",
+        "The list response contained 100 distinct rows from the preceding pagination fixture. Selecting by the exact request ID isolates the list assertion without changing its profile scope or production SQL. It requires exactly the tested request, a null next cursor and all prior financial isolation assertions.",
+        "A disposable PostgreSQL 16 run of the exact production list SQL reproduced the full unfiltered page and confirmed the focused lookup returns precisely one request with no foreign invoice, invoice state or refund. API and DB builds, ESLint, Prettier and diff checks passed. The mounted HTTP test remains separate.",
+        "The same hosted run passed five solar request, 26 signed email callback, 18 chargeback and seven online top-up HTTP/DB cases, including their source-bound scope or receipt assertions. These successful scopes do not change the overall failed result."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/preflight-42765289565",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "0f23112325dd64a614f40b96ee54badd69cff3764c011d432eb07b50907101b1"
     }
   },
   "historical_improvements": [

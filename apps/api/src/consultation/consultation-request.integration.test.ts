@@ -445,19 +445,20 @@ it('keeps foreign financial rows out of an owned consultation even when their re
     refunds: [],
   });
 
-  const list = await fetch(
-    `${http.base}/api/consultations/requests?profileId=${profiles.individual}`,
-    { headers: headers.individual! }
-  );
+  const search = new URLSearchParams({ profileId: profiles.individual!, q: requestId });
+  const list = await fetch(`${http.base}/api/consultations/requests?${search}`, {
+    headers: headers.individual!,
+  });
   expect(list.status, http.logs()).toBe(200);
   expect(await list.json()).toMatchObject({
-    requests: expect.arrayContaining([
-      expect.objectContaining({
+    requests: [
+      {
         id: requestId,
         invoice_id: null,
         invoice_state: null,
         refund_pending: false,
-      }),
-    ]),
+      },
+    ],
+    nextBefore: null,
   });
 });
