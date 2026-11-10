@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T12:05:22+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T12:07:27+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1171 | Accepted with unchanged source bindings. |
-| verify | 137 | Existing work may be complete; inspect evidence before building. |
+| done | 1173 | Accepted with unchanged source bindings. |
+| verify | 135 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1287,7 +1287,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.02.08` | done | Recorded batch work | Write idempotency tests: duplicate request returns original result, same idempotency key different payload rejected |
 | `06-security-testing-observability.md#T-06.10.02.09` | done | Recorded batch work | Mandatory concurrency tests: simultaneous wallet payments, duplicate provider callbacks, duplicate bank confirmation, concurrent refund workers, repeated order submission, ownership/role changes during requests, competing state transitions |
 | `06-security-testing-observability.md#T-06.10.02.10` | done | Recorded batch work | Write provider adapter integration tests: fake SMTP, fake SMS.ir, fake payment gateway with all error modes |
-| `06-security-testing-observability.md#T-06.10.03.01` | verify | Inventory needed | Configure Playwright: project structure, environment, auth helpers, seed data, parallel workers with isolated DB schemas |
+| `06-security-testing-observability.md#T-06.10.03.01` | done | Recorded batch work | Configure Playwright: project structure, environment, auth helpers, seed data, parallel workers with isolated DB schemas |
 | `06-security-testing-observability.md#T-06.10.03.02` | done | Recorded batch work | Write E2E: registration → OTP verify → onboarding INDIVIDUAL → dashboard |
 | `06-security-testing-observability.md#T-06.10.03.03` | done | Recorded batch work | Write E2E: registration → OTP verify → onboarding LEGAL → profile verification flow |
 | `06-security-testing-observability.md#T-06.10.03.04` | done | Recorded batch work | Write E2E: login → OTP (new device) → MFA → session revocation |
@@ -1300,7 +1300,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.03.11` | done | Recorded batch work | Write E2E: contract version acceptance/signature → adjustment invoice |
 | `06-security-testing-observability.md#T-06.10.03.12` | done | Recorded batch work | Write E2E: admin configuration change → effective version → rollback |
 | `06-security-testing-observability.md#T-06.10.03.13` | done | Recorded batch work | Write E2E: profile switching → data isolation verification |
-| `06-security-testing-observability.md#T-06.10.03.14` | verify | Inventory needed | Configure CI E2E: PR → Chromium only; nightly → Chromium + Firefox + WebKit; release → + mobile viewports |
+| `06-security-testing-observability.md#T-06.10.03.14` | done | Recorded batch work | Configure CI E2E: PR → Chromium only; nightly → Chromium + Firefox + WebKit; release → + mobile viewports |
 | `06-security-testing-observability.md#T-06.10.03.15` | done | Recorded batch work | Ensure E2E never calls production payment, SMS, email, storage, bill-data, or AI providers |
 | `06-security-testing-observability.md#T-06.10.03.16` | done | Recorded batch work | Ensure every E2E test runs with Persian (fa) locale as default, verifying RTL layout and Jalali calendar |
 | `06-security-testing-observability.md#T-06.10.03.17` | done | Recorded batch work | Add dedicated English/LTR smoke tests and Gregorian calendar boundary tests |

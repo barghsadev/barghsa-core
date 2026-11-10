@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T12:05:22+00:00",
-  "source_commit": "37ea774e755759a0ff41c2c7cd5a64c2e0805729",
+  "updated": "2026-11-10T12:07:27+00:00",
+  "source_commit": "9b3fbeafd07a0c12151d9fdbf053dfcfe3ef0726",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -13389,7 +13389,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13401,7 +13402,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "AGENTS.md",
@@ -17877,7 +17878,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -17893,7 +17895,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "eslint.config.mjs",
@@ -18062,7 +18064,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -18103,7 +18106,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "eslint.config.mjs",
@@ -18792,7 +18795,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -18822,7 +18826,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "package.json",
@@ -18998,7 +19002,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -19022,7 +19027,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -495346,7 +495351,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -495354,7 +495360,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "vitest.config.ts",
@@ -497245,7 +497251,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-real-nestjs-and-migrated-test-fixture",
@@ -497253,7 +497260,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -497321,7 +497328,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-parallel-postgres-isolation",
@@ -497329,7 +497337,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -497402,7 +497410,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -497434,7 +497443,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -498376,7 +498385,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -498408,7 +498418,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -498471,19 +498481,82 @@
         "story": "06-security-testing-observability.md#spec-a2575d616ae6"
       },
       "requirement": "| T-06.10.03.01 | Configure Playwright: project structure, environment, auth helpers, seed data, parallel workers with isolated DB schemas | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/development/ci.md"
+        ],
+        "batches": [
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-playwright-and-ci-configuration",
+          "reviewed_sha": "9b3fbeafd07a0c12151d9fdbf053dfcfe3ef0726",
+          "source_evidence": [
+            {
+              "path": "apps/api/e2e/session.spec.ts",
+              "sha256": "88452f7fe3a667f7c939d8da6a6ee195922c1a66e5b8050e84c91a8442584c6e"
+            },
+            {
+              "path": "apps/api/playwright.config.ts",
+              "sha256": "f3936c132542fc8ec0a84af9cc09792f5d60822ce1ab3e6cbcd927cd7e506a8c"
+            },
+            {
+              "path": "apps/api/scripts/admin-ui-fixture.ts",
+              "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+            },
+            {
+              "path": "apps/web/e2e/admin-settings-live.spec.ts",
+              "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+            },
+            {
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "0157a19660c4eff58eb388396211c192b1b106e86ad73d08b2e8478dc4cec21c"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "24f59ff7dd0f3ee0d385e7f72fbefc9c9c560c8a153fb251ccf344733bb0ee84"
+            },
+            {
+              "path": "apps/web/e2e/local-network.ts",
+              "sha256": "a121fe7feaf0a217ee39b4ea5a7c60d1b90d0dd58062437080bd9a0b7b63008d"
+            },
+            {
+              "path": "apps/web/e2e/public-auth-fixture.ts",
+              "sha256": "80d98db1c5750fb377130dc173b2138ef90dba347baca8783fbdc998711b18f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "docs/development/ci.md",
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+            },
+            {
+              "path": "packages/db/src/test/globalSetup.ts",
+              "sha256": "04795ac3b8cbe3f2336619db65e0e78e128c3625b910c6ca645913f13708a79a"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Playwright configures five browser projects, a Persian default locale, per-test browser contexts and an explicit loopback environment. Auth helpers establish controlled sessions and public CSRF. The real API fixture owns a unique disposable PostgreSQL database with migrations and seeded test data, while pure browser cases keep per-test state in route fixtures.",
+            "The scheduled run used 40 separate shard jobs. Six Persian and English Mobile Safari storage, provider and AI configuration cases passed against the migrated real API in job 129738700024. The stricter current loopback fixture was verified separately in the provider-isolation batch. The prior full run failed overall and the exact candidate matrix remains open."
+          ]
+        }
       }
     },
     {
@@ -499516,19 +499589,66 @@
         "story": "06-security-testing-observability.md#spec-a2575d616ae6"
       },
       "requirement": "| T-06.10.03.14 | Configure CI E2E: PR → Chromium only; nightly → Chromium + Firefox + WebKit; release → + mobile viewports | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/development/ci.md"
+        ],
+        "batches": [
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-playwright-and-ci-configuration",
+          "reviewed_sha": "9b3fbeafd07a0c12151d9fdbf053dfcfe3ef0726",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/browser-nightly.yml",
+              "sha256": "d8fd9f966e5488307a2e91535b326ff64960f2d8c7f433e7a100c53089dfb1c2"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "docs/development/ci.md",
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+            },
+            {
+              "path": "scripts/browser-projects.mjs",
+              "sha256": "e0a3a2e38d0f3cdbc813be151f11807acb6f5c8e8c4c69993e18b49f0f028f72"
+            },
+            {
+              "path": "scripts/browser-projects.test.mjs",
+              "sha256": "9484a3e4fb196ad0839a4215072377ade5192928321b8d87b7014e14b11d7c91"
+            },
+            {
+              "path": "scripts/check-browser-results.py",
+              "sha256": "1e7086dac76325086f48072519d3c9052fd973eee4299d1c533b484d4b4f45b0"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "scripts/test_check_browser_results.py",
+              "sha256": "92825d371a4eba553b459e76779fcdbdce3e82edfe30bedcfcd20c6588ab5475"
+            }
+          ],
+          "checks": [
+            "Ordinary CI uses Chromium for production-browser checks, including its explicit Mobile Chrome performance gate. The scheduled browser workflow uses Chromium, Firefox, WebKit and both mobile profiles. It can be dispatched against the same immutable release candidate as full CI, which verifies Chromium source coverage and strict release policy separately.",
+            "The configured scheduled run reported all 40 expected shards and failed its strict aggregate with 127 unexpected and 18 flaky outcomes. The five local selector, flake-gate and result handling checks passed. The CI runbook records the exact candidate pairing and complete shard receipt requirement. Current source matches the observed scheduled workflow and result handling."
+          ]
+        }
       }
     },
     {
@@ -499565,7 +499685,8 @@
           "docs/development/ci.md"
         ],
         "batches": [
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-provider-loopback-boundary",
@@ -499645,7 +499766,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -736685,7 +736806,8 @@
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -737049,7 +737171,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -737349,7 +737471,8 @@
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -737713,7 +737836,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -738013,7 +738136,8 @@
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -738377,7 +738501,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -738678,7 +738802,8 @@
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -739042,7 +739167,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -739342,7 +739467,8 @@
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -739706,7 +739832,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -740006,7 +740132,8 @@
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -740370,7 +740497,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -740670,7 +740797,8 @@
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -741034,7 +741162,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -741335,7 +741463,8 @@
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -741699,7 +741828,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -741999,7 +742128,8 @@
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -742363,7 +742493,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -742663,7 +742793,8 @@
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -743027,7 +743158,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "d9c65e6455f74f019a24b2be6355d24cd84c4b0358d702a5219832b2f96cf324"
+              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -772563,7 +772694,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-profile-isolation-and-calendar-browser-evidence",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -881233,6 +881365,105 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/cancellation-and-otp-browser-recovery",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "9e0599837da1f9693fdf1a6f744ed26a972368079668d4a6d2c1a5506f1aa1b0"
+    },
+    "release-0.6-playwright-fixtures-and-ci-matrix-configuration": {
+      "batch": "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+      "base_commit": "9b3fbeafd07a0c12151d9fdbf053dfcfe3ef0726",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.03.01",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "docs/development/ci.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "d8fd9f966e5488307a2e91535b326ff64960f2d8c7f433e7a100c53089dfb1c2"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+        },
+        {
+          "path": "apps/api/e2e/session.spec.ts",
+          "sha256": "88452f7fe3a667f7c939d8da6a6ee195922c1a66e5b8050e84c91a8442584c6e"
+        },
+        {
+          "path": "apps/api/playwright.config.ts",
+          "sha256": "f3936c132542fc8ec0a84af9cc09792f5d60822ce1ab3e6cbcd927cd7e506a8c"
+        },
+        {
+          "path": "apps/api/scripts/admin-ui-fixture.ts",
+          "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "f4e44610f0515b0a13da6293407a36de0789e73b60cf13683495decb63657892"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "0157a19660c4eff58eb388396211c192b1b106e86ad73d08b2e8478dc4cec21c"
+        },
+        {
+          "path": "apps/web/e2e/global-setup.ts",
+          "sha256": "24f59ff7dd0f3ee0d385e7f72fbefc9c9c560c8a153fb251ccf344733bb0ee84"
+        },
+        {
+          "path": "apps/web/e2e/local-network.ts",
+          "sha256": "a121fe7feaf0a217ee39b4ea5a7c60d1b90d0dd58062437080bd9a0b7b63008d"
+        },
+        {
+          "path": "apps/web/e2e/public-auth-fixture.ts",
+          "sha256": "80d98db1c5750fb377130dc173b2138ef90dba347baca8783fbdc998711b18f1"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+        },
+        {
+          "path": "packages/db/src/test/globalSetup.ts",
+          "sha256": "04795ac3b8cbe3f2336619db65e0e78e128c3625b910c6ca645913f13708a79a"
+        },
+        {
+          "path": "scripts/browser-projects.mjs",
+          "sha256": "e0a3a2e38d0f3cdbc813be151f11807acb6f5c8e8c4c69993e18b49f0f028f72"
+        },
+        {
+          "path": "scripts/browser-projects.test.mjs",
+          "sha256": "9484a3e4fb196ad0839a4215072377ade5192928321b8d87b7014e14b11d7c91"
+        },
+        {
+          "path": "scripts/check-browser-results.py",
+          "sha256": "1e7086dac76325086f48072519d3c9052fd973eee4299d1c533b484d4b4f45b0"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        },
+        {
+          "path": "scripts/test_check_browser_results.py",
+          "sha256": "92825d371a4eba553b459e76779fcdbdce3e82edfe30bedcfcd20c6588ab5475"
+        }
+      ],
+      "checks": [
+        "Playwright configures five browser projects, a Persian default locale, per-test browser contexts and an explicit loopback environment. Auth helpers establish controlled sessions and public CSRF. The real API fixture owns a unique disposable PostgreSQL database with migrations and seeded test data, while pure browser cases keep per-test state in route fixtures.",
+        "The scheduled run used 40 separate shard jobs. Six Persian and English Mobile Safari storage, provider and AI configuration cases passed against the migrated real API in job 129738700024. The stricter current loopback fixture was verified separately in the provider-isolation batch. The prior full run failed overall and the exact candidate matrix remains open.",
+        "Ordinary CI uses Chromium for production-browser checks, including its explicit Mobile Chrome performance gate. The scheduled browser workflow uses Chromium, Firefox, WebKit and both mobile profiles. It can be dispatched against the same immutable release candidate as full CI, which verifies Chromium source coverage and strict release policy separately.",
+        "The configured scheduled run reported all 40 expected shards and failed its strict aggregate with 127 unexpected and 18 flaky outcomes. The five local selector, flake-gate and result handling checks passed. The CI runbook records the exact candidate pairing and complete shard receipt requirement. Current source matches the observed scheduled workflow and result handling."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-project-and-ci-configuration",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "21d536d81347b462c4449bd1a313ab0247cb9c76d8b2c638df1e9aed2cac9e57"
     }
   },
   "historical_improvements": [

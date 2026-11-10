@@ -6,7 +6,7 @@ Manually dispatch CI to run the full release checks. They include coverage from 
 
 Direct pushes to `main` require **Verify monorepo integrity** on the exact candidate. Seed preflight refs at the verified remote `main` SHA and push the candidate as the next update. A stack can fast-forward together after the exact tip passes. Seeding at an unpublished candidate can create duplicate check contexts when a later push cancels the seed run. Keep diagnostic snapshots on a parent that already contains their board changes because the secret scanner reads all branch history.
 
-Nightly jobs are separate from the integrity check. The release workflow in `kanban/WORKFLOW.md` governs when to enqueue staging after the verified release push.
+The nightly browser workflow runs Chromium, Firefox, WebKit, Mobile Chrome, and Mobile Safari in eight shards per project. For a release candidate, dispatch `ci.yml` and `browser-nightly.yml` against the same immutable preflight ref. Verify both runs report the intended `headSha` and retain the strict rollup from all 40 browser shards. The Chromium coverage run and the browser matrix provide separate evidence. The release workflow in `kanban/WORKFLOW.md` governs when to enqueue staging after the verified release push.
 
 The web suite pins Playwright 1.65.0 and uses the browser revisions it installs. This release restores WebKit mouse movement deltas used by the NumberField scrub test. Run the web suite with the same Node.js 24 version as CI when reproducing hosted results. [Playwright WebKit fix](https://github.com/microsoft/playwright/issues/43417).
 
@@ -83,6 +83,10 @@ fulfill synthetic provider URLs. The real API and worker processes launched
 by browser fixtures also reject non-loopback sockets. Run staging acceptance
 probes through the deployment runbooks with authorized test recipients and
 sandbox configuration.
+
+Browser workers that exercise the real API seed a separate disposable
+PostgreSQL database. Browser-only journeys keep their fixture data in each
+test's isolated context.
 
 ## Reusing local builds
 
