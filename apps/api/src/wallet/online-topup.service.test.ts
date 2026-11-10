@@ -74,6 +74,7 @@ function makeGateway(overrides: Partial<PaymentGateway> = {}): PaymentGateway {
 }
 
 type ScriptOptions = {
+  topUpCount?: number;
   wallet?: { profile_id: string } | null;
   existing?: ReturnType<typeof makePendingRow> | null;
   insert?: ReturnType<typeof makePendingRow> | Error;
@@ -84,6 +85,9 @@ type ScriptOptions = {
 
 function scriptClient(opts: ScriptOptions = {}) {
   mockClient.query.mockImplementation(async (sql: string) => {
+    if (sql.includes('rate_limit_rolling')) {
+      return { rows: [{ count: opts.topUpCount ?? 1, reset_ms: '42000' }] };
+    }
     if (
       sql.includes('pg_advisory_lock') ||
       sql.includes('pg_advisory_unlock') ||
@@ -260,6 +264,31 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
       expect.arrayContaining([canonical, AMOUNT.toString(), IDEM])
     );
     expect(walletService.createWallet).toHaveBeenCalledWith(canonical.toUpperCase(), mockClient);
+    expect(mockClient.query).toHaveBeenCalledWith(expect.stringContaining('rate_limit_rolling'), [
+      true,
+      `wallet:top-up:profile:${canonical}`,
+      60_000,
+      10,
+      true,
+    ]);
+  });
+
+  it('denies a new intent at the profile limit before persisting or contacting the gateway', async () => {
+    scriptClient({ topUpCount: 11 });
+    await expect(
+      service.initiate({
+        profileId: PROFILE_ID,
+        amountIrR: AMOUNT,
+        idempotencyKey: IDEM,
+        actor: testActor,
+      })
+    ).rejects.toMatchObject({ status: 429, response: { retryAfterMs: 42_000 } });
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+    expect(mockClient.query).not.toHaveBeenCalledWith(
+      expect.stringContaining('INSERT INTO wallet_transactions'),
+      expect.any(Array)
+    );
+    expect(gateway.startPayment).not.toHaveBeenCalled();
   });
 
   it('creates a Pending top-up, starts the gateway, and does not credit the wallet', async () => {
@@ -314,6 +343,7 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
 
   it('replays a matching Pending row with an existing redirect without calling the gateway again', async () => {
     scriptClient({
+      topUpCount: 11,
       existing: makePendingRow({
         metadata: { channel: 'online', gateway: { authority: 'auth-1', redirectUrl: REDIRECT } },
         ref_id: 'auth-1',
@@ -328,6 +358,10 @@ describe('OnlineTopUpService (T-04.2.02.01)', () => {
     });
 
     expect(result.redirectUrl).toBe(REDIRECT);
+    expect(mockClient.query).not.toHaveBeenCalledWith(
+      expect.stringContaining('rate_limit_rolling'),
+      expect.any(Array)
+    );
     expect(gateway.startPayment).not.toHaveBeenCalled();
     expect(await promClient.register.metrics()).not.toContain(
       'payment_idempotency_last_conflict_timestamp_seconds{'

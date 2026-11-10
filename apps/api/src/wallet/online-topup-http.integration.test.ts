@@ -70,6 +70,47 @@ async function seed() {
   return { userId, profileId, sessionId, csrf, correlationId, key, headers, review, submit };
 }
 
+it('limits new intents by profile while preserving an accepted HTTP replay', async () => {
+  const input = await seed();
+  const rateKey = `wallet:top-up:profile:${input.profileId}`;
+  for (let count = 1; count <= 9; count++) {
+    const seeded = await http.pool.query(
+      'SELECT count FROM rate_limit_rolling(true, $1, 60000, 10, true)',
+      [rateKey]
+    );
+    expect(seeded.rows).toEqual([{ count }]);
+  }
+  const tenth = await input.submit();
+  expect(tenth.status, await tenth.clone().text()).toBe(201);
+  const receipt = (await tenth.json()) as { transactionId: string };
+
+  const nextKey = randomUUID();
+  const preview = await fetch(`${http.base}/api/wallet/${input.profileId}/top-ups/review`, {
+    method: 'POST',
+    headers: input.headers,
+    body: JSON.stringify({ amount: 1000, idempotencyKey: nextKey }),
+  });
+  expect(preview.status, await preview.clone().text()).toBe(200);
+  const review = (await preview.json()) as { hash: string };
+  const denied = await fetch(`${http.base}/api/wallet/${input.profileId}/top-ups`, {
+    method: 'POST',
+    headers: { ...input.headers, 'Idempotency-Key': nextKey },
+    body: JSON.stringify({ amount: 1000, expectedReviewHash: review.hash }),
+  });
+  expect(denied.status, await denied.clone().text()).toBe(429);
+  expect(Number(denied.headers.get('Retry-After'))).toBeGreaterThan(0);
+  const replay = await input.submit();
+  expect(replay.status, await replay.clone().text()).toBe(201);
+  expect(await replay.json()).toEqual(receipt);
+  expect(
+    (
+      await http.pool.query('SELECT id FROM wallet_transactions WHERE wallet_id=$1', [
+        input.profileId,
+      ])
+    ).rows
+  ).toEqual([{ id: receipt.transactionId }]);
+});
+
 it('online HTTP initiation binds the authenticated actor and persists one Pending intent on retry', async () => {
   const input = await seed();
   expect(

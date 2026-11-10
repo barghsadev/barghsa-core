@@ -77,6 +77,7 @@ function makeWalletService() {
 }
 
 type ScriptOptions = {
+  topUpCount?: number;
   wallet?: { profile_id: string } | null;
   storageStatus?: string | null;
   storageMetadata?: Record<string, unknown> | null;
@@ -88,6 +89,9 @@ type ScriptOptions = {
 
 function scriptClient(opts: ScriptOptions = {}) {
   mockClient.query.mockImplementation(async (sql: string, params: unknown[] = []) => {
+    if (sql.includes('rate_limit_rolling')) {
+      return { rows: [{ count: opts.topUpCount ?? 1, reset_ms: '42000' }] };
+    }
     if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
       return { rows: [] };
     }
@@ -168,6 +172,7 @@ function submitInput(overrides: Record<string, unknown> = {}) {
 
 describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
   let walletService: ReturnType<typeof makeWalletService>;
+  let storage: ReturnType<typeof memoryStorage>;
   let service: BankReceiptTopUpService;
 
   beforeEach(() => {
@@ -177,10 +182,8 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
     mockClient.release.mockImplementation(() => {});
     mockClient.query.mockReset();
     walletService = makeWalletService();
-    service = new BankReceiptTopUpService(
-      walletService as unknown as WalletService,
-      memoryStorage(new Map([[ATTACHMENT, pdfBytes()]]))
-    );
+    storage = memoryStorage(new Map([[ATTACHMENT, pdfBytes()]]));
+    service = new BankReceiptTopUpService(walletService as unknown as WalletService, storage);
   });
 
   it('rejects a blank idempotency key before touching the wallet', async () => {
@@ -316,6 +319,13 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
       attachmentKey: sealedInvoiceBankReceiptAttachmentKey(ATTACHMENT),
     });
     expect(walletService.credit).not.toHaveBeenCalled();
+    expect(mockClient.query).toHaveBeenCalledWith(expect.stringContaining('rate_limit_rolling'), [
+      true,
+      `wallet:top-up:profile:${PROFILE_ID}`,
+      60_000,
+      10,
+      true,
+    ]);
     const insert = mockClient.query.mock.calls.find(([sql]) =>
       String(sql).includes('INSERT INTO wallet_transactions')
     );
@@ -331,10 +341,32 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
     expect(protect?.[1]?.slice(0, 2)).toEqual([ATTACHMENT, ACTOR_ID]);
   });
 
+  it('denies a new bank receipt at the shared profile limit before sealing the attachment', async () => {
+    scriptClient({ topUpCount: 11 });
+    const readObject = vi.spyOn(storage, 'getObject');
+    const putObject = vi.spyOn(storage, 'putObject');
+    await expect(service.submit(submitInput())).rejects.toMatchObject({
+      status: 429,
+      response: { retryAfterMs: 42_000 },
+    });
+    expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+    expect(mockClient.query).not.toHaveBeenCalledWith(
+      expect.stringMatching(/UPDATE storage_records|INSERT INTO wallet_transactions/),
+      expect.any(Array)
+    );
+    expect(readObject).not.toHaveBeenCalled();
+    expect(putObject).not.toHaveBeenCalled();
+    expect(walletService.credit).not.toHaveBeenCalled();
+  });
+
   it('does not rewrite an already-submitted immutable receipt on retry', async () => {
-    scriptClient({ storageStatus: 'immutable', existing: makePendingRow() });
+    scriptClient({ storageStatus: 'immutable', existing: makePendingRow(), topUpCount: 11 });
     const result = await service.submit(submitInput());
     expect(result.state).toBe('Pending');
+    expect(mockClient.query).not.toHaveBeenCalledWith(
+      expect.stringContaining('rate_limit_rolling'),
+      expect.any(Array)
+    );
     expect(
       mockClient.query.mock.calls.some(([sql]) => String(sql).includes('UPDATE storage_records'))
     ).toBe(false);

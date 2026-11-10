@@ -1,5 +1,6 @@
 import { HttpException, NotFoundException } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { PostgresRateLimiterStore, rateLimitKey } from '@barghsa/shared/rate-limit';
 
 /** Call inside the transaction, before taking the wallet lock. */
 export async function lockActiveTopUpProfile(
@@ -22,4 +23,24 @@ export async function lockActiveTopUpProfile(
       },
       409
     );
+}
+
+/** Count new online and receipt top-ups in their existing admission transaction. */
+export async function enforceProfileTopUpLimit(
+  client: { query: ConstructorParameters<typeof PostgresRateLimiterStore>[0] },
+  canonicalProfileId: string
+): Promise<void> {
+  const store = new PostgresRateLimiterStore((sql, values) => client.query(sql, values));
+  const key = rateLimitKey('wallet:top-up:profile', canonicalProfileId);
+  const result = await store.incrementSecurity(key, 10, 60_000);
+  if (!result.allowed) {
+    throw new HttpException(
+      {
+        statusCode: 429,
+        error: ErrorCodes.RATE_LIMIT_EXCEEDED.code,
+        retryAfterMs: result.resetMs,
+      },
+      429
+    );
+  }
 }

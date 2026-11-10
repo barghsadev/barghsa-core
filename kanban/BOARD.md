@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T06:57:04+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T07:06:18+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1137 | Accepted with unchanged source bindings. |
-| verify | 172 | Existing work may be complete; inspect evidence before building. |
-| partial | 51 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 171 | Existing work may be complete; inspect evidence before building. |
+| partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1193,7 +1193,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.05.02.03` | done | Recorded batch work | Configure login limits: progressive delay after 5 failures per account+IP in 15min; IP/device spray detection |
 | `06-security-testing-observability.md#T-06.05.02.04` | done | Recorded batch work | Configure password reset: 5 starts per account or dest/hour; separate IP limits |
 | `06-security-testing-observability.md#T-06.05.02.05` | done | Recorded batch work | Configure order/consultation limits: 5 per profile/minute; idempotency key as secondary protect |
-| `06-security-testing-observability.md#T-06.05.02.06` | verify | Inventory needed | Configure wallet/payment/refund limits: 10 per profile/minute; stricter provider+anomaly controls |
+| `06-security-testing-observability.md#T-06.05.02.06` | partial | Recorded batch work | Configure wallet/payment/refund limits: 10 per profile/minute; stricter provider+anomaly controls |
 | `06-security-testing-observability.md#T-06.05.02.07` | partial | Recorded batch work | Configure file upload limits: 20 per profile/minute; concurrent upload, size, storage quotas |
 | `06-security-testing-observability.md#T-06.05.02.08` | done | Recorded batch work | Configure AI limits: per-user requests, concurrency, token, cost budgets; stricter for tool-enabled actions |
 | `06-security-testing-observability.md#T-06.05.02.09` | verify | Inventory needed | Admin UI: view/edit limits within safe min/max bounds; versioned configuration |

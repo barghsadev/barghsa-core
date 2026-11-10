@@ -1,4 +1,4 @@
-import { lockActiveTopUpProfile } from './active-profile.js';
+import { enforceProfileTopUpLimit, lockActiveTopUpProfile } from './active-profile.js';
 import {
   lockFinancialSubmissionActor,
   type FinancialSubmissionActor,
@@ -444,6 +444,7 @@ export class OnlineTopUpService {
         const review = this.financialReview(profileId, amountIrR, snapshot);
         if (input.expectedReviewHash)
           this.reviews.assertConfirmed(review, input.expectedReviewHash);
+        await enforceProfileTopUpLimit(client, canonicalWalletId);
         const inserted = await client.query(
           `INSERT INTO wallet_transactions
              (wallet_id, type, amount, state, idempotency_key, description, metadata)

@@ -166,6 +166,16 @@ specification has no signed delivery callback declaration. A status report
 proves provider feedback for that message and must stay separate from the
 signed callback gate. [SMS.ir API specification](https://api.sms.ir/swagger/v1/swagger.json).
 
+## Wallet top-up admission
+
+Online and bank-receipt top-ups share a rolling limit of 10 new intents per
+profile per minute. PostgreSQL uses the locked wallet's canonical profile ID,
+so multiple authorized agents share the same quota. A new intent consumes
+quota in the transaction that creates it, before receipt sealing or gateway
+initialization. A rolled-back transaction leaves the quota available.
+Matching idempotent retries reuse the committed intent. The HTTP account
+limits and independent provider callback controls continue to apply.
+
 ## Live candidate review
 
 - Exercise login, logout, account recovery, MFA step-up and context changes

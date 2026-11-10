@@ -42,6 +42,7 @@ import {
   claimBankReceiptAttachment,
 } from '../finance/claim-bank-receipt-attachment.js';
 import { WalletService, type TransactionRow } from './wallet.service.js';
+import { enforceProfileTopUpLimit } from './active-profile.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 
 const PG_UNIQUE_VIOLATION = '23505';
@@ -415,6 +416,7 @@ export class BankReceiptTopUpService {
 
       const review = this.financialReview(profileId, amountIrR, receipt, storageRow);
       if (expectedReviewHash) this.reviews.assertConfirmed(review, expectedReviewHash);
+      await enforceProfileTopUpLimit(client, canonicalWalletId);
 
       const sealed = await sealBankReceiptAttachment(
         client,
