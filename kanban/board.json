@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T05:50:10+00:00",
-  "source_commit": "b9a437ac048ab30da40c37110322189fa4a0000f",
+  "updated": "2026-11-10T05:54:00+00:00",
+  "source_commit": "1744fa25ba86167f43513dbd84338389679dc56b",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35703,7 +35703,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35751,7 +35752,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -42484,7 +42485,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -42520,11 +42522,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -43846,7 +43848,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -43890,7 +43893,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/tos/tos-acceptance.ts",
@@ -45227,7 +45230,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -45271,7 +45275,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/tos/tos-acceptance.ts",
@@ -46616,7 +46620,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -46660,7 +46665,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/tos/tos-acceptance.ts",
@@ -74360,7 +74365,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -74648,11 +74654,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.ts",
@@ -203267,7 +203273,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -203387,7 +203394,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -205238,7 +205245,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -205358,7 +205366,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -208156,7 +208164,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -208208,11 +208217,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -209519,7 +209528,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -209571,11 +209581,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -210882,7 +210892,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -210934,11 +210945,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -212246,7 +212257,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -212298,11 +212310,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -213569,7 +213581,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -213621,11 +213634,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -214892,7 +214905,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -214944,11 +214958,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -216215,7 +216229,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -216267,11 +216282,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -217538,7 +217553,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -217590,11 +217606,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -218861,7 +218877,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -218913,11 +218930,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -220184,7 +220201,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -220236,11 +220254,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -221508,7 +221526,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -221560,11 +221579,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -222831,7 +222850,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -222883,11 +222903,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -224155,7 +224175,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -224207,11 +224228,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -225478,7 +225499,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -225530,11 +225552,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -226801,7 +226823,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -226853,11 +226876,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -228124,7 +228147,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -228176,11 +228200,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -229447,7 +229471,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -229499,11 +229524,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -230770,7 +230795,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -230822,11 +230848,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -232094,7 +232120,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -232146,11 +232173,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -233417,7 +233444,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -233469,11 +233497,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -234740,7 +234768,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -234792,11 +234821,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -236063,7 +236092,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -236115,11 +236145,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -237386,7 +237416,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -237438,11 +237469,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -238709,7 +238740,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -238761,11 +238793,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -240033,7 +240065,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -240085,11 +240118,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -241357,7 +241390,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -241409,11 +241443,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -242681,7 +242715,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -242733,11 +242768,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -244004,7 +244039,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -244056,11 +244092,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -245327,7 +245363,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -245379,11 +245416,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -246650,7 +246687,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -246702,11 +246740,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/web/e2e/catalogue-forms.spec.ts",
@@ -397003,7 +397041,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -397031,11 +397070,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -397782,7 +397821,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -397810,11 +397850,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -398561,7 +398601,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -398589,11 +398630,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -399342,7 +399383,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -399370,11 +399412,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -400119,7 +400161,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-solar-building-form-and-address-snapshots",
@@ -400128,7 +400171,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -400136,7 +400179,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -400769,7 +400812,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-solar-building-form-and-address-snapshots",
@@ -400778,7 +400822,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -400786,7 +400830,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -401420,7 +401464,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -401448,11 +401493,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -402199,7 +402244,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -402227,11 +402273,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -402978,7 +403024,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -403006,11 +403053,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -403758,7 +403805,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -403786,11 +403834,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -404538,7 +404586,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -404566,11 +404615,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -405319,7 +405368,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -405347,11 +405397,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -406104,7 +406154,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -406132,11 +406183,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -406883,7 +406934,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -406911,11 +406963,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -407663,7 +407715,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -407691,11 +407744,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -414321,7 +414374,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -414637,11 +414691,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -415687,7 +415741,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -416003,11 +416058,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -417054,7 +417109,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -417370,11 +417426,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -418420,7 +418476,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -418736,11 +418793,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -419786,7 +419843,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -420102,11 +420160,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -421153,7 +421211,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -421469,11 +421528,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -422521,7 +422580,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -422837,11 +422897,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -423886,7 +423946,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -424186,11 +424247,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -425216,7 +425277,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -425532,11 +425594,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -426581,7 +426643,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -426897,11 +426960,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -427943,7 +428006,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -428243,11 +428307,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -429267,7 +429331,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -429567,11 +429632,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -430591,7 +430656,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -430891,11 +430957,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -431897,7 +431963,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -431957,7 +432024,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -432616,7 +432683,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "accepted-all-applicable-order-review-wallet-disclosure",
@@ -432676,7 +432744,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -434072,7 +434140,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -434132,7 +434201,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -435911,7 +435980,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -435971,7 +436041,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -436586,7 +436656,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -436646,7 +436717,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -437261,7 +437332,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -437321,7 +437393,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -437936,7 +438008,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -437996,7 +438069,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -438611,7 +438684,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -438671,7 +438745,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -439286,7 +439360,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -439346,7 +439421,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -439961,7 +440036,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -440021,7 +440097,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -441355,7 +441431,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -441415,7 +441492,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -442029,7 +442106,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -442089,7 +442167,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -442715,7 +442793,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -442775,7 +442854,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -444111,7 +444190,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -444171,7 +444251,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -444790,7 +444870,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -444850,7 +444931,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -445466,7 +445547,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -445526,7 +445608,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.concurrency.integration.test.ts",
@@ -484059,7 +484141,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-authority-for-queued-and-private-results",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -484067,7 +484150,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "3d3635791cadb37702c277080586edb8096c089196e769c74b0a3f6a97d0ca64"
+              "sha256": "8b4022c892707c3dc5afcc675b115d5959e6c943ad29a9f879e0ecfd961eef28"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -484211,8 +484294,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the new consultation HTTP regression and existing valid financial projections on the exact hosted source and full production schema.",
-        "Finish tracing explicit-ID saving and solar related records and opaque cross-profile misses under the approved context design."
+        "Verify the new consultation and solar HTTP regressions and existing financial projections on the exact hosted source and full production schema.",
+        "Finish tracing the explicit-ID saving related records and opaque cross-profile misses under the approved context design."
       ],
       "owner": null,
       "depends_on": [],
@@ -484221,7 +484304,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-authority-for-queued-and-private-results",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": null
       }
@@ -484248,7 +484332,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-authority-for-queued-and-private-results",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -484369,7 +484454,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "3d3635791cadb37702c277080586edb8096c089196e769c74b0a3f6a97d0ca64"
+              "sha256": "8b4022c892707c3dc5afcc675b115d5959e6c943ad29a9f879e0ecfd961eef28"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -484411,7 +484496,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-authority-for-queued-and-private-results",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -484419,7 +484505,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "3d3635791cadb37702c277080586edb8096c089196e769c74b0a3f6a97d0ca64"
+              "sha256": "8b4022c892707c3dc5afcc675b115d5959e6c943ad29a9f879e0ecfd961eef28"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -487747,7 +487833,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-submission-quota-and-replay-authority",
@@ -487779,11 +487866,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "docs/decisions/fulfillment-and-financial-closure.md",
@@ -490728,7 +490815,8 @@
         "batches": [
           "release-0.6-source-grounded-threat-model-and-review",
           "release-0.6-authority-for-queued-and-private-results",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -490740,7 +490828,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "3d3635791cadb37702c277080586edb8096c089196e769c74b0a3f6a97d0ca64"
+              "sha256": "8b4022c892707c3dc5afcc675b115d5959e6c943ad29a9f879e0ecfd961eef28"
             },
             {
               "path": "docs/threat-model.md",
@@ -738149,7 +738237,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-verification-settings",
@@ -738277,7 +738366,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -739883,7 +739972,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
@@ -741071,7 +741160,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -741979,7 +742069,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
@@ -743155,7 +743245,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ]
       }
     },
@@ -749228,11 +749319,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-request.validation.ts",
@@ -752055,7 +752146,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ]
       }
     },
@@ -752983,11 +753075,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
@@ -756049,7 +756141,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -756982,11 +757075,11 @@
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
-              "sha256": "b733a71c69c2287bdf97476e362eb424e5efaf5bd29462ca3df24a1a1e86ac5e"
+              "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
-              "sha256": "2351000f7fd2f86266ce92c1c0c309b283c57eb08d1d195bfe421afc23a3761c"
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
@@ -759934,7 +760027,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-solar-financial-profile-scope"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -867471,6 +867565,57 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/consultation-finance-scope",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "322a02c69d169bafbccb796dc464f13b95eb6f184e180de08fe4d183ab64da1d"
+    },
+    "release-0.6-solar-financial-profile-scope": {
+      "batch": "release-0.6-solar-financial-profile-scope",
+      "base_commit": "1744fa25ba86167f43513dbd84338389679dc56b",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.01.04"
+      ],
+      "changed_paths": [
+        "apps/api/src/solar/solar-request.integration.test.ts",
+        "apps/api/src/solar/solar-request.service.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/orders/orders.service.ts",
+          "sha256": "22c6aef1fc109cedb37c0df86da4b2df55b0f5d507448b674942f86c547b1427"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.controller.ts",
+          "sha256": "bfedfd7b8ab6e6a436d9b463f59bc6a7181e4abfaa2422f54ad759e3f671a69d"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.integration.test.ts",
+          "sha256": "89818ad256bccf835d0ebd8ae98350406f66f01305f2ebf16a1825f82821272c"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.service.ts",
+          "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "8b4022c892707c3dc5afcc675b115d5959e6c943ad29a9f879e0ecfd961eef28"
+        },
+        {
+          "path": "packages/db/drizzle/production/0167_solar_contract_link.sql",
+          "sha256": "a2a0dc4c7953260cf65b434b6c10214e9c02179573cb9d4858c30e89d25c8243"
+        },
+        {
+          "path": "packages/db/drizzle/production/0259_invoice_origin_foreign_keys.sql",
+          "sha256": "7da9064616117595d2f418dd0ed725da20f12a7e8968101c4a44dbf72fceac87"
+        }
+      ],
+      "checks": [
+        "The solar contract reference and invoice origin foreign keys permit legacy or incorrectly associated references across profiles. The previous customer SQL disclosed related foreign contract and invoice identities, states and publication presence.",
+        "The solar list and detail projections join the authorized profile on the contract and initial invoice. The detail response uses the scoped contract identity. Valid owned contract, publication and initial-invoice results retain their existing shape.",
+        "The exact previous and current SQL ran against disposable PostgreSQL 16.15. Foreign contract and invoice references were excluded, an earlier foreign invoice on an owned contract no longer won the selection, and own results stayed visible. The disposable container was removed.",
+        "All 86 related solar operation, postal and document controller tests passed, as did API typecheck, lint, formatting and diff checks. The new full-schema HTTP regression still needs an exact hosted run."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/solar-finance-scope",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "36db8d20157e8054545db6a5c93643abf51abca15848d1db2793a681c23a0e60"
     }
   },
   "historical_improvements": [

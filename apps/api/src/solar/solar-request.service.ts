@@ -377,16 +377,17 @@ export class SolarRequestService {
       if (before && !cursor) throw new NotFoundException('Solar request cursor not found');
       const rows = (
         await client.query(
-          `SELECT r.id,r.status,r.building_type,r.grid_type,r.submitted_at,r.contract_id,
+          `SELECT r.id,r.status,r.building_type,r.grid_type,r.submitted_at,c.id AS contract_id,
                  i.id AS initial_invoice_id,i.state AS initial_invoice_state,
                  EXISTS(
-                   SELECT 1 FROM contract_publications cp WHERE cp.contract_id=r.contract_id
+                   SELECT 1 FROM contract_publications cp WHERE cp.contract_id=c.id
                  ) AS contract_published
                  FROM solar_construction_requests r
+                 LEFT JOIN contracts c ON c.id=r.contract_id AND c.profile_id=r.profile_id
                  LEFT JOIN LATERAL (
-                   SELECT id,state FROM invoices WHERE contract_id=r.contract_id::text
+                   SELECT id,state FROM invoices WHERE contract_id=c.id::text AND profile_id=r.profile_id
                    ORDER BY issued_at,id LIMIT 1
-                 ) i ON r.contract_id IS NOT NULL
+                 ) i ON c.id IS NOT NULL
                  WHERE r.profile_id=$1
                  AND ($2::timestamptz IS NULL OR (r.submitted_at,r.id) ${comparison} ($2::timestamptz,$3::uuid))
                  AND (cardinality($4::text[])=0 OR r.status=ANY($4::text[]))
@@ -425,15 +426,16 @@ export class SolarRequestService {
       await requireCurrentSession(client, actor);
       const request = (
         await client.query<Record<string, unknown>>(
-          `SELECT r.*,r.submission_review->'data'->>'siteAddress' AS site_address,
+          `SELECT r.*,c.id AS scoped_contract_id,r.submission_review->'data'->>'siteAddress' AS site_address,
                i.id AS initial_invoice_id,
                i.state AS initial_invoice_state,
-               EXISTS(SELECT 1 FROM contract_publications cp WHERE cp.contract_id=r.contract_id) AS contract_published
+               EXISTS(SELECT 1 FROM contract_publications cp WHERE cp.contract_id=c.id) AS contract_published
            FROM solar_construction_requests r
+           LEFT JOIN contracts c ON c.id=r.contract_id AND c.profile_id=r.profile_id
            LEFT JOIN LATERAL (
-               SELECT id,state FROM invoices WHERE contract_id=r.contract_id::text
+               SELECT id,state FROM invoices WHERE contract_id=c.id::text AND profile_id=r.profile_id
              ORDER BY issued_at,id LIMIT 1
-           ) i ON r.contract_id IS NOT NULL
+           ) i ON c.id IS NOT NULL
            WHERE r.id=$1`,
           [id]
         )
@@ -468,7 +470,8 @@ export class SolarRequestService {
       const progress = await readSolarProgress(client, id);
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      return { request, history, progress };
+      const { scoped_contract_id, ...details } = request;
+      return { request: { ...details, contract_id: scoped_contract_id }, history, progress };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

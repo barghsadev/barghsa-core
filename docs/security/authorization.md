@@ -8,6 +8,7 @@ PostgreSQL supplies current account, session, ownership and role authority. The 
 - An agent's Manager, Finance and Legal roles contribute additive capabilities within one legal profile. Actual ownership comes from the profile's current owner. Domain operations apply their permission for the requested action and retain additional constraints such as commercial verification or a signature review.
 - Read and mutate customer orders, invoices, contracts, wallet records, tickets and documents within the authorized profile or account. Apply both the record identifier and authorized scope before returning results or issuing a signed transfer. Keep exact amounts, terms and state transitions inside the domain's authoritative transaction. [Customer setup and delegation](../decisions/customer-setup-and-delegation.md).
 - Consultation list and detail reads require related invoices, adjustments and refunds to belong to the request's authorized profile. This check also covers older references that can point to an invoice from a different profile.
+- Solar list and detail reads scope the related contract, publication and initial invoice to the request's authorized profile.
 
 ## Staff capabilities
 
