@@ -26,6 +26,11 @@ The command that changes state checks the proof before applying those effects.
 Verification provider configuration writes and circuit-breaker resets also
 require fresh step-up. The verification adapter remains a development stub.
 
+Ownership transfers, role changes and protected identity edits write their
+audit rows within the business transaction. The rows identify the actor, the
+affected record and the previous and resulting authority or identity values.
+An audit failure rolls back the change.
+
 ## Background and external work
 
 - A worker acts on an authorized durable record with an operation-specific claim or lease. Before publishing a private result, recheck its current ownership or grant and enforce its result scope. Preserve transaction and provider idempotency boundaries when a retry is allowed. [Async jobs](../operations/async-jobs.md).

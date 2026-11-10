@@ -109,6 +109,27 @@ it.each(['Owner', 'Manager'])(
       after: ['Finance'],
       password: 'private-password',
     });
+    const completed = await audit(other, 'ownership_transfer_completed', {
+      profileId: profile.id,
+      fromUserId: target.id,
+      toUserId: other.id,
+      transferId: 'private-transfer',
+    });
+    const legacyAccepted = await audit(target, 'ownership_transfer_accepted', {
+      profileId: profile.id,
+      fromUserId: other.id,
+      toUserId: target.id,
+    });
+    await audit(other, 'ownership_transfer_completed', {
+      profileId: foreign.id,
+      fromUserId: target.id,
+      toUserId: other.id,
+    });
+    await audit(other, 'ownership_transfer_completed', {
+      profileId: profile.id,
+      fromUserId: owner.id,
+      toUserId: other.id,
+    });
     await audit(target, 'order_created', { profileId: foreign.id });
     await audit(other, 'order_created', { profileId: profile.id });
     await audit(target, 'electricity.order_comment_added', {
@@ -138,9 +159,21 @@ it.each(['Owner', 'Manager'])(
           createdAt: '2026-09-01T00:00:00.000Z',
           performed: false,
         },
+        {
+          id: completed,
+          kind: 'ownershipAccepted',
+          createdAt: '2026-09-01T00:00:00.000Z',
+          performed: false,
+        },
+        {
+          id: legacyAccepted,
+          kind: 'ownershipAccepted',
+          createdAt: '2026-09-01T00:00:00.000Z',
+          performed: true,
+        },
       ]),
     });
-    expect(body.items).toHaveLength(2);
+    expect(body.items).toHaveLength(4);
     expect(JSON.stringify(body)).not.toMatch(
       /private|secret|password|before|after|metadata|correlation/
     );

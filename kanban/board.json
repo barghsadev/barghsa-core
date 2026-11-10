@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T06:41:15+00:00",
-  "source_commit": "1a5b2926b7ac815790f207fb5022977ced797ff3",
+  "updated": "2026-11-10T06:45:31+00:00",
+  "source_commit": "a8fda345e4d528a9aa46f3afcecc6bed4479c116",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -484712,7 +484712,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-high-risk-staff-step-up"
+          "release-0.6-high-risk-staff-step-up",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -484720,7 +484721,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "207cb96766c55628f5ff2918b2ba58ffb753632faac8f61a56bab4d406889265"
+              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -484845,7 +484846,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-high-risk-staff-step-up"
+          "release-0.6-high-risk-staff-step-up",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -484890,7 +484892,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "207cb96766c55628f5ff2918b2ba58ffb753632faac8f61a56bab4d406889265"
+              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -484957,7 +484959,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-high-risk-staff-step-up"
+          "release-0.6-high-risk-staff-step-up",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -485078,7 +485081,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "207cb96766c55628f5ff2918b2ba58ffb753632faac8f61a56bab4d406889265"
+              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -485124,7 +485127,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-high-risk-staff-step-up"
+          "release-0.6-high-risk-staff-step-up",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -485132,7 +485136,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "207cb96766c55628f5ff2918b2ba58ffb753632faac8f61a56bab4d406889265"
+              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -485231,7 +485235,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-high-risk-staff-step-up",
-          "release-0.6-provider-command-unknown-fields"
+          "release-0.6-provider-command-unknown-fields",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -485373,7 +485378,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "207cb96766c55628f5ff2918b2ba58ffb753632faac8f61a56bab4d406889265"
+              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -486033,19 +486038,118 @@
         "story": "06-security-testing-observability.md#spec-57b540becf52"
       },
       "requirement": "| T-06.03.03.01 | Implement audit-logging interceptor for ownership/role/identity changes: before/after values, actor, timestamp | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+        ],
+        "current_acceptance": {
+          "kind": "verified-transactional-sensitive-audit",
+          "reviewed_sha": "a8fda345e4d528a9aa46f3afcecc6bed4479c116",
+          "checks": [
+            "The current protected writes create append-only audit rows inside the mutation transaction. Ownership records old/new owner, actor and time; role writes record previous and new roles; protected identity changes record field-level before/after values. The native suites cover current authority, required proof and rollback if the audit fails. The transactional implementation is recorded in the authorization policy.",
+            "Hosted run 42759736897 job 129642496352 passed 185 selected ownership, agent, staff role and identity HTTP cases. Tested source matches the governing runtime, with adjacent controller/service diffs limited to the verified log redactions.",
+            "An isolated PostgreSQL 16 fixture ran the exact old and new listAgentActivity implementation. The old reader omitted completed-transfer audit rows. The fixed reader accepts both real and legacy event names, keeps the safe summary kind, and preserves role denial, profile and member scope, internal visibility and the no-metadata projection.",
+            "API typecheck, ESLint, Prettier and diff checks passed. The new HTTP cases exercise the full mounted endpoint and still need an exact hosted run. No audit schema, old rows, protected mutations or session behavior changed."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-http.integration.test.ts",
+              "sha256": "9def554a790acb07250bc6ad7169f9e44947ef694eedf103b9045da75f3c569f"
+            },
+            {
+              "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
+              "sha256": "65a89679fc88d1970de93885262e5f7a10978e7b958965e0f93b4169ecf1b631"
+            },
+            {
+              "path": "apps/api/src/crm/crm-contact-http.integration.test.ts",
+              "sha256": "ac5aa2d866db05e62898ebe00b8174dd99e2f27b7fed2a9aa764cf233756a160"
+            },
+            {
+              "path": "apps/api/src/crm/crm-profile-legal.ts",
+              "sha256": "4653b5e17032fbc6e593bb5f47207510e980df36e2b800af66c010b6fc04c258"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.controller.ts",
+              "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.service.ts",
+              "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
+            },
+            {
+              "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+              "sha256": "13f1dfdab981a1ac041b666b6ecb22896f7a96c85cc3120eefdc064b8ae2fccd"
+            },
+            {
+              "path": "apps/api/src/crm/verification-case.service.ts",
+              "sha256": "319132938cc59fe27fb88a3b4a54b67e1a038bb9bf99bf87036ab0fb279874a8"
+            },
+            {
+              "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
+              "sha256": "0b0e37bf53009400aa10956163e4dc45887e1bd72aae18e2b2f188a228be3e89"
+            },
+            {
+              "path": "apps/api/src/profiles/agent-activity.ts",
+              "sha256": "8eea6af6d2faa35ef02a5372204159ac740ea4c397d51a72fa1e145235dae78a"
+            },
+            {
+              "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
+              "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.service.ts",
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
+            },
+            {
+              "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
+              "sha256": "06b98b37271eac465b1317c4d654ccb722b31fe5bf8df4e724a6781b9a9fa82f"
+            },
+            {
+              "path": "apps/api/src/profiles/ownership-http.integration.test.ts",
+              "sha256": "800e2746504e1f0251ea8581db2fb447c46fe2bacccbdd13d6be35764e031c45"
+            },
+            {
+              "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
+              "sha256": "e0f4b283f5838eda4f7430c2d5b5cb9c2b5a56d699230ebb241ecb8d4b968332"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.service.ts",
+              "sha256": "c26f01a740273a6fbec8da33c8d4cb0927d56920429c9579c30ad9f918609489"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "docs/security/authorization.md",
+              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
+            },
+            {
+              "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
+              "sha256": "698a3ae55e55edb7f5b7ed1cbada39ad71c8867a799ca80a2ef463bd5597ad13"
+            },
+            {
+              "path": "packages/shared/src/team-activity/index.ts",
+              "sha256": "886886f229044097df55d1549350b1be83bb5078410653159145d61c1576ddd7"
+            }
+          ]
+        }
       }
     },
     {
@@ -491972,7 +492076,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-high-risk-staff-step-up"
+          "release-0.6-high-risk-staff-step-up",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -491984,7 +492089,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "207cb96766c55628f5ff2918b2ba58ffb753632faac8f61a56bab4d406889265"
+              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
             },
             {
               "path": "docs/threat-model.md",
@@ -730165,7 +730270,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -730173,11 +730279,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "28b420b97f7b4efffd14afc0c456f18a887694191f12157c52d4085e5113102a"
+              "sha256": "0b0e37bf53009400aa10956163e4dc45887e1bd72aae18e2b2f188a228be3e89"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
-              "sha256": "565d596a16e4370e28fab8e474e062737229733d86e1dcebb7153dffbeb2b9fc"
+              "sha256": "8eea6af6d2faa35ef02a5372204159ac740ea4c397d51a72fa1e145235dae78a"
             },
             {
               "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -730818,7 +730924,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -730826,11 +730933,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "28b420b97f7b4efffd14afc0c456f18a887694191f12157c52d4085e5113102a"
+              "sha256": "0b0e37bf53009400aa10956163e4dc45887e1bd72aae18e2b2f188a228be3e89"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
-              "sha256": "565d596a16e4370e28fab8e474e062737229733d86e1dcebb7153dffbeb2b9fc"
+              "sha256": "8eea6af6d2faa35ef02a5372204159ac740ea4c397d51a72fa1e145235dae78a"
             },
             {
               "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -731471,7 +731578,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -731479,11 +731587,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "28b420b97f7b4efffd14afc0c456f18a887694191f12157c52d4085e5113102a"
+              "sha256": "0b0e37bf53009400aa10956163e4dc45887e1bd72aae18e2b2f188a228be3e89"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
-              "sha256": "565d596a16e4370e28fab8e474e062737229733d86e1dcebb7153dffbeb2b9fc"
+              "sha256": "8eea6af6d2faa35ef02a5372204159ac740ea4c397d51a72fa1e145235dae78a"
             },
             {
               "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -732125,7 +732233,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -732133,11 +732242,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "28b420b97f7b4efffd14afc0c456f18a887694191f12157c52d4085e5113102a"
+              "sha256": "0b0e37bf53009400aa10956163e4dc45887e1bd72aae18e2b2f188a228be3e89"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
-              "sha256": "565d596a16e4370e28fab8e474e062737229733d86e1dcebb7153dffbeb2b9fc"
+              "sha256": "8eea6af6d2faa35ef02a5372204159ac740ea4c397d51a72fa1e145235dae78a"
             },
             {
               "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -732778,7 +732887,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -732786,11 +732896,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "28b420b97f7b4efffd14afc0c456f18a887694191f12157c52d4085e5113102a"
+              "sha256": "0b0e37bf53009400aa10956163e4dc45887e1bd72aae18e2b2f188a228be3e89"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
-              "sha256": "565d596a16e4370e28fab8e474e062737229733d86e1dcebb7153dffbeb2b9fc"
+              "sha256": "8eea6af6d2faa35ef02a5372204159ac740ea4c397d51a72fa1e145235dae78a"
             },
             {
               "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -733431,7 +733541,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -733439,11 +733550,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "28b420b97f7b4efffd14afc0c456f18a887694191f12157c52d4085e5113102a"
+              "sha256": "0b0e37bf53009400aa10956163e4dc45887e1bd72aae18e2b2f188a228be3e89"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
-              "sha256": "565d596a16e4370e28fab8e474e062737229733d86e1dcebb7153dffbeb2b9fc"
+              "sha256": "8eea6af6d2faa35ef02a5372204159ac740ea4c397d51a72fa1e145235dae78a"
             },
             {
               "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -734084,7 +734195,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -734092,11 +734204,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "28b420b97f7b4efffd14afc0c456f18a887694191f12157c52d4085e5113102a"
+              "sha256": "0b0e37bf53009400aa10956163e4dc45887e1bd72aae18e2b2f188a228be3e89"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
-              "sha256": "565d596a16e4370e28fab8e474e062737229733d86e1dcebb7153dffbeb2b9fc"
+              "sha256": "8eea6af6d2faa35ef02a5372204159ac740ea4c397d51a72fa1e145235dae78a"
             },
             {
               "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -734738,7 +734850,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -734746,11 +734859,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "28b420b97f7b4efffd14afc0c456f18a887694191f12157c52d4085e5113102a"
+              "sha256": "0b0e37bf53009400aa10956163e4dc45887e1bd72aae18e2b2f188a228be3e89"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
-              "sha256": "565d596a16e4370e28fab8e474e062737229733d86e1dcebb7153dffbeb2b9fc"
+              "sha256": "8eea6af6d2faa35ef02a5372204159ac740ea4c397d51a72fa1e145235dae78a"
             },
             {
               "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -735391,7 +735504,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -735399,11 +735513,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "28b420b97f7b4efffd14afc0c456f18a887694191f12157c52d4085e5113102a"
+              "sha256": "0b0e37bf53009400aa10956163e4dc45887e1bd72aae18e2b2f188a228be3e89"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
-              "sha256": "565d596a16e4370e28fab8e474e062737229733d86e1dcebb7153dffbeb2b9fc"
+              "sha256": "8eea6af6d2faa35ef02a5372204159ac740ea4c397d51a72fa1e145235dae78a"
             },
             {
               "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -736044,7 +736158,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-transactional-sensitive-audit-and-ownership-history"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -736052,11 +736167,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
-              "sha256": "28b420b97f7b4efffd14afc0c456f18a887694191f12157c52d4085e5113102a"
+              "sha256": "0b0e37bf53009400aa10956163e4dc45887e1bd72aae18e2b2f188a228be3e89"
             },
             {
               "path": "apps/api/src/profiles/agent-activity.ts",
-              "sha256": "565d596a16e4370e28fab8e474e062737229733d86e1dcebb7153dffbeb2b9fc"
+              "sha256": "8eea6af6d2faa35ef02a5372204159ac740ea4c397d51a72fa1e145235dae78a"
             },
             {
               "path": "apps/api/src/profiles/agent-feature-http.integration.test.ts",
@@ -870498,6 +870613,117 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/idempotency-unit-evidence",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "4b1d9aa39c0b371108c93b377c94e62c011e24678fc6edb9f19f503d33582e22"
+    },
+    "release-0.6-transactional-sensitive-audit-and-ownership-history": {
+      "batch": "release-0.6-transactional-sensitive-audit-and-ownership-history",
+      "base_commit": "a8fda345e4d528a9aa46f3afcecc6bed4479c116",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.03.01"
+      ],
+      "changed_paths": [
+        "apps/api/src/profiles/agent-activity-http.integration.test.ts",
+        "apps/api/src/profiles/agent-activity.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-http.integration.test.ts",
+          "sha256": "9def554a790acb07250bc6ad7169f9e44947ef694eedf103b9045da75f3c569f"
+        },
+        {
+          "path": "apps/api/src/admin/staff-sensitive-actions-http.integration.test.ts",
+          "sha256": "65a89679fc88d1970de93885262e5f7a10978e7b958965e0f93b4169ecf1b631"
+        },
+        {
+          "path": "apps/api/src/crm/crm-contact-http.integration.test.ts",
+          "sha256": "ac5aa2d866db05e62898ebe00b8174dd99e2f27b7fed2a9aa764cf233756a160"
+        },
+        {
+          "path": "apps/api/src/crm/crm-profile-legal.ts",
+          "sha256": "4653b5e17032fbc6e593bb5f47207510e980df36e2b800af66c010b6fc04c258"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.controller.ts",
+          "sha256": "d1220cc23d33c0dbc42071c1ebb5e1942792f82bad4671a8a4365e25e578c061"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "8478f968ceb8d22a24085cfcc562b9178fa148043bd59cf35aecb72e6e787832"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "13f1dfdab981a1ac041b666b6ecb22896f7a96c85cc3120eefdc064b8ae2fccd"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.service.ts",
+          "sha256": "319132938cc59fe27fb88a3b4a54b67e1a038bb9bf99bf87036ab0fb279874a8"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
+          "sha256": "0b0e37bf53009400aa10956163e4dc45887e1bd72aae18e2b2f188a228be3e89"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-activity.ts",
+          "sha256": "8eea6af6d2faa35ef02a5372204159ac740ea4c397d51a72fa1e145235dae78a"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
+          "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
+        },
+        {
+          "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
+          "sha256": "06b98b37271eac465b1317c4d654ccb722b31fe5bf8df4e724a6781b9a9fa82f"
+        },
+        {
+          "path": "apps/api/src/profiles/ownership-http.integration.test.ts",
+          "sha256": "800e2746504e1f0251ea8581db2fb447c46fe2bacccbdd13d6be35764e031c45"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
+          "sha256": "e0f4b283f5838eda4f7430c2d5b5cb9c2b5a56d699230ebb241ecb8d4b968332"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "c26f01a740273a6fbec8da33c8d4cb0927d56920429c9579c30ad9f918609489"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
+        },
+        {
+          "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
+          "sha256": "698a3ae55e55edb7f5b7ed1cbada39ad71c8867a799ca80a2ef463bd5597ad13"
+        },
+        {
+          "path": "packages/shared/src/team-activity/index.ts",
+          "sha256": "886886f229044097df55d1549350b1be83bb5078410653159145d61c1576ddd7"
+        }
+      ],
+      "checks": [
+        "The current protected writes create append-only audit rows inside the mutation transaction. Ownership records old/new owner, actor and time; role writes record previous and new roles; protected identity changes record field-level before/after values. The native suites cover current authority, required proof and rollback if the audit fails. The transactional implementation is recorded in the authorization policy.",
+        "Hosted run 42759736897 job 129642496352 passed 185 selected ownership, agent, staff role and identity HTTP cases. Tested source matches the governing runtime, with adjacent controller/service diffs limited to the verified log redactions.",
+        "An isolated PostgreSQL 16 fixture ran the exact old and new listAgentActivity implementation. The old reader omitted completed-transfer audit rows. The fixed reader accepts both real and legacy event names, keeps the safe summary kind, and preserves role denial, profile and member scope, internal visibility and the no-metadata projection.",
+        "API typecheck, ESLint, Prettier and diff checks passed. The new HTTP cases exercise the full mounted endpoint and still need an exact hosted run. No audit schema, old rows, protected mutations or session behavior changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/sensitive-audit-evidence",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "55fd4220379569959e1bad2a8fcda11f6ad7fccf00d404d95a2e8a3a12411b61"
     }
   },
   "historical_improvements": [

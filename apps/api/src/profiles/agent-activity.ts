@@ -6,6 +6,10 @@ import { z } from 'zod';
 
 const invalid = () => new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
 const forbidden = () => new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+const activityEventKinds = {
+  ...TEAM_ACTIVITY_EVENTS,
+  ownership_transfer_completed: TEAM_ACTIVITY_EVENTS.ownership_transfer_accepted,
+};
 const cursorSchema = z
   .object({
     profileId: z.uuid(),
@@ -90,12 +94,13 @@ export async function listAgentActivity(
     const parameters = [
       profileId,
       userId,
-      Object.keys(TEAM_ACTIVITY_EVENTS),
+      Object.keys(activityEventKinds),
       [
         'agent_roles_changed',
         'agent_removed',
         'ownership_transfer_initiated',
         'ownership_transfer_accepted',
+        'ownership_transfer_completed',
         'ownership_transfer_declined',
         'ownership_transfer_cancelled',
         'ownership_transfer_expired',
@@ -124,7 +129,7 @@ export async function listAgentActivity(
       userId,
       items: rows.map((row) => ({
         id: row.id,
-        kind: TEAM_ACTIVITY_EVENTS[row.event as keyof typeof TEAM_ACTIVITY_EVENTS],
+        kind: activityEventKinds[row.event as keyof typeof activityEventKinds],
         createdAt: new Date(row.created_at).toISOString(),
         performed: row.user_id === userId,
       })),
