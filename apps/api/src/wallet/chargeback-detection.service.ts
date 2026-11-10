@@ -164,7 +164,12 @@ export class ChargebackDetectionService {
       );
     }
 
-    const result = await this.processVerifiedNotification(eventId, parsed.notification);
+    const payloadSha256 = createHash('sha256').update(input.rawBody).digest('hex');
+    const result = await this.processVerifiedNotification(
+      eventId,
+      parsed.notification,
+      payloadSha256
+    );
     if (this.alertService && needsFinanceChargebackAlert(result.status)) {
       const client = await getDbPool().connect();
       try {
@@ -190,7 +195,8 @@ export class ChargebackDetectionService {
 
   private async processVerifiedNotification(
     eventId: string,
-    notification: ParsedChargebackNotification
+    notification: ParsedChargebackNotification,
+    payloadSha256: string
   ): Promise<HandleChargebackResult> {
     const pool = getDbPool({ session: true });
     const client = await pool.connect();
@@ -198,7 +204,7 @@ export class ChargebackDetectionService {
     try {
       await client.query('SELECT pg_advisory_lock($1, $2)', lockKeys);
       try {
-        const claim = await this.claimEvent(client, eventId, notification);
+        const claim = await this.claimEvent(client, eventId, notification, payloadSha256);
         if (!claim.inserted) {
           const existing = claim.existing;
           if (!existing) {
@@ -360,16 +366,17 @@ export class ChargebackDetectionService {
   private async claimEvent(
     client: QueryClient,
     eventId: string,
-    notification: ParsedChargebackNotification
+    notification: ParsedChargebackNotification,
+    payloadSha256: string
   ): Promise<{ inserted: boolean; existing: ChargebackEventRow | null }> {
     try {
       const inserted = await client.query(
-        `INSERT INTO wallet_chargeback_events (event_id, status, raw)
-         VALUES ($1, 'processing', $2::jsonb)
+        `INSERT INTO wallet_chargeback_events (event_id, status, raw, payload_sha256)
+         VALUES ($1, 'processing', $2::jsonb, $3)
          ON CONFLICT (event_id) DO NOTHING
          RETURNING event_id, original_transaction_id, reversal_transaction_id,
                    wallet_id, status, match_method, raw`,
-        [eventId, JSON.stringify(chargebackEventRaw(notification))]
+        [eventId, JSON.stringify(chargebackEventRaw(notification)), payloadSha256]
       );
       if (inserted.rows.length > 0) {
         return {

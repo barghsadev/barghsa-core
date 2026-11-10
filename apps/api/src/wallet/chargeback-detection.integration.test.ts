@@ -21,6 +21,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+import { createHash } from 'node:crypto';
 import { HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { startHttpFixture } from '../test/http-fixture';
@@ -155,7 +156,8 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
   }
 
   it('maps a signed chargeback to the original credit and posts a reversal', async () => {
-    const result = await service.handle(signed(chargebackBody(), 'evt-cb-int-1'));
+    const callback = signed(chargebackBody(), 'evt-cb-int-1');
+    const result = await service.handle(callback);
 
     expect(result.mapped).toBe(true);
     expect(result.reversed).toBe(true);
@@ -192,6 +194,19 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
       reverses_transaction_id: creditId,
       description: WALLET_CHARGEBACK_REASON,
     });
+    expect(
+      (
+        await ctx.pool.query(
+          'SELECT payload_sha256,status FROM wallet_chargeback_events WHERE event_id=$1',
+          ['evt-cb-int-1']
+        )
+      ).rows
+    ).toEqual([
+      {
+        payload_sha256: createHash('sha256').update(callback.rawBody).digest('hex'),
+        status: 'reversed',
+      },
+    ]);
   });
 
   it('keeps an archived-profile chargeback unresolved and invokes the finance alert path on retries', async () => {

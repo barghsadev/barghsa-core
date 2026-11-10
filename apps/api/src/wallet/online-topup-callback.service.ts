@@ -69,6 +69,7 @@ interface ProcessVerifiedPayloadInput {
   status: 'paid' | 'failed' | 'cancelled';
   providerRefId?: string;
   raw: unknown;
+  payloadSha256?: string;
 }
 
 type CallbackEventStatus = 'processing' | 'credited' | 'unpaid' | 'duplicate';
@@ -212,6 +213,7 @@ export class OnlineTopUpCallbackService {
       amountIrR,
       status: parsed.data.status,
       raw: parsed.data,
+      payloadSha256: createHash('sha256').update(input.rawBody).digest('hex'),
       ...(parsed.data.providerRefId ? { providerRefId: parsed.data.providerRefId } : {}),
     });
   }
@@ -299,6 +301,7 @@ export class OnlineTopUpCallbackService {
           pendingId: pending.id,
           walletId: pending.walletId,
           raw: input.raw,
+          payloadSha256: input.payloadSha256 ?? null,
         });
         if (!claim.inserted) {
           const existing = claim.existing;
@@ -325,7 +328,12 @@ export class OnlineTopUpCallbackService {
             return await this.alreadyProcessedResult(client, existing, pending);
           }
           if (resumeUnpaidForPaid) {
-            await this.reopenUnpaidEvent(client, input.eventId, input.raw);
+            await this.reopenUnpaidEvent(
+              client,
+              input.eventId,
+              input.raw,
+              input.payloadSha256 ?? null
+            );
           }
         }
 
@@ -537,16 +545,23 @@ export class OnlineTopUpCallbackService {
       pendingId: string;
       walletId: string;
       raw: unknown;
+      payloadSha256: string | null;
     }
   ): Promise<{ inserted: boolean; existing: CallbackEventRow | null }> {
     try {
       const inserted = await client.query(
         `INSERT INTO wallet_topup_callback_events
-           (event_id, pending_transaction_id, wallet_id, status, raw)
-         VALUES ($1, $2, $3, 'processing', $4::jsonb)
+           (event_id, pending_transaction_id, wallet_id, status, raw, payload_sha256)
+         VALUES ($1, $2, $3, 'processing', $4::jsonb, $5)
          ON CONFLICT (event_id) DO NOTHING
          RETURNING event_id, pending_transaction_id, wallet_id, status`,
-        [input.eventId, input.pendingId, input.walletId, JSON.stringify(input.raw)]
+        [
+          input.eventId,
+          input.pendingId,
+          input.walletId,
+          JSON.stringify(input.raw),
+          input.payloadSha256,
+        ]
       );
       if (inserted.rows.length > 0) {
         return {
@@ -701,16 +716,18 @@ export class OnlineTopUpCallbackService {
   private async reopenUnpaidEvent(
     client: QueryClient,
     eventId: string,
-    raw: unknown
+    raw: unknown,
+    payloadSha256: string | null
   ): Promise<void> {
     const result = await client.query(
       `UPDATE wallet_topup_callback_events
           SET status = 'processing',
-              raw = $2::jsonb
+              raw = $2::jsonb,
+              payload_sha256 = $3
         WHERE event_id = $1
           AND status = 'unpaid'
         RETURNING status`,
-      [eventId, JSON.stringify(raw)]
+      [eventId, JSON.stringify(raw), payloadSha256]
     );
     const row = result.rows[0] as Record<string, unknown> | undefined;
     if (result.rows.length !== 1 || row?.status !== 'processing') {

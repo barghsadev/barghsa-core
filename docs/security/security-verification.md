@@ -133,6 +133,12 @@ session and reads only the delivery projection, including a fixed bounce
 diagnostic. Keep the event records behind the private database connection
 and use the authorized application projections for routine investigation.
 
+New signed callbacks retain the SHA-256 digest of the verified body. Historical
+records and browser payment returns keep a null digest. A Resend ledger row
+commits with all associated effects. Payment keeps its existing claim and
+outcome states. When a verified paid callback reopens the same unpaid intent,
+the claim records the new digest with its corresponding validated payload.
+
 SMS.ir v1 publishes an authenticated delivery report by message ID. Its public
 specification has no signed delivery callback declaration. A status report
 proves provider feedback for that message and must stay separate from the

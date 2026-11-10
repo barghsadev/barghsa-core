@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, expect, it, vi } from 'vitest';
-import { createHmac, randomUUID } from 'node:crypto';
+import { createHash, createHmac, randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture';
 import { ProviderSecretsService } from '../provider-config/provider-secrets.service';
 
@@ -267,11 +267,12 @@ async function post(
     tampered?: boolean;
     stale?: boolean;
     withSession?: boolean;
+    formatted?: boolean;
   } = {}
 ) {
   const id = options.id ?? randomUUID();
   const timestamp = String(Math.floor(Date.now() / 1000) - (options.stale ? 3600 : 0));
-  const body = JSON.stringify(event);
+  const body = JSON.stringify(event, null, options.formatted ? 2 : undefined);
   const signature = createHmac('sha256', Buffer.from(secret.slice(6), 'base64'))
     .update(`${id}.${timestamp}.${body}`)
     .digest('base64');
@@ -292,7 +293,7 @@ it('accepts actual Resend hard bounces and suppresses each normalized recipient 
   const event = payload('email.bounced', {
     to: ['Person@Example.test', 'person@example.test', 'second@example.test'],
   });
-  const response = await post(event);
+  const response = await post(event, { formatted: true });
   expect(response.status).toBe(200);
   expect(
     (await http.pool.query('SELECT address,reason FROM email_suppressions ORDER BY address')).rows
@@ -300,8 +301,14 @@ it('accepts actual Resend hard bounces and suppresses each normalized recipient 
     { address: 'person@example.test', reason: 'hard_bounce' },
     { address: 'second@example.test', reason: 'hard_bounce' },
   ]);
-  const stored = (await http.pool.query('SELECT raw FROM email_webhook_events')).rows[0];
-  expect(stored.raw).toEqual(event);
+  const stored = (await http.pool.query('SELECT raw,payload_sha256 FROM email_webhook_events'))
+    .rows[0];
+  expect(stored).toEqual({
+    raw: event,
+    payload_sha256: createHash('sha256')
+      .update(JSON.stringify(event, null, 2))
+      .digest('hex'),
+  });
 });
 
 it('accepts a complaint recipient array and deduplicates concurrent provider retries', async () => {

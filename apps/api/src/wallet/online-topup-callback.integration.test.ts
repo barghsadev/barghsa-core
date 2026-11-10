@@ -20,7 +20,7 @@ import {
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { HttpException } from '@nestjs/common';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { ONLINE_TOPUP_EXPIRY_REASON } from '@barghsa/shared/finance';
@@ -313,6 +313,19 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
       state: 'Completed',
       amount: AMOUNT.toString(),
     });
+    expect(
+      (
+        await ctx.pool.query(
+          'SELECT payload_sha256,status FROM wallet_topup_callback_events WHERE event_id=$1',
+          ['evt-int-1']
+        )
+      ).rows
+    ).toEqual([
+      {
+        payload_sha256: createHash('sha256').update(callback.rawBody).digest('hex'),
+        status: 'credited',
+      },
+    ]);
   });
 
   it('does not credit a second time for the same event id', async () => {

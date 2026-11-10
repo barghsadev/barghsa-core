@@ -291,7 +291,8 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
   it('maps a signed chargeback to the original top-up and reverses it', async () => {
     const { service, reverseTransaction } = makeService();
     scriptClient({ credit: makeCreditRow() });
-    const result = await service.handle(signedInput(payload()));
+    const rawBody = ` ${payload()}\n`;
+    const result = await service.handle(signedInput(rawBody));
     expect(result).toEqual({
       ok: true,
       processed: true,
@@ -308,6 +309,10 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
       `wallet-chargeback-reversal:${EVENT_ID}`,
       mockClient
     );
+    const claim = mockClient.query.mock.calls.find(([sql]) =>
+      String(sql).includes('INSERT INTO wallet_chargeback_events')
+    );
+    expect(claim?.[1]?.[2]).toBe(createHash('sha256').update(rawBody).digest('hex'));
   });
 
   it('records an unmatched exception when no original top-up is unique', async () => {
@@ -639,3 +644,4 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
     );
   });
 });
+import { createHash } from 'node:crypto';

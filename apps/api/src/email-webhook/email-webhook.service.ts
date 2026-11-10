@@ -6,6 +6,7 @@ import {
   HttpException,
   BadRequestException,
 } from '@nestjs/common';
+import { createHash } from 'node:crypto';
 import { v7 as uuidv7 } from 'uuid';
 import { z } from 'zod';
 import { getDbPool } from '@barghsa/db';
@@ -111,7 +112,8 @@ export class EmailWebhookService {
     // Record and apply atomically. Domain errors propagate unchanged; only
     //    unexpected failures become 500s.
     try {
-      return await this.processEvent(event, headers, providerIds);
+      const payloadSha256 = createHash('sha256').update(rawBody).digest('hex');
+      return await this.processEvent(event, headers, providerIds, payloadSha256);
     } catch (err) {
       if (err instanceof HttpException) throw err;
       this.logger.error('Resend webhook processing failed');
@@ -171,7 +173,8 @@ export class EmailWebhookService {
   private async processEvent(
     event: ResendWebhookEvent,
     headers: ResendWebhookHeaders,
-    providerIds: string[]
+    providerIds: string[],
+    payloadSha256: string
   ): Promise<DispatchOutcome> {
     const token = headers.id;
     if (!token) throw badPayload();
@@ -184,8 +187,8 @@ export class EmailWebhookService {
       const insert = await client.query(
         `INSERT INTO email_webhook_events
            (id, event_token, event_type, message_id, to_address, from_address,
-            outbox_id, status, raw, verified_provider_ids)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            outbox_id, status, raw, verified_provider_ids, payload_sha256)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
          ON CONFLICT (event_token) DO NOTHING`,
         [
           eventId,
@@ -198,6 +201,7 @@ export class EmailWebhookService {
           EVENT_STATUS[event.type] ?? null,
           event,
           providerIds,
+          payloadSha256,
         ]
       );
       if ((insert.rowCount ?? 0) === 0) {

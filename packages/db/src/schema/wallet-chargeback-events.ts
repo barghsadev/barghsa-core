@@ -1,5 +1,6 @@
 import { domainChecks } from '../domain-checks';
-import { index, jsonb, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { check, index, jsonb, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 import { uuidv7, timestamptz } from '../types.js';
 import { walletTransactions, wallets } from './wallets.js';
 
@@ -58,10 +59,14 @@ export const walletChargebackEvents = pgTable(
     /** Verified chargeback JSON (no secrets). */
     raw: jsonb('raw'),
 
+    /** Digest of the authenticated body. Null for legacy events. */
+    payloadSha256: text('payload_sha256'),
+
     createdAt: timestamptz('created_at').defaultNow().notNull(),
   },
   (table) => [
     ...domainChecks('wallet_chargeback_events'),
+    check('wallet_chargeback_payload_sha256', sql`${table.payloadSha256} ~ '^[0-9a-f]{64}$'`),
     uniqueIndex('uq_wallet_chargeback_event_id').on(table.eventId),
     index('idx_wce_original_tx').on(table.originalTransactionId),
     index('idx_wce_wallet').on(table.walletId),

@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { createHash } from 'node:crypto';
 import promClient from 'prom-client';
 import { HttpException } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -251,7 +252,8 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
   it('credits via WalletService.credit with a stable idempotency key', async () => {
     scriptClient({ pending: makePendingRow() });
     const { service, credit, verifyPayment } = makeService();
-    const result = await service.handle(signedInput(payload()));
+    const rawBody = ` ${payload()}\n`;
+    const result = await service.handle(signedInput(rawBody));
     expect(result).toMatchObject({
       ok: true,
       processed: true,
@@ -283,6 +285,7 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
     );
     expect(claim).toBeDefined();
     expect(String(claim![0])).toContain('RETURNING');
+    expect(claim?.[1]?.[4]).toBe(createHash('sha256').update(rawBody).digest('hex'));
   });
 
   it('claims the event id before gateway verify or wallet credit', async () => {
@@ -551,6 +554,7 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
       String(call[0]).includes('INSERT INTO wallet_topup_callback_events')
     );
     expect(claim?.[1]?.[0]).toBe(zarinpalReturnEventId(TX_ID, AUTHORITY, 'paid'));
+    expect(claim?.[1]?.[4]).toBeNull();
   });
 
   it('does not credit a ZarinPal GET return with Status=NOK', async () => {
@@ -658,7 +662,8 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
       existingEvent: claimedEventRow({ status: 'unpaid' }),
     });
     const { service, credit, verifyPayment } = makeService();
-    const result = await service.handle(signedInput(payload()));
+    const rawBody = payload();
+    const result = await service.handle(signedInput(rawBody));
     expect(result).toMatchObject({
       processed: true,
       credited: true,
@@ -670,6 +675,7 @@ describe('OnlineTopUpCallbackService (T-04.2.02.02)', () => {
       String(call[0]).includes("SET status = 'processing'")
     );
     expect(reopen).toBeDefined();
+    expect(reopen?.[1]?.[2]).toBe(createHash('sha256').update(rawBody).digest('hex'));
     expect(await promClient.register.metrics()).not.toContain(
       'payment_callback_last_anomaly_timestamp_seconds{'
     );

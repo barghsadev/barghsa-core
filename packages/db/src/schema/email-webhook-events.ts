@@ -1,4 +1,4 @@
-import { uuid, pgTable, text, jsonb, uniqueIndex, index } from 'drizzle-orm/pg-core';
+import { uuid, pgTable, text, jsonb, uniqueIndex, index, check } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { uuidv7, timestamptz } from '../types.js';
 import { notificationOutbox } from './notification-outbox.js';
@@ -63,11 +63,15 @@ export const emailWebhookEvents = pgTable(
     /** Full verified event payload snapshot (audit / triage). */
     raw: jsonb('raw'),
 
+    /** Digest of the authenticated body before JSON parsing. Null for legacy events. */
+    payloadSha256: text('payload_sha256'),
+
     createdAt: timestamptz('created_at').defaultNow().notNull(),
   },
   (table) => [
     // Idempotency gate: a repeated `svix-id` must insert nothing.
     uniqueIndex('uq_email_webhook_event_token').on(table.eventToken),
+    check('email_webhook_payload_sha256', sql`${table.payloadSha256} ~ '^[0-9a-f]{64}$'`),
     // Triaging by provider message id (delivery-state reconciliation).
     index('idx_ewe_message').on(table.messageId),
     index('idx_ewe_address').on(table.toAddress),
