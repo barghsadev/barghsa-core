@@ -19,3 +19,10 @@ PostgreSQL supplies current account, session, ownership and role authority. The 
 - A worker acts on an authorized durable record with an operation-specific claim or lease. Before publishing a private result, recheck its current ownership or grant and enforce its result scope. Preserve transaction and provider idempotency boundaries when a retry is allowed. [Async jobs](../operations/async-jobs.md).
 - The assistant reads published knowledge within the current audience and slot. Its launch scope permits read-only guidance. Session, operating context, publication and output checks determine what an answer can include. [AI inference](../operations/ai-inference.md).
 - Signed provider callbacks prove the expected issuer, message and replay boundary independently of customer or staff sessions. Resolve the referenced durable intent before accepting a status or financial change. [Staging payment verification](../operations/staging-payment-sandbox.md).
+
+The model-test worker rechecks the requesting staff grant before calling the
+provider. The profile-export worker checks the current owner, active profile
+and job lease before collecting data and before publishing the result. Export
+downloads and document links check the current session and scope before signing.
+The customer and staff application paths share the same profile and capability
+rules at those boundaries.

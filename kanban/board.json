@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T05:42:22+00:00",
-  "source_commit": "39a0fc3464dff6aa0f7b52e7b685b11a891da694",
+  "updated": "2026-11-10T05:45:49+00:00",
+  "source_commit": "71edc3a0b69f849c979744ebf4ff0637229432dd",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -483984,7 +483984,8 @@
           "release-0.6-authorization-policy-and-staff-grants",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-authority-for-queued-and-private-results"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -483992,7 +483993,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "69ae3c5af565ae3d122d4b671692f8c8f53b33f9f9517ee02e2ce58949286358"
+              "sha256": "6715afdaa6a0c2ec3f0a1b68f888afa7599c417709c73acfbd2e1bd906386177"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -484132,18 +484133,20 @@
         "story": "06-security-testing-observability.md#spec-2ce6d1b092d4"
       },
       "requirement": "| T-06.03.01.04 | Implement profile-scoped data access: load resources by both `id` and `activeProfileId`; reject cross-profile access | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Finish tracing object-level profile predicates and opaque cross-profile misses through the remaining explicit-ID saving, solar and consultation paths, using the approved explicit-profile and server-owned preference design."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-authority-for-queued-and-private-results"
+        ],
         "current_acceptance": null
       }
     },
@@ -484158,19 +484161,149 @@
         "story": "06-security-testing-observability.md#spec-2ce6d1b092d4"
       },
       "requirement": "| T-06.03.01.05 | Extend authorization to background workers, AI tool calls, file access URLs, exports, and admin actions | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-authority-for-queued-and-private-results"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "71edc3a0b69f849c979744ebf4ff0637229432dd",
+          "checks": [
+            "The same shared capability rules gate request authority and durable job work. A model-test job checks the current staff model grant before provider I/O, and export jobs validate the current owner, active profile and lease before collection and again before publication.",
+            "The active-profile preference is checked against current ownership or agent grants. Document and export links recheck current session and permitted scope before a signed result is exposed. Current module-wide staff reads use the previously approved explicit grants. The approved read-only assistant uses audience-scoped published knowledge and has no business tools.",
+            "Successful hosted job 129636126527 recorded 335 cases across 11 relevant authority suites, including document and invoice isolation, order permissions, ownership changes, queued model-test revocation, private exports, recipient scope and runtime inference. The reviewed policy, test and caller source paths are byte-identical at this candidate."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/staff-effective-permissions-http.integration.test.ts",
+              "sha256": "652e9c463f39ee0d129217a40bc635e2afe1f713b2ed39b0fefea17a05c548d2"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-inference-routed-http.integration.test.ts",
+              "sha256": "9a4879b297b767eec8ffcba00c3932d36a9d0467ae55d36a84e4e02c14f5fce8"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+              "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
+              "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+              "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
+              "sha256": "e2133e95e2239fee21fd5aa6e9d3cbb552400d6e69174209d43956eb24487f1b"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "623aa108f967dc846294609c5baabb5fc25df0a0a27277dd60befc68cf6d2f3b"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+            },
+            {
+              "path": "apps/api/src/orders/order-access-http.integration.test.ts",
+              "sha256": "20c78e4f9338843f85f5d2562d2f6dfee8f605a4d68ad03bfc731b91ed274fa6"
+            },
+            {
+              "path": "apps/api/src/orders/orders.service.ts",
+              "sha256": "22c6aef1fc109cedb37c0df86da4b2df55b0f5d507448b674942f86c547b1427"
+            },
+            {
+              "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
+              "sha256": "06b98b37271eac465b1317c4d654ccb722b31fe5bf8df4e724a6781b9a9fa82f"
+            },
+            {
+              "path": "apps/api/src/profiles/profile-context.ts",
+              "sha256": "ca74bef2a3d492374e3f7841b2552bf65cb80871787fda00861c6ff4ef06bac5"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.controller.ts",
+              "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.ts",
+              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+            },
+            {
+              "path": "apps/worker/src/ai-models/test-runner.test.ts",
+              "sha256": "4c65ab65b8cddb3ef8d5c2ec0a29327f49473acbeb96249ac0f56bf7f307a0b0"
+            },
+            {
+              "path": "apps/worker/src/ai-models/test-runner.ts",
+              "sha256": "c7cc9369acbad0945138b6f5178c4d99053bcd822b547c20c87885aaa6be0aab"
+            },
+            {
+              "path": "apps/worker/src/jobs/async-runner.ts",
+              "sha256": "fab1906a7a024563a01c109e290988902886e419e4ddbe48efac1c8fe916a8de"
+            },
+            {
+              "path": "apps/worker/src/notifications/recipient-profile-access.integration.test.ts",
+              "sha256": "02d1f5a6ac2f4b73561a608d476ee18d15d5ef601c30b83bb8236df80ebd8c15"
+            },
+            {
+              "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
+              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+            },
+            {
+              "path": "apps/worker/src/privacy/profile-export.ts",
+              "sha256": "06825ca4df7c5eefc2487da26611f5f6626df3409767399133c98453f5c4b3e3"
+            },
+            {
+              "path": "docs/security/authorization.md",
+              "sha256": "6715afdaa6a0c2ec3f0a1b68f888afa7599c417709c73acfbd2e1bd906386177"
+            },
+            {
+              "path": "packages/shared/src/admin/staff-permissions.ts",
+              "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+            },
+            {
+              "path": "packages/shared/src/agent-permissions/index.ts",
+              "sha256": "8c8bf060d6a1354c0ba93a1210b51dd86a13adce0cc9d6f4d02a33e4c0ae3bbd"
+            }
+          ]
+        }
       }
     },
     {
@@ -484199,7 +484332,8 @@
           "release-0.6-authorization-policy-and-staff-grants",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-authority-for-queued-and-private-results"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -484207,7 +484341,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "69ae3c5af565ae3d122d4b671692f8c8f53b33f9f9517ee02e2ce58949286358"
+              "sha256": "6715afdaa6a0c2ec3f0a1b68f888afa7599c417709c73acfbd2e1bd906386177"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -490513,7 +490647,8 @@
           "docs/threat-model.md"
         ],
         "batches": [
-          "release-0.6-source-grounded-threat-model-and-review"
+          "release-0.6-source-grounded-threat-model-and-review",
+          "release-0.6-authority-for-queued-and-private-results"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -490525,7 +490660,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "69ae3c5af565ae3d122d4b671692f8c8f53b33f9f9517ee02e2ce58949286358"
+              "sha256": "6715afdaa6a0c2ec3f0a1b68f888afa7599c417709c73acfbd2e1bd906386177"
             },
             {
               "path": "docs/threat-model.md",
@@ -867052,6 +867187,148 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webhook-payload-hash",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "3520d4cb9e9b5fd0cbf173daeb553117ad6aae64eabdc53b437f35e65411686d"
+    },
+    "release-0.6-authority-for-queued-and-private-results": {
+      "batch": "release-0.6-authority-for-queued-and-private-results",
+      "base_commit": "71edc3a0b69f849c979744ebf4ff0637229432dd",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.03.01.05"
+      ],
+      "changed_paths": [
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/staff-effective-permissions-http.integration.test.ts",
+          "sha256": "652e9c463f39ee0d129217a40bc635e2afe1f713b2ed39b0fefea17a05c548d2"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-routed-http.integration.test.ts",
+          "sha256": "9a4879b297b767eec8ffcba00c3932d36a9d0467ae55d36a84e4e02c14f5fce8"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-knowledge-chat-http.integration.test.ts",
+          "sha256": "5729fcd6f99d4fead62af88e6a7210885280778d00170e75c1614114806fc9e7"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-knowledge-chat.service.ts",
+          "sha256": "3921dfeabd0904efa7f6d05b71c157390d57368f22f0a3b87b70e913a4e1e7af"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
+          "sha256": "d3733a5769ac7abbb6022e68e7e3d8798c0a99976b22e08a9d4de155b97b42a0"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
+          "sha256": "e2133e95e2239fee21fd5aa6e9d3cbb552400d6e69174209d43956eb24487f1b"
+        },
+        {
+          "path": "apps/api/src/documents/document-access.ts",
+          "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+        },
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+        },
+        {
+          "path": "apps/api/src/documents/document.service.ts",
+          "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "623aa108f967dc846294609c5baabb5fc25df0a0a27277dd60befc68cf6d2f3b"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+          "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+        },
+        {
+          "path": "apps/api/src/orders/order-access-http.integration.test.ts",
+          "sha256": "20c78e4f9338843f85f5d2562d2f6dfee8f605a4d68ad03bfc731b91ed274fa6"
+        },
+        {
+          "path": "apps/api/src/orders/orders.service.ts",
+          "sha256": "22c6aef1fc109cedb37c0df86da4b2df55b0f5d507448b674942f86c547b1427"
+        },
+        {
+          "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
+          "sha256": "06b98b37271eac465b1317c4d654ccb722b31fe5bf8df4e724a6781b9a9fa82f"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-context.ts",
+          "sha256": "ca74bef2a3d492374e3f7841b2552bf65cb80871787fda00861c6ff4ef06bac5"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+        },
+        {
+          "path": "apps/api/src/session/staff-permissions.ts",
+          "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.controller.ts",
+          "sha256": "7e5c48bf871de01a8084d5402f817e7772a89ad8027a1db7d8d4c4f4242eebd4"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.ts",
+          "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+        },
+        {
+          "path": "apps/worker/src/ai-models/test-runner.test.ts",
+          "sha256": "4c65ab65b8cddb3ef8d5c2ec0a29327f49473acbeb96249ac0f56bf7f307a0b0"
+        },
+        {
+          "path": "apps/worker/src/ai-models/test-runner.ts",
+          "sha256": "c7cc9369acbad0945138b6f5178c4d99053bcd822b547c20c87885aaa6be0aab"
+        },
+        {
+          "path": "apps/worker/src/jobs/async-runner.ts",
+          "sha256": "fab1906a7a024563a01c109e290988902886e419e4ddbe48efac1c8fe916a8de"
+        },
+        {
+          "path": "apps/worker/src/notifications/recipient-profile-access.integration.test.ts",
+          "sha256": "02d1f5a6ac2f4b73561a608d476ee18d15d5ef601c30b83bb8236df80ebd8c15"
+        },
+        {
+          "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
+          "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+        },
+        {
+          "path": "apps/worker/src/privacy/profile-export.ts",
+          "sha256": "06825ca4df7c5eefc2487da26611f5f6626df3409767399133c98453f5c4b3e3"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "6715afdaa6a0c2ec3f0a1b68f888afa7599c417709c73acfbd2e1bd906386177"
+        },
+        {
+          "path": "packages/shared/src/admin/staff-permissions.ts",
+          "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+        },
+        {
+          "path": "packages/shared/src/agent-permissions/index.ts",
+          "sha256": "8c8bf060d6a1354c0ba93a1210b51dd86a13adce0cc9d6f4d02a33e4c0ae3bbd"
+        }
+      ],
+      "checks": [
+        "The same shared capability rules gate request authority and durable job work. A model-test job checks the current staff model grant before provider I/O, and export jobs validate the current owner, active profile and lease before collection and again before publication.",
+        "The active-profile preference is checked against current ownership or agent grants. Document and export links recheck current session and permitted scope before a signed result is exposed. Current module-wide staff reads use the previously approved explicit grants. The approved read-only assistant uses audience-scoped published knowledge and has no business tools.",
+        "Successful hosted job 129636126527 recorded 335 cases across 11 relevant authority suites, including document and invoice isolation, order permissions, ownership changes, queued model-test revocation, private exports, recipient scope and runtime inference. The reviewed policy, test and caller source paths are byte-identical at this candidate.",
+        "Object-level profile predicates for the remaining explicit-ID service flows are still under review. Production-like access rehearsal remains an independent release gate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/authorization-scope",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "37dcfbf1d49188546d74484686741ddad48ee4a80e640b814640430a90d1d7b6"
     }
   },
   "historical_improvements": [
