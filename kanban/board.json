@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T09:31:26+00:00",
-  "source_commit": "6210451bb436d9c134088cacdf5f30ea5ec01841",
+  "updated": "2026-11-10T09:34:16+00:00",
+  "source_commit": "2ab79fcca576bcf65a0af97991afd58dfd73c434",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -495620,19 +495620,89 @@
         "story": "06-security-testing-observability.md#spec-f7421d6dc1ea"
       },
       "requirement": "| T-06.09.03.04 | Write RTL tests for onboarding/profile forms: INDIVIDUAL and LEGAL flows, field validation, address selection | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-onboarding-form-testing-library"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-onboarding-form-testing-library",
+          "reviewed_sha": "2ab79fcca576bcf65a0af97991afd58dfd73c434",
+          "checks": [
+            "React Testing Library mounts the actual Individual and Legal onboarding routes through the accepted workspace providers, existing query ownership and versioned API contract fixtures.",
+            "Both cases restore a saved address, change province, clear the stale city and read only city options bound to the new province. An invalid postal code blocks advancement and links the field to an accessible error. After correction, the versioned draft saves the new province, city and postal code before the wizard navigates to the next stage. Neither case submits the profile while saving the address.",
+            "All 32 targeted cases across the two route tests and the existing form, draft, journey and profile suites passed. Web typecheck, focused lint, formatting and diff checks passed."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/web/src/components/OnboardingWizard.tsx",
+              "sha256": "0faa5162a685d66ed5278f8e15e353eeca6fd45725cfbc2d7c4caac4dace7aed"
+            },
+            {
+              "path": "apps/web/src/hooks/useGeographyOptions.ts",
+              "sha256": "520091b3c30a4f9686760ec8d5691f5f9f7818521c6555efe059ae7ac4333225"
+            },
+            {
+              "path": "apps/web/src/hooks/useOnboardingDraft.test.tsx",
+              "sha256": "73738b2c507ee8591ee1b2099c27f23ba060ec83f75c93b12f0a969054bf9029"
+            },
+            {
+              "path": "apps/web/src/hooks/useOnboardingDraft.ts",
+              "sha256": "ab284b4cf3c5e0a6a6b07cbac58adae4540576f062cb2aa7eb301d79a92d75b2"
+            },
+            {
+              "path": "apps/web/src/hooks/useOnboardingForm.test.tsx",
+              "sha256": "615c545110f390e335b3aede1dfa358798b69fb84a137e6c5a6e6cdf38207f71"
+            },
+            {
+              "path": "apps/web/src/hooks/useOnboardingForm.ts",
+              "sha256": "da9e89503351249b1a29397825ce8199353dfb5baf58b6aa92bcf84196a207d6"
+            },
+            {
+              "path": "apps/web/src/hooks/useOnboardingSubmission.ts",
+              "sha256": "1fb6a2de10635105dbf3cb84a027bff4cda0aed8c888ec32cbf73eb4a04c52d7"
+            },
+            {
+              "path": "apps/web/src/lib/onboarding-journey.test.ts",
+              "sha256": "cb282d0916961f9b8ea9a02ef4a0d5cade660c230170564322dfb5dd95c673af"
+            },
+            {
+              "path": "apps/web/src/lib/onboarding-profile.test.ts",
+              "sha256": "71d76a745195ccd0bb9421cea51c61d12036ca03443ca1b09189e9e3d1956249"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding-forms.test.tsx",
+              "sha256": "8c9f69f28da49fabed707470be75aae8a4ab681311e61f7597cdcffd3930d815"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
+              "sha256": "81c644be74e099b0b985b74182f923530b85367de783be2f862a517325b95cd9"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
+              "sha256": "d7775fe6894ca50a7b293d5162e43267734a5489d23db74d4764e9d39a49bd0c"
+            },
+            {
+              "path": "apps/web/src/test/branding-settings-fixtures.ts",
+              "sha256": "7ece9748cce352a4cabdb0da2b0825d9fe5a8727b7fc741315a2dcc03796b9d0"
+            },
+            {
+              "path": "apps/web/src/test/render-workspace.tsx",
+              "sha256": "70a97ccc8b1102b62ca6a8335c5afb6724c0c3cd2dda94cefc7fd72c88ff957d"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dependent-select.tsx",
+              "sha256": "8b10f92cceed8e99e24c3700ebadde512fdf39f5142df2a2a8635eafbd3b35c8"
+            }
+          ]
+        }
       }
     },
     {
@@ -876126,6 +876196,86 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/workspace-testing-library",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "ef4ef6802ae67d5da5f66a6316278ef1050425f43f371da0625e705eaf4881c9"
+    },
+    "release-0.6-onboarding-form-testing-library": {
+      "batch": "release-0.6-onboarding-form-testing-library",
+      "base_commit": "2ab79fcca576bcf65a0af97991afd58dfd73c434",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.03.04"
+      ],
+      "changed_paths": [
+        "apps/web/src/routes/onboarding-forms.test.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/OnboardingWizard.tsx",
+          "sha256": "0faa5162a685d66ed5278f8e15e353eeca6fd45725cfbc2d7c4caac4dace7aed"
+        },
+        {
+          "path": "apps/web/src/hooks/useGeographyOptions.ts",
+          "sha256": "520091b3c30a4f9686760ec8d5691f5f9f7818521c6555efe059ae7ac4333225"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingDraft.test.tsx",
+          "sha256": "73738b2c507ee8591ee1b2099c27f23ba060ec83f75c93b12f0a969054bf9029"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingDraft.ts",
+          "sha256": "ab284b4cf3c5e0a6a6b07cbac58adae4540576f062cb2aa7eb301d79a92d75b2"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingForm.test.tsx",
+          "sha256": "615c545110f390e335b3aede1dfa358798b69fb84a137e6c5a6e6cdf38207f71"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingForm.ts",
+          "sha256": "da9e89503351249b1a29397825ce8199353dfb5baf58b6aa92bcf84196a207d6"
+        },
+        {
+          "path": "apps/web/src/hooks/useOnboardingSubmission.ts",
+          "sha256": "1fb6a2de10635105dbf3cb84a027bff4cda0aed8c888ec32cbf73eb4a04c52d7"
+        },
+        {
+          "path": "apps/web/src/lib/onboarding-journey.test.ts",
+          "sha256": "cb282d0916961f9b8ea9a02ef4a0d5cade660c230170564322dfb5dd95c673af"
+        },
+        {
+          "path": "apps/web/src/lib/onboarding-profile.test.ts",
+          "sha256": "71d76a745195ccd0bb9421cea51c61d12036ca03443ca1b09189e9e3d1956249"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding-forms.test.tsx",
+          "sha256": "8c9f69f28da49fabed707470be75aae8a4ab681311e61f7597cdcffd3930d815"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
+          "sha256": "81c644be74e099b0b985b74182f923530b85367de783be2f862a517325b95cd9"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
+          "sha256": "d7775fe6894ca50a7b293d5162e43267734a5489d23db74d4764e9d39a49bd0c"
+        },
+        {
+          "path": "apps/web/src/test/branding-settings-fixtures.ts",
+          "sha256": "7ece9748cce352a4cabdb0da2b0825d9fe5a8727b7fc741315a2dcc03796b9d0"
+        },
+        {
+          "path": "apps/web/src/test/render-workspace.tsx",
+          "sha256": "70a97ccc8b1102b62ca6a8335c5afb6724c0c3cd2dda94cefc7fd72c88ff957d"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dependent-select.tsx",
+          "sha256": "8b10f92cceed8e99e24c3700ebadde512fdf39f5142df2a2a8635eafbd3b35c8"
+        }
+      ],
+      "checks": [
+        "React Testing Library mounts the actual Individual and Legal onboarding routes through the accepted workspace providers, existing query ownership and versioned API contract fixtures.",
+        "Both cases restore a saved address, change province, clear the stale city and read only city options bound to the new province. An invalid postal code blocks advancement and links the field to an accessible error. After correction, the versioned draft saves the new province, city and postal code before the wizard navigates to the next stage. Neither case submits the profile while saving the address.",
+        "All 32 targeted cases across the two route tests and the existing form, draft, journey and profile suites passed. Web typecheck, focused lint, formatting and diff checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/onboarding-form-testing-library",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "59f621660859d0bbe090dc539d7571126960d5af63c97d0d73d290c83496ae79"
     }
   },
   "historical_improvements": [
