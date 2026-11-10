@@ -119,10 +119,19 @@ it('allows exactly one concurrent contact verification and rejects reuse', async
     contactValue: '+989121234567',
     otpChallengeId: id,
     otp: '123456',
-    previousOtp: '112233',
   };
+  expect((await post('add-contact', { ...body, previousOtp: '112233' })).status).toBe(400);
+  expect(
+    (
+      await http.pool.query(
+        'SELECT attempts_remaining,consumed_at FROM otp_challenges WHERE challenge_id=$1',
+        [id]
+      )
+    ).rows[0]
+  ).toEqual({ attempts_remaining: 5, consumed_at: null });
   const results = await Promise.all([post('add-contact', body), post('add-contact', body)]);
   expect(results.map((result) => result.status).sort()).toEqual([200, 409]);
+  expect((await post('add-contact', body)).status).toBe(409);
   expect(
     (await http.pool.query("SELECT mobile FROM users WHERE user_id='otp-user'")).rows[0].mobile
   ).toBe(body.contactValue);

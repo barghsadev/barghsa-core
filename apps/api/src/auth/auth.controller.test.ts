@@ -351,9 +351,17 @@ describe('authentication input and step-up failures', () => {
   it.each([
     { operation: 'resendOtp' as const, purpose: 'registration' },
     { operation: 'resendLoginOtp' as const, purpose: 'login' },
-  ])('binds resend to $purpose rather than a caller purpose', async ({ operation, purpose }) => {
+  ])('rejects a caller purpose and binds resend to $purpose', async ({ operation, purpose }) => {
     const { controller, otp, res } = fixture();
-    await controller[operation]({ challengeId, purpose: 'password_reset' }, request(), res);
+    await expect(
+      controller[operation]({ challengeId, purpose: 'password_reset' }, request(), res)
+    ).rejects.toMatchObject({
+      status: 400,
+      response: { error: 'VALIDATION:INPUT:INVALID' },
+    });
+    expect(otp.resendChallenge).not.toHaveBeenCalled();
+    await controller[operation]({ challengeId }, request(), res);
+    expect(otp.resendChallenge).toHaveBeenCalledTimes(1);
     expect(otp.resendChallenge).toHaveBeenCalledWith(
       challengeId,
       'unknown',

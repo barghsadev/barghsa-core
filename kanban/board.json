@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T03:00:40+00:00",
-  "source_commit": "405bbcf29aa531d49eee71d60d750cb4558dcfd1",
+  "updated": "2026-11-10T03:04:38+00:00",
+  "source_commit": "3b38436e20cfa1216214fe306483f1b479188342",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -18401,7 +18401,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -18437,7 +18438,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -19027,7 +19028,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -19063,7 +19065,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -19786,7 +19788,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -19822,7 +19825,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -20403,7 +20406,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -20439,7 +20443,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -21034,7 +21038,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -21070,7 +21075,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -21666,7 +21671,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -21702,7 +21708,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -22297,7 +22303,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -22333,7 +22340,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -22932,7 +22939,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -22968,7 +22976,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -25376,7 +25384,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -25412,7 +25421,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -476330,7 +476339,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -476342,7 +476352,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -476412,7 +476422,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -476432,7 +476443,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -476586,7 +476597,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -476610,7 +476622,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -476720,7 +476732,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-reject-unknown-auth-command-fields",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -476740,7 +476753,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -476853,7 +476866,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-reject-unknown-auth-command-fields",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -476885,7 +476899,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -478378,7 +478392,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-api-and-private-cutover-proof",
@@ -478394,7 +478409,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -483395,7 +483410,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-verify-auth-rate-controls"
+          "release-0.6-verify-auth-rate-controls",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "verified-auth-rate-controls",
@@ -483431,7 +483447,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -483483,7 +483499,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-verify-auth-rate-controls"
+          "release-0.6-verify-auth-rate-controls",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "verified-auth-rate-controls",
@@ -483515,7 +483532,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -483575,7 +483592,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-verify-auth-rate-controls"
+          "release-0.6-verify-auth-rate-controls",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "verified-auth-rate-controls",
@@ -483603,7 +483621,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -483651,7 +483669,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-verify-auth-rate-controls"
+          "release-0.6-verify-auth-rate-controls",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "verified-auth-rate-controls",
@@ -483687,7 +483706,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -495338,7 +495357,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-private-session-cutover-and-health-probes",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -495346,7 +495366,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -634925,7 +634945,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -634949,7 +634970,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -635033,7 +635054,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -635780,7 +635801,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -635804,7 +635826,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -635888,7 +635910,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -636635,7 +636657,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -636659,7 +636682,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -636743,7 +636766,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -637490,7 +637513,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -637514,7 +637538,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -637598,7 +637622,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -638345,7 +638369,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -638369,7 +638394,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -638453,7 +638478,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -651452,7 +651477,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -651476,7 +651502,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -651560,7 +651586,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -652307,7 +652333,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -652331,7 +652358,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -652415,7 +652442,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -653162,7 +653189,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -653186,7 +653214,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -653270,7 +653298,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -654017,7 +654045,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -654041,7 +654070,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -654125,7 +654154,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -654872,7 +654901,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -654896,7 +654926,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -654980,7 +655010,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -655727,7 +655757,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -655751,7 +655782,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -655835,7 +655866,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -656582,7 +656613,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -656606,7 +656638,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -656690,7 +656722,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -657437,7 +657469,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -657461,7 +657494,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -657545,7 +657578,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -658292,7 +658325,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -658316,7 +658350,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -658400,7 +658434,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -659147,7 +659181,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -659171,7 +659206,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -659255,7 +659290,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -660002,7 +660037,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -660026,7 +660062,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -660110,7 +660146,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -660857,7 +660893,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -660881,7 +660918,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
-              "sha256": "70095449ac4eec9c0282032bb176e0fa2f6c39f005da02ea2056ad21fa809a8c"
+              "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -660965,7 +661002,7 @@
             },
             {
               "path": "apps/api/src/auth/otp-http.integration.test.ts",
-              "sha256": "ef4aafd3d469d91f7b677ca34445d8dde4c210be6c895df884aee89fe2c6c731"
+              "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
             },
             {
               "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
@@ -758128,7 +758165,8 @@
         "Retire obsolete PR-only requirements under the approved direct-main workflow, without weakening production checks.",
         "Run authenticated ZAP probes against the exact accepted v0.6.0 staging candidate and disposition any findings. The v0.5.0 receipt verifies the deployed staging integration only.",
         "Earlier full workflow 42709841616 at fa7d7416 failed production browser checks with 70 unexpected cases across 14 suites, 2835 expected, 2 skipped and zero flakes. Browser coverage mapping refused the incomplete run. Six representative form-accessibility cases reproduced on the newer built source. Diagnose the affected fixtures and application behavior and obtain the complete passing final candidate browser gate.",
-        "The first failed-browser cohort now has targeted Chromium and mobile Safari evidence for Terms detail focus, address dialog and late city results, branding labels and tab navigation, verification mode and wallet limit recovery. Remaining failing cohorts and the complete candidate matrix still need disposition and a passing receipt."
+        "The first failed-browser cohort now has targeted Chromium and mobile Safari evidence for Terms detail focus, address dialog and late city results, branding labels and tab navigation, verification mode and wallet limit recovery. Remaining failing cohorts and the complete candidate matrix still need disposition and a passing receipt.",
+        "Protected preflight 42742923993 failed three OTP cases at 0d12a1df after strict validation rejected obsolete caller fields. Updated assertions prove the invalid requests cannot reach resend or consume the contact challenge, and the valid requests preserve route purpose and concurrent single use. The exact cumulative hosted preflight remains required."
       ],
       "owner": null,
       "depends_on": [],
@@ -758225,7 +758263,8 @@
           "release-0.6-external-provider-metrics-reconciliation",
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-strict-otp-caller-preflight"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -858761,6 +858800,64 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/template-scan",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "5643efeb539572ef39720753c7af08d3872027cb84af03a9aa35354aa98b3958"
+    },
+    "release-0.6-strict-otp-caller-preflight": {
+      "batch": "release-0.6-strict-otp-caller-preflight",
+      "base_commit": "3b38436e20cfa1216214fe306483f1b479188342",
+      "task_keys": [
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/auth/auth.controller.test.ts",
+        "apps/api/src/auth/otp-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.controller.test.ts",
+          "sha256": "5802b5555ebcf059ab8ef4d19dc69b226369be751197e8d6c5b4054d95847159"
+        },
+        {
+          "path": "apps/api/src/auth/auth.controller.ts",
+          "sha256": "e6259b86d8c18d3c68d7fcde66f11b560b5302075f9cb9daedf2f9f0e171ab5c"
+        },
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "04d5e581c3c38c90ca270b9bda018caf6032551602c5216639d7542dd518fc44"
+        },
+        {
+          "path": "apps/api/src/auth/dto/add-contact.dto.ts",
+          "sha256": "8027a5aae0eb827925fc44ce65570bd5fa4551d3f8191e05db0b160f26fe70c7"
+        },
+        {
+          "path": "apps/api/src/auth/dto/login.dto.ts",
+          "sha256": "444e3445b545774cbd51cf1c5bee1a6375885431ac94dae306738f977c01d032"
+        },
+        {
+          "path": "apps/api/src/auth/dto/otp.dto.ts",
+          "sha256": "208129eedacc572309f50c62d41d86fd0bf3bd3980d21a6ae4dcbef216c0d37e"
+        },
+        {
+          "path": "apps/api/src/auth/otp-http.integration.test.ts",
+          "sha256": "2d7774fca53a9ea18d79e9ee77bc54ad2f80721cfd8118242336e1219bca852a"
+        },
+        {
+          "path": "apps/api/src/auth/otp.service.ts",
+          "sha256": "8b9e10353fd47ad81fae2173ec2d7e28db0c68e260004b6595b7c4bebdb1bf30"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Reviewed the production web registration and login resend calls and contact forms. The affected API tests now send the same allowed fields after separately asserting that the injected caller purpose and obsolete previous OTP are rejected.",
+        "Both valid resend routes derive the OTP purpose server side. The compiled contact HTTP test checks no attempt decrement on the rejected request, one success and one conflict under concurrency, explicit replay rejection, the stored contact, and a single audit effect.",
+        "The 75 local controller tests passed. The compiled auth suite on the failed preflight runtime with only the two tested files overlaid passed all 86 tests against isolated PostgreSQL. Related auth runtime sources and lockfile match the current checkout byte for byte.",
+        "Affected ESLint, formatting and diff checks passed. The hosted preflight and full milestone gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/auth-otp-preflight",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "9be374d4fba44651a1a6b51b2c294d7fbb751eaa20a24ed415bc1d335874b5bd"
     }
   },
   "historical_improvements": [
