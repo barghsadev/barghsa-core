@@ -108,10 +108,20 @@ for (const locale of ['en', 'fa'] as const)
       await expect(query).toHaveAccessibleDescription(copy('query'));
       expect(queries).toBe(0);
       await query.fill('Meter question');
-      await button(k('runQuery')).click();
+      const [queryRejection] = await Promise.all([
+        page.waitForResponse(
+          (response) =>
+            new URL(response.url()).pathname === `/api/admin/kb-groups/${kg.id}/query` &&
+            response.request().method() === 'POST'
+        ),
+        query.press('Enter'),
+      ]);
+      expect(queryRejection.status()).toBe(400);
+      expect(queries).toBe(1);
       await expect(query).toBeFocused();
       await expect(query).toHaveValue('Meter question');
       await expect(query).toHaveAttribute('aria-invalid', 'true');
+      await expect(query).toHaveAccessibleDescription(copy('query'));
       await button(k('runQuery')).click();
       await expect(page.getByText('Verified guidance', { exact: true })).toBeVisible();
       await button(k('link')).click();

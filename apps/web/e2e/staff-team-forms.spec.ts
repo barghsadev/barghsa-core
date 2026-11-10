@@ -76,6 +76,7 @@ for (const locale of ['en', 'fa'] as const)
       page,
     }, info) => {
       await setupCatalogueForms(page, locale, dark);
+      await page.emulateMedia({ reducedMotion: 'reduce' });
       const text = (key: string) => t(`admin.teams.${key}`, locale);
       let saved = structuredClone(staffTeam),
         verified = false,

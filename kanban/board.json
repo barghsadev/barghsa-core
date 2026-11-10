@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T16:56:06+00:00",
-  "source_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+  "updated": "2026-11-10T17:09:21+00:00",
+  "source_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5584,7 +5584,8 @@
         "Actual scheduled run 42789410833 reported all 40 shards with 127 unexpected outcomes and 18 flakes. The customer request, owned-read and Firefox document replays passed. The Firefox electricity submission race and the Persian saving touch-target flake now have source-bound local passing evidence. Resolve remaining failures and repeat the complete matrix on the exact candidate. The solar Submit request touch target also has source-bound passing geometry and mobile gate receipts.",
         "Registration, MFA, legal onboarding, electricity and wallet, saving, consultation, solar construction and admin configuration have targeted source-bound receipts. The exact hosted release matrix and strict rollup still need a clean pass. The cancellation and OTP repairs have targeted local browser receipts.",
         "The exact 150bec1e browser matrix exposed Firefox invitation focus and Mobile Safari account-menu/custom-trigger failures. Final focused Linux Firefox/Mobile Safari, Chromium, Mobile Chrome and native mobile combobox runs passed. Read back all hosted outcomes and run the complete matrix on the final release candidate.",
-        "Hosted WebKit widget entry geometry failures now have passing exact Linux WebKit and Chromium receipts. Verify the final matrix and strict outcome."
+        "Hosted WebKit widget entry geometry failures now have passing exact Linux WebKit and Chromium receipts. Verify the final matrix and strict outcome.",
+        "Focused browser checks cover the recorded notification history, knowledge 400, staff grid and staff form contrast failures. Read back remaining hosted results and the final strict rollup."
       ],
       "owner": null,
       "depends_on": [],
@@ -5665,7 +5666,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": null
       }
@@ -62932,7 +62934,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -63112,7 +63115,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
+              "sha256": "fd40399c2632fff58bc26523ab18f4bdff66a8c8587328e6f9e5ada0ae901b85"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -63779,6 +63782,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-team-forms.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -64056,7 +64067,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -64236,7 +64248,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
+              "sha256": "fd40399c2632fff58bc26523ab18f4bdff66a8c8587328e6f9e5ada0ae901b85"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -64903,6 +64915,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-team-forms.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -65180,7 +65200,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -65360,7 +65381,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
+              "sha256": "fd40399c2632fff58bc26523ab18f4bdff66a8c8587328e6f9e5ada0ae901b85"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -66027,6 +66048,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-team-forms.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -100658,7 +100687,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -100838,7 +100868,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
+              "sha256": "fd40399c2632fff58bc26523ab18f4bdff66a8c8587328e6f9e5ada0ae901b85"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -101505,6 +101535,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-team-forms.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -101714,7 +101752,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -101894,7 +101933,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
+              "sha256": "fd40399c2632fff58bc26523ab18f4bdff66a8c8587328e6f9e5ada0ae901b85"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -102561,6 +102600,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-team-forms.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -102776,7 +102823,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -102956,7 +103004,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
+              "sha256": "fd40399c2632fff58bc26523ab18f4bdff66a8c8587328e6f9e5ada0ae901b85"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -103623,6 +103671,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-team-forms.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -110623,7 +110679,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "status": "done",
@@ -110723,7 +110780,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -110980,6 +111037,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
               ],
               "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -111275,7 +111340,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "status": "done",
@@ -111423,7 +111489,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -111550,6 +111616,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -437178,7 +437252,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -437246,7 +437321,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -437767,6 +437842,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -437912,7 +437995,8 @@
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "accepted-all-applicable-order-review-wallet-disclosure",
@@ -437980,7 +438064,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -439111,6 +439195,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -439389,7 +439481,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -439457,7 +439550,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -441109,6 +441202,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
               ],
               "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -441237,7 +441338,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -441305,7 +441407,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -441826,6 +441928,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -441921,7 +442031,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -441989,7 +442100,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -442510,6 +442621,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -442605,7 +442724,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -442673,7 +442793,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -443194,6 +443314,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -443289,7 +443417,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -443357,7 +443486,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -443878,6 +444007,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -443973,7 +444110,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -444041,7 +444179,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -444562,6 +444700,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -444657,7 +444803,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -444725,7 +444872,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -445246,6 +445393,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -445341,7 +445496,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -445409,7 +445565,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -445930,6 +446086,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -446749,7 +446913,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -446817,7 +446982,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -447338,6 +447503,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -447432,7 +447605,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -447500,7 +447674,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -448021,6 +448195,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -448127,7 +448309,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -448195,7 +448378,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -448716,6 +448899,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -449537,7 +449728,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -449605,7 +449797,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -450126,6 +450318,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -450225,7 +450425,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -450293,7 +450494,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -450814,6 +451015,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -450910,7 +451119,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -450978,7 +451188,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -451499,6 +451709,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -469886,7 +470104,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "status": "done",
@@ -469986,7 +470205,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -470243,6 +470462,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
               ],
               "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -470358,7 +470585,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "status": "done",
@@ -470458,7 +470686,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -470715,6 +470943,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
               ],
               "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -470832,7 +471068,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "status": "done",
@@ -470932,7 +471169,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -471189,6 +471426,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
               ],
               "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -471305,7 +471550,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "status": "done",
@@ -471405,7 +471651,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/knowledge-bases.spec.ts",
@@ -471662,6 +471908,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-openrouter-relay/kb-disable-fix-proof.json"
               ],
               "scope": "One existing KB source-update enabled assignment deduplicated. All other service methods and prior assertions retained.109 real HTTP/database/controller/service cases cover original implicit source disable, explicit model-change disable, blocked enable, index invalidation, current authority/session/step-up/CSRF and audit boundaries. No unrelated task/release or live answer gate accepted."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -471769,7 +472023,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "status": "done",
@@ -471917,7 +472172,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -472043,6 +472298,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -472159,7 +472422,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "status": "done",
@@ -472307,7 +472571,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -472434,6 +472698,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -472545,7 +472817,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "status": "done",
@@ -472693,7 +472966,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -472819,6 +473092,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -548531,7 +548812,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548563,7 +548845,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/package.json",
@@ -548810,6 +549092,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ]
         }
@@ -548869,7 +549159,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548901,7 +549192,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/package.json",
@@ -549148,6 +549439,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ]
         }
@@ -549207,7 +549506,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549239,7 +549539,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/package.json",
@@ -549486,6 +549786,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ]
         }
@@ -549545,7 +549853,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549577,7 +549886,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/package.json",
@@ -549824,6 +550133,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ]
         }
@@ -555734,7 +556051,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-protected-storage-origins",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -555990,7 +556308,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -556198,7 +556516,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
+              "sha256": "fd40399c2632fff58bc26523ab18f4bdff66a8c8587328e6f9e5ada0ae901b85"
             },
             {
               "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
@@ -557236,6 +557554,15 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts",
+                "apps/web/e2e/staff-team-forms.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ]
         }
@@ -559482,7 +559809,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-public-registration-privacy",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559626,7 +559954,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-tables.spec.ts",
@@ -559698,7 +560026,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
@@ -560268,6 +560596,15 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts",
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ]
         }
@@ -560395,7 +560732,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-public-registration-privacy",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560539,7 +560877,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-tables.spec.ts",
@@ -560611,7 +560949,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
@@ -561181,6 +561519,15 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts",
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ]
         }
@@ -561866,7 +562213,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-public-registration-privacy",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -562010,7 +562358,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/knowledge-policy-tables.spec.ts",
@@ -562082,7 +562430,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/staff-users.spec.ts",
@@ -562652,6 +563000,15 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts",
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ]
         }
@@ -611938,7 +612295,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -612326,7 +612684,7 @@
             },
             {
               "path": "apps/web/e2e/notification-panel-query.spec.ts",
-              "sha256": "4b7de1cec7ae7c34f478975ff980689ba36f9138f7cfdd88020e24bc5924488b"
+              "sha256": "544d13703855faa0f7a5cc42636775e655a82e23824b06de7cc6e394c7e4d49c"
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
@@ -612514,7 +612872,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
+              "sha256": "fd40399c2632fff58bc26523ab18f4bdff66a8c8587328e6f9e5ada0ae901b85"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -614773,6 +615131,15 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/notification-panel-query.spec.ts",
+                "apps/web/e2e/staff-team-forms.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ]
         }
@@ -700070,7 +700437,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -700170,7 +700538,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -700553,6 +700921,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -700753,7 +701129,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -700853,7 +701230,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -701236,6 +701613,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -701436,7 +701821,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -701536,7 +701922,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -701919,6 +702305,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -702117,7 +702511,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -702217,7 +702612,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -702600,6 +702995,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -702798,7 +703201,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -702898,7 +703302,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -703281,6 +703685,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -703481,7 +703893,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -703581,7 +703994,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -703964,6 +704377,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -704163,7 +704584,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -704263,7 +704685,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -704646,6 +705068,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -704845,7 +705275,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -704945,7 +705376,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -705328,6 +705759,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -705527,7 +705966,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -705627,7 +706067,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -706010,6 +706450,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -706209,7 +706657,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -706309,7 +706758,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -706692,6 +707141,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -706891,7 +707348,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -706991,7 +707449,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -707374,6 +707832,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -707573,7 +708039,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -707673,7 +708140,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -708056,6 +708523,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -756519,7 +756994,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_acceptance": {
           "kind": "verified-admin-safety-and-team-ui-journeys",
@@ -756531,7 +757007,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
+              "sha256": "fd40399c2632fff58bc26523ab18f4bdff66a8c8587328e6f9e5ada0ae901b85"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -756654,6 +757130,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-team-forms.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -765066,7 +765550,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
+              "sha256": "fd40399c2632fff58bc26523ab18f4bdff66a8c8587328e6f9e5ada0ae901b85"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -767286,7 +767770,7 @@
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
-              "sha256": "d36c346cbe9770ebec091d777f2571f1c28af8b2ecb3e7ac4e89e6e5053c71cd"
+              "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
             },
             {
               "path": "apps/web/src/components/AdminBusinessWorkCounts.tsx",
@@ -769185,6 +769669,15 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/staff-team-forms.spec.ts",
+                "apps/web/e2e/staff-dashboard-widgets.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -769614,7 +770107,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ]
       }
     },
@@ -770866,7 +771360,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -773323,6 +773817,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "presentation_renewals": [
@@ -773690,7 +774192,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-protected-storage-origins",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -774947,7 +775450,7 @@
             },
             {
               "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
-              "sha256": "d02cedec7031e6bcdcc320724d1d06385008abc76c6ff44ecfc3fd0ac683d907"
+              "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -777273,6 +777776,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-browser-navigation-query-and-resting-states",
+              "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+              "paths": [
+                "apps/web/e2e/knowledge-policy-membership.spec.ts"
+              ],
+              "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -777657,7 +778168,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-protected-storage-origins",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -781720,7 +782232,8 @@
         "The primary mobile populated-paint measurement now excludes demonstrated test-runner polling delay. All 12 focused cases passed with unchanged budgets. Verify the repaired hosted integrity check before closing the release gate.",
         "Nightly 42817801007 exposed additional login and electricity timing/overlay flakes and Linux WebKit Terms selection failures. The focused repairs pass locally; the hosted candidate rerun and other matrix outcomes remain open.",
         "The generated contract now matches the rate-limit routes and contact-proof registration response. The exact hosted quality check is pending. Scope-tested touch and focus fixes cover observed hosted browser failures. Remaining matrix jobs and strict rollup are open.",
-        "Hosted WebKit widget entry geometry failures now have passing exact Linux WebKit and Chromium receipts. Verify the final matrix and strict outcome."
+        "Hosted WebKit widget entry geometry failures now have passing exact Linux WebKit and Chromium receipts. Verify the final matrix and strict outcome.",
+        "Focused browser checks cover the recorded notification history, knowledge 400, staff grid and staff form contrast failures. Read back remaining hosted results and the final strict rollup."
       ],
       "owner": null,
       "depends_on": [],
@@ -781879,7 +782392,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-browser-navigation-query-and-resting-states"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -895201,6 +895715,103 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
       "source_scope_proof": "dashboard-widget-after-entrance-source-proof.json",
       "source_scope_proof_sha256": "ac2c679c7889874fd6b03728e0449d97a025fd3c1eecd940a19ff7834d447a48"
+    },
+    "release-0.6-browser-navigation-query-and-resting-states": {
+      "batch": "release-0.6-browser-navigation-query-and-resting-states",
+      "base_commit": "a1633f87b5efbbea5a880b04f53f8dde0be7f1bb",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "release-readiness#R-05.02",
+        "02-auth-users-admin.md#T-06.01.01",
+        "02-auth-users-admin.md#T-06.01.02",
+        "02-auth-users-admin.md#T-06.01.03",
+        "02-auth-users-admin.md#T-09.08.01",
+        "02-auth-users-admin.md#T-09.08.02",
+        "02-auth-users-admin.md#T-09.08.03",
+        "02-auth-users-admin.md#T-09.11.02",
+        "02-auth-users-admin.md#T-09.11.03",
+        "03-core-business.md#T-03.90.01",
+        "03-core-business.md#T-03.90.02",
+        "03-core-business.md#T-03.90.03",
+        "03-core-business.md#T-03.90.04",
+        "03-core-business.md#T-03.90.05",
+        "03-core-business.md#T-03.90.06",
+        "03-core-business.md#T-03.90.07",
+        "03-core-business.md#T-03.90.08",
+        "03-core-business.md#T-03.90.09",
+        "03-core-business.md#T-03.90.10",
+        "03-core-business.md#T-03.90.12",
+        "03-core-business.md#T-03.90.13",
+        "03-core-business.md#T-03.90.14",
+        "03-core-business.md#T-03.90.16",
+        "03-core-business.md#T-03.90.17",
+        "03-core-business.md#T-03.90.18",
+        "05-notifications-documents-ai.md#T-05.17.01",
+        "05-notifications-documents-ai.md#T-05.17.02",
+        "05-notifications-documents-ai.md#T-05.17.03",
+        "05-notifications-documents-ai.md#T-05.17.04",
+        "05-notifications-documents-ai.md#T-05.18.01",
+        "05-notifications-documents-ai.md#T-05.18.02",
+        "05-notifications-documents-ai.md#T-05.18.03",
+        "07-ui-ux-design.md#T-07.04.01.01",
+        "07-ui-ux-design.md#T-07.04.01.02",
+        "07-ui-ux-design.md#T-07.04.01.03",
+        "07-ui-ux-design.md#T-07.04.01.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.19.01.01",
+        "07-ui-ux-design.md#T-07.19.01.02",
+        "07-ui-ux-design.md#T-07.19.01.03",
+        "07-ui-ux-design.md#T-07.19.02.01",
+        "07-ui-ux-design.md#T-07.19.02.02",
+        "07-ui-ux-design.md#T-07.19.02.03",
+        "07-ui-ux-design.md#T-07.19.02.04",
+        "07-ui-ux-design.md#T-07.19.02.05",
+        "07-ui-ux-design.md#T-07.19.02.06",
+        "07-ui-ux-design.md#T-07.19.02.07",
+        "07-ui-ux-design.md#T-07.19.02.08",
+        "07-ui-ux-design.md#T-07.19.02.09",
+        "07-ui-ux-design.md#T-07.30.02.16",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/knowledge-policy-membership.spec.ts",
+        "apps/web/e2e/notification-panel-query.spec.ts",
+        "apps/web/e2e/staff-dashboard-widgets.spec.ts",
+        "apps/web/e2e/staff-team-forms.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/knowledge-policy-membership.spec.ts",
+          "sha256": "7aaa99b98d4befecd0d60ca38972660ca9356ae55de417461ea48c65d4ecfe3d"
+        },
+        {
+          "path": "apps/web/e2e/notification-panel-query.spec.ts",
+          "sha256": "544d13703855faa0f7a5cc42636775e655a82e23824b06de7cc6e394c7e4d49c"
+        },
+        {
+          "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
+          "sha256": "14496814207142e7ec9bc807e2bbf68b1e77905618e674a156188b7be85c0eca"
+        },
+        {
+          "path": "apps/web/e2e/staff-team-forms.spec.ts",
+          "sha256": "fd40399c2632fff58bc26523ab18f4bdff66a8c8587328e6f9e5ada0ae901b85"
+        }
+      ],
+      "checks": [
+        "Exact Linux WebKit passed the hosted Persian dark notification case after the draft URL and archived preview cleanup settle before Back and reload. The test retains independent queue filters, draft preservation and history assertions. All eight Chromium notification and knowledge cases pass across both languages and themes.",
+        "The hosted Firefox knowledge trace showed no POST after clicking with a filled query. The exact test submits the actual focused input with Enter, verifies the protected POST returned 400 and checks the localized accessible field error and the following successful retry. Pinned macOS Firefox passed at the original 30 s budget. Linux Firefox passed the new query checks but timed out while the final fresh page still loaded. The exact full Linux fixture passed in 33.7 s using a 45 s invocation-only ceiling. The repository and hosted 30 s budgets are preserved.",
+        "The staff dashboard case passes on Linux Mobile Safari after both widget transforms settle, with the existing subpixel geometry, independent retry and accessibility checks. Both locales also passed on local Mobile Safari in the prior scoped run. The English light team form passed in Linux Mobile Safari with reduced motion and an additional experimental toast assertion. That assertion was removed after Persian cases showed it depended on transient toast visibility. All four final exact local Mobile Safari team cases passed with their existing Axe checks and the reduced-motion preference.",
+        "Changed-file format, lint and diff validation passed. Hosted Firefox shard 4, WebKit shard 5 and Mobile Safari shard 7 failures have related focused evidence. Full hosted matrix and strict outcome remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "source_scope_proof": "browser-navigation-query-resting-states-source-proof.json",
+      "source_scope_proof_sha256": "5f8072abd9d25b0b522589331de2d1ae06bee12d41be2fe81bfd36b8ef27e2f8"
     }
   },
   "historical_improvements": [

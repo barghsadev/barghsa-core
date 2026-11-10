@@ -1,5 +1,5 @@
 import { fullNavigation } from './navigation-fixture';
-import { test, expect } from './coverage-fixture';
+import { test, expect, type Locator } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/app';
 import { dashboardText } from '@barghsa/i18n/dashboard';
@@ -90,13 +90,16 @@ for (const locale of ['en', 'fa'] as const) {
           )
           .toBe(true);
       }
-      const geometry = (element: Element) => {
-        const box = element.getBoundingClientRect();
-        const grid = element.parentElement!.getBoundingClientRect();
-        return { x: box.x - grid.x, y: box.y - grid.y, width: box.width, height: box.height };
+      const geometry = async (widget: Locator) => {
+        await expect(widget).toHaveCSS('transform', 'none');
+        return widget.evaluate((element) => {
+          const box = element.getBoundingClientRect();
+          const grid = element.parentElement!.getBoundingClientRect();
+          return { x: box.x - grid.x, y: box.y - grid.y, width: box.width, height: box.height };
+        });
       };
-      const before = await work.evaluate(geometry);
-      const verificationBefore = await verification.evaluate(geometry);
+      const before = await geometry(work);
+      const verificationBefore = await geometry(verification);
       const previous = { ...reads };
       fail = false;
       await work.getByRole('button', { name: dashboardText('widget.retry', locale) }).click();
@@ -108,8 +111,8 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(
         verification.getByText(dashboardText('verification.empty', locale))
       ).toBeVisible();
-      const after = await work.evaluate(geometry);
-      const verificationAfter = await verification.evaluate(geometry);
+      const after = await geometry(work);
+      const verificationAfter = await geometry(verification);
       for (const key of ['x', 'y', 'width', 'height'] as const) {
         expect(after[key]).toBeCloseTo(before[key], 2);
         expect(verificationAfter[key]).toBeCloseTo(verificationBefore[key], 2);

@@ -157,15 +157,20 @@ for (const locale of ['en', 'fa'] as const)
       expect(params(page).get('locale')).toBe(locale);
       await expect(body).toHaveValue('Private draft preserved');
       await version.selectOption('draft-v3');
+      await expect.poll(() => params(page).get('preview_version')).toBe('draft-v3');
       await catalogue
         .getByRole('combobox', { name: word('allStatus'), exact: true })
         .selectOption('archived');
       await expect(version).toHaveValue('archived-v1');
+      await expect.poll(() => params(page).get('status')).toBe('archived');
+      await expect.poll(() => params(page).has('preview_version')).toBe(false);
       await page.goBack();
       await expect.poll(() => catalogueReads.at(-1)?.searchParams.has('status')).toBe(false);
       await expect(version).toHaveValue('draft-v3');
       await page.locator('#tpl-preview-locale').selectOption(locale);
+      await expect.poll(() => params(page).get('preview_locale')).toBe(locale);
       await page.locator('#tpl-preview-version').selectOption('draft-v3');
+      await expect.poll(() => params(page).get('preview_version')).toBe('draft-v3');
       await page.reload();
       await expect(version).toHaveValue('draft-v3');
       await expect(page.locator('#tpl-preview-event')).toHaveValue('fixture.versions');
