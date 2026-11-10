@@ -13,6 +13,9 @@ async function freshRegistration(page: import('@playwright/test').Page, locale: 
   await page.locator('#username').fill('test@example.test');
   await page.locator('#username').press('Tab');
   await page.locator('#password').fill(' Fresh synthetic value 12A ');
+  const strength = page.locator('#password-strength').getByRole('progressbar');
+  await expect(strength).toHaveAttribute('aria-busy', 'false');
+  await expect(strength).toHaveAttribute('aria-valuenow', '100');
   await page.getByRole('checkbox').check();
   await page.locator('button[type="submit"]').click();
   await expect(page).toHaveURL(new RegExp(`/register/verify\\?challengeId=${nextChallengeId}`));

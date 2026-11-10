@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T18:22:29+00:00",
-  "source_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+  "updated": "2026-11-10T18:23:04+00:00",
+  "source_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5593,10 +5593,11 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify hosted run 42864645557 at 820405f4 across all five browser projects and all 40 shards, retain the current clean strict rollup and seven-day history, and reconcile any source changes before final promotion.",
+        "Reconcile the remaining hosted shards and strict rollup for run 42864645557 at 820405f4. After reconciling all observed flakes, require one clean replacement exact run across all five browser projects and all 40 shards, and retain the seven-day history.",
         "Chromium shard 5 of run 42864645557 failed the strict gate on a Persian consent-click flake. The focused fix has eight passing cases. Reconcile the other hosted shards before dispatching the next exact full matrix.",
         "Mobile Chrome shard 1 of 42864645557 flaked on reverse-arrow navigation before the Home selection committed. Twelve focused checks passed after waiting for the current selection. Read back remaining hosted outcomes before the next exact run.",
-        "Firefox shard 1 of 42864645557 flaked on protected-navigation event timing after logout. Five focused checks passed with the committed navigation and explicit denied-auth proof. Reconcile remaining hosted shards before the next exact matrix."
+        "Firefox shard 1 of 42864645557 flaked on protected-navigation event timing after logout. Five focused checks passed with the committed navigation and explicit denied-auth proof. Reconcile remaining hosted shards before the next exact matrix.",
+        "Chromium shard 1 and Mobile Chrome shard 6 failed while password strength changed during registration consent. All 36 focused cases passed after waiting for the committed strength meter. The exact replacement hosted matrix and full release gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -5682,7 +5683,8 @@
           "release-0.6-registration-proof-callers-and-browser-readback",
           "release-0.6-registration-consent-layout-readiness",
           "release-0.6-catalogue-committed-keyboard-selection",
-          "release-0.6-account-logout-committed-probe"
+          "release-0.6-account-logout-committed-probe",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": null
       }
@@ -5872,11 +5874,12 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify hosted run 42864645557 at 820405f4 across all five browser projects and all 40 shards, retain the current clean strict rollup and seven-day history, and reconcile any source changes before final promotion.",
+        "Reconcile the remaining hosted shards and strict rollup for run 42864645557 at 820405f4. After reconciling all observed flakes, require one clean replacement exact run across all five browser projects and all 40 shards, and retain the seven-day history.",
         "Record the strict promotion report from the accepted candidate in the production approval package.",
         "Chromium shard 5 of run 42864645557 failed the strict gate on a Persian consent-click flake. The focused fix has eight passing cases. Reconcile the other hosted shards before dispatching the next exact full matrix.",
         "Mobile Chrome shard 1 of 42864645557 flaked on reverse-arrow navigation before the Home selection committed. Twelve focused checks passed after waiting for the current selection. Read back remaining hosted outcomes before the next exact run.",
-        "Firefox shard 1 of 42864645557 flaked on protected-navigation event timing after logout. Five focused checks passed with the committed navigation and explicit denied-auth proof. Reconcile remaining hosted shards before the next exact matrix."
+        "Firefox shard 1 of 42864645557 flaked on protected-navigation event timing after logout. Five focused checks passed with the committed navigation and explicit denied-auth proof. Reconcile remaining hosted shards before the next exact matrix.",
+        "Chromium shard 1 and Mobile Chrome shard 6 failed while password strength changed during registration consent. All 36 focused cases passed after waiting for the committed strength meter. The exact replacement hosted matrix and full release gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -5960,7 +5963,8 @@
           "release-0.6-registration-proof-callers-and-browser-readback",
           "release-0.6-registration-consent-layout-readiness",
           "release-0.6-catalogue-committed-keyboard-selection",
-          "release-0.6-account-logout-committed-probe"
+          "release-0.6-account-logout-committed-probe",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": null
       }
@@ -14299,8 +14303,9 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify hosted run 42864645557 at 820405f4 across all five browser projects and all 40 shards, retain the current clean strict rollup and seven-day history, and reconcile any source changes before final promotion.",
-        "Verify runtime-generated navigation destinations against complete journey evidence and configure the authorized dedicated results receiver."
+        "Reconcile the remaining hosted shards and strict rollup for run 42864645557 at 820405f4. After reconciling all observed flakes, require one clean replacement exact run across all five browser projects and all 40 shards, and retain the seven-day history.",
+        "Verify runtime-generated navigation destinations against complete journey evidence and configure the authorized dedicated results receiver.",
+        "Chromium shard 1 and Mobile Chrome shard 6 failed while password strength changed during registration consent. All 36 focused cases passed after waiting for the committed strength meter. The exact replacement hosted matrix and full release gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -14359,7 +14364,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-registration-proof-callers-and-browser-readback"
+          "release-0.6-registration-proof-callers-and-browser-readback",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": null
       }
@@ -19781,7 +19787,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -19861,7 +19868,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "d844cd3d4684fb4ce10653c518fbcf3be968ef48e328854150d666f0275a4a73"
+              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -20282,6 +20289,14 @@
                 "apps/api/src/auth/registration-http.integration.test.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-registration-pointer-after-strength",
+              "base_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -20441,7 +20456,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -20521,7 +20537,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "d844cd3d4684fb4ce10653c518fbcf3be968ef48e328854150d666f0275a4a73"
+              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -20942,6 +20958,14 @@
                 "apps/api/src/auth/registration-http.integration.test.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-registration-pointer-after-strength",
+              "base_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -21234,7 +21258,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -21314,7 +21339,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "d844cd3d4684fb4ce10653c518fbcf3be968ef48e328854150d666f0275a4a73"
+              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -21735,6 +21760,14 @@
                 "apps/api/src/auth/registration-http.integration.test.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-registration-pointer-after-strength",
+              "base_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -21885,7 +21918,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -21965,7 +21999,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "d844cd3d4684fb4ce10653c518fbcf3be968ef48e328854150d666f0275a4a73"
+              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -22386,6 +22420,14 @@
                 "apps/api/src/auth/registration-http.integration.test.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-registration-pointer-after-strength",
+              "base_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -22550,7 +22592,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -22630,7 +22673,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "d844cd3d4684fb4ce10653c518fbcf3be968ef48e328854150d666f0275a4a73"
+              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -23051,6 +23094,14 @@
                 "apps/api/src/auth/registration-http.integration.test.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-registration-pointer-after-strength",
+              "base_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -23216,7 +23267,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -23296,7 +23348,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "d844cd3d4684fb4ce10653c518fbcf3be968ef48e328854150d666f0275a4a73"
+              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -23717,6 +23769,14 @@
                 "apps/api/src/auth/registration-http.integration.test.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-registration-pointer-after-strength",
+              "base_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -23881,7 +23941,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -23961,7 +24022,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "d844cd3d4684fb4ce10653c518fbcf3be968ef48e328854150d666f0275a4a73"
+              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -24382,6 +24443,14 @@
                 "apps/api/src/auth/registration-http.integration.test.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-registration-pointer-after-strength",
+              "base_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -24550,7 +24619,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": {
           "kind": "verified-registration-consent-and-otp",
@@ -24630,7 +24700,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "d844cd3d4684fb4ce10653c518fbcf3be968ef48e328854150d666f0275a4a73"
+              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -25051,6 +25121,14 @@
                 "apps/api/src/auth/registration-http.integration.test.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-registration-pointer-after-strength",
+              "base_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -32892,7 +32970,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -32928,7 +33007,7 @@
             },
             {
               "path": "apps/web/e2e/auth-rate-limit.spec.ts",
-              "sha256": "0d544f5464e1b2433196958e52ed62447a0039fe6b9e5f35407010a45a5ce1bc"
+              "sha256": "b25211dcf4d0b4896bec85b3d64669dee1eebb0d1e5852795fad0a3bada6cbf9"
             },
             {
               "path": "apps/web/e2e/password-reset.spec.ts",
@@ -33370,6 +33449,14 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-registration-pointer-after-strength",
+              "base_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
+              "paths": [
+                "apps/web/e2e/auth-rate-limit.spec.ts"
+              ],
+              "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -33624,7 +33711,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -33676,7 +33764,7 @@
             },
             {
               "path": "apps/web/e2e/auth-rate-limit.spec.ts",
-              "sha256": "0d544f5464e1b2433196958e52ed62447a0039fe6b9e5f35407010a45a5ce1bc"
+              "sha256": "b25211dcf4d0b4896bec85b3d64669dee1eebb0d1e5852795fad0a3bada6cbf9"
             },
             {
               "path": "apps/web/e2e/password-reset.spec.ts",
@@ -34677,6 +34765,14 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-registration-pointer-after-strength",
+              "base_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
+              "paths": [
+                "apps/web/e2e/auth-rate-limit.spec.ts"
+              ],
+              "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -35540,7 +35636,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -35588,7 +35685,7 @@
             },
             {
               "path": "apps/web/e2e/auth-rate-limit.spec.ts",
-              "sha256": "0d544f5464e1b2433196958e52ed62447a0039fe6b9e5f35407010a45a5ce1bc"
+              "sha256": "b25211dcf4d0b4896bec85b3d64669dee1eebb0d1e5852795fad0a3bada6cbf9"
             },
             {
               "path": "apps/web/e2e/login-recovery.spec.ts",
@@ -36128,6 +36225,14 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-registration-pointer-after-strength",
+              "base_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
+              "paths": [
+                "apps/web/e2e/auth-rate-limit.spec.ts"
+              ],
+              "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -491395,7 +491500,8 @@
         "batches": [
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
           "release-0.6-public-registration-privacy",
-          "release-0.6-registration-proof-callers-and-browser-readback"
+          "release-0.6-registration-proof-callers-and-browser-readback",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "current_acceptance": {
           "kind": "verified-public-registration-privacy",
@@ -491435,7 +491541,7 @@
             },
             {
               "path": "apps/web/e2e/registration-recovery.spec.ts",
-              "sha256": "d844cd3d4684fb4ce10653c518fbcf3be968ef48e328854150d666f0275a4a73"
+              "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
             },
             {
               "path": "apps/web/src/routes/register/index.tsx",
@@ -491490,6 +491596,14 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-registration-pointer-after-strength",
+              "base_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
+              "paths": [
+                "apps/web/e2e/registration-recovery.spec.ts"
+              ],
+              "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
             }
           ]
         }
@@ -792779,7 +792893,8 @@
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "Chromium shard 5 of run 42864645557 failed the strict gate on a Persian consent-click flake. The focused fix has eight passing cases. Reconcile the other hosted shards before dispatching the next exact full matrix.",
         "Mobile Chrome shard 1 of 42864645557 flaked on reverse-arrow navigation before the Home selection committed. Twelve focused checks passed after waiting for the current selection. Read back remaining hosted outcomes before the next exact run.",
-        "Firefox shard 1 of 42864645557 flaked on protected-navigation event timing after logout. Five focused checks passed with the committed navigation and explicit denied-auth proof. Reconcile remaining hosted shards before the next exact matrix."
+        "Firefox shard 1 of 42864645557 flaked on protected-navigation event timing after logout. Five focused checks passed with the committed navigation and explicit denied-auth proof. Reconcile remaining hosted shards before the next exact matrix.",
+        "Chromium shard 1 and Mobile Chrome shard 6 failed while password strength changed during registration consent. All 36 focused cases passed after waiting for the committed strength meter. The exact replacement hosted matrix and full release gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -792943,7 +793058,8 @@
           "release-0.6-registration-proof-callers-and-browser-readback",
           "release-0.6-registration-consent-layout-readiness",
           "release-0.6-catalogue-committed-keyboard-selection",
-          "release-0.6-account-logout-committed-probe"
+          "release-0.6-account-logout-committed-probe",
+          "release-0.6-registration-pointer-after-strength"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -907615,6 +907731,82 @@
         {
           "file": "electricity-vat-native-source.sha256",
           "sha256": "930d8060951a328b6af2d56b09a671c9b623444546f4763f92c5b77cf1cc2f1f"
+        }
+      ]
+    },
+    "release-0.6-registration-pointer-after-strength": {
+      "batch": "release-0.6-registration-pointer-after-strength",
+      "base_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02",
+        "02-auth-users-admin.md#T-01.01.01",
+        "02-auth-users-admin.md#T-01.01.02",
+        "02-auth-users-admin.md#T-01.01.04",
+        "02-auth-users-admin.md#T-01.01.05",
+        "02-auth-users-admin.md#T-01.01.06",
+        "02-auth-users-admin.md#T-01.02.01",
+        "02-auth-users-admin.md#T-01.02.02",
+        "02-auth-users-admin.md#T-01.02.03",
+        "02-auth-users-admin.md#T-02.03.01",
+        "02-auth-users-admin.md#T-02.03.02",
+        "02-auth-users-admin.md#T-02.04.01",
+        "06-security-testing-observability.md#T-06.01.02.06"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/auth-rate-limit.spec.ts",
+        "apps/web/e2e/registration-recovery.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/auth-rate-limit.spec.ts",
+          "sha256": "b25211dcf4d0b4896bec85b3d64669dee1eebb0d1e5852795fad0a3bada6cbf9"
+        },
+        {
+          "path": "apps/web/e2e/registration-recovery.spec.ts",
+          "sha256": "be15c253481ead317da5878a2931e8c8c80f06dfce6289076e9546052ec3d585"
+        }
+      ],
+      "checks": [
+        "Hosted run 42864645557, Chromium shard 1 job 129999614888 and Mobile Chrome shard 6 job 129999614895, each ended with one flaky case and no final unexpected outcome. Traces show the strength meter at 0 before the physical pointer, a score of 100 after the action and consent still unchecked.",
+        "The focused tests wait for the computed strong score and then use the original click or check. Twelve registration rate-limit and twenty-four fresh-registration recovery cases passed on pinned Chromium and Mobile Chrome, in both languages, with zero retries. Browser test file hashes match the focused test copies.",
+        "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "proof_logs": [
+        {
+          "file": "hosted-browser-42864645557-chromium-1.log",
+          "sha256": "6fa9ba9bb15bdc9d26be20493b915f2e99de7a26781f041eecfd2558d7c1c3f9"
+        },
+        {
+          "file": "hosted-browser-42864645557-mobile-chrome-6.log",
+          "sha256": "59764617f12e81a463da7b23a7e44dd2f7d5448f15158149f7812f6668740190"
+        },
+        {
+          "file": "auth-rate-limit-strength-focused.log",
+          "sha256": "c9250ea216f13c3fb46df2598919711017f02b7c0ea4df00f1546ff1ab5c7cb1"
+        },
+        {
+          "file": "auth-rate-limit-strength-focused.json",
+          "sha256": "82213241669dc8ea2b6e4d46d55000c5a2cc99d6714b4ad19a996f9779a55ac6"
+        },
+        {
+          "file": "auth-rate-limit-strength-source.sha256",
+          "sha256": "d9b76aaffab1d33e3104210428cf3e97f1216b537cf4952589fe034966bf1d93"
+        },
+        {
+          "file": "registration-recovery-strength-focused.log",
+          "sha256": "c4ee31cd952963a974532216a4b7d344ceeafbb99b1e678f9c8eb36650b13564"
+        },
+        {
+          "file": "registration-recovery-strength-focused.json",
+          "sha256": "e8dbb36a0a22eb59c574df0d7dfa6b606a38be67785e9c0944f149e448ce1b06"
+        },
+        {
+          "file": "registration-recovery-strength-source.sha256",
+          "sha256": "ba2aba8763f9cbc98c4916fef1d7462052108471bb6f137b3d590d63b59af69d"
         }
       ]
     }

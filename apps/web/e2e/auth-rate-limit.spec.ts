@@ -32,7 +32,14 @@ for (const locale of ['fa', 'en'] as const) {
       await page.locator('#username').press('Tab');
       if (path !== 'forgot-password')
         await page.locator('#password').fill('Browser-rate-password-123!');
-      if (path === 'register') await page.getByRole('checkbox').click();
+      if (path === 'register') {
+        const strength = page.locator('#password-strength').getByRole('progressbar');
+        await expect(strength).toHaveAttribute('aria-busy', 'false');
+        await expect(strength).toHaveAttribute('aria-valuenow', '100');
+        const terms = page.getByRole('checkbox');
+        await terms.click();
+        await expect(terms).toBeChecked();
+      }
       await page.locator('button[type="submit"]').click();
       await expect(page.getByRole('alert').first()).toContainText(
         locale === 'fa' ? '125 ثانیه' : '۱۲۵ seconds'
