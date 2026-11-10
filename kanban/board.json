@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T12:07:27+00:00",
-  "source_commit": "9b3fbeafd07a0c12151d9fdbf053dfcfe3ef0726",
+  "updated": "2026-11-10T12:12:05+00:00",
+  "source_commit": "968ea00afa92d204cf8d9937408009a716d7f420",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -486845,7 +486845,8 @@
           "release-0.6-high-risk-staff-step-up",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-reusable-profile-and-staff-capability-scope"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -486853,7 +486854,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
+              "sha256": "7802582ac8fa7b1f50c96991c981b321a13a446cedea5e1c3aca514b94527cb0"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -486945,14 +486946,16 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Current staff permission, agent capability and selected-profile checks share typed policies and deny absent authority. The specification calls for a single AuthorizationService. The existing runtime uses the request-bound staff checker, the shared capability matrix and the reusable SQL selector; resolve that representation difference separately from the current capability and scope evidence."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-reusable-profile-and-staff-capability-scope"
+        ],
         "current_acceptance": null
       }
     },
@@ -486979,7 +486982,8 @@
         "batches": [
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-high-risk-staff-step-up",
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-reusable-profile-and-staff-capability-scope"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -487024,7 +487028,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
+              "sha256": "7802582ac8fa7b1f50c96991c981b321a13a446cedea5e1c3aca514b94527cb0"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -487062,7 +487066,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-local-compiled-admission-evidence",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-reusable-profile-and-staff-capability-scope"
         ],
         "current_acceptance": {
           "kind": "source-matched-hosted-profile-isolation",
@@ -487123,7 +487128,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
+              "sha256": "7802582ac8fa7b1f50c96991c981b321a13a446cedea5e1c3aca514b94527cb0"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -487178,7 +487183,8 @@
           "release-0.6-high-risk-staff-step-up",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-business-state-machine-unit-evidence",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-reusable-profile-and-staff-capability-scope"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -487299,7 +487305,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
+              "sha256": "7802582ac8fa7b1f50c96991c981b321a13a446cedea5e1c3aca514b94527cb0"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -487348,7 +487354,8 @@
           "release-0.6-high-risk-staff-step-up",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-reusable-profile-and-staff-capability-scope"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -487356,7 +487363,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
+              "sha256": "7802582ac8fa7b1f50c96991c981b321a13a446cedea5e1c3aca514b94527cb0"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -487457,7 +487464,8 @@
           "release-0.6-high-risk-staff-step-up",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-reusable-profile-and-staff-capability-scope"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -487599,7 +487607,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
+              "sha256": "7802582ac8fa7b1f50c96991c981b321a13a446cedea5e1c3aca514b94527cb0"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -488028,19 +488036,78 @@
         "story": "06-security-testing-observability.md#spec-49b330cec1cf"
       },
       "requirement": "| T-06.03.02.02 | Implement reusable query scope filter: `where({ id, profileId: activeProfileId })` for customer resources | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/security/authorization.md"
+        ],
+        "batches": [
+          "release-0.6-reusable-profile-and-staff-capability-scope"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-profile-and-staff-capability-scope",
+          "reviewed_sha": "968ea00afa92d204cf8d9937408009a716d7f420",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/contract/contract-customer-access.ts",
+              "sha256": "789ba0972b242090edf44322feb53fbea1c926edefd6819720c1e62aaf7bb153"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
+              "sha256": "ca2d1cf0437d692d1238aa10e47995ceb7533dc070e3c22b9123940368f43fee"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "623aa108f967dc846294609c5baabb5fc25df0a0a27277dd60befc68cf6d2f3b"
+            },
+            {
+              "path": "apps/api/src/profiles/agent-role.guard.test.ts",
+              "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
+            },
+            {
+              "path": "apps/api/src/profiles/agent-role.guard.ts",
+              "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
+            },
+            {
+              "path": "apps/api/src/profiles/profile-context.ts",
+              "sha256": "ca74bef2a3d492374e3f7841b2552bf65cb80871787fda00861c6ff4ef06bac5"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.guard.test.ts",
+              "sha256": "83f77df548a27103bec6ce6b2960d8a317f65746ec699af30873b6cf946ca31a"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.guard.ts",
+              "sha256": "853391a898f19ef6386234216fad187e59d6686cead2fff36320516e14071d3d"
+            },
+            {
+              "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+              "sha256": "8fa91fa11e9dd8460ffc736f8ad67a0527bb10bc9e1978bffe2ac30b0457eafc"
+            },
+            {
+              "path": "docs/security/authorization.md",
+              "sha256": "7802582ac8fa7b1f50c96991c981b321a13a446cedea5e1c3aca514b94527cb0"
+            },
+            {
+              "path": "packages/shared/src/agent-permissions/index.ts",
+              "sha256": "8c8bf060d6a1354c0ba93a1210b51dd86a13adce0cc9d6f4d02a33e4c0ae3bbd"
+            }
+          ],
+          "checks": [
+            "The reusable activeProfileSql(permission) query resolves the server-selected profile against the current actor, archived state, owner or active Legal-profile agent role and operation-specific capability. The existing parameterized invoice, wallet, contract and document callers apply that profile scope to the requested resource identifier. The transaction paths recheck current session and scope where authority may change.",
+            "The prior owner-approved profile selection design remains effective. All 190 focused tests passed across the current staff policy, admin boundary, profile and agent guard, and customer invoice tests. No product code changed."
+          ]
+        }
       }
     },
     {
@@ -488054,19 +488121,346 @@
         "story": "06-security-testing-observability.md#spec-49b330cec1cf"
       },
       "requirement": "| T-06.03.02.03 | Ensure staff/staff-admin routes verify explicit permission, not just \"is staff\" | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/security/authorization.md"
+        ],
+        "batches": [
+          "release-0.6-reusable-profile-and-staff-capability-scope"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-profile-and-staff-capability-scope",
+          "reviewed_sha": "968ea00afa92d204cf8d9937408009a716d7f420",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
+              "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
+            },
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
+            },
+            {
+              "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+              "sha256": "0703727781bc2593526056b78d91758e5917a0b76e5e1c04dbbd0d76c1b1afdc"
+            },
+            {
+              "path": "apps/api/src/admin/brand-asset.controller.ts",
+              "sha256": "2276a62acc61c1af28cf8a38b50117ad2a1ff900649c724def87878b5eed7bfc"
+            },
+            {
+              "path": "apps/api/src/admin/business-work-counts.controller.ts",
+              "sha256": "7f37eb1f1aa439f148c5cf98a337255d639a0392b05394931a6dd8f9460522fa"
+            },
+            {
+              "path": "apps/api/src/admin/chargeback-alert.controller.ts",
+              "sha256": "085c655f53422e9a217da8c1b0986430d357e901aa4ed3c849f73e3dd9a50e97"
+            },
+            {
+              "path": "apps/api/src/admin/config-audit.controller.ts",
+              "sha256": "740dae374b083a60a25d23e810ff216aec92f1dfa75b52dda6a4c0a4947b5ca9"
+            },
+            {
+              "path": "apps/api/src/admin/contract-electricity-limits.controller.ts",
+              "sha256": "6d036bf059dae10b9940a7eea6744bad7399301912a08cad1d06fc27f9e6b270"
+            },
+            {
+              "path": "apps/api/src/admin/contract-template.controller.ts",
+              "sha256": "fe76c61ee5355315cea4ce78709f54601fb54f02683f242e02628b44db071549"
+            },
+            {
+              "path": "apps/api/src/admin/customer-corrections.controller.ts",
+              "sha256": "9612d3920b9b89118038edb2c8cb8104709ed1d4fcb926e2926dbc332251d757"
+            },
+            {
+              "path": "apps/api/src/admin/customer-corrections.service.ts",
+              "sha256": "e6c03efcd1ccb58fc4f702f77e6f168a3d206610c0393104156d9a1f721b9496"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.controller.ts",
+              "sha256": "bca0b0ad957c0e79921ea2d49095d3f1ad7c2eeff8cdb6789c6cf7d9a947ba18"
+            },
+            {
+              "path": "apps/api/src/admin/due-at-override.controller.ts",
+              "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+            },
+            {
+              "path": "apps/api/src/admin/failed-jobs.controller.ts",
+              "sha256": "dc4b75ff6c5e0779f483f1f51cde3804f5fe395aaca05244f94809a8e55aa3c8"
+            },
+            {
+              "path": "apps/api/src/admin/gift-code.controller.ts",
+              "sha256": "42fc94678f183e1d7e514f4e894186b320b10e4f4d92941186de6be85f45aeb9"
+            },
+            {
+              "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+              "sha256": "78e49c7520959167171da17040aa4d36b15b9dc83d852a84906fc685d4a69f99"
+            },
+            {
+              "path": "apps/api/src/admin/invoice-ledger.controller.ts",
+              "sha256": "25f316b8f6798f7101688fd9d9fea7bc8a84b613d43d46d61743ce761ff3f65a"
+            },
+            {
+              "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+              "sha256": "655aaed37dedf7197553b627ff7a1f2922f00081dfc9a7208112bc9cb5ace657"
+            },
+            {
+              "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+              "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+            },
+            {
+              "path": "apps/api/src/admin/service-due-period.controller.ts",
+              "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+            },
+            {
+              "path": "apps/api/src/admin/service-workflow.controller.ts",
+              "sha256": "09e1a1e6a8df10438a0bbf1c540f310f3ca0601916476895613e26677272a880"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.controller.ts",
+              "sha256": "4e3780953131cb3ac4466d08e7bfc19b99bc0e4b540d3370917d3617548b9922"
+            },
+            {
+              "path": "apps/api/src/admin/vat-config.controller.ts",
+              "sha256": "b4a2e354eca051ec2975cfa6042d540e243b7968fbb28e3565225d77dc4c89e8"
+            },
+            {
+              "path": "apps/api/src/admin/verification-policy.controller.ts",
+              "sha256": "904a7421e31d835af4a892d9d687cbee7abc1978499b850d4f0407904859e8f4"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-agent-slots.controller.ts",
+              "sha256": "4e567bfdc70b79b30b09d6c41ca3dbd638b9148b20f5ff0847ec0471ec495e65"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
+              "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
+              "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
+            },
+            {
+              "path": "apps/api/src/ai-models/ai-models.controller.ts",
+              "sha256": "c840b4ea1e0820774d6c6879c15a43b4860546c57e38a2fdf4dc20c2d0bfc7df"
+            },
+            {
+              "path": "apps/api/src/ai-policies/ai-policies.controller.ts",
+              "sha256": "b907e46a95e3e0b03fec8aec5b00d6a357d7130922ee05f958ef283853b1a277"
+            },
+            {
+              "path": "apps/api/src/auth/otp-config.controller.ts",
+              "sha256": "fbeac35e1e2dbfeced4a708b8af1a327c6c66f77d1c6c664671896d8dccf259f"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.ts",
+              "sha256": "db4593b385c5fe48e10376450803c9aeab3bb6d1b79e18eded53b94c5537c5c9"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-catalogue.controller.ts",
+              "sha256": "c8a166410a665e3e7a4ff800c4fd791202702780eef02a18bdf9427364985349"
+            },
+            {
+              "path": "apps/api/src/catalogue/saving-inventory.controller.ts",
+              "sha256": "4d01202fa5d56df229619fd268fe010948f126a209f9a74fa178b2b35dd54105"
+            },
+            {
+              "path": "apps/api/src/contract/contract-activation.controller.ts",
+              "sha256": "1222b631fa1a74d4fcc85f713c8991fc23cac7b80f99efc8225b8edfd3929430"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-request.controller.ts",
+              "sha256": "4bf6cf864e07c133bdc777f6d221fcf93a585ed463b5e45c804c7815e107b371"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-status.controller.ts",
+              "sha256": "5ed59eeb43663458e89d787092ecec2036de0e3c976a18e539aeb711c05dbe03"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.controller.ts",
+              "sha256": "e8bf437e357ef95147668c7e8fcd76c64309f2722d27d2df58d5363691f4075e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-review.controller.ts",
+              "sha256": "ad9e00f071c317515b975684dd86fe5430e6490ab1103900ee26793d0dc59828"
+            },
+            {
+              "path": "apps/api/src/contract/contract-signature.controller.ts",
+              "sha256": "73363ba6ab962c7b08cbda89860a378cdbcded1c818eef6eefca622161250b4d"
+            },
+            {
+              "path": "apps/api/src/contract/contract.controller.ts",
+              "sha256": "953451cbb86603635cac0ab6e79f5e11f3bc54df7cbe17dcbf51abedd825d610"
+            },
+            {
+              "path": "apps/api/src/documents/document-access.ts",
+              "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.controller.ts",
+              "sha256": "5eee3f561abc97452940e2aa506168102fa25438bda2eff5f0002c9028af7808"
+            },
+            {
+              "path": "apps/api/src/documents/document-template.controller.ts",
+              "sha256": "eb4c4d8c04802538d7d81e399b59ef8d724bfa90e01f3890d18d2dad46085e73"
+            },
+            {
+              "path": "apps/api/src/documents/document.controller.ts",
+              "sha256": "9808de9e671a9b4a5261e207b831b9e77454a1cf9d70116e7a2eb8816252d6f9"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-comments.controller.ts",
+              "sha256": "f93bc7b5fbcb2533bbada6ac3b08279afc47333f19d5f11ae443e6bec45fd191"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-comments.service.ts",
+              "sha256": "7a1b348331a2f98109860c1a8650982bef8fa535bfbe2ed41aeb8f7d6de3c9f6"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-increase.controller.ts",
+              "sha256": "f983fb347b0c68da249e778913f85f8ed46aa011d896d5f7a8208a874b702cb2"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+              "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+              "sha256": "d9c23e957966dbe973998aca5daef38f3eeadc8cc562caec768976b12d58d76e"
+            },
+            {
+              "path": "apps/api/src/geography/admin-geography.controller.ts",
+              "sha256": "8761a944b0924c86fc38fb122c67ad2684f161762034a4c5d70abb82d49004b7"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
+              "sha256": "f0ba02f7b0b1962197fe269bc630024d82b3df387f1efabf407a4dd3bb1ae690"
+            },
+            {
+              "path": "apps/api/src/invoice/manual-invoice.controller.ts",
+              "sha256": "a54d1e9e4177c8f247ce13fd9e0d3e25591b143a2a802ad28d0656b12b569557"
+            },
+            {
+              "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
+              "sha256": "73c268bfa610810f10d6cd7bcf67c8aa3596b286e4e05d590ef96502a495ddb6"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.controller.ts",
+              "sha256": "51dc03ef4757ce40ba61557f31a57c1019316b7d49b96391b61c07522c33ea5a"
+            },
+            {
+              "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
+              "sha256": "8211c6e86e1970ae0b4eadb3945623e50b1abdb5dc823f631320acf6c093594a"
+            },
+            {
+              "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
+              "sha256": "1c0c34d12a79a64d8b701fce74a95bc54b2380b0f3023d2d4b3529df5aa9e893"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/saving/saving-cancellation.controller.ts",
+              "sha256": "e703eb0f8594b9ddb64b0b122190eab86c6d98e61fce6b03b63ef0a1531f3464"
+            },
+            {
+              "path": "apps/api/src/saving/saving-comments.controller.ts",
+              "sha256": "ee24baa7781544772ea9f1cc90b1d708141fd56a7f6c36d55d5d2e7f974e411d"
+            },
+            {
+              "path": "apps/api/src/saving/saving-comments.service.ts",
+              "sha256": "ba2772bf3b9ee76d86508a7b38e238023e5f4751f23ffb1bb3cf4bd9a9e9817d"
+            },
+            {
+              "path": "apps/api/src/saving/saving-fulfillment.controller.ts",
+              "sha256": "1c633cdc7968f37a14b2a30552a8530687f45904d02f03a7c9fe7d81292e2690"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.test.ts",
+              "sha256": "2d32d0b69d4903befe6120da3fefa076f3392cd2999787e3469999d7c5087043"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+            },
+            {
+              "path": "apps/api/src/solar/solar-documents.controller.ts",
+              "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.controller.ts",
+              "sha256": "57a3fbc30f678be3a6a1bdd76de995428564d91967cbeeaf194af72d338e7ab9"
+            },
+            {
+              "path": "apps/api/src/solar/solar-postal.controller.ts",
+              "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+            },
+            {
+              "path": "apps/api/src/solar/solar-progress.controller.ts",
+              "sha256": "e95737cddd898af4d404ccd96a2e268538cb075b98474a82b8546d6bda805c9e"
+            },
+            {
+              "path": "apps/api/src/storage/storage-admin.controller.ts",
+              "sha256": "cee1172c3f3bc923c3b7960016fbbce1a2a0efe3afd3ae8c402ff7186a37ea75"
+            },
+            {
+              "path": "apps/api/src/storage/storage-admin.guard.ts",
+              "sha256": "36bb3e7681fb0d53b8f98180ce692971aac6864818b2af1986a53b3732e2d00e"
+            },
+            {
+              "path": "apps/api/src/storage/storage-records.controller.ts",
+              "sha256": "d5b28152952ba20474c5e475cb0ff5674df23d45ee0293fe492821c30dd57e86"
+            },
+            {
+              "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+              "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
+            },
+            {
+              "path": "apps/api/src/verification/verification-provider.controller.ts",
+              "sha256": "d6327a4f8abfaa0854e56e3cd062a11ffe1a62053927ca9303a2a45537f5cd2b"
+            },
+            {
+              "path": "apps/api/src/wallet/staff-wallet-balance.controller.ts",
+              "sha256": "69964bdb94a45f758f6feaf61fb724d9cb24fee9dbd62448f416ec37d0dd312f"
+            },
+            {
+              "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
+              "sha256": "764f677d49b62241a3279ee2aed96af002cba030ed4c86b8647f441ea3ee7001"
+            },
+            {
+              "path": "docs/security/authorization.md",
+              "sha256": "7802582ac8fa7b1f50c96991c981b321a13a446cedea5e1c3aca514b94527cb0"
+            },
+            {
+              "path": "packages/shared/src/admin/staff-permissions.ts",
+              "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+            }
+          ],
+          "checks": [
+            "Staff or staff-eligible status alone does not grant a domain operation. The session resolves current grants, and the staff authorization checks require the operation capability, the explicit wildcard grant or current administrator authority. The current administrator and contract transaction paths retain their independent step-up and revocation checks.",
+            "Reviewed the 67 files with literal staff or admin route prefixes. Six controller files delegate their capability checks to the correction, document, order comment and storage authorization paths; those specific branches were inspected. The focused 190-case run passed, including the admin controller tripwire preventing denied requests from reaching the service. The broader BOLA endpoint census remains separate."
+          ]
+        }
       }
     },
     {
@@ -488290,7 +488684,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-reusable-profile-and-staff-capability-scope"
         ],
         "current_acceptance": {
           "kind": "verified-transactional-sensitive-audit",
@@ -488380,7 +488775,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
+              "sha256": "7802582ac8fa7b1f50c96991c981b321a13a446cedea5e1c3aca514b94527cb0"
             },
             {
               "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
@@ -494426,7 +494821,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-high-risk-staff-step-up",
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-reusable-profile-and-staff-capability-scope"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -494438,7 +494834,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "99275f960b430fbe2abf3a8cf9e24d7903cf13ec70489a55d3e1b2e444c57eb2"
+              "sha256": "7802582ac8fa7b1f50c96991c981b321a13a446cedea5e1c3aca514b94527cb0"
             },
             {
               "path": "docs/threat-model.md",
@@ -772695,7 +773091,8 @@
           "release-0.6-profile-isolation-and-calendar-browser-evidence",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-reusable-profile-and-staff-capability-scope"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -881464,6 +881861,386 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-project-and-ci-configuration",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "21d536d81347b462c4449bd1a313ab0247cb9c76d8b2c638df1e9aed2cac9e57"
+    },
+    "release-0.6-reusable-profile-and-staff-capability-scope": {
+      "batch": "release-0.6-reusable-profile-and-staff-capability-scope",
+      "base_commit": "968ea00afa92d204cf8d9937408009a716d7f420",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.02",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
+          "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
+        },
+        {
+          "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+          "sha256": "0703727781bc2593526056b78d91758e5917a0b76e5e1c04dbbd0d76c1b1afdc"
+        },
+        {
+          "path": "apps/api/src/admin/brand-asset.controller.ts",
+          "sha256": "2276a62acc61c1af28cf8a38b50117ad2a1ff900649c724def87878b5eed7bfc"
+        },
+        {
+          "path": "apps/api/src/admin/business-work-counts.controller.ts",
+          "sha256": "7f37eb1f1aa439f148c5cf98a337255d639a0392b05394931a6dd8f9460522fa"
+        },
+        {
+          "path": "apps/api/src/admin/chargeback-alert.controller.ts",
+          "sha256": "085c655f53422e9a217da8c1b0986430d357e901aa4ed3c849f73e3dd9a50e97"
+        },
+        {
+          "path": "apps/api/src/admin/config-audit.controller.ts",
+          "sha256": "740dae374b083a60a25d23e810ff216aec92f1dfa75b52dda6a4c0a4947b5ca9"
+        },
+        {
+          "path": "apps/api/src/admin/contract-electricity-limits.controller.ts",
+          "sha256": "6d036bf059dae10b9940a7eea6744bad7399301912a08cad1d06fc27f9e6b270"
+        },
+        {
+          "path": "apps/api/src/admin/contract-template.controller.ts",
+          "sha256": "fe76c61ee5355315cea4ce78709f54601fb54f02683f242e02628b44db071549"
+        },
+        {
+          "path": "apps/api/src/admin/customer-corrections.controller.ts",
+          "sha256": "9612d3920b9b89118038edb2c8cb8104709ed1d4fcb926e2926dbc332251d757"
+        },
+        {
+          "path": "apps/api/src/admin/customer-corrections.service.ts",
+          "sha256": "e6c03efcd1ccb58fc4f702f77e6f168a3d206610c0393104156d9a1f721b9496"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.controller.ts",
+          "sha256": "bca0b0ad957c0e79921ea2d49095d3f1ad7c2eeff8cdb6789c6cf7d9a947ba18"
+        },
+        {
+          "path": "apps/api/src/admin/due-at-override.controller.ts",
+          "sha256": "66de2bea67342f682c83e069a1706406a60e0de1064c5d74d4ca95a9b767b0a4"
+        },
+        {
+          "path": "apps/api/src/admin/failed-jobs.controller.ts",
+          "sha256": "dc4b75ff6c5e0779f483f1f51cde3804f5fe395aaca05244f94809a8e55aa3c8"
+        },
+        {
+          "path": "apps/api/src/admin/gift-code.controller.ts",
+          "sha256": "42fc94678f183e1d7e514f4e894186b320b10e4f4d92941186de6be85f45aeb9"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+          "sha256": "78e49c7520959167171da17040aa4d36b15b9dc83d852a84906fc685d4a69f99"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-ledger.controller.ts",
+          "sha256": "25f316b8f6798f7101688fd9d9fea7bc8a84b613d43d46d61743ce761ff3f65a"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+          "sha256": "655aaed37dedf7197553b627ff7a1f2922f00081dfc9a7208112bc9cb5ace657"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.controller.ts",
+          "sha256": "118d9ee862dd8742e4eec5ce0dff0f191b34fa6ee86aa4ecc4e643baf818575f"
+        },
+        {
+          "path": "apps/api/src/admin/service-due-period.controller.ts",
+          "sha256": "cbb1cf7a18dcde8940361bb062ad4450651ef554994cdd22246879e30048b840"
+        },
+        {
+          "path": "apps/api/src/admin/service-workflow.controller.ts",
+          "sha256": "09e1a1e6a8df10438a0bbf1c540f310f3ca0601916476895613e26677272a880"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+        },
+        {
+          "path": "apps/api/src/admin/upload-policy.controller.ts",
+          "sha256": "4e3780953131cb3ac4466d08e7bfc19b99bc0e4b540d3370917d3617548b9922"
+        },
+        {
+          "path": "apps/api/src/admin/vat-config.controller.ts",
+          "sha256": "b4a2e354eca051ec2975cfa6042d540e243b7968fbb28e3565225d77dc4c89e8"
+        },
+        {
+          "path": "apps/api/src/admin/verification-policy.controller.ts",
+          "sha256": "904a7421e31d835af4a892d9d687cbee7abc1978499b850d4f0407904859e8f4"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agent-slots.controller.ts",
+          "sha256": "4e567bfdc70b79b30b09d6c41ca3dbd638b9148b20f5ff0847ec0471ec495e65"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-agents.controller.ts",
+          "sha256": "33150e61bbc18839163e08dfdcb231ba4a9b4f71132145bc6302807a7e5dfa4c"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-staff-chat.controller.ts",
+          "sha256": "b6e80d4b7fd38edeccb798ab18fb594eb87ab3290459652ae50d8e8795930b80"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.controller.ts",
+          "sha256": "c840b4ea1e0820774d6c6879c15a43b4860546c57e38a2fdf4dc20c2d0bfc7df"
+        },
+        {
+          "path": "apps/api/src/ai-policies/ai-policies.controller.ts",
+          "sha256": "b907e46a95e3e0b03fec8aec5b00d6a357d7130922ee05f958ef283853b1a277"
+        },
+        {
+          "path": "apps/api/src/auth/otp-config.controller.ts",
+          "sha256": "fbeac35e1e2dbfeced4a708b8af1a327c6c66f77d1c6c664671896d8dccf259f"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.controller.ts",
+          "sha256": "db4593b385c5fe48e10376450803c9aeab3bb6d1b79e18eded53b94c5537c5c9"
+        },
+        {
+          "path": "apps/api/src/catalogue/saving-catalogue.controller.ts",
+          "sha256": "c8a166410a665e3e7a4ff800c4fd791202702780eef02a18bdf9427364985349"
+        },
+        {
+          "path": "apps/api/src/catalogue/saving-inventory.controller.ts",
+          "sha256": "4d01202fa5d56df229619fd268fe010948f126a209f9a74fa178b2b35dd54105"
+        },
+        {
+          "path": "apps/api/src/contract/contract-activation.controller.ts",
+          "sha256": "1222b631fa1a74d4fcc85f713c8991fc23cac7b80f99efc8225b8edfd3929430"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation-request.controller.ts",
+          "sha256": "4bf6cf864e07c133bdc777f6d221fcf93a585ed463b5e45c804c7815e107b371"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation-status.controller.ts",
+          "sha256": "5ed59eeb43663458e89d787092ecec2036de0e3c976a18e539aeb711c05dbe03"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation.controller.ts",
+          "sha256": "e8bf437e357ef95147668c7e8fcd76c64309f2722d27d2df58d5363691f4075e"
+        },
+        {
+          "path": "apps/api/src/contract/contract-customer-access.ts",
+          "sha256": "789ba0972b242090edf44322feb53fbea1c926edefd6819720c1e62aaf7bb153"
+        },
+        {
+          "path": "apps/api/src/contract/contract-review.controller.ts",
+          "sha256": "ad9e00f071c317515b975684dd86fe5430e6490ab1103900ee26793d0dc59828"
+        },
+        {
+          "path": "apps/api/src/contract/contract-signature.controller.ts",
+          "sha256": "73363ba6ab962c7b08cbda89860a378cdbcded1c818eef6eefca622161250b4d"
+        },
+        {
+          "path": "apps/api/src/contract/contract.controller.ts",
+          "sha256": "953451cbb86603635cac0ab6e79f5e11f3bc54df7cbe17dcbf51abedd825d610"
+        },
+        {
+          "path": "apps/api/src/documents/document-access.ts",
+          "sha256": "ab9401904439ee2aea50bd0a874df0b8015fa9fcb5cb20c775c98dc7ced71d02"
+        },
+        {
+          "path": "apps/api/src/documents/document-retention.controller.ts",
+          "sha256": "5eee3f561abc97452940e2aa506168102fa25438bda2eff5f0002c9028af7808"
+        },
+        {
+          "path": "apps/api/src/documents/document-template.controller.ts",
+          "sha256": "eb4c4d8c04802538d7d81e399b59ef8d724bfa90e01f3890d18d2dad46085e73"
+        },
+        {
+          "path": "apps/api/src/documents/document.controller.ts",
+          "sha256": "9808de9e671a9b4a5261e207b831b9e77454a1cf9d70116e7a2eb8816252d6f9"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-comments.controller.ts",
+          "sha256": "f93bc7b5fbcb2533bbada6ac3b08279afc47333f19d5f11ae443e6bec45fd191"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-comments.service.ts",
+          "sha256": "7a1b348331a2f98109860c1a8650982bef8fa535bfbe2ed41aeb8f7d6de3c9f6"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-increase.controller.ts",
+          "sha256": "f983fb347b0c68da249e778913f85f8ed46aa011d896d5f7a8208a874b702cb2"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-price-adjustment.controller.ts",
+          "sha256": "1178f33125b14ec9892a8059919c81acf611fab3a7c4fc640caec99a6a1269cd"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-staff-review.controller.ts",
+          "sha256": "d9c23e957966dbe973998aca5daef38f3eeadc8cc562caec768976b12d58d76e"
+        },
+        {
+          "path": "apps/api/src/geography/admin-geography.controller.ts",
+          "sha256": "8761a944b0924c86fc38fb122c67ad2684f161762034a4c5d70abb82d49004b7"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
+          "sha256": "ca2d1cf0437d692d1238aa10e47995ceb7533dc070e3c22b9123940368f43fee"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "623aa108f967dc846294609c5baabb5fc25df0a0a27277dd60befc68cf6d2f3b"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
+          "sha256": "f0ba02f7b0b1962197fe269bc630024d82b3df387f1efabf407a4dd3bb1ae690"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.controller.ts",
+          "sha256": "a54d1e9e4177c8f247ce13fd9e0d3e25591b143a2a802ad28d0656b12b569557"
+        },
+        {
+          "path": "apps/api/src/knowledge-bases/knowledge-bases.controller.ts",
+          "sha256": "73c268bfa610810f10d6cd7bcf67c8aa3596b286e4e05d590ef96502a495ddb6"
+        },
+        {
+          "path": "apps/api/src/maintenance/maintenance.controller.ts",
+          "sha256": "51dc03ef4757ce40ba61557f31a57c1019316b7d49b96391b61c07522c33ea5a"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-role.guard.test.ts",
+          "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-role.guard.ts",
+          "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-context.ts",
+          "sha256": "ca74bef2a3d492374e3f7841b2552bf65cb80871787fda00861c6ff4ef06bac5"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.guard.test.ts",
+          "sha256": "83f77df548a27103bec6ce6b2960d8a317f65746ec699af30873b6cf946ca31a"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.guard.ts",
+          "sha256": "853391a898f19ef6386234216fad187e59d6686cead2fff36320516e14071d3d"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
+          "sha256": "8211c6e86e1970ae0b4eadb3945623e50b1abdb5dc823f631320acf6c093594a"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
+          "sha256": "1c0c34d12a79a64d8b701fce74a95bc54b2380b0f3023d2d4b3529df5aa9e893"
+        },
+        {
+          "path": "apps/api/src/refund/external-refund.controller.ts",
+          "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+        },
+        {
+          "path": "apps/api/src/refund/wallet-refund.controller.ts",
+          "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+        },
+        {
+          "path": "apps/api/src/saving/saving-cancellation.controller.ts",
+          "sha256": "e703eb0f8594b9ddb64b0b122190eab86c6d98e61fce6b03b63ef0a1531f3464"
+        },
+        {
+          "path": "apps/api/src/saving/saving-comments.controller.ts",
+          "sha256": "ee24baa7781544772ea9f1cc90b1d708141fd56a7f6c36d55d5d2e7f974e411d"
+        },
+        {
+          "path": "apps/api/src/saving/saving-comments.service.ts",
+          "sha256": "ba2772bf3b9ee76d86508a7b38e238023e5f4751f23ffb1bb3cf4bd9a9e9817d"
+        },
+        {
+          "path": "apps/api/src/saving/saving-fulfillment.controller.ts",
+          "sha256": "1c633cdc7968f37a14b2a30552a8530687f45904d02f03a7c9fe7d81292e2690"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+        },
+        {
+          "path": "apps/api/src/session/staff-permissions.test.ts",
+          "sha256": "2d32d0b69d4903befe6120da3fefa076f3392cd2999787e3469999d7c5087043"
+        },
+        {
+          "path": "apps/api/src/session/staff-permissions.ts",
+          "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+        },
+        {
+          "path": "apps/api/src/solar/solar-documents.controller.ts",
+          "sha256": "283612874865ae7cc6e295eb06c631b2ae0936201de3c05315d6533b2403a2e7"
+        },
+        {
+          "path": "apps/api/src/solar/solar-final.controller.ts",
+          "sha256": "57a3fbc30f678be3a6a1bdd76de995428564d91967cbeeaf194af72d338e7ab9"
+        },
+        {
+          "path": "apps/api/src/solar/solar-postal.controller.ts",
+          "sha256": "d0731d671acd69c2b116958b6c55ada875977b04c63151cd5d2fbd117ff048f8"
+        },
+        {
+          "path": "apps/api/src/solar/solar-progress.controller.ts",
+          "sha256": "e95737cddd898af4d404ccd96a2e268538cb075b98474a82b8546d6bda805c9e"
+        },
+        {
+          "path": "apps/api/src/storage/storage-admin.controller.ts",
+          "sha256": "cee1172c3f3bc923c3b7960016fbbce1a2a0efe3afd3ae8c402ff7186a37ea75"
+        },
+        {
+          "path": "apps/api/src/storage/storage-admin.guard.ts",
+          "sha256": "36bb3e7681fb0d53b8f98180ce692971aac6864818b2af1986a53b3732e2d00e"
+        },
+        {
+          "path": "apps/api/src/storage/storage-records.controller.ts",
+          "sha256": "d5b28152952ba20474c5e475cb0ff5674df23d45ee0293fe492821c30dd57e86"
+        },
+        {
+          "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+          "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
+        },
+        {
+          "path": "apps/api/src/verification/verification-provider.controller.ts",
+          "sha256": "d6327a4f8abfaa0854e56e3cd062a11ffe1a62053927ca9303a2a45537f5cd2b"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
+          "sha256": "8fa91fa11e9dd8460ffc736f8ad67a0527bb10bc9e1978bffe2ac30b0457eafc"
+        },
+        {
+          "path": "apps/api/src/wallet/staff-wallet-balance.controller.ts",
+          "sha256": "69964bdb94a45f758f6feaf61fb724d9cb24fee9dbd62448f416ec37d0dd312f"
+        },
+        {
+          "path": "apps/api/src/wallet/staff-wallet-ledger.controller.ts",
+          "sha256": "764f677d49b62241a3279ee2aed96af002cba030ed4c86b8647f441ea3ee7001"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "7802582ac8fa7b1f50c96991c981b321a13a446cedea5e1c3aca514b94527cb0"
+        },
+        {
+          "path": "packages/shared/src/admin/staff-permissions.ts",
+          "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+        },
+        {
+          "path": "packages/shared/src/agent-permissions/index.ts",
+          "sha256": "8c8bf060d6a1354c0ba93a1210b51dd86a13adce0cc9d6f4d02a33e4c0ae3bbd"
+        }
+      ],
+      "checks": [
+        "The reusable activeProfileSql(permission) query resolves the server-selected profile against the current actor, archived state, owner or active Legal-profile agent role and operation-specific capability. The existing parameterized invoice, wallet, contract and document callers apply that profile scope to the requested resource identifier. The transaction paths recheck current session and scope where authority may change.",
+        "The prior owner-approved profile selection design remains effective. All 190 focused tests passed across the current staff policy, admin boundary, profile and agent guard, and customer invoice tests. No product code changed.",
+        "Staff or staff-eligible status alone does not grant a domain operation. The session resolves current grants, and the staff authorization checks require the operation capability, the explicit wildcard grant or current administrator authority. The current administrator and contract transaction paths retain their independent step-up and revocation checks.",
+        "Reviewed the 67 files with literal staff or admin route prefixes. Six controller files delegate their capability checks to the correction, document, order comment and storage authorization paths; those specific branches were inspected. The focused 190-case run passed, including the admin controller tripwire preventing denied requests from reaching the service. The broader BOLA endpoint census remains separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/authorization-profile-and-staff-scope",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "deab6d2d6b0ac20fc55ed7d1b2245fb44d8aacad6ce586da89e4b8cb28162f27"
     }
   },
   "historical_improvements": [

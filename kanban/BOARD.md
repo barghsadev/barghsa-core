@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T12:07:27+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T12:12:05+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1173 | Accepted with unchanged source bindings. |
-| verify | 135 | Existing work may be complete; inspect evidence before building. |
+| done | 1175 | Accepted with unchanged source bindings. |
+| verify | 133 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1143,7 +1143,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.02.04.04` | done | Recorded batch work | Cache preflight response (e.g. `Access-Control-Max-Age: 3600`) |
 | `06-security-testing-observability.md#T-06.02.04.05` | done | Recorded batch work | Write CORS integration tests: valid origin, invalid origin, credentialed request, preflight |
 | `06-security-testing-observability.md#T-06.03.01.01` | done | Recorded batch work | Design authorization policy engine: roles, capabilities/permissions, resource types, scopes (profile, system) |
-| `06-security-testing-observability.md#T-06.03.01.02` | verify | Inventory needed | Implement `AuthorizationService` with deny-by-default policy resolution |
+| `06-security-testing-observability.md#T-06.03.01.02` | verify | Recorded batch work | Implement `AuthorizationService` with deny-by-default policy resolution |
 | `06-security-testing-observability.md#T-06.03.01.03` | done | Recorded batch work | Implement NestJS guard/decorator for endpoint-level permission checks |
 | `06-security-testing-observability.md#T-06.03.01.04` | done | Recorded batch work | Implement profile-scoped data access: load resources by both `id` and `activeProfileId`; reject cross-profile access |
 | `06-security-testing-observability.md#T-06.03.01.05` | done | Recorded batch work | Extend authorization to background workers, AI tool calls, file access URLs, exports, and admin actions |
@@ -1153,8 +1153,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.03.01.09` | done | Recorded batch work | Ensure AuthorizationService logs every authorization denial as a structured audit event with actor, resource, action, reason, timestamp |
 | `06-security-testing-observability.md#T-06.03.01.10` | done | Recorded batch work | Write integration test: authorization denials are logged and appear on audit event dashboard |
 | `06-security-testing-observability.md#T-06.03.02.01` | verify | Inventory needed | Audit all existing resource-loading endpoints for BOLA gaps (load by ID without profile scope check) |
-| `06-security-testing-observability.md#T-06.03.02.02` | verify | Inventory needed | Implement reusable query scope filter: `where({ id, profileId: activeProfileId })` for customer resources |
-| `06-security-testing-observability.md#T-06.03.02.03` | verify | Inventory needed | Ensure staff/staff-admin routes verify explicit permission, not just "is staff" |
+| `06-security-testing-observability.md#T-06.03.02.02` | done | Recorded batch work | Implement reusable query scope filter: `where({ id, profileId: activeProfileId })` for customer resources |
+| `06-security-testing-observability.md#T-06.03.02.03` | done | Recorded batch work | Ensure staff/staff-admin routes verify explicit permission, not just "is staff" |
 | `06-security-testing-observability.md#T-06.03.02.04` | done | Recorded batch work | Write BOLA/IDOR penetration tests: attempt cross-profile access via UUID enumeration, direct ID manipulation |
 | `06-security-testing-observability.md#T-06.03.02.05` | done | Recorded batch work | Add DAST/security E2E: attempt access to another profile's invoices, orders, contracts, wallet |
 | `06-security-testing-observability.md#T-06.03.03.01` | done | Recorded batch work | Implement audit-logging interceptor for ownership/role/identity changes: before/after values, actor, timestamp |
