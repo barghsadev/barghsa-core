@@ -121,23 +121,18 @@ describe('AuthService', () => {
       );
     });
 
-    it('rejects an existing username without creating a challenge', async () => {
-      mockClient.query.mockImplementation(async (sql: string) => ({
-        rows: sql.includes('FROM account_login_identifiers') ? [{ user_id: 'existing' }] : [],
-      }));
-      const error = await service
-        .register(
-          {
-            username: 'user@example.com',
-            password: 'StrongPass1',
-            tosVersionId: '00000000-0000-4000-8000-000000000001',
-          },
-          '127.0.0.1'
-        )
-        .catch((error) => error);
-      expect(error).toBeInstanceOf(HttpException);
-      expect(error.getStatus()).toBe(409);
-      expect(mockCreateChallenge).not.toHaveBeenCalled();
+    it('starts a proof challenge without looking up the destination owner', async () => {
+      const username = 'user@example.com';
+      const tosVersionId = '00000000-0000-4000-8000-000000000001';
+      await expect(
+        service.register({ username, password: 'StrongPass1', tosVersionId }, '127.0.0.1')
+      ).resolves.toEqual({ challengeId: '0000-000-00000' });
+      expect(mockCreateChallenge).toHaveBeenCalledOnce();
+      for (const query of [mockQuery, mockClient.query]) {
+        expect(query.mock.calls.map(([sql]) => sql).join('\n')).not.toMatch(
+          /\b(?:account_login_identifiers|users)\b/i
+        );
+      }
     });
 
     it('throws TOS_NOT_ACCEPTED for invalid tosVersionId', async () => {

@@ -38,10 +38,14 @@ async function post(path: string, body: unknown, headers: Record<string, string>
   });
 }
 
-async function pendingRegistration(username = `atomic-${randomUUID()}@example.test`) {
-  const started = await post('auth/register', { username, password, tosVersionId: oldTerms });
+async function pendingRegistration(
+  username = `atomic-${randomUUID()}@example.test`,
+  tosVersionId = oldTerms
+) {
+  const started = await post('auth/register', { username, password, tosVersionId });
   const body = (await started.json()) as { challengeId: string };
   expect(started.status, JSON.stringify(body) + fixture.logs()).toBe(200);
+  expect(body).toEqual({ challengeId: expect.any(String) });
   // Transaction tests control the stored code; real delivery has separate HTTP/worker evidence.
   await fixture.pool.query('UPDATE otp_challenges SET otp_hash=$1 WHERE challenge_id=$2', [
     createHash('sha256').update('123456').digest('hex'),
@@ -295,12 +299,23 @@ it('keeps consent bound to the displayed publication and supports later re-accep
       )
     ).rows
   ).toEqual([{ version_id: oldTerms }, { version_id: newTerms }]);
-  const duplicate = await post('auth/register', {
-    username: 'consent@example.test',
-    password,
-    tosVersionId: newTerms,
+  // Advance the per-destination minute cooldown after the original registration.
+  await fixture.pool.query('SELECT rate_limit_rolling_reset(true,$1)', [
+    'otp:dest:consent@example.test:60s',
+  ]);
+  const { body: duplicateProof } = await pendingRegistration('consent@example.test', newTerms);
+  const duplicate = await post('auth/register/verify', duplicateProof);
+  expect(duplicate.status, await duplicate.clone().text()).toBe(409);
+  expect(await duplicate.json()).toMatchObject({
+    error: { code: 'AUTH:REGISTER:USERNAME_TAKEN' },
   });
-  expect(duplicate.status, await duplicate.text()).toBe(409);
+  expect(
+    (
+      await fixture.pool.query('SELECT user_id FROM users WHERE username=$1', [
+        'consent@example.test',
+      ])
+    ).rows
+  ).toEqual([{ user_id: user.userId }]);
 }, 15000);
 
 it('preserves published content when draft edits race publication', async () => {

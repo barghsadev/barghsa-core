@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T17:20:27+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T17:27:21+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Read back terminal browser results and repair demonstrated failures before running the final exact matrix and strict report.
+Reconcile the exact replacement browser matrix and native/combined coverage outcomes. Preserve focused evidence and verify every explicit release prerequisite.
 
 - `01-platform-infrastructure.md#T-01.04.04`: Configure Playwright for E2E testing
 - `01-platform-infrastructure.md#T-01.04.06`: Configure flaky-test quarantine process

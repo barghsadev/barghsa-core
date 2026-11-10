@@ -44,6 +44,13 @@ async function expireOtpCooldown(destination: string) {
     `otp:dest:${destination}:60s`,
   ]);
 }
+async function setFixtureOtp(challengeId: string) {
+  // Known fixture code isolates transaction/login behavior from provider delivery.
+  await http.pool.query('UPDATE otp_challenges SET otp_hash=$1 WHERE challenge_id=$2', [
+    createHash('sha256').update('123456').digest('hex'),
+    challengeId,
+  ]);
+}
 async function contactChallenge(destination = secondary) {
   const response = await post('add-contact/send-otp', {
     contactType: destination.includes('@') ? 'email' : 'mobile',
@@ -51,11 +58,7 @@ async function contactChallenge(destination = secondary) {
   });
   expect(response.status, http.logs()).toBe(200);
   const { challengeId } = (await response.json()) as { challengeId: string };
-  // Known fixture code isolates transaction/login behavior from provider delivery.
-  await http.pool.query('UPDATE otp_challenges SET otp_hash=$1 WHERE challenge_id=$2', [
-    createHash('sha256').update('123456').digest('hex'),
-    challengeId,
-  ]);
+  await setFixtureOtp(challengeId);
   return challengeId;
 }
 const complete = (id: string, destination = secondary) =>
@@ -97,9 +100,26 @@ it('requires proof for a historical secondary email, then accepts both identifie
       ])
     ).rows[0]
   ).toEqual({ user_id: 'contact-user', purpose: 'password_reset' });
-  expect(
-    (await post('register', { username: secondary, password, tosVersionId: randomUUID() })).status
-  ).toBe(409);
+  const tosVersionId = randomUUID();
+  await http.pool.query(
+    `INSERT INTO tos_versions(id,version_id,content_fa,content_en,status,is_active,published_at)
+     VALUES ($1,'alias-proof-v1','قوانین','Terms','published',true,NOW())`,
+    [tosVersionId]
+  );
+  await expireOtpCooldown(secondary);
+  const registration = await post('register', { username: secondary, password, tosVersionId });
+  expect(registration.status, await registration.clone().text()).toBe(200);
+  const body = (await registration.json()) as { challengeId: string };
+  expect(body).toEqual({ challengeId: expect.any(String) });
+  await setFixtureOtp(body.challengeId);
+  const duplicate = await post('register/verify', { challengeId: body.challengeId, otp: '123456' });
+  expect(duplicate.status, await duplicate.clone().text()).toBe(409);
+  expect(await duplicate.json()).toMatchObject({
+    error: { code: 'AUTH:REGISTER:USERNAME_TAKEN' },
+  });
+  expect((await http.pool.query('SELECT user_id,username FROM users')).rows).toEqual([
+    { user_id: 'contact-user', username: primary },
+  ]);
 });
 it('shares failed-login counters across aliases and clears them after successful login OTP', async () => {
   expect((await complete(await contactChallenge())).status).toBe(200);

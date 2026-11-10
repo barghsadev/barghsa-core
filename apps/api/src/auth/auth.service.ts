@@ -90,9 +90,9 @@ export class AuthService {
   /**
    * Attempt to register a new user.
    *
-   * Validates input, checks username availability, creates an OTP challenge
-   * that also stores the password hash and TOS version for atomic consumption
-   * on OTP verify. Returns a `challengeId` for the next step (OTP verification).
+   * Validates consent and creates or reuses an OTP challenge without looking up
+   * the destination owner. The challenge binds the password hash and TOS version
+   * for atomic consumption after proof.
    */
   async register(
     input: RegisterInput,

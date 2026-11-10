@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T17:20:27+00:00",
-  "source_commit": "6761df94c30bc4ba3993bd84a778596cc420d122",
+  "updated": "2026-11-10T17:27:21+00:00",
+  "source_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5593,11 +5593,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Actual scheduled run 42789410833 reported all 40 shards with 127 unexpected outcomes and 18 flakes. The customer request, owned-read and Firefox document replays passed. The Firefox electricity submission race and the Persian saving touch-target flake now have source-bound local passing evidence. Resolve remaining failures and repeat the complete matrix on the exact candidate. The solar Submit request touch target also has source-bound passing geometry and mobile gate receipts.",
-        "Registration, MFA, legal onboarding, electricity and wallet, saving, consultation, solar construction and admin configuration have targeted source-bound receipts. The exact hosted release matrix and strict rollup still need a clean pass. The cancellation and OTP repairs have targeted local browser receipts.",
-        "The exact 150bec1e browser matrix exposed Firefox invitation focus and Mobile Safari account-menu/custom-trigger failures. Final focused Linux Firefox/Mobile Safari, Chromium, Mobile Chrome and native mobile combobox runs passed. Read back all hosted outcomes and run the complete matrix on the final release candidate.",
-        "Hosted WebKit widget entry geometry failures now have passing exact Linux WebKit and Chromium receipts. Verify the final matrix and strict outcome.",
-        "Focused browser checks cover the recorded notification history, knowledge 400, staff grid and staff form contrast failures. Read back remaining hosted results and the final strict rollup."
+        "Verify hosted run 42864645557 at 820405f4 across all five browser projects and all 40 shards, retain the current clean strict rollup and seven-day history, and reconcile any source changes before final promotion."
       ],
       "owner": null,
       "depends_on": [],
@@ -5679,7 +5675,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-dashboard-grid-after-entrance",
-          "release-0.6-browser-navigation-query-and-resting-states"
+          "release-0.6-browser-navigation-query-and-resting-states",
+          "release-0.6-registration-proof-callers-and-browser-readback"
         ],
         "current_acceptance": null
       }
@@ -5869,8 +5866,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read back the current empty quarantine registry and the completed failed scheduled outcomes. Resolve remaining unexpected and flaky cases and verify a clean strict report on the exact candidate.",
-        "Record the strict promotion report from the exact accepted candidate in the production approval package. The CLI and manual CI release path enforce the guard and the synthetic controls passed."
+        "Verify hosted run 42864645557 at 820405f4 across all five browser projects and all 40 shards, retain the current clean strict rollup and seven-day history, and reconcile any source changes before final promotion.",
+        "Record the strict promotion report from the accepted candidate in the production approval package."
       ],
       "owner": null,
       "depends_on": [],
@@ -5950,7 +5947,8 @@
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-registration-proof-callers-and-browser-readback"
         ],
         "current_acceptance": null
       }
@@ -11369,7 +11367,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
@@ -11464,6 +11462,14 @@
                 "apps/api/src/profiles/agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -14281,9 +14287,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Actual scheduled run 42789410833 completed across all five projects and all 40 shards. Its published rollup reported 24 failed shards, 127 unexpected outcomes and 18 flakes. Correct residual failures and verify the current full matrix and strict report.",
-        "The actual scheduled advisory, Drizzle and navigation job and current outcome artifact were read back. Six earlier schedules had no outcome receipt. Verify the next exact rollup and the authorized dedicated results receiver.",
-        "Verify runtime-generated navigation destinations against current complete journey evidence and configure an authorized dedicated results receiver. The registered shell and literal/template JSX links have local evidence."
+        "Verify hosted run 42864645557 at 820405f4 across all five browser projects and all 40 shards, retain the current clean strict rollup and seven-day history, and reconcile any source changes before final promotion.",
+        "Verify runtime-generated navigation destinations against complete journey evidence and configure the authorized dedicated results receiver."
       ],
       "owner": null,
       "depends_on": [],
@@ -14341,7 +14346,8 @@
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-registration-proof-callers-and-browser-readback"
         ],
         "current_acceptance": null
       }
@@ -14697,7 +14703,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -14805,6 +14811,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -14905,7 +14919,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -14997,6 +15011,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -19629,7 +19651,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -19645,7 +19667,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -20109,6 +20131,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -20280,7 +20311,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -20296,7 +20327,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -20760,6 +20791,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -21064,7 +21104,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -21080,7 +21120,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -21544,6 +21584,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -21706,7 +21755,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -21722,7 +21771,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -22186,6 +22235,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -22362,7 +22420,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -22378,7 +22436,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -22842,6 +22900,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -23019,7 +23086,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -23035,7 +23102,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -23499,6 +23566,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -23675,7 +23751,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -23691,7 +23767,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -24155,6 +24231,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -24335,7 +24420,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -24351,7 +24436,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -24815,6 +24900,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -25047,11 +25141,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
@@ -25546,6 +25640,15 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -25900,11 +26003,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -26498,6 +26601,15 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -26842,11 +26954,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -27352,6 +27464,15 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -27685,11 +27806,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/dto/force-change-password.dto.ts",
@@ -28218,6 +28339,15 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -28505,7 +28635,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -28981,6 +29111,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -29219,7 +29357,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -29702,6 +29840,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -32616,7 +32762,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -33074,6 +33220,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -33344,7 +33498,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/dto/reset-password.dto.ts",
@@ -34373,6 +34527,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -35248,11 +35410,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/otp-device-http.integration.test.ts",
@@ -35815,6 +35977,15 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -39827,7 +39998,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -40252,6 +40423,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -45176,7 +45355,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -45184,7 +45363,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -46271,6 +46450,15 @@
                 "apps/api/src/tos/tos.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -46595,7 +46783,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -46603,7 +46791,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -47690,6 +47878,15 @@
                 "apps/api/src/tos/tos.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -48022,7 +48219,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -48030,7 +48227,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
@@ -49117,6 +49314,15 @@
                 "apps/api/src/tos/tos.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -53663,7 +53869,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
@@ -54610,6 +54816,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -56643,7 +56857,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -57152,6 +57366,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -58614,7 +58836,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
@@ -59404,6 +59626,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -71508,7 +71738,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/geography/admin-geography.controller.test.ts",
@@ -71950,6 +72180,14 @@
                 "apps/api/src/tos/tos.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -72221,7 +72459,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/geography/admin-geography.controller.test.ts",
@@ -72663,6 +72901,14 @@
                 "apps/api/src/tos/tos.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -72934,7 +73180,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/geography/admin-geography.controller.test.ts",
@@ -73377,6 +73623,14 @@
                 "apps/api/src/tos/tos.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -73646,7 +73900,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/geography/admin-geography.controller.test.ts",
@@ -74088,6 +74342,14 @@
                 "apps/api/src/tos/tos.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -77187,7 +77449,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
@@ -78874,6 +79136,14 @@
                 "apps/api/src/wallet/bank-receipt-confirmation.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -119584,7 +119854,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -120091,6 +120361,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -489316,7 +489594,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -489324,7 +489602,7 @@
             },
             {
               "path": "apps/api/test/auth.service.spec.ts",
-              "sha256": "bc626693fce29ce46b24d8dac9d99922f2ff1bb44730787ae055f61594342ffd"
+              "sha256": "52b3dd34ad4c1b61f5cf30d264c3c9968251b0fd025bb1f3e9d7b76b29616317"
             },
             {
               "path": "packages/db/src/seed/admin-bootstrap.integration.test.ts",
@@ -489360,6 +489638,15 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/test/auth.service.spec.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -489485,7 +489772,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -489493,7 +489780,7 @@
             },
             {
               "path": "apps/api/test/auth.service.spec.ts",
-              "sha256": "bc626693fce29ce46b24d8dac9d99922f2ff1bb44730787ae055f61594342ffd"
+              "sha256": "52b3dd34ad4c1b61f5cf30d264c3c9968251b0fd025bb1f3e9d7b76b29616317"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -489538,6 +489825,15 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/test/auth.service.spec.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -489640,7 +489936,7 @@
             },
             {
               "path": "apps/api/test/auth.service.spec.ts",
-              "sha256": "bc626693fce29ce46b24d8dac9d99922f2ff1bb44730787ae055f61594342ffd"
+              "sha256": "52b3dd34ad4c1b61f5cf30d264c3c9968251b0fd025bb1f3e9d7b76b29616317"
             },
             {
               "path": "apps/api/test/password-hash-policy.spec.ts",
@@ -489669,6 +489965,16 @@
           ],
           "checks": [
             "Native tests verify previously encoded Argon2 hashes with different costs. The compiled forced-password-change journey reissued an older credential under the current policy without weakening mandatory replacement or session rules."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/test/auth.service.spec.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            }
           ]
         }
       }
@@ -489797,7 +490103,7 @@
             },
             {
               "path": "apps/api/test/auth.service.spec.ts",
-              "sha256": "bc626693fce29ce46b24d8dac9d99922f2ff1bb44730787ae055f61594342ffd"
+              "sha256": "52b3dd34ad4c1b61f5cf30d264c3c9968251b0fd025bb1f3e9d7b76b29616317"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -489833,6 +490139,16 @@
             "The added Operations-role, foreign order UUID and hostile payment-return assertions passed against the compiled app. Existing role, order and read-only return assertions were preserved.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/test/auth.service.spec.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            }
           ]
         }
       }
@@ -490038,7 +490354,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -490082,6 +490398,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -490140,7 +490464,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp-config-http.integration.test.ts",
@@ -490160,7 +490484,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
@@ -490209,6 +490533,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -490253,7 +490586,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -490291,6 +490624,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -490318,7 +490659,10 @@
         "changed_paths": [
           "apps/api/src/auth/auth.controller.ts",
           "apps/api/src/auth/auth.service.ts",
+          "apps/api/src/auth/contact-login-http.integration.test.ts",
           "apps/api/src/auth/registration-dedup-http.integration.test.ts",
+          "apps/api/src/auth/registration-http.integration.test.ts",
+          "apps/api/test/auth.service.spec.ts",
           "apps/web/e2e/registration-recovery.spec.ts",
           "apps/web/src/routes/register/index.tsx",
           "apps/web/src/routes/register/verify.tsx",
@@ -490326,7 +490670,8 @@
         ],
         "batches": [
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-registration-proof-callers-and-browser-readback"
         ],
         "current_acceptance": {
           "kind": "verified-public-registration-privacy",
@@ -490338,7 +490683,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -490379,6 +490724,18 @@
             {
               "path": "docs/security/otp.md",
               "sha256": "6d16d748335dc543697dafea64b02fc478ab8b7dfe52c5152b70258f51d8c291"
+            },
+            {
+              "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+            },
+            {
+              "path": "apps/api/src/auth/registration-http.integration.test.ts",
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+            },
+            {
+              "path": "apps/api/test/auth.service.spec.ts",
+              "sha256": "52b3dd34ad4c1b61f5cf30d264c3c9968251b0fd025bb1f3e9d7b76b29616317"
             }
           ],
           "checks": [
@@ -490387,7 +490744,9 @@
             "A proven collision with the unique account identifier is handled inside a savepoint, including the alias trigger. A fresh conflict consumes the proof and commits no new user, session, consent or account mutation. The deadline is checked after the unique-key wait. Unrelated unique failures roll back as before.",
             "English and Persian browsers focus the existing-account heading after correct proof, remove the code form, and provide exact sign-in and recovery routes. Chromium passed nine registration cases and Mobile Safari passed the two new English and Persian cases without retries. Both browsers checked wrong-code privacy, focus after valid proof, both recovery destinations, and the consumed-code result after reload. Earlier fixture assertions used a different accessible link name and an obsolete one-time code label; the exact current names and response codes are now asserted.",
             "Strict API/web typechecking, ESLint, Prettier, compiled API/worker/web builds and all 102 route/interaction budgets passed. Isolated Linux PostgreSQL applied all 207 exact production migrations. The selected native checks retain encrypted provider delivery, atomic consent and session rollback, destination normalization, deduplicated queue, invalid-code consumption, and the existing published-only Telegram response and privacy assertions.",
-            "The four older OTP service and test bindings were renewed from current exact accepted references. The isolated compiled delivery and OTP suites also passed normal encrypted registration, provider receipt, session rollback and consent checks against the final auth source."
+            "The four older OTP service and test bindings were renewed from current exact accepted references. The isolated compiled delivery and OTP suites also passed normal encrypted registration, provider receipt, session rollback and consent checks against the final auth source.",
+            "Three older hosted auth cases in run 42857945735 expected duplicate-account status before proof. Updated the service test to require a generic challenge without an owner lookup. Updated verified secondary contact and published terms HTTP callers to obtain a valid challenge first and confirm the 409 after proof. Preserve the existing account and published consent, and let the fixture advance only the per-destination minute cooldown.",
+            "All 12 service units passed. Compiled Linux HTTP ran both complete contact-login and registration suites on 207 production migrations and passed all 16 cases. The comment-free AuthService AST is identical. The source change corrects its stale comment; database, OTP and route behavior are unchanged."
           ],
           "source_renewals": [
             {
@@ -490399,6 +490758,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -490452,7 +490819,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -490506,6 +490873,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -490626,7 +491001,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -490658,7 +491033,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
@@ -490697,6 +491072,15 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -490741,7 +491125,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -490791,6 +491175,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -490836,7 +491228,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -490898,6 +491290,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -490942,7 +491342,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -490992,6 +491392,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -491037,7 +491445,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -491111,6 +491519,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -491275,7 +491691,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -491325,6 +491741,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -491370,7 +491794,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -491448,6 +491872,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -491679,7 +492111,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -491799,6 +492231,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -492024,7 +492464,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -492114,6 +492554,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -492192,7 +492640,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -492309,6 +492757,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -497645,7 +498101,7 @@
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -497713,6 +498169,16 @@
             "Eighteen compiled PostgreSQL HTTP cases passed. Tokenless requests still fail at the CSRF gate, and unknown credential fields fail before establishing a session. Unknown contact fields preserve OTP issuance and consumption, and unknown activation fields preserve the token and credential state. The known legacy login fields, normalized registration and verified alias recovery still pass.",
             "The reviewed OpenAPI delta consists of 14 auth request-only changes. Existing request schemas explicitly reject additional properties and the activation route publishes its exact schema. API type checks, changed-file lint, formatting and contract verification passed.",
             "The remaining application command DTO inventory is independent of this verified auth scope. The canonical task stays partial."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/contact-login-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            }
           ]
         }
       },
@@ -499584,7 +500050,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
@@ -499648,6 +500114,14 @@
                 "apps/api/src/profiles/agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -499698,7 +500172,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
@@ -499768,6 +500242,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -500023,7 +500505,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
@@ -500081,6 +500563,14 @@
                 "apps/api/src/common/http-exception.filter.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -500133,7 +500623,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
@@ -500228,6 +500718,14 @@
                 "apps/api/src/profiles/agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -500273,7 +500771,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -500335,6 +500833,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -500383,7 +500889,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -500450,6 +500956,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -500496,7 +501010,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/dto/forgot-password.dto.ts",
@@ -500546,6 +501060,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -500592,7 +501114,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -500654,6 +501176,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -513572,7 +514102,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -513781,6 +514311,16 @@
             "The initial affected API unit selection passed 999 of 1021 cases. Four expected log assertions were replaced with keyed-reference and raw-data exclusion checks. Four financial fixtures were reconciled with the existing atomic policy-and-counter SQL and preserve assertions for limits, exact wallet debits, rollback, replay, provider uncertainty and receipt sealing. All 82 financial fixture cases and the four follow-up admin/approval/TOS/template files passed. Worker scanner units passed, including unchanged restricted wallet failure results and the pseudonymous emitted warning.",
             "Pinned Linux PostgreSQL applied all 207 migrations. Compiled API audit and gift-code HTTP suites passed all 50 cases, including an unavailable audit table, preserved opaque denial, matching correlation ID, pseudonymous actor reference and unchanged gift-code permissions, audit rollback and counters. The final CRM orphan diagnostic and template-upload log were reviewed as output-only and are outside those HTTP scenarios.",
             "The existing shared runtime secret is used only for domain-separated operator references. It never enters output. Missing keys or identifiers emit an unavailable marker. Old log references change on key rotation. Restricted audit and job records retain original values."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            }
           ]
         }
       }
@@ -514003,7 +514543,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/delivery-http.integration.test.ts",
@@ -514396,6 +514936,14 @@
                 "apps/api/src/invoice/invoice-state-machine.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ]
         }
@@ -514604,7 +515152,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/otp.service.ts",
@@ -514813,6 +515361,16 @@
             "The initial affected API unit selection passed 999 of 1021 cases. Four expected log assertions were replaced with keyed-reference and raw-data exclusion checks. Four financial fixtures were reconciled with the existing atomic policy-and-counter SQL and preserve assertions for limits, exact wallet debits, rollback, replay, provider uncertainty and receipt sealing. All 82 financial fixture cases and the four follow-up admin/approval/TOS/template files passed. Worker scanner units passed, including unchanged restricted wallet failure results and the pseudonymous emitted warning.",
             "Pinned Linux PostgreSQL applied all 207 migrations. Compiled API audit and gift-code HTTP suites passed all 50 cases, including an unavailable audit table, preserved opaque denial, matching correlation ID, pseudonymous actor reference and unchanged gift-code permissions, audit rollback and counters. The final CRM orphan diagnostic and template-upload log were reviewed as output-only and are outside those HTTP scenarios.",
             "The existing shared runtime secret is used only for domain-separated operator references. It never enters output. Missing keys or identifiers emit an unavailable marker. Old log references change on key rotation. Restricted audit and job records retain original values."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            }
           ]
         }
       }
@@ -662531,11 +663089,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -662635,7 +663193,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -663174,6 +663732,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -663427,11 +663995,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -663531,7 +664099,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -664070,6 +664638,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -664323,11 +664901,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -664427,7 +665005,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -664966,6 +665544,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -665219,11 +665807,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -665323,7 +665911,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -665862,6 +666450,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -666115,11 +666713,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -666219,7 +666817,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -666758,6 +667356,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -679593,11 +680201,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -679697,7 +680305,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -680236,6 +680844,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -680489,11 +681107,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -680593,7 +681211,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -681132,6 +681750,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -681385,11 +682013,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -681489,7 +682117,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -682028,6 +682656,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -682281,11 +682919,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -682385,7 +683023,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -682924,6 +683562,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -683177,11 +683825,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -683281,7 +683929,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -683820,6 +684468,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -684073,11 +684731,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -684177,7 +684835,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -684716,6 +685374,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -684969,11 +685637,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -685073,7 +685741,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -685612,6 +686280,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -685865,11 +686543,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -685969,7 +686647,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -686508,6 +687186,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -686761,11 +687449,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -686865,7 +687553,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -687404,6 +688092,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -687657,11 +688355,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -687761,7 +688459,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -688300,6 +688998,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -688553,11 +689261,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -688657,7 +689365,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -689196,6 +689904,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -689449,11 +690167,11 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
-              "sha256": "cf25b190404241a6ff1662ecb4fd5a2eddcedbf2776a1da3c24e83880aa9ee87"
+              "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
             },
             {
               "path": "apps/api/src/auth/contact-session-http.integration.test.ts",
@@ -689553,7 +690271,7 @@
             },
             {
               "path": "apps/api/src/auth/registration-http.integration.test.ts",
-              "sha256": "7ce0cd7517ba22bb480bb06109cd584ece48e7f54c059178dcdc0379071f3fcd"
+              "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
             },
             {
               "path": "apps/api/src/auth/reset-password-http.integration.test.ts",
@@ -690092,6 +690810,16 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts",
+                "apps/api/src/auth/contact-login-http.integration.test.ts",
+                "apps/api/src/auth/registration-http.integration.test.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -778345,7 +779073,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
@@ -781776,6 +782504,14 @@
                 "apps/worker/src/ai-models/test-runner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "presentation_renewals": [
@@ -782465,7 +783201,7 @@
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
-              "sha256": "b8e34e15fe7c05f679c655f31718ae619a6fb05d3b88523dc9e3aa69177fc679"
+              "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
             },
             {
               "path": "apps/api/src/auth/force-password-http.integration.test.ts",
@@ -785761,6 +786497,14 @@
                 "apps/worker/src/ai-models/test-runner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+              "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+              "paths": [
+                "apps/api/src/auth/auth.service.ts"
+              ],
+              "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -790215,14 +790959,10 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile every epic-01 and epic-06 criterion with current source and operational evidence. Apply the approved direct-main workflow while preserving all production gates.",
-        "Run the full hosted browser matrix against the exact next candidate and retain the seven-day report. The prior c20816f0 matrix finished and failed. Focused native checks cover its diagnosed failures, including the pinned Firefox runtime, receipt details, CSP provenance, combobox validation focus and migrated reconciliation queue.",
-        "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
-        "The primary mobile populated-paint measurement now excludes demonstrated test-runner polling delay. All 12 focused cases passed with unchanged budgets. Verify the repaired hosted integrity check before closing the release gate.",
-        "Nightly 42817801007 exposed additional login and electricity timing/overlay flakes and Linux WebKit Terms selection failures. The focused repairs pass locally; the hosted candidate rerun and other matrix outcomes remain open.",
-        "The generated contract now matches the rate-limit routes and contact-proof registration response. The exact hosted quality check is pending. Scope-tested touch and focus fixes cover observed hosted browser failures. Remaining matrix jobs and strict rollup are open.",
-        "Hosted WebKit widget entry geometry failures now have passing exact Linux WebKit and Chromium receipts. Verify the final matrix and strict outcome.",
-        "Focused browser checks cover the recorded notification history, knowledge 400, staff grid and staff form contrast failures. Read back remaining hosted results and the final strict rollup."
+        "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
+        "Verify hosted run 42864645557 at 820405f4 across all five browser projects and all 40 shards, retain the current clean strict rollup and seven-day history, and reconcile any source changes before final promotion.",
+        "Read back full hosted native and combined coverage on the revised auth and financial fixtures. Earlier run 42857945735 failed these older callers; targeted fixes have passing receipts.",
+        "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
       "depends_on": [],
@@ -790382,7 +791122,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-dashboard-grid-after-entrance",
-          "release-0.6-browser-navigation-query-and-resting-states"
+          "release-0.6-browser-navigation-query-and-resting-states",
+          "release-0.6-registration-proof-callers-and-browser-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -904194,11 +904935,71 @@
         "The final changed behavior was checked with keyed-reference tests, 34 ESM/CommonJS export and declaration checks, strict shared/API/worker type checks, and changed-file ESLint. The OTP console still requires both local-development controls and existing OTP unit assertions passed.",
         "The initial affected API unit selection passed 999 of 1021 cases. Four expected log assertions were replaced with keyed-reference and raw-data exclusion checks. Four financial fixtures were reconciled with the existing atomic policy-and-counter SQL and preserve assertions for limits, exact wallet debits, rollback, replay, provider uncertainty and receipt sealing. All 82 financial fixture cases and the four follow-up admin/approval/TOS/template files passed. Worker scanner units passed, including unchanged restricted wallet failure results and the pseudonymous emitted warning.",
         "Pinned Linux PostgreSQL applied all 207 migrations. Compiled API audit and gift-code HTTP suites passed all 50 cases, including an unavailable audit table, preserved opaque denial, matching correlation ID, pseudonymous actor reference and unchanged gift-code permissions, audit rollback and counters. The final CRM orphan diagnostic and template-upload log were reviewed as output-only and are outside those HTTP scenarios.",
-        "The existing shared runtime secret is used only for domain-separated operator references. It never enters output. Missing keys or identifiers emit an unavailable marker. Old log references change on key rotation. Restricted audit and job records retain original values."
+        "The existing shared runtime secret is used only for domain-separated operator references. It never enters output. Missing keys or identifiers emit an unavailable marker. Old log references change on key rotation. Restricted audit and job records retain original values.",
+        "The pinned Linux PostgreSQL AI-model worker suite passed all 14 cases with the exact logger source. Existing durable actor identity, current grant checks, lease fencing, circuit behavior and secret-free delivery diagnostics were verified."
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
       "source_scope_proof": "log-privacy-source-scope.json",
       "source_scope_proof_sha256": "b4d7f908e4e589336b2d7d67da88e3f1cd94a041f87ef23d7fabd24108e2e4e4"
+    },
+    "release-0.6-registration-proof-callers-and-browser-readback": {
+      "batch": "release-0.6-registration-proof-callers-and-browser-readback",
+      "base_commit": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.01.02.06",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/auth/auth.service.ts",
+        "apps/api/src/auth/contact-login-http.integration.test.ts",
+        "apps/api/src/auth/registration-http.integration.test.ts",
+        "apps/api/test/auth.service.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/auth.service.ts",
+          "sha256": "bdce1c2b9c37756cd535f841880b58e454aea7935ff78c638d9770dacfdbfd9c"
+        },
+        {
+          "path": "apps/api/src/auth/contact-login-http.integration.test.ts",
+          "sha256": "0d3dc9835577d7e12e818e9df4ccb1c56b5ac6f2847e631d5430bbec110e79b0"
+        },
+        {
+          "path": "apps/api/src/auth/registration-http.integration.test.ts",
+          "sha256": "1cc12322befd301a6c405e23db30913c6f6a338feebcb4d5a977bd20a501bbd3"
+        },
+        {
+          "path": "apps/api/test/auth.service.spec.ts",
+          "sha256": "52b3dd34ad4c1b61f5cf30d264c3c9968251b0fd025bb1f3e9d7b76b29616317"
+        }
+      ],
+      "checks": [
+        "Three older hosted auth cases in run 42857945735 expected duplicate-account status before proof. Updated the service test to require a generic challenge without an owner lookup. Updated verified secondary contact and published terms HTTP callers to obtain a valid challenge first and confirm the 409 after proof. Preserve the existing account and published consent, and let the fixture advance only the per-destination minute cooldown.",
+        "All 12 service units passed. Compiled Linux HTTP ran both complete contact-login and registration suites on 207 production migrations and passed all 16 cases. The comment-free AuthService AST is identical. The source change corrects its stale comment; database, OTP and route behavior are unchanged.",
+        "Hosted browser run 42851100246 at 150bec1e reported all 40 shards. The rollup failed with 7 failing shards, 13 flaky outcomes, zero unexpected outcomes after retry and zero missing or invalid shards. Its downloaded summary SHA-256 is fdecd7ff24547481dd390692d4e5180757f46c734f3a59940c9be0cf7184719f. The seven diagnoses have focused passing receipts in the preceding three batches.",
+        "The exact replacement matrix 42864645557 was dispatched once at 820405f4a44efb5f795efd5c5144723fde29d9c7. Pending results are neither browser nor release acceptance. The browser fixes were published to main as 6761df94 after required app 15368 check 129996602284 passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "source_scope_proof": "registration-callers-source-scope.json",
+      "source_scope_proof_sha256": "cafbb16660988582707e0f42e6cbeec81326ff8b2c354958eef29e278516aa49",
+      "hosted_browser_receipts": {
+        "preceding": {
+          "run": 42851100246,
+          "sha": "150bec1e55c94a4004ed96780ac14611c1304519",
+          "conclusion": "failure",
+          "failed_shards": 7,
+          "flaky": 13,
+          "report_sha256": "fdecd7ff24547481dd390692d4e5180757f46c734f3a59940c9be0cf7184719f"
+        },
+        "replacement": {
+          "run": 42864645557,
+          "sha": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+          "conclusion": null
+        }
+      }
     }
   },
   "historical_improvements": [
@@ -904246,7 +905047,7 @@
       "01-platform-infrastructure.md#T-05.05.01",
       "release-readiness#R-05.02"
     ],
-    "goal": "Read back terminal browser results and repair demonstrated failures before running the final exact matrix and strict report."
+    "goal": "Reconcile the exact replacement browser matrix and native/combined coverage outcomes. Preserve focused evidence and verify every explicit release prerequisite."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
