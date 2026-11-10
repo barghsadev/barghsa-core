@@ -2,6 +2,7 @@
 """Exercise the committed pilot config without host ports or production certificates."""
 from pathlib import Path
 import argparse
+import json
 import subprocess
 import tempfile
 import time
@@ -51,6 +52,42 @@ try:
             time.sleep(.1)
         else: raise RuntimeError('Proxy did not start')
         print(run('docker','exec',backend,'node','/check.mjs'),end='')
+        run('docker', 'exec', backend, 'node', '-e', '''
+const assert = require('node:assert/strict');
+const https = require('node:https');
+const marker = 'barghsa-private-log-probe';
+function request(method, extraHeaders) {
+  return new Promise((resolve, reject) => {
+    const req = https.request({
+      host: '127.0.0.1', port: 443, rejectUnauthorized: false, method,
+      path: `/api/${marker}?authority=${marker}`,
+      headers: {
+        'User-Agent': marker, 'X-Forwarded-For': marker,
+        Referer: `https://example.test/${marker}`, Authorization: `Bearer ${marker}`,
+        ...extraHeaders,
+      },
+    }, (response) => {
+      response.resume();
+      response.on('end', () => resolve(response.statusCode));
+    });
+    req.on('error', reject);
+    req.setTimeout(5000, () => req.destroy(new Error('Privacy probe timed out')));
+    req.end();
+  });
+}
+(async () => {
+  assert.equal(await request('PATCH', {}), 200);
+  assert.equal(await request('POST', { 'Content-Length': 70000000 }), 413);
+})().catch((error) => { console.error(error); process.exitCode = 1; });
+''')
+        logs = subprocess.run(['docker', 'logs', proxy], check=True, capture_output=True, text=True)
+        if 'barghsa-private-log-probe' in logs.stdout + logs.stderr:
+            raise RuntimeError('Proxy logs exposed the private request marker')
+        records = [json.loads(line) for line in logs.stdout.splitlines() if line.startswith('{"time":')]
+        outcomes = {(row['method'], row['route'], row['status']) for row in records}
+        if not {('PATCH', '/api', '200'), ('POST', '/api', '413')} <= outcomes:
+            raise RuntimeError('Proxy logs omitted a privacy probe outcome')
+        print('PASS private proxy logs retain success and request-rejection outcomes')
 finally:
     for container in [proxy,backend]:
         subprocess.run(['docker','rm','-f',container],capture_output=True)

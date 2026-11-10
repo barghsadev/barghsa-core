@@ -27,4 +27,4 @@ Browser storage holds presentation preferences, brief translated acknowledgement
 
 Product analytics sends only approved event names and their permitted area or service. Route error reporting sends an approved error code and a random support reference. These payloads omit request bodies, form data and URL parameters.
 
-Staging and pilot access logs keep the HTTP method, route and response status. They omit query strings and referrer values, and record individual session revocations as `/api/auth/sessions/:id`. Keep access to historical logs restricted through the credential cutover.
+Staging and pilot proxy access records contain the HTTP method, fixed route group, response and upstream status, timing and bytes sent. They record individual session revocations as `/api/auth/sessions/:id` and omit raw paths, query strings, client addresses and request headers. The proxies use these records for HTTP outcomes and keep process diagnostics separate from Nginx's raw request error lines. Keep historical access and error logs restricted through the credential cutover.

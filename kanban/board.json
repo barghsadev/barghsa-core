@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T03:56:41+00:00",
-  "source_commit": "7caa396ae5e4eac8cf4af194eb09e94bdba84023",
+  "updated": "2026-11-10T04:00:40+00:00",
+  "source_commit": "ec39c7714497a9d85ad21948d141495e8a2e14c3",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -12119,7 +12119,8 @@
         "batches": [
           "release-0.6-pilot-proxy-and-cache-policy",
           "release-0.6-browser-and-edge-privacy",
-          "release-0.6-pilot-and-commercial-topology-documentation"
+          "release-0.6-pilot-and-commercial-topology-documentation",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -12127,7 +12128,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
+              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
             },
             {
               "path": "deploy/pilot/README.md",
@@ -12135,7 +12136,7 @@
             },
             {
               "path": "scripts/test-pilot-proxy.py",
-              "sha256": "40ed7d4f9fb89d400c209f0781926967ecdab7bd923c6d1353722d3bac9e4af6"
+              "sha256": "970d0f0c9d42c6b00b8f4df622e9411f022e84c777adfac23201e61eaecbf876"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -12349,7 +12350,8 @@
         ],
         "batches": [
           "release-0.6-proxy-trust-and-request-limits",
-          "release-0.6-browser-and-edge-privacy"
+          "release-0.6-browser-and-edge-privacy",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -12357,11 +12359,11 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
+              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
             },
             {
               "path": "scripts/check-staging-proxy.mjs",
@@ -12472,7 +12474,8 @@
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-pilot-and-commercial-topology-documentation",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-suppress-api-framework-header"
+          "release-0.6-suppress-api-framework-header",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -12480,7 +12483,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
+              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
             },
             {
               "path": "deploy/pilot/README.md",
@@ -33557,7 +33560,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -33629,7 +33633,7 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
+              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -33641,7 +33645,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
             },
             {
               "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
@@ -33697,7 +33701,7 @@
             },
             {
               "path": "scripts/test-pilot-proxy.py",
-              "sha256": "40ed7d4f9fb89d400c209f0781926967ecdab7bd923c6d1353722d3bac9e4af6"
+              "sha256": "970d0f0c9d42c6b00b8f4df622e9411f022e84c777adfac23201e61eaecbf876"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -478291,7 +478295,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-session-authority",
@@ -478395,7 +478400,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
             },
             {
               "path": "packages/db/src/schema/sessions.ts",
@@ -478507,7 +478512,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-browser-and-edge-privacy",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-session-verification",
@@ -478559,7 +478565,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
             }
           ],
           "checks": [
@@ -478739,7 +478745,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-session-authority",
@@ -478839,7 +478846,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
             },
             {
               "path": "packages/db/src/schema/sessions.ts",
@@ -478920,7 +478927,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-strict-otp-caller-preflight",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-api-and-private-cutover-proof",
@@ -479080,7 +479088,7 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
+              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -479088,7 +479096,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
             },
             {
               "path": "docs/security/otp.md",
@@ -479096,7 +479104,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
             },
             {
               "path": "packages/db/src/schema/sessions.ts",
@@ -479179,7 +479187,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-session-authority",
@@ -479271,7 +479280,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
             },
             {
               "path": "packages/db/src/schema/sessions.ts",
@@ -479314,7 +479323,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-browser-and-edge-privacy",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-session-verification",
@@ -479366,7 +479376,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
             }
           ],
           "checks": [
@@ -480431,7 +480441,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-browser-dynamic-evaluation-boundary"
+          "release-0.6-browser-dynamic-evaluation-boundary",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -480479,7 +480490,7 @@
             },
             {
               "path": "scripts/test-pilot-proxy.py",
-              "sha256": "40ed7d4f9fb89d400c209f0781926967ecdab7bd923c6d1353722d3bac9e4af6"
+              "sha256": "970d0f0c9d42c6b00b8f4df622e9411f022e84c777adfac23201e61eaecbf876"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -480718,7 +480729,8 @@
           "release-0.6-container-runtime-hardening",
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-browser-and-edge-privacy"
+          "release-0.6-browser-and-edge-privacy",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -480750,7 +480762,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -480766,7 +480778,7 @@
             },
             {
               "path": "scripts/test-pilot-proxy.py",
-              "sha256": "40ed7d4f9fb89d400c209f0781926967ecdab7bd923c6d1353722d3bac9e4af6"
+              "sha256": "970d0f0c9d42c6b00b8f4df622e9411f022e84c777adfac23201e61eaecbf876"
             }
           ],
           "checks": [
@@ -480833,7 +480845,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-browser-and-edge-privacy"
+          "release-0.6-browser-and-edge-privacy",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -480853,7 +480866,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -483675,7 +483688,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -483683,7 +483697,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
+              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
             },
             {
               "path": "deploy/staging/README.md",
@@ -483691,7 +483705,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -486688,7 +486702,8 @@
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-suppress-api-framework-header"
+          "release-0.6-suppress-api-framework-header",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -486704,11 +486719,11 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
+              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
             },
             {
               "path": "scripts/check-staging-proxy.mjs",
@@ -486782,7 +486797,8 @@
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-suppress-api-framework-header"
+          "release-0.6-suppress-api-framework-header",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -486806,11 +486822,11 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "29dc4b58c3216d8b29a57fd35f24334d36c13014d9685dd5dd2ec8448ac9f179"
+              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -487680,7 +487696,8 @@
           "docs/runbooks/security-incident.md"
         ],
         "batches": [
-          "release-0.6-security-incident-and-review-prerequisites"
+          "release-0.6-security-incident-and-review-prerequisites",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "reviewed-security-incident-runbook",
@@ -487696,7 +487713,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
             }
           ],
           "checks": [
@@ -492043,7 +492060,8 @@
         "Automatic, manual, adjustment and replacement invoice failure logs now use fixed operation text. The regression reproduces a leaked synthetic payment reference on the previous code, then verifies the exact safe message, rollback, no commit and the unchanged thrown error. Review of remaining sinks and production-equivalent receipt checks remains open.",
         "Wallet reconciliation scan failures now emit fixed operation messages, with the opaque wallet ID for per-wallet errors. Raw exception text is excluded from the scan log and background job error. The prior leak was reproduced with a synthetic reference. Remaining sink review and production-equivalent receipts are open.",
         "Reviewed administrative mutation, geography, profile invitation and Terms error sinks now omit exception contents and untrusted team names. The Terms regression verifies the exact safe log, stable 500 response, rollback and release. Remaining service, worker, database and ingress sink review and live evidence remain open.",
-        "The alternate single-container proxy now omits raw paths, parameters and headers from JSON access records and keeps request failures observable through status and upstream status. The isolated proxy proof verified app and object forwarding, both upstream outage responses and no synthetic secret markers in logs. Other ingress configurations and production-equivalent receipt checks remain open."
+        "The alternate single-container proxy now omits raw paths, parameters and headers from JSON access records and keeps request failures observable through status and upstream status. The isolated proxy proof verified app and object forwarding, both upstream outage responses and no synthetic secret markers in logs. Other ingress configurations and production-equivalent receipt checks remain open.",
+        "The primary staging and pilot proxy configurations now use JSON outcomes and fixed route groups. Both isolated profiles kept routes and response behavior intact while excluding private path, query and header markers, including on 413 rejection and upstream 502. The existing Docker proxy checks now include a privacy regression. Exact hosted and production-equivalent receipt checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -492095,7 +492113,8 @@
           "release-0.6-invoice-error-log-redaction",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-administrative-mutation-log-redaction",
-          "release-0.6-single-proxy-log-redaction"
+          "release-0.6-single-proxy-log-redaction",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
@@ -492299,7 +492318,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-ai-inference-metrics",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -492331,7 +492351,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -495916,7 +495936,8 @@
         "batches": [
           "release-0.6-private-session-cutover-and-health-probes",
           "release-0.6-reject-unknown-auth-command-fields",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-staging-pilot-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -495972,11 +495993,11 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "a6169fa2716af694ba983c277b145f6da6efabc41ee8c92479582af418b19e21"
+              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "85efc197eccc06fc801bf1b9991389241a4ff376f98fbba0006b16a8e8b5e738"
+              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
             }
           ],
           "checks": [
@@ -860460,6 +860481,66 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/single-proxy-log-redaction",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "22de88043b5927fa66eec936a86c2343ea25455112458e76810affa95838f100"
+    },
+    "release-0.6-staging-pilot-proxy-log-redaction": {
+      "batch": "release-0.6-staging-pilot-proxy-log-redaction",
+      "base_commit": "ec39c7714497a9d85ad21948d141495e8a2e14c3",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.02.06"
+      ],
+      "changed_paths": [
+        "deploy/pilot/nginx.conf",
+        "deploy/staging/nginx.conf",
+        "docs/security/session-lifetime.md",
+        "scripts/test-pilot-proxy.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
+        },
+        {
+          "path": "deploy/staging/nginx-api-proxy.conf",
+          "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+        },
+        {
+          "path": "deploy/staging/nginx-s3-proxy.conf",
+          "sha256": "9f1cd69e8b73bdafbf88dfec384820b7e158e3061a21d2bfab9f3fb05c7414ca"
+        },
+        {
+          "path": "deploy/staging/nginx.conf",
+          "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
+        },
+        {
+          "path": "docs/security/session-lifetime.md",
+          "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
+        },
+        {
+          "path": "scripts/check-pilot-proxy.mjs",
+          "sha256": "3d1d3d7004acbcae9f2013b11540545919f0377bd4c90826399115c97bbcbc58"
+        },
+        {
+          "path": "scripts/check-staging-proxy.mjs",
+          "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "44b10444a8c51c2afd401002712ab72abf537e259934c128679c9e22b86795dd"
+        },
+        {
+          "path": "scripts/test-pilot-proxy.py",
+          "sha256": "970d0f0c9d42c6b00b8f4df622e9411f022e84c777adfac23201e61eaecbf876"
+        }
+      ],
+      "checks": [
+        "The previous configs masked session IDs and omitted access-log queries, but the isolated run reproduced raw profile path and client header values in access output and raw payment callback query values in NGINX upstream error output. The staging storage case reproduced the same gap for an object path and its signed query.",
+        "The fixed JSON records retain time, method, fixed route group, status, bytes, request time and upstream status. Session route masking is preserved. The selected request paths do not emit raw NGINX error text, and process diagnostics remain configured.",
+        "Both local NGINX 1.29.8 profiles passed syntax and isolated TLS replay. The API and staging object upstream received the original path and query. Access records correctly showed 200, 413 and 502 outcomes without marker text. The new exact Node privacy request ran in the local loopback adapter. The normal Docker wrapper remains to be verified by the exact hosted check.",
+        "The first isolated proof expected a hyphen for an unset upstream status. JSON log escaping emitted an empty string on the edge-generated 413. The final proof asserts that the 413 has no upstream status and that each forwarded request retains its actual upstream result. Documentation formatting, Python syntax and diff checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/primary-proxy-log-redaction",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "9283a75b02401422cc885cb2a3adf352190d346e709abd33b0d31a5c7190673b"
     }
   },
   "historical_improvements": [
