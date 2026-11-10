@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T09:28:01+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T09:31:26+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1153 | Accepted with unchanged source bindings. |
+| done | 1154 | Accepted with unchanged source bindings. |
 | verify | 154 | Existing work may be complete; inspect evidence before building. |
-| partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1261,7 +1261,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.09.02.05` | done | Recorded batch work | Author unit tests for input validation: Zod schema edge cases, normalization, locale-specific formatting |
 | `06-security-testing-observability.md#T-06.09.02.06` | done | Recorded batch work | Author unit tests for provider adapter responses: success, timeout, throttle, error classification, mapping |
 | `06-security-testing-observability.md#T-06.09.02.07` | done | Recorded batch work | Author unit tests for Jalali calendar: month lengths, leap years, period boundaries, Gregorian conversion |
-| `06-security-testing-observability.md#T-06.09.03.01` | partial | Recorded batch work | Configure RTL with custom render helpers, providers (auth, i18n, theme), and MSW/api contract fixtures |
+| `06-security-testing-observability.md#T-06.09.03.01` | done | Recorded batch work | Configure RTL with custom render helpers, providers (auth, i18n, theme), and MSW/api contract fixtures |
 | `06-security-testing-observability.md#T-06.09.03.02` | done | Recorded batch work | Write RTL tests for registration form: validation, OTP flow, error states, RTL layout |
 | `06-security-testing-observability.md#T-06.09.03.03` | done | Recorded batch work | Write RTL tests for login form: validation, error states, MFA step-up, RTL/LTR |
 | `06-security-testing-observability.md#T-06.09.03.04` | verify | Inventory needed | Write RTL tests for onboarding/profile forms: INDIVIDUAL and LEGAL flows, field validation, address selection |

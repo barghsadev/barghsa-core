@@ -1,28 +1,35 @@
-import { QueryProvider } from '../../../test/query-provider.js';
 import { act, type ComponentType } from 'react';
-import { createRoot, type Root } from 'react-dom/client';
+import { cleanup } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { Route } from './username.js';
-import { AccountUserProvider } from '../../../hooks/useAccountUser.js';
 import { t } from '@barghsa/i18n/app';
 import { tAccountSettingsForms as copy } from '@barghsa/i18n/account-settings-forms';
 import type { AccountSettingsUser } from '../../../lib/account-settings-form.js';
+import { DEFAULT_BRAND_CONFIG } from '../../../lib/brand-config.js';
+import { THEME_POLICY_STORAGE_KEY } from '../../../lib/theme.js';
+import { renderWorkspace } from '../../../test/render-workspace.js';
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (options: unknown) => ({ options }),
 }));
-let root: Root, host: HTMLDivElement;
+let view: ReturnType<typeof renderWorkspace>, host: HTMLDivElement;
+let previousDirection: string | null, previousThemePolicy: string | null;
 const Page = Route.options.component as ComponentType;
 beforeEach(() => {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
+  previousDirection = document.documentElement.getAttribute('dir');
+  previousThemePolicy = localStorage.getItem(THEME_POLICY_STORAGE_KEY);
   document.documentElement.lang = 'en';
   host = document.createElement('div');
   document.body.append(host);
-  root = createRoot(host);
 });
 afterEach(async () => {
-  await act(async () => root.unmount());
+  await act(async () => cleanup());
   host.remove();
   vi.unstubAllGlobals();
+  if (previousThemePolicy === null) localStorage.removeItem(THEME_POLICY_STORAGE_KEY);
+  else localStorage.setItem(THEME_POLICY_STORAGE_KEY, previousThemePolicy);
+  if (previousDirection === null) document.documentElement.removeAttribute('dir');
+  else document.documentElement.dir = previousDirection;
   document.documentElement.lang = 'fa';
 });
 function deferred<T>() {
@@ -44,6 +51,7 @@ function fixture(contact: 'email' | 'mobile' = 'mobile') {
     } as AccountSettingsUser,
     readStatus: 200,
     readCount: 0,
+    nextRead: undefined as ((init?: RequestInit) => Promise<Response>) | undefined,
     writes: [] as { path: string; body: Record<string, string>; csrf: string | null }[],
     override: undefined as
       ((path: string, body: Record<string, string>) => Promise<Response> | Response) | undefined,
@@ -51,9 +59,21 @@ function fixture(contact: 'email' | 'mobile' = 'mobile') {
   vi.stubGlobal(
     'fetch',
     vi.fn(async (path: string, init?: RequestInit) => {
+      if (path === '/api/public/branding/config' && !init?.method)
+        return Response.json({
+          ...DEFAULT_BRAND_CONFIG,
+          supportEmail: 'help@example.test',
+          supportPhone: '021-12345678',
+          supportMobile: '09121234567',
+          darkMode: true,
+          themeMode: 'dark',
+        });
       if (!init?.method) {
         expect(path).toBe('/api/auth/user');
         state.readCount++;
+        const nextRead = state.nextRead;
+        state.nextRead = undefined;
+        if (nextRead) return nextRead(init);
         return Response.json(state.user, { status: state.readStatus });
       }
       const body = JSON.parse(String(init.body)) as Record<string, string>;
@@ -78,17 +98,9 @@ function fixture(contact: 'email' | 'mobile' = 'mobile') {
   return state;
 }
 async function mount(actor = 'user') {
-  await act(async () =>
-    root.render(
-      <QueryProvider>
-        {
-          <AccountUserProvider value={actor}>
-            <Page />
-          </AccountUserProvider>
-        }
-      </QueryProvider>
-    )
-  );
+  await act(async () => {
+    view = renderWorkspace(<Page />, host, actor);
+  });
 }
 function button(parent: ParentNode, label: string) {
   const value = Array.from(parent.querySelectorAll<HTMLButtonElement>('button')).find(
@@ -131,6 +143,27 @@ async function pair() {
   await change('previous-otp', '112233');
   await change('change-otp', '123456');
 }
+
+it.each([
+  ['fa', 'rtl'],
+  ['en', 'ltr'],
+] as const)(
+  'renders authenticated settings in %s with the published theme',
+  async (locale, dir) => {
+    document.documentElement.lang = locale;
+    const state = fixture();
+    await mount();
+    expect(view.getByRole('heading', { name: t('settings.username.title', locale) })).toBeDefined();
+    expect(view.getByRole('button', { name: t('settings.username.change', locale) })).toBeDefined();
+    expect(document.documentElement.dir).toBe(dir);
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
+    expect(fetch).toHaveBeenCalledWith('/api/public/branding/config', {
+      signal: expect.any(AbortSignal),
+    });
+    expect(state.readCount).toBe(1);
+    expect(state.writes).toEqual([]);
+  }
+);
 
 it('owns touched native validation and preserves independent raw destination drafts with zero writes', async () => {
   const state = fixture();
@@ -361,7 +394,8 @@ it('keeps account reads manual and makes each explicit refresh a fresh abortable
   expect(state.readCount).toBe(1);
   await click(copy('refresh', 'en'));
   expect(state.readCount).toBe(2);
-  const requests = vi.mocked(fetch).mock.calls;
+  const requests = vi.mocked(fetch).mock.calls.filter(([path]) => path === '/api/auth/user');
+  expect(requests).toHaveLength(2);
   expect(requests.every((request) => request[1]?.credentials === 'include')).toBe(true);
   const signals = requests.map((request) => request[1]?.signal);
   expect(signals.every((signal) => signal instanceof AbortSignal)).toBe(true);
@@ -373,10 +407,10 @@ it('cancels old-account reads and refuses their late authorization denial', asyn
   const state = fixture(),
     held = deferred<Response>();
   let signal: AbortSignal | null | undefined;
-  vi.mocked(fetch).mockImplementationOnce(async (_path, init) => {
+  state.nextRead = async (init) => {
     signal = init?.signal;
     return held.promise;
-  });
+  };
   await mount();
   state.user = { ...state.user, userId: 'new-user', username: 'replacement@example.test' };
   await mount('new-user');
@@ -394,14 +428,13 @@ it('aborts the owned refresh on unmount without publishing a late source', async
     held = deferred<Response>();
   await mount();
   let signal: AbortSignal | null | undefined;
-  vi.mocked(fetch).mockImplementationOnce(async (_path, init) => {
+  state.nextRead = async (init) => {
     signal = init?.signal;
     return held.promise;
-  });
+  };
   await click(copy('refresh', 'en'));
   expect(signal?.aborted).toBe(false);
-  await act(async () => root.unmount());
-  root = createRoot(host);
+  await act(async () => view.unmount());
   expect(signal?.aborted).toBe(true);
   await act(async () => held.resolve(Response.json(state.user)));
   expect(host.textContent).toBe('');

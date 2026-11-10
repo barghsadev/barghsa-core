@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T09:28:01+00:00",
-  "source_commit": "232d3c4d908ae96b393ed874b3fd9837505b1932",
+  "updated": "2026-11-10T09:31:26+00:00",
+  "source_commit": "6210451bb436d9c134088cacdf5f30ea5ec01841",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -495273,21 +495273,98 @@
         "story": "06-security-testing-observability.md#spec-f7421d6dc1ea"
       },
       "requirement": "| T-06.09.03.01 | Configure RTL with custom render helpers, providers (auth, i18n, theme), and MSW/api contract fixtures | M |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Verify reusable React Testing Library providers for authenticated, localized and themed application routes with API contract fixtures. The public auth forms now share a Testing Library render helper using the existing QueryProvider and locale subscription."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-authenticated-workspace-testing-library"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source-bound-authenticated-workspace-testing-library",
+          "reviewed_sha": "6210451bb436d9c134088cacdf5f30ea5ec01841",
+          "checks": [
+            "The existing public auth form renderer and new authenticated workspace renderer use the pinned React Testing Library dependency and real QueryProvider. The workspace renderer uses the production account user, UI direction and brand theme providers. It preserves the component tree when the test account changes.",
+            "The actual authenticated username settings route mounts against explicit account, branding and command API contract fixtures. Tests verify localized headings and actions, Persian RTL, English LTR, the validated published dark theme, credentialed abortable account reads and no unexpected writes. Existing stale-account, unmount, command and OTP assertions remain.",
+            "The first focused run passed four related files and exposed five fixture or renderer migration failures in the account file. Correcting the branding payload, selecting the exact account endpoint for pending reads, and using the library unmount path passed all 17 account cases. Together with the 29 passing unchanged sibling cases, 46 focused cases passed across five files. Web typecheck, focused lint, formatting and diff checks passed."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/web/package.json",
+              "sha256": "161ac4dddcb3d7dab2ae77928e31553a2eda2b8468a86ddee5616315f4da6e6d"
+            },
+            {
+              "path": "apps/web/src/hooks/useAccountUser.tsx",
+              "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+            },
+            {
+              "path": "apps/web/src/hooks/useLocale.ts",
+              "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+            },
+            {
+              "path": "apps/web/src/lib/session-role.test.ts",
+              "sha256": "389ae9c473b96f6e58416a4e021cbdc394316361f84670a0351ededeadb7681c"
+            },
+            {
+              "path": "apps/web/src/providers/BrandThemeProvider.test.tsx",
+              "sha256": "37263fbfac7ec19a78fd066b0541de4ea9a21908e65875c2ca95ad4f1ed3e01d"
+            },
+            {
+              "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+              "sha256": "8e2cb24dbab8576970cd9d4622e5f930ab9a4ca71ff222ddacb0b9da051a7abc"
+            },
+            {
+              "path": "apps/web/src/providers/QueryProvider.test.tsx",
+              "sha256": "776ca724c6b9e3bfebc9741112a5a188670a492db2846e617a855a58050f3288"
+            },
+            {
+              "path": "apps/web/src/providers/QueryProvider.tsx",
+              "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+            },
+            {
+              "path": "apps/web/src/providers/UiDirectionProvider.test.tsx",
+              "sha256": "0e2f23a175180096177c236cff4d2f1316040f460770cc5337b7a1a2b6ab9ae0"
+            },
+            {
+              "path": "apps/web/src/providers/UiDirectionProvider.tsx",
+              "sha256": "48edc81247cc48097381e1404b2ecc9d855a58187761541778558e4f069f3a3a"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/account-native-forms.test.tsx",
+              "sha256": "3b7734ac4bad57686584d761f358474b19e8dc13c3c9c8c2a8801188effa81a7"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/username.tsx",
+              "sha256": "9ec6bd4c18c86d6101ce57bf33d9cb971515e5882da17ccfc1ea167ee64c09cd"
+            },
+            {
+              "path": "apps/web/src/test/query-provider.tsx",
+              "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+            },
+            {
+              "path": "apps/web/src/test/render-auth-form.tsx",
+              "sha256": "cc3df7f2180d91be375d5bc615876d82a67c588041485d52d8a42a6ed4bb8f09"
+            },
+            {
+              "path": "apps/web/src/test/render-workspace.tsx",
+              "sha256": "70a97ccc8b1102b62ca6a8335c5afb6724c0c3cd2dda94cefc7fd72c88ff957d"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "33835dca5f8ae0b68e08392346c8eaa0def77eb2161d8ab7c09cabf15da79beb"
+            }
+          ]
+        }
       }
     },
     {
@@ -875960,6 +876037,95 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/auth-form-testing-library",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "1398eedcf78ebdb582837b2909ceab786faa7b7f070557b5100452275f57e8ae"
+    },
+    "release-0.6-authenticated-workspace-testing-library": {
+      "batch": "release-0.6-authenticated-workspace-testing-library",
+      "base_commit": "6210451bb436d9c134088cacdf5f30ea5ec01841",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.03.01"
+      ],
+      "changed_paths": [
+        "apps/web/src/routes/_app/settings/account-native-forms.test.tsx",
+        "apps/web/src/test/render-workspace.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/package.json",
+          "sha256": "161ac4dddcb3d7dab2ae77928e31553a2eda2b8468a86ddee5616315f4da6e6d"
+        },
+        {
+          "path": "apps/web/src/hooks/useAccountUser.tsx",
+          "sha256": "df3aab8b4374e7244a6963d078fc770cbc49be69a061414b0eb77671972c663f"
+        },
+        {
+          "path": "apps/web/src/hooks/useLocale.ts",
+          "sha256": "b753d2595d649722a4d9e131ba4d688b434c4183a8bea106c08d965c3d252856"
+        },
+        {
+          "path": "apps/web/src/lib/session-role.test.ts",
+          "sha256": "389ae9c473b96f6e58416a4e021cbdc394316361f84670a0351ededeadb7681c"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.test.tsx",
+          "sha256": "37263fbfac7ec19a78fd066b0541de4ea9a21908e65875c2ca95ad4f1ed3e01d"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "8e2cb24dbab8576970cd9d4622e5f930ab9a4ca71ff222ddacb0b9da051a7abc"
+        },
+        {
+          "path": "apps/web/src/providers/QueryProvider.test.tsx",
+          "sha256": "776ca724c6b9e3bfebc9741112a5a188670a492db2846e617a855a58050f3288"
+        },
+        {
+          "path": "apps/web/src/providers/QueryProvider.tsx",
+          "sha256": "f561e26be49338054d2eade859ad127e6be65b1b02ba133b12b3af593c3de1d1"
+        },
+        {
+          "path": "apps/web/src/providers/UiDirectionProvider.test.tsx",
+          "sha256": "0e2f23a175180096177c236cff4d2f1316040f460770cc5337b7a1a2b6ab9ae0"
+        },
+        {
+          "path": "apps/web/src/providers/UiDirectionProvider.tsx",
+          "sha256": "48edc81247cc48097381e1404b2ecc9d855a58187761541778558e4f069f3a3a"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/account-native-forms.test.tsx",
+          "sha256": "3b7734ac4bad57686584d761f358474b19e8dc13c3c9c8c2a8801188effa81a7"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/username.tsx",
+          "sha256": "9ec6bd4c18c86d6101ce57bf33d9cb971515e5882da17ccfc1ea167ee64c09cd"
+        },
+        {
+          "path": "apps/web/src/test/query-provider.tsx",
+          "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+        },
+        {
+          "path": "apps/web/src/test/render-auth-form.tsx",
+          "sha256": "cc3df7f2180d91be375d5bc615876d82a67c588041485d52d8a42a6ed4bb8f09"
+        },
+        {
+          "path": "apps/web/src/test/render-workspace.tsx",
+          "sha256": "70a97ccc8b1102b62ca6a8335c5afb6724c0c3cd2dda94cefc7fd72c88ff957d"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "33835dca5f8ae0b68e08392346c8eaa0def77eb2161d8ab7c09cabf15da79beb"
+        }
+      ],
+      "checks": [
+        "The existing public auth form renderer and new authenticated workspace renderer use the pinned React Testing Library dependency and real QueryProvider. The workspace renderer uses the production account user, UI direction and brand theme providers. It preserves the component tree when the test account changes.",
+        "The actual authenticated username settings route mounts against explicit account, branding and command API contract fixtures. Tests verify localized headings and actions, Persian RTL, English LTR, the validated published dark theme, credentialed abortable account reads and no unexpected writes. Existing stale-account, unmount, command and OTP assertions remain.",
+        "The first focused run passed four related files and exposed five fixture or renderer migration failures in the account file. Correcting the branding payload, selecting the exact account endpoint for pending reads, and using the library unmount path passed all 17 account cases. Together with the 29 passing unchanged sibling cases, 46 focused cases passed across five files. Web typecheck, focused lint, formatting and diff checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/workspace-testing-library",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "ef4ef6802ae67d5da5f66a6316278ef1050425f43f371da0625e705eaf4881c9"
     }
   },
   "historical_improvements": [
