@@ -32,6 +32,32 @@ it('does not queue health work behind an exhausted application pool', async () =
   }
 }, 10000);
 
+it('bounds queued application work during saturation and recovers the same pool', async () => {
+  const held = await pool.connect();
+  const previousTimeout = pool.options.connectionTimeoutMillis;
+  pool.options.connectionTimeoutMillis = 250;
+  try {
+    const queued = Promise.allSettled([pool.query('SELECT 11'), pool.query('SELECT 12')]);
+    expect(pool.waitingCount).toBe(2);
+    expect(await dbHealth()).toMatchObject({
+      ok: false,
+      poolStats: { totalCount: 1, idleCount: 0, waitingCount: 2 },
+    });
+    expect(await queued).toEqual(
+      Array.from({ length: 2 }, () => ({
+        status: 'rejected',
+        reason: expect.objectContaining({ message: 'timeout exceeded when trying to connect' }),
+      }))
+    );
+    expect(pool.waitingCount).toBe(0);
+  } finally {
+    pool.options.connectionTimeoutMillis = previousTimeout;
+    held.release();
+  }
+  expect((await dbHealth()).ok).toBe(true);
+  expect((await pool.query('SELECT 42 AS value')).rows).toEqual([{ value: 42 }]);
+});
+
 it('cancels a stalled probe and shares its deadline across concurrent callers', async () => {
   const client = await pool.connect();
   const original = client.query.bind(client);

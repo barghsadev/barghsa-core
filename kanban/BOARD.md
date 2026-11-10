@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T07:44:21+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T07:46:55+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1143 | Accepted with unchanged source bindings. |
-| verify | 165 | Existing work may be complete; inspect evidence before building. |
+| done | 1144 | Accepted with unchanged source bindings. |
+| verify | 164 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1320,7 +1320,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.11.03.06` | verify | Inventory needed | Schedule weekly performance regression run in staging |
 | `06-security-testing-observability.md#T-06.11.04.01` | verify | Inventory needed | Write failure-injection tests: provider timeout → circuit breaker → queue; Redis unavailable → fallback to PG |
 | `06-security-testing-observability.md#T-06.11.04.02` | done | Recorded batch work | Write worker reliability tests: crash during job → reprocess or dead-letter; duplicate delivery → idempotency |
-| `06-security-testing-observability.md#T-06.11.04.03` | verify | Inventory needed | Write DB connection exhaustion test: pool full → queue/backpressure → graceful degradation |
+| `06-security-testing-observability.md#T-06.11.04.03` | done | Recorded batch work | Write DB connection exhaustion test: pool full → queue/backpressure → graceful degradation |
 | `06-security-testing-observability.md#T-06.11.04.04` | verify | Inventory needed | Schedule quarterly PostgreSQL restore test: measure RPO/RTO, document in runbook |
 | `06-security-testing-observability.md#T-06.11.04.05` | verify | Inventory needed | Schedule quarterly object storage recovery test: version retrieval, policy enforcement, orphan detection |
 | `06-security-testing-observability.md#T-06.11.04.06` | done | Recorded batch work | Write reconciliation tests: deliberately inconsistent fixtures → mismatch alert → finance exception |

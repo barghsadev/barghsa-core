@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T07:44:21+00:00",
-  "source_commit": "565a024e261378c745a219a489f2e2837ae76539",
+  "updated": "2026-11-10T07:46:55+00:00",
+  "source_commit": "efa683a589f3d2d7f552b1399b40b6715d4d3ac9",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -497346,19 +497346,49 @@
         "story": "06-security-testing-observability.md#spec-9df3f15eb1bf"
       },
       "requirement": "| T-06.11.04.03 | Write DB connection exhaustion test: pool full → queue/backpressure → graceful degradation | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-database-pool-exhaustion-tests"
+        ],
+        "current_acceptance": {
+          "kind": "verified-postgresql-pool-backpressure",
+          "reviewed_sha": "efa683a589f3d2d7f552b1399b40b6715d4d3ac9",
+          "checks": [
+            "The new real PostgreSQL case holds the only application connection, verifies two waiting requests, confirms the readiness check does not enter the queue, observes bounded acquisition errors, and proves the same pool serves work after release. The temporary acquisition deadline belongs to the test fixture.",
+            "All five targeted PostgreSQL pool and health cases passed, including no readiness query under saturation, bounded late checkout, shared probe cancellation and recovery. The disposable fixture was removed. DB typecheck, scoped ESLint, Prettier and diff checks passed.",
+            "Three source-matched compiled API telemetry/health cases on GitHub run 42772013847 separately prove mounted 200/503 readiness behavior, continued liveness and schema recovery. No production-pool sizing, live hosted test result or stage release acceptance is claimed by this batch."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/health/health.controller.ts",
+              "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+            },
+            {
+              "path": "apps/api/src/health/health.service.ts",
+              "sha256": "cafbb49eda3715d91702c4529d756f154d0f8c485278ddfdbfc8409ce281ea36"
+            },
+            {
+              "path": "apps/api/src/metrics/telemetry-http.integration.test.ts",
+              "sha256": "aea0869320ba7477afaf71705b1acfedf2e9a1f98741aa4f4dc3cdf5df71cb0a"
+            },
+            {
+              "path": "packages/db/src/db-health.integration.test.ts",
+              "sha256": "a6ea2a6d8fd4b5f6034fce99f5736be2cf8795b776d8d03028a4ef680ee2f834"
+            },
+            {
+              "path": "packages/db/src/index.ts",
+              "sha256": "b3f5d1610e70400a1bc2b267e871f177e992ce70ecdab2bab5c526440ce0178f"
+            }
+          ]
+        }
       }
     },
     {
@@ -872577,6 +872607,46 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/preflight-42772013847-fixture-corrections",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "6feb638a81e8a5d1c492575dda0cc57afa86fd991cc84207d8d447c71a46ad41"
+    },
+    "release-0.6-database-pool-exhaustion-tests": {
+      "batch": "release-0.6-database-pool-exhaustion-tests",
+      "base_commit": "efa683a589f3d2d7f552b1399b40b6715d4d3ac9",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.11.04.03"
+      ],
+      "changed_paths": [
+        "packages/db/src/db-health.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/health/health.controller.ts",
+          "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+        },
+        {
+          "path": "apps/api/src/health/health.service.ts",
+          "sha256": "cafbb49eda3715d91702c4529d756f154d0f8c485278ddfdbfc8409ce281ea36"
+        },
+        {
+          "path": "apps/api/src/metrics/telemetry-http.integration.test.ts",
+          "sha256": "aea0869320ba7477afaf71705b1acfedf2e9a1f98741aa4f4dc3cdf5df71cb0a"
+        },
+        {
+          "path": "packages/db/src/db-health.integration.test.ts",
+          "sha256": "a6ea2a6d8fd4b5f6034fce99f5736be2cf8795b776d8d03028a4ef680ee2f834"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "b3f5d1610e70400a1bc2b267e871f177e992ce70ecdab2bab5c526440ce0178f"
+        }
+      ],
+      "checks": [
+        "The new real PostgreSQL case holds the only application connection, verifies two waiting requests, confirms the readiness check does not enter the queue, observes bounded acquisition errors, and proves the same pool serves work after release. The temporary acquisition deadline belongs to the test fixture.",
+        "All five targeted PostgreSQL pool and health cases passed, including no readiness query under saturation, bounded late checkout, shared probe cancellation and recovery. The disposable fixture was removed. DB typecheck, scoped ESLint, Prettier and diff checks passed.",
+        "Three source-matched compiled API telemetry/health cases on GitHub run 42772013847 separately prove mounted 200/503 readiness behavior, continued liveness and schema recovery. No production-pool sizing, live hosted test result or stage release acceptance is claimed by this batch."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-pool-pressure",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "326e6da94cb3cd9b53fa53d0136344687f02eefcc77c3818c1650e687c0f5e4f"
     }
   },
   "historical_improvements": [
