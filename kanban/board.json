@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T11:35:59+00:00",
-  "source_commit": "53926fc8486d97c088c60ea0d2067b31c0bc2e2b",
+  "updated": "2026-11-10T11:41:09+00:00",
+  "source_commit": "799a548a2e9c7dc5b7dd994d279826e6f81402ba",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -498485,19 +498485,75 @@
         "story": "06-security-testing-observability.md#spec-a2575d616ae6"
       },
       "requirement": "| T-06.10.03.04 | Write E2E: login → OTP (new device) → MFA → session revocation | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/web/e2e/auth-entry-session.spec.ts"
+        ],
+        "batches": [
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-new-device-mfa-and-session-revocation-browser-journey",
+          "reviewed_sha": "799a548a2e9c7dc5b7dd994d279826e6f81402ba",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/session/session-reference.ts",
+              "sha256": "7b14576d1db2b702e48977448863ddad68c190eed5f6a5ba045192086218324d"
+            },
+            {
+              "path": "apps/web/e2e/auth-entry-session.spec.ts",
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
+            },
+            {
+              "path": "apps/web/e2e/confirmation-fixture.ts",
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+            },
+            {
+              "path": "apps/web/e2e/cookie-response.ts",
+              "sha256": "f9499db8b307db49482077836cf2678117227e0d5ab1e59432d23d8f9158cb85"
+            },
+            {
+              "path": "apps/web/e2e/public-auth-fixture.ts",
+              "sha256": "80d98db1c5750fb377130dc173b2138ef90dba347baca8783fbdc998711b18f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "apps/web/src/hooks/useSecurityRevocationForm.ts",
+              "sha256": "11e3c05a47f0be4814d23c20f6953c89ff5c57350a2d6cf4e85b9d7dda794fcf"
+            },
+            {
+              "path": "apps/web/src/lib/security-settings-form.ts",
+              "sha256": "4e7fd523e3962e3df89c90c12554d2e9dd6600d2f4efcf7afb5737643a6751f6"
+            },
+            {
+              "path": "apps/web/src/routes/_app/settings/security.tsx",
+              "sha256": "3eca7a4c63e3515ed34bf156a9ae500e2ab449b0fbf5bd7ea375e3b26054eddb"
+            },
+            {
+              "path": "apps/web/src/routes/login.tsx",
+              "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "The implemented new-device MFA is password followed by the login OTP as defined in T-02.01.03. A clean browser submits exact credentials with public CSRF. The invalid OTP never issues a session, and a valid bound OTP completes MFA and opens the customer workspace. Persian code digits are normalized and device trust is left unselected.",
+            "The session list identifies the current session and an existing separate browser. The customer must authorize destructive confirmation. The scoped DELETE demands step-up. The password step-up rotates the session and CSRF fixture, and the exact retry revokes only the older non-authenticating session reference after a fresh session list.",
+            "The older browser was authenticated before revocation and returns to sign-in on a fresh navigation afterward. The current browser still loads its current session after reload. The six exact local production-build cases passed in Persian and English across Firefox, Mobile Chrome and Mobile Safari. Four existing customer and staff session-expiry cases also passed. Focused format, lint and diff checks passed. The browser uses controlled API responses and performs no live OTP or account mutation."
+          ]
+        }
       }
     },
     {
@@ -546837,7 +546893,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546853,7 +546910,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -548196,7 +548253,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548212,7 +548270,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -647000,7 +647058,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -647204,7 +647263,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -647862,7 +647921,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -648066,7 +648126,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -648724,7 +648784,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -648928,7 +648989,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -649586,7 +649647,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -649790,7 +649852,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -650448,7 +650510,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -650652,7 +650715,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -663652,7 +663715,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -663856,7 +663920,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -664514,7 +664578,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -664718,7 +664783,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -665376,7 +665441,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -665580,7 +665646,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -666238,7 +666304,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -666442,7 +666509,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -667100,7 +667167,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -667304,7 +667372,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -667962,7 +668030,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -668166,7 +668235,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -668824,7 +668893,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -669028,7 +669098,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -669686,7 +669756,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -669890,7 +669961,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -670548,7 +670619,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -670752,7 +670824,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -671410,7 +671482,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -671614,7 +671687,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -672272,7 +672345,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -672476,7 +672550,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -673134,7 +673208,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -673338,7 +673413,7 @@
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
-              "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+              "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -771590,7 +771665,8 @@
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
           "release-0.6-solar-request-touch-target",
           "release-0.6-effective-brand-rollback-browser-journey",
-          "release-0.6-registration-and-onboarding-browser-journeys"
+          "release-0.6-registration-and-onboarding-browser-journeys",
+          "release-0.6-new-device-mfa-and-session-revocation-browser-journey"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -879849,6 +879925,71 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/registered-onboarding",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "9f87c37caa70439e85feee1742236fb89f7244fedad5004d4850c000d602391a"
+    },
+    "release-0.6-new-device-mfa-and-session-revocation-browser-journey": {
+      "batch": "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
+      "base_commit": "799a548a2e9c7dc5b7dd994d279826e6f81402ba",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.03.04",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/auth-entry-session.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/session/session-reference.ts",
+          "sha256": "7b14576d1db2b702e48977448863ddad68c190eed5f6a5ba045192086218324d"
+        },
+        {
+          "path": "apps/web/e2e/auth-entry-session.spec.ts",
+          "sha256": "3b9a75ad16adc1dbc4b0c9d9753881d551792ad3be747817a5d396ce4d8e86fe"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+        },
+        {
+          "path": "apps/web/e2e/cookie-response.ts",
+          "sha256": "f9499db8b307db49482077836cf2678117227e0d5ab1e59432d23d8f9158cb85"
+        },
+        {
+          "path": "apps/web/e2e/public-auth-fixture.ts",
+          "sha256": "80d98db1c5750fb377130dc173b2138ef90dba347baca8783fbdc998711b18f1"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/hooks/useSecurityRevocationForm.ts",
+          "sha256": "11e3c05a47f0be4814d23c20f6953c89ff5c57350a2d6cf4e85b9d7dda794fcf"
+        },
+        {
+          "path": "apps/web/src/lib/security-settings-form.ts",
+          "sha256": "4e7fd523e3962e3df89c90c12554d2e9dd6600d2f4efcf7afb5737643a6751f6"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/security.tsx",
+          "sha256": "3eca7a4c63e3515ed34bf156a9ae500e2ab449b0fbf5bd7ea375e3b26054eddb"
+        },
+        {
+          "path": "apps/web/src/routes/login.tsx",
+          "sha256": "204f1ef3fb0d6192964e0874b0cb1d8374218c6f92de941d6858019619a5e98c"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "The implemented new-device MFA is password followed by the login OTP as defined in T-02.01.03. A clean browser submits exact credentials with public CSRF. The invalid OTP never issues a session, and a valid bound OTP completes MFA and opens the customer workspace. Persian code digits are normalized and device trust is left unselected.",
+        "The session list identifies the current session and an existing separate browser. The customer must authorize destructive confirmation. The scoped DELETE demands step-up. The password step-up rotates the session and CSRF fixture, and the exact retry revokes only the older non-authenticating session reference after a fresh session list.",
+        "The older browser was authenticated before revocation and returns to sign-in on a fresh navigation afterward. The current browser still loads its current session after reload. The six exact local production-build cases passed in Persian and English across Firefox, Mobile Chrome and Mobile Safari. Four existing customer and staff session-expiry cases also passed. Focused format, lint and diff checks passed. The browser uses controlled API responses and performs no live OTP or account mutation."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/new-device-mfa",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "7820aae9a269014746ae5d2760a89b265f6a23063ff7f225803d0c82167862ef"
     }
   },
   "historical_improvements": [
