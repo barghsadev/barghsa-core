@@ -2111,7 +2111,8 @@
               "enum": [
                 "branding",
                 "otp",
-                "service-response-targets"
+                "service-response-targets",
+                "authorization"
               ],
               "type": "string"
             }
@@ -2183,7 +2184,11 @@
                                     "numberStyle",
                                     "ttlSeconds",
                                     "ticket",
-                                    "verification_case"
+                                    "verification_case",
+                                    "resource",
+                                    "action",
+                                    "reason",
+                                    "correlationId"
                                   ],
                                   "type": "string"
                                 },
@@ -2236,7 +2241,8 @@
                             "enum": [
                               "updated",
                               "draft_created",
-                              "activated"
+                              "activated",
+                              "authorization_denied"
                             ],
                             "type": "string"
                           },
@@ -2274,7 +2280,8 @@
                       "enum": [
                         "branding",
                         "otp",
-                        "service-response-targets"
+                        "service-response-targets",
+                        "authorization"
                       ],
                       "type": "string"
                     }
@@ -2291,7 +2298,7 @@
             "description": ""
           }
         },
-        "summary": "Read safe field changes for one authorized settings scope",
+        "summary": "Read safe settings or authorization audit records for one scope",
         "tags": [
           "Admin · Settings"
         ]

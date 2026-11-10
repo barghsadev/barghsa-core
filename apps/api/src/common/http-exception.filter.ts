@@ -15,8 +15,10 @@ import type { ErrorCodeDef } from '@barghsa/shared/errors';
 import { t } from '@barghsa/i18n';
 import { t as crmMessage } from '@barghsa/i18n/crm';
 import { readOnlineTopUpLimitFromErrorBody } from '@barghsa/shared/finance';
+import type { AuthorizationDenial } from '@barghsa/db';
 import { correlationIdStorage } from './correlation-id.middleware.js';
 import { InputFieldException } from './input-field.exception.js';
+import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 /**
  * Look up the ErrorCodeDef for a given error code string, or fall back to the
@@ -50,10 +52,12 @@ function resolveErrorCodeDef(errorCode: string, httpStatus: number): ErrorCodeDe
 export class HttpExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(HttpExceptionFilter.name);
 
-  catch(exception: unknown, host: ArgumentsHost): void {
+  constructor(private readonly recordDenial?: (event: AuthorizationDenial) => Promise<void>) {}
+
+  async catch(exception: unknown, host: ArgumentsHost): Promise<void> {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    const request = ctx.getRequest<Partial<AuthenticatedRequest> & Request>();
 
     // Determine HTTP status and error code
     const { httpStatus, errorCode } = this.resolveError(exception);
@@ -243,6 +247,30 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     }
 
+    const actorId = request.session?.userId;
+    const resource = request.route?.path;
+    if (
+      this.recordDenial &&
+      actorId &&
+      typeof resource === 'string' &&
+      (httpStatus === HttpStatus.FORBIDDEN ||
+        (httpStatus === HttpStatus.NOT_FOUND && errorCode === ErrorCodes.NOT_FOUND_RESOURCE.code))
+    ) {
+      // An opaque resource miss deliberately does not distinguish absence from denial.
+      const event = {
+        actorId,
+        resource,
+        action: request.method,
+        reason: errorCode,
+        correlationId,
+        createdAt: new Date(),
+      };
+      try {
+        await this.recordDenial(event);
+      } catch {
+        this.logger.error({ event: 'authorization.denial.persistence_failed', ...event });
+      }
+    }
     response.status(httpStatus).json(body);
   }
 

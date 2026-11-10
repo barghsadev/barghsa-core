@@ -20,7 +20,9 @@ const permissions = {
   branding: 'admin:branding:read',
   otp: 'admin:config:read',
   'service-response-targets': 'admin:service-targets:edit',
+  authorization: '*',
 } as const;
+const scopes = Object.keys(CONFIG_AUDIT_FIELDS);
 const snapshotSchema = {
   type: 'object' as const,
   required: ['recorded', 'value'],
@@ -92,15 +94,15 @@ export function auditChanges(scope: ConfigAuditScope, previous: unknown, current
 @Controller('api/admin/config/audit')
 export class ConfigAuditController {
   @Get()
-  @ApiOperation({ summary: 'Read safe field changes for one authorized settings scope' })
-  @ApiQuery({ name: 'scope', enum: ['branding', 'otp', 'service-response-targets'] })
+  @ApiOperation({ summary: 'Read safe settings or authorization audit records for one scope' })
+  @ApiQuery({ name: 'scope', enum: scopes })
   @ApiQuery({ name: 'cursor', required: false, type: String })
   @ApiOkResponse({
     schema: {
       type: 'object',
       required: ['scope', 'items', 'nextCursor'],
       properties: {
-        scope: { type: 'string', enum: ['branding', 'otp', 'service-response-targets'] },
+        scope: { type: 'string', enum: scopes },
         nextCursor: { type: 'string', nullable: true, maxLength: 512 },
         items: {
           type: 'array',
@@ -120,7 +122,10 @@ export class ConfigAuditController {
               id: { type: 'string', format: 'uuid' },
               actorId: { type: 'string', nullable: true, maxLength: 128 },
               createdAt: { type: 'string', format: 'date-time' },
-              event: { type: 'string', enum: ['updated', 'draft_created', 'activated'] },
+              event: {
+                type: 'string',
+                enum: ['updated', 'draft_created', 'activated', 'authorization_denied'],
+              },
               version: { type: 'integer', nullable: true, minimum: 1, maximum: 2147483647 },
               detailsAvailable: { type: 'boolean' },
               changes: {
@@ -168,7 +173,15 @@ export class ConfigAuditController {
         metadata: unknown;
         config: unknown;
       }>(
-        `SELECT a.id,a.user_id,a.event,safe.data AS metadata,b.config,
+        scope === 'authorization'
+          ? `SELECT id,actor_id AS user_id,'authorization_denied' AS event,NULL AS config,
+          jsonb_build_object('current',jsonb_build_object('resource',resource,'action',action,
+            'reason',reason,'correlationId',correlation_id)) AS metadata,
+          to_char(created_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS at
+         FROM authorization_denials
+         WHERE $1::timestamptz IS NULL OR (created_at,id)<($1::timestamptz,$2::uuid)
+         ORDER BY created_at DESC,id DESC LIMIT 51`
+          : `SELECT a.id,a.user_id,a.event,safe.data AS metadata,b.config,
           to_char(a.created_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS at
          FROM audit_log a CROSS JOIN LATERAL
            (SELECT CASE WHEN a.metadata IS JSON OBJECT THEN a.metadata::jsonb ELSE '{}'::jsonb END AS data) safe
@@ -178,7 +191,9 @@ export class ConfigAuditController {
            OR ($1='service-response-targets' AND a.event='config_change' AND safe.data->>'key'='admin.service_response_targets'))
            AND ($2::timestamptz IS NULL OR (a.created_at,a.id)<($2::timestamptz,$3::text))
          ORDER BY a.created_at DESC,a.id DESC LIMIT 51`,
-        [scope, cursor?.at ?? null, cursor?.id ?? null]
+        scope === 'authorization'
+          ? [cursor?.at ?? null, cursor?.id ?? null]
+          : [scope, cursor?.at ?? null, cursor?.id ?? null]
       );
       const rows = result.rows.slice(0, 50);
       const items: ConfigAuditEntry[] = rows.map((row) => {
@@ -192,11 +207,13 @@ export class ConfigAuditController {
           actorId: row.user_id && row.user_id.length <= 128 ? row.user_id : null,
           createdAt: row.at,
           event:
-            row.event === 'branding.activated'
-              ? 'activated'
-              : row.event === 'branding.draft_created'
-                ? 'draft_created'
-                : 'updated',
+            scope === 'authorization'
+              ? 'authorization_denied'
+              : row.event === 'branding.activated'
+                ? 'activated'
+                : row.event === 'branding.draft_created'
+                  ? 'draft_created'
+                  : 'updated',
           version:
             typeof version === 'number' &&
             Number.isSafeInteger(version) &&

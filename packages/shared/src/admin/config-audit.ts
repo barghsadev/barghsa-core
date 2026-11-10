@@ -21,6 +21,7 @@ export const CONFIG_AUDIT_FIELDS = {
   ],
   otp: ['ttlSeconds'],
   'service-response-targets': ['ticket', 'verification_case'],
+  authorization: ['resource', 'action', 'reason', 'correlationId'],
 } as const;
 export type ConfigAuditScope = keyof typeof CONFIG_AUDIT_FIELDS;
 export type ConfigAuditValue = string | number | boolean | null;
@@ -32,7 +33,7 @@ export interface ConfigAuditEntry {
   id: string;
   actorId: string | null;
   createdAt: string;
-  event: 'updated' | 'draft_created' | 'activated';
+  event: 'updated' | 'draft_created' | 'activated' | 'authorization_denied';
   version: number | null;
   detailsAvailable: boolean;
   changes: { field: string; previous: ConfigAuditSnapshot; current: ConfigAuditSnapshot }[];
@@ -50,7 +51,7 @@ export function isConfigAuditTimestamp(value: unknown): value is string {
   return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 19) === value.slice(0, 19);
 }
 export function isConfigAuditScope(value: unknown): value is ConfigAuditScope {
-  return value === 'branding' || value === 'otp' || value === 'service-response-targets';
+  return typeof value === 'string' && Object.hasOwn(CONFIG_AUDIT_FIELDS, value);
 }
 export function isConfigAuditValue(value: unknown): value is ConfigAuditValue {
   return (
@@ -82,6 +83,7 @@ export function isConfigAuditPage(value: unknown): value is ConfigAuditPage {
   )
     return false;
   const fields: readonly string[] = CONFIG_AUDIT_FIELDS[value.scope];
+  const isAuthorization = value.scope === 'authorization';
   const ids = new Set<string>();
   return value.items.every((entry: unknown) => {
     if (
@@ -94,9 +96,11 @@ export function isConfigAuditPage(value: unknown): value is ConfigAuditPage {
           !entry.actorId.length ||
           entry.actorId.length > 128)) ||
       !isConfigAuditTimestamp(entry.createdAt) ||
-      (entry.event !== 'updated' &&
-        entry.event !== 'draft_created' &&
-        entry.event !== 'activated') ||
+      (isAuthorization
+        ? entry.event !== 'authorization_denied'
+        : entry.event !== 'updated' &&
+          entry.event !== 'draft_created' &&
+          entry.event !== 'activated') ||
       (entry.version !== null &&
         (typeof entry.version !== 'number' ||
           !Number.isSafeInteger(entry.version) ||

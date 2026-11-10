@@ -142,6 +142,64 @@ it('enforces scope-specific grants, revoked sessions and strict cursor input', a
   await http.pool.query("UPDATE sessions SET revoked_at=NOW() WHERE user_id='reader'");
   expect((await call('scope=otp', 'reader')).status).toBe(401);
 });
+it('records a denial and exposes it only to the authorized audit dashboard', async () => {
+  const before = (await http.pool.query('SELECT * FROM audit_log ORDER BY id')).rows;
+  const denied = await call('scope=authorization&private=do-not-record', 'reader');
+  expect(denied.status).toBe(400);
+  const response = await call('scope=authorization', 'reader');
+  expect(response.status).toBe(403);
+  const { error } = (await response.json()) as { error: { correlationId: string } };
+  expect(error.correlationId).toBe(response.headers.get('x-correlation-id'));
+  expect((await call('scope=authorization', 'customer')).status).toBe(403);
+
+  const dashboard = await call('scope=authorization');
+  expect(dashboard.headers.get('cache-control')).toBe(
+    'private, no-cache, no-store, must-revalidate'
+  );
+  const page = await pageResponse(dashboard);
+  const item = page.items.find((record) => record.actorId === 'reader')!;
+  expect(item).toMatchObject({
+    event: 'authorization_denied',
+    actorId: 'reader',
+    createdAt: expect.any(String),
+    version: null,
+    detailsAvailable: true,
+  });
+  expect(Object.fromEntries(item.changes.map((row) => [row.field, row.current.value]))).toEqual({
+    resource: '/api/admin/config/audit',
+    action: 'GET',
+    reason: 'AUTHZ:FORBIDDEN',
+    correlationId: error.correlationId,
+  });
+  expect(JSON.stringify(page)).not.toMatch(/scope=|do-not-record|barghsa_session/);
+  for (const actor of ['admin', 'reader']) {
+    const bootstrap = await fetch(`${http.base}/api/auth/user`, { headers: headers[actor]! });
+    expect(bootstrap.status).toBe(200);
+    const { navigation } = (await bootstrap.json()) as { navigation: { paths: string[] } };
+    expect(navigation.paths.includes('/admin/authorization-audit')).toBe(actor === 'admin');
+  }
+  for (const statement of [
+    'UPDATE authorization_denials SET reason=reason WHERE id=$1',
+    'DELETE FROM authorization_denials WHERE id=$1',
+  ]) {
+    await expect(http.pool.query(statement, [item.id])).rejects.toMatchObject({ code: '55000' });
+  }
+  await expect(http.pool.query('TRUNCATE authorization_denials')).rejects.toMatchObject({
+    code: '55000',
+  });
+  expect(await pageResponse(await call('scope=authorization'))).toEqual(page);
+  expect((await http.pool.query('SELECT * FROM audit_log ORDER BY id')).rows).toEqual(before);
+});
+
+it('keeps the public denial and writes a sanitized diagnostic if audit persistence fails', async () => {
+  await http.pool.query('ALTER TABLE authorization_denials RENAME TO unavailable_denials');
+  const response = await call('scope=authorization', 'reader');
+  expect(response.status).toBe(403);
+  const payload = await response.text();
+  expect(payload).toContain('AUTHZ:FORBIDDEN');
+  expect(payload).not.toMatch(/unavailable_denials|persistence_failed|reader/);
+  await expect.poll(() => http.logs()).toContain('authorization.denial.persistence_failed');
+});
 it('rechecks session expiry after the audit query waits for a database lock', async () => {
   const lock = await http.pool.connect();
   let response: Promise<Response> | undefined;

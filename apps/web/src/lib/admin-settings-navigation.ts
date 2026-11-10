@@ -30,7 +30,7 @@ export const ADMIN_SETTINGS_SECTIONS = [
       '/admin/agent-slots',
     ],
   },
-  { key: 'security', paths: ['/admin/verification'] },
+  { key: 'security', paths: ['/admin/verification', '/admin/authorization-audit'] },
   { key: 'system', paths: ['/admin/storage', '/admin/service-targets', '/admin/maintenance'] },
 ] as const;
 

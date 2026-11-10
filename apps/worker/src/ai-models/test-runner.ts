@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
+import { recordAuthorizationDenial } from '@barghsa/db';
 import {
   AiModelTester,
   AiModelSecrets,
@@ -77,6 +78,17 @@ export async function runAiModelTest(
     actor.activation_token ||
     (!actor.is_admin && !permissions.includes('*') && !permissions.includes('admin:ai:models'))
   ) {
+    const event = {
+      actorId: job.actor_user_id,
+      resource: 'ai.model',
+      action: 'test',
+      reason: 'AUTHZ:FORBIDDEN',
+      correlationId: job.correlation_id,
+      createdAt: new Date(),
+    };
+    await recordAuthorizationDenial(pool, event).catch(() => {
+      console.error(JSON.stringify({ event: 'authorization.denial.persistence_failed', ...event }));
+    });
     return finish(null, 'AUTHZ:FORBIDDEN');
   }
   const models = await pool.query<{

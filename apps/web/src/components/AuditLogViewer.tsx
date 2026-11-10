@@ -42,7 +42,13 @@ function AuditTimeline({
     numbers = useNumberFormatting(locale),
     time = useAccountTime(),
     id = useId();
-  const word = (key: string) => t(`admin.audit.${key}`, locale);
+  const isAuthorization = kind === 'authorization';
+  const word = (key: string) => {
+    const scoped = `admin.audit.authorization.${key}`;
+    return isAuthorization && authorizationCopy.has(key)
+      ? t(scoped, locale)
+      : t(`admin.audit.${key}`, locale);
+  };
   const [open, setOpen] = useState(false),
     [cursor, setCursor] = useState<string | null>(null);
   const [items, setItems] = useState<ConfigAuditEntry[]>([]),
@@ -170,16 +176,20 @@ function AuditTimeline({
                         {entry.changes.map((change) => (
                           <div key={change.field} className="flex min-w-0 flex-col gap-2">
                             <h3 className="text-sm font-medium">{word(`field.${change.field}`)}</h3>
-                            <dl className="grid min-w-0 gap-3 sm:grid-cols-2">
-                              {(['previous', 'current'] as const).map((key) => (
-                                <div key={key} className="min-w-0">
-                                  <dt className="text-sm text-muted-foreground">{word(key)}</dt>
-                                  <dd className="whitespace-pre-wrap break-words" dir="auto">
-                                    {display(change[key])}
-                                  </dd>
-                                </div>
-                              ))}
-                            </dl>
+                            {isAuthorization ? (
+                              <bdi className="break-all">{display(change.current)}</bdi>
+                            ) : (
+                              <dl className="grid min-w-0 gap-3 sm:grid-cols-2">
+                                {(['previous', 'current'] as const).map((key) => (
+                                  <div key={key} className="min-w-0">
+                                    <dt className="text-sm text-muted-foreground">{word(key)}</dt>
+                                    <dd className="whitespace-pre-wrap break-words" dir="auto">
+                                      {display(change[key])}
+                                    </dd>
+                                  </div>
+                                ))}
+                              </dl>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -216,3 +226,22 @@ function AuditTimeline({
     </section>
   );
 }
+
+const authorizationCopy = new Set([
+  'title',
+  'description',
+  'show',
+  'hide',
+  'loading',
+  'empty',
+  'denied',
+  'error',
+  'retry',
+  'refresh',
+  'more',
+  'authorization_denied',
+  'field.resource',
+  'field.action',
+  'field.reason',
+  'field.correlationId',
+]);

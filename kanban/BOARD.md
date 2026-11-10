@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T00:00:12+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T00:31:09+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1079 | Accepted with unchanged source bindings. |
-| verify | 246 | Existing work may be complete; inspect evidence before building. |
+| done | 1081 | Accepted with unchanged source bindings. |
+| verify | 244 | Existing work may be complete; inspect evidence before building. |
 | partial | 36 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1150,8 +1150,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.03.01.06` | done | Recorded batch work | Implement staff role permissions: deny-by-default, additive by role (CS, CRM, Finance, Legal, Ops, Admin) |
 | `06-security-testing-observability.md#T-06.03.01.07` | verify | Inventory needed | Ensure all staff permissions are explicit capabilities; high-risk commands require dedicated capability + step-up auth |
 | `06-security-testing-observability.md#T-06.03.01.08` | done | Recorded batch work | Write integration tests: each role's permitted/denied actions, profile isolation, cross-tenant BOLA attempts |
-| `06-security-testing-observability.md#T-06.03.01.09` | verify | Inventory needed | Ensure AuthorizationService logs every authorization denial as a structured audit event with actor, resource, action, reason, timestamp |
-| `06-security-testing-observability.md#T-06.03.01.10` | verify | Inventory needed | Write integration test: authorization denials are logged and appear on audit event dashboard |
+| `06-security-testing-observability.md#T-06.03.01.09` | done | Recorded batch work | Ensure AuthorizationService logs every authorization denial as a structured audit event with actor, resource, action, reason, timestamp |
+| `06-security-testing-observability.md#T-06.03.01.10` | done | Recorded batch work | Write integration test: authorization denials are logged and appear on audit event dashboard |
 | `06-security-testing-observability.md#T-06.03.02.01` | verify | Inventory needed | Audit all existing resource-loading endpoints for BOLA gaps (load by ID without profile scope check) |
 | `06-security-testing-observability.md#T-06.03.02.02` | verify | Inventory needed | Implement reusable query scope filter: `where({ id, profileId: activeProfileId })` for customer resources |
 | `06-security-testing-observability.md#T-06.03.02.03` | verify | Inventory needed | Ensure staff/staff-admin routes verify explicit permission, not just "is staff" |

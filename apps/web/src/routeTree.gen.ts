@@ -36,6 +36,7 @@ import { Route as AdminAgentSlotsRouteImport } from './routes/admin/agent-slots'
 import { Route as AdminAgentsRouteImport } from './routes/admin/agents'
 import { Route as AdminAiModelsRouteImport } from './routes/admin/ai-models'
 import { Route as AdminApprovalRequestsRouteImport } from './routes/admin/approval-requests'
+import { Route as AdminAuthorizationAuditRouteImport } from './routes/admin/authorization-audit'
 import { Route as AdminBrandingRouteImport } from './routes/admin/branding'
 import { Route as AdminCatalogueRouteImport } from './routes/admin/catalogue'
 import { Route as AdminConsultationsRouteImport } from './routes/admin/consultations'
@@ -250,6 +251,11 @@ const AdminAiModelsRoute = AdminAiModelsRouteImport.update({
 const AdminApprovalRequestsRoute = AdminApprovalRequestsRouteImport.update({
   id: '/approval-requests',
   path: '/approval-requests',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuthorizationAuditRoute = AdminAuthorizationAuditRouteImport.update({
+  id: '/authorization-audit',
+  path: '/authorization-audit',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminBrandingRoute = AdminBrandingRouteImport.update({
@@ -695,6 +701,7 @@ export interface FileRoutesByFullPath {
   '/admin/agents': typeof AdminAgentsRoute
   '/admin/ai-models': typeof AdminAiModelsRoute
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
+  '/admin/authorization-audit': typeof AdminAuthorizationAuditRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/catalogue': typeof AdminCatalogueRoute
   '/admin/consultations': typeof AdminConsultationsRoute
@@ -799,6 +806,7 @@ export interface FileRoutesByTo {
   '/admin/agents': typeof AdminAgentsRoute
   '/admin/ai-models': typeof AdminAiModelsRoute
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
+  '/admin/authorization-audit': typeof AdminAuthorizationAuditRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/catalogue': typeof AdminCatalogueRoute
   '/admin/consultations': typeof AdminConsultationsRoute
@@ -906,6 +914,7 @@ export interface FileRoutesById {
   '/admin/agents': typeof AdminAgentsRoute
   '/admin/ai-models': typeof AdminAiModelsRoute
   '/admin/approval-requests': typeof AdminApprovalRequestsRoute
+  '/admin/authorization-audit': typeof AdminAuthorizationAuditRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/catalogue': typeof AdminCatalogueRoute
   '/admin/consultations': typeof AdminConsultationsRoute
@@ -1017,6 +1026,7 @@ export interface FileRouteTypes {
     | '/admin/agents'
     | '/admin/ai-models'
     | '/admin/approval-requests'
+    | '/admin/authorization-audit'
     | '/admin/branding'
     | '/admin/catalogue'
     | '/admin/consultations'
@@ -1121,6 +1131,7 @@ export interface FileRouteTypes {
     | '/admin/agents'
     | '/admin/ai-models'
     | '/admin/approval-requests'
+    | '/admin/authorization-audit'
     | '/admin/branding'
     | '/admin/catalogue'
     | '/admin/consultations'
@@ -1227,6 +1238,7 @@ export interface FileRouteTypes {
     | '/admin/agents'
     | '/admin/ai-models'
     | '/admin/approval-requests'
+    | '/admin/authorization-audit'
     | '/admin/branding'
     | '/admin/catalogue'
     | '/admin/consultations'
@@ -1515,6 +1527,13 @@ declare module '@tanstack/react-router' {
       path: '/approval-requests'
       fullPath: '/admin/approval-requests'
       preLoaderRoute: typeof AdminApprovalRequestsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/authorization-audit': {
+      id: '/admin/authorization-audit'
+      path: '/authorization-audit'
+      fullPath: '/admin/authorization-audit'
+      preLoaderRoute: typeof AdminAuthorizationAuditRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/branding': {
@@ -2244,6 +2263,7 @@ interface AdminRouteChildren {
   AdminAgentsRoute: typeof AdminAgentsRoute
   AdminAiModelsRoute: typeof AdminAiModelsRoute
   AdminApprovalRequestsRoute: typeof AdminApprovalRequestsRoute
+  AdminAuthorizationAuditRoute: typeof AdminAuthorizationAuditRoute
   AdminBrandingRoute: typeof AdminBrandingRoute
   AdminCatalogueRoute: typeof AdminCatalogueRoute
   AdminConsultationsRoute: typeof AdminConsultationsRoute
@@ -2293,6 +2313,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAgentsRoute: AdminAgentsRoute,
   AdminAiModelsRoute: AdminAiModelsRoute,
   AdminApprovalRequestsRoute: AdminApprovalRequestsRoute,
+  AdminAuthorizationAuditRoute: AdminAuthorizationAuditRoute,
   AdminBrandingRoute: AdminBrandingRoute,
   AdminCatalogueRoute: AdminCatalogueRoute,
   AdminConsultationsRoute: AdminConsultationsRoute,

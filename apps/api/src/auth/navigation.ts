@@ -58,6 +58,7 @@ export const STAFF_NAVIGATION: ReadonlyArray<readonly [string, ...string[]]> = [
   ['/admin/geography', 'admin:geography:edit'],
   ['/admin/tos', 'admin:tos:edit'],
   ['/admin/verification', 'admin:config:read'],
+  ['/admin/authorization-audit', '*'],
   ['/admin/notifications', 'admin:notifications:edit'],
   ['/admin/providers', 'admin:notification-providers:edit'],
   ['/admin/upload-policies', 'admin:uploads:edit'],

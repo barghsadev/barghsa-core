@@ -1429,6 +1429,13 @@
       "when": 1794261742110,
       "tag": "0283_operations_outbox_backlog_priority",
       "breakpoints": true
+    },
+    {
+      "idx": 284,
+      "version": "7",
+      "when": 1794269233246,
+      "tag": "0284_authorization_denials",
+      "breakpoints": true
     }
   ]
 }

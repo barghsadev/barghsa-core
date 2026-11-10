@@ -334,6 +334,18 @@ it('gives a customer the same denial for a foreign order and guessed UUIDs', asy
       const payload = (await result.json()) as { error: Record<string, unknown> };
       expect(payload.error.code).toBe(ErrorCodes.NOT_FOUND_RESOURCE.code);
       expect(payload.error.correlationId).toEqual(expect.any(String));
+      const observed = await http.pool.query(
+        'SELECT actor_id,resource,action,reason FROM authorization_denials WHERE correlation_id=$1',
+        [payload.error.correlationId]
+      );
+      expect(observed.rows).toEqual([
+        {
+          actor_id: 'stranger',
+          resource: `/api/orders/:id${suffix}`,
+          action: method,
+          reason: ErrorCodes.NOT_FOUND_RESOURCE.code,
+        },
+      ]);
       delete payload.error.correlationId;
       errors.push(payload);
     }

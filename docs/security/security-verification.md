@@ -42,6 +42,25 @@ rtk proxy pnpm --filter @barghsa/api exec vitest run \
   src/wallet/online-topup-http.integration.test.ts
 ```
 
+## Authorization audit
+
+In the staff workspace, open **Settings → Security → Authorization audit**
+with a current administrator or wildcard grant. The dashboard reads at most
+50 records at a time from the append-only `authorization_denials` table. It
+shows the actor, operation, resource template, reason, time and correlation ID
+when present. Authenticated HTTP denials and opaque resource misses use the
+same public response as before. The queued AI model test records a denial
+when the submitting actor loses authority before execution.
+
+The audit uses the matched route template. It excludes resource identifiers
+from the URL, query values, bodies, cookies and provider credentials. Opaque
+misses are recorded with the same reason whether the resource is missing or
+outside the actor's authority. The separate table preserves business audit
+and rollback semantics. A failed write leaves the original denial in effect
+and emits `authorization.denial.persistence_failed` with the same safe fields
+for operations to investigate. Check that event alongside the API and worker
+logs after a database incident.
+
 ## Live candidate review
 
 - Exercise login, logout, account recovery, MFA step-up and context changes

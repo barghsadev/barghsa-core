@@ -206,6 +206,11 @@ export default function AdminLayout() {
           label: t('admin.nav.verification', locale),
           icon: ShieldCheck,
         },
+        {
+          to: '/admin/authorization-audit',
+          label: t('admin.audit.authorization.title', locale),
+          icon: ShieldCheck,
+        },
         { to: '/admin/notifications', label: t('admin.nav.notifications', locale), icon: Bell },
         { to: '/admin/providers', label: t('admin.nav.providers', locale), icon: Plug },
         {

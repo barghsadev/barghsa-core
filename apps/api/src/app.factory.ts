@@ -3,6 +3,7 @@ import { trustedProxyIps } from './common/proxy-trust.js';
 import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { getDbPool, recordAuthorizationDenial } from '@barghsa/db';
 import { AppModule } from './app.module.js';
 import { CacheControlInterceptor } from './common/cache-control.interceptor.js';
 import { HttpExceptionFilter } from './common/http-exception.filter.js';
@@ -76,7 +77,9 @@ export async function createApplication() {
   app.useGlobalInterceptors(new EtagInterceptor(app.get(Reflector)));
 
   // Global exception filter — stable error codes, localized messages, no stack traces
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(
+    new HttpExceptionFilter((event) => recordAuthorizationDenial(getDbPool(), event))
+  );
 
   const config = new DocumentBuilder()
     .setTitle('API')

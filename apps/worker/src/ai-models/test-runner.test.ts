@@ -34,6 +34,37 @@ async function enqueue() {
 const tester = () => ({
   test: vi.fn().mockResolvedValue({ ok: true, latencyMs: 1, responsePreview: 'pong' }),
 });
+it('records a queued command denial after a grant is revoked and skips provider I/O', async () => {
+  const { id } = await enqueue();
+  const correlationId = randomUUID();
+  await fixture.pool.query('UPDATE ai_model_test_jobs SET correlation_id=$2 WHERE id=$1', [
+    id,
+    correlationId,
+  ]);
+  await fixture.pool.query("UPDATE users SET is_admin=false WHERE user_id='ai-worker-admin'");
+  const client = tester();
+  expect(await runAiModelTest(fixture.pool, client, secrets)).toBe('failed');
+  expect(client.test).not.toHaveBeenCalled();
+  expect(
+    (await fixture.pool.query('SELECT status,error_code FROM ai_model_test_jobs WHERE id=$1', [id]))
+      .rows
+  ).toEqual([{ status: 'failed', error_code: 'AUTHZ:FORBIDDEN' }]);
+  expect(
+    (
+      await fixture.pool.query('SELECT * FROM authorization_denials WHERE correlation_id=$1', [
+        correlationId,
+      ])
+    ).rows
+  ).toEqual([
+    expect.objectContaining({
+      actor_id: 'ai-worker-admin',
+      resource: 'ai.model',
+      action: 'test',
+      reason: 'AUTHZ:FORBIDDEN',
+      created_at: expect.any(Date),
+    }),
+  ]);
+});
 it('claims once across competing workers and stores only a safe result', async () => {
   const { id } = await enqueue(),
     client = tester();
