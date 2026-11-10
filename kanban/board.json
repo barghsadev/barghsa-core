@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T12:28:26+00:00",
-  "source_commit": "ab1db108d3e6fea5d74991d2f74754796bc5681f",
+  "updated": "2026-11-10T12:31:51+00:00",
+  "source_commit": "bc8a9a12ae784cd7da4d8f66af06cbeda3c44a22",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -493520,14 +493520,16 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify the pending native HTTP credential read/write and auth-delivery wipe paths on the exact release source. Provider and AI readers still support pre-migration plaintext, so record a protected inventory and any required re-entry for the production-equivalent database before claiming all retained credentials are encrypted. The v0.5 staging inventory found eight versioned credential fields and no unversioned values in the checked families."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-credential-storage-and-projection-review"
+        ],
         "current_acceptance": null
       }
     },
@@ -773314,7 +773316,8 @@
           "release-0.6-reusable-profile-and-staff-capability-scope",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-credential-storage-and-projection-review"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -882729,6 +882732,113 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/worker-credential-redaction",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "7b3a5ce997717909a086dc8d3b39df385d5fcf8db85f6e7378b3a318b6de44e1"
+    },
+    "release-0.6-credential-storage-and-projection-review": {
+      "batch": "release-0.6-credential-storage-and-projection-review",
+      "base_commit": "bc8a9a12ae784cd7da4d8f66af06cbeda3c44a22",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.01.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/ai-models/ai-models-http.integration.test.ts",
+          "sha256": "6f525974b519bedf799230d89b7c8c28e1f6e09757daa683ae719ae9088b1188"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.service.test.ts",
+          "sha256": "1cdb222bc82e97fd0dd3705d86146da98bb9dd8d4eed824bf89499026fe2d8b1"
+        },
+        {
+          "path": "apps/api/src/ai-models/ai-models.service.ts",
+          "sha256": "c47c622fabde926b1d3256afc0da3087d412e5801e7cf7c48a3fdd31e98821c8"
+        },
+        {
+          "path": "apps/api/src/auth/delivery-http.integration.test.ts",
+          "sha256": "b1336fff2c6de9b9ff6a9f1f9ae7390e3ab7bf27147416948debeb3c01a0236d"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
+          "sha256": "04569d69076e5c1e6bff3dc41a040655a14fe4bb474388c2607070c1addc98f6"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "57e8352838954be282354b839af6edd70e968db557a0ba1fdacd332d42e374d5"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-input-fields.ts",
+          "sha256": "79ecdc98f41e4de136a3c9e9299965dde7312f4d35dfa09c50346600162ac0fb"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-secrets.service.ts",
+          "sha256": "550f26b0c594a1982f466162c223b79722b72e40be2e851ec2c436dc0f7bc45a"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "4544fbd5f15ae00d811559d0fea6f96d50d16edf7f331640a84e8695cef05703"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "sha256": "a6aca6dacbd846cf0d13a4a7f449d9000edc9fcdbf241a76f3a4288cbdb65c26"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config.service.ts",
+          "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+        },
+        {
+          "path": "apps/web/src/components/AiModelRecordTable.tsx",
+          "sha256": "4df0a93086d12c7f76cb5f62c60f153562ffc53cc2d646c29d02d4e60fee311a"
+        },
+        {
+          "path": "apps/web/src/lib/ai-model-form.test.ts",
+          "sha256": "3270f377b15b47bfb4fcd226a18c72e9f789fb9cf5347107a57b5af38146cdea"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiModelsPage.test.tsx",
+          "sha256": "15c271ba03fed2396c87f75f6d9e1381c6dea6f2b68e0f419e5990fc75c3dac1"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiModelsPage.tsx",
+          "sha256": "e79b9faa4484ffa9afb54766d9abad3eb017e43001badced876ffcbebce78562"
+        },
+        {
+          "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
+          "sha256": "a72f4e37a56dd99540aeb5a9ecfe69126db05f322e971061614e9f11f0ab33b0"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStorageConfig.test.tsx",
+          "sha256": "42df2e46bc26e35b2b194da2e0f358c97fdcbc1ccc5ec797d3b58270c3f77411"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStorageConfig.tsx",
+          "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
+        },
+        {
+          "path": "apps/web/src/pages/provider-forms.test.tsx",
+          "sha256": "7286caff450af4224c03fb867007a72d0d25c7cb4afb2bc086b9d41e91db9619"
+        },
+        {
+          "path": "apps/web/src/pages/storage-policy-forms.test.tsx",
+          "sha256": "56759456a593c679d182c822eeb93515360190b178078777ef5ffed012ff5ef5"
+        },
+        {
+          "path": "docs/security/password-hashing.md",
+          "sha256": "bda8cc38fcb6b90abd6edab26d32cd12ac4f8a38b51c5cc583340f60c3cb08ac"
+        },
+        {
+          "path": "packages/shared/src/ai-models/secrets.ts",
+          "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
+        }
+      ],
+      "checks": [
+        "New provider, AI, storage and auth-delivery writes use encrypted representations. Reviewed the provider and AI masked DTOs, storage configured-secret indicator, and existing authorized one-time temporary-password disclosure with subsequent hash-only retention.",
+        "All 66 focused web form and catalogue checks passed on current sources. Reused the 94 API overlap cases for the unchanged API sources. Native storage, AI and auth-delivery HTTP integration cases remain distinct from these local mocked checks.",
+        "Read-only inventory on live v0.5.0 dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c counted eight populated provider, AI and storage credential fields, all versioned, and zero populated auth-delivery payloads. Prefixes alone do not prove decryption or establish the state of a different database."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/credential-storage-projections",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "e812fdd19816a610ee2b46c515af8cb4e87a04a53046622bf61efa8c4ec4ae3c"
     }
   },
   "historical_improvements": [
