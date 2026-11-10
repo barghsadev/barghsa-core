@@ -76,6 +76,7 @@ export default function () {
     'X-CSRF-Token': actor.csrf,
     'Content-Type': 'application/json',
     'Accept-Language': actor.locale,
+    'X-Forwarded-For': actor.clientIp,
   };
   const quoteInput = { profileId: actor.profileId, period: 'next_week', totalKwh: '10' };
   const quote = request(
@@ -212,6 +213,7 @@ export function handleSummary(data) {
         backgroundProfiles: fixture.background,
         seededInvoices: 13 * fixture.samples,
         operationsRecipients: 3,
+        clientAddresses: new Set(fixture.actors.map((actor) => actor.clientIp)).size,
       },
       failedChecks: data.metrics.checks?.values.fails ?? null,
       operations,

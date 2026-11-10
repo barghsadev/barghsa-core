@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T17:36:29+00:00",
-  "source_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
+  "updated": "2026-11-10T17:43:19+00:00",
+  "source_commit": "d3176e986c00da414dc179c858fa4c7147d43e12",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -14403,7 +14403,8 @@
           "docs/operations/service-objectives.md"
         ],
         "batches": [
-          "release-0.6-weekly-isolated-load-scenarios"
+          "release-0.6-weekly-isolated-load-scenarios",
+          "release-0.6-load-client-address-fixture"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -14415,11 +14416,11 @@
             },
             {
               "path": "apps/api/performance/weekly.k6.mjs",
-              "sha256": "8ff2f015946c051bc7455b295db5f8c1a6674863fdca11de905703150b5d371d"
+              "sha256": "7efde50d28bf3f6675815bbc0d145fa441b2cde064bdd2eb9ff609e4a882a5aa"
             },
             {
               "path": "apps/api/performance/weekly.perf.ts",
-              "sha256": "d181218e802f3c507ade98cceb2807f1a861b92a2b3dd72a8b7bc46a2a09a70b"
+              "sha256": "d11c411335ce70d7f713ed84b034327594a31e870860d1a889006eda5054bf36"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -14463,14 +14464,30 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
+              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
             }
           ],
           "checks": [
             "Found no existing executable weekly load workload after checking the current workflow and application fixture paths. Reused the reviewed latency budgets, compiled production API, exact migration template and real private operations receiver with isolated synthetic accounts.",
             "The checksum-verified Grafana k6 v2.3.0 Linux binary passed the loopback-only origin guard and the compiled PostgreSQL smoke through all 207 migrations. Four fresh attempts per each of the seven scenarios completed with zero failed checks. The database verified exact counts for electricity orders, fully paid invoices, wallet debits, authorized storage reservations, alert receipts and three private delivery intents per alert.",
             "The weekly full fixture is configured for 1,000 distinct synthetic customers, 5,000 background profiles, twelve historic invoices plus one payable invoice per customer, Persian and English payloads and eight concurrent users. The report keeps p99 unavailable below 1,000 completed samples. The schedule pins the executable SHA-256 and keeps all runtime traffic on loopback.",
-            "The reported p95 rehearsal budgets remain 300/500 ms. The scheduled regression guard applies the existing 20% tolerance and fails missing samples or an unsuccessful operation. The workflow passed actionlint and the touched files passed formatting, ESLint and diff validation. No full-load, staging or production-equivalent pass is claimed."
+            "The reported p95 rehearsal budgets remain 300/500 ms. The scheduled regression guard applies the existing 20% tolerance and fails missing samples or an unsuccessful operation. The workflow passed actionlint and the touched files passed formatting, ESLint and diff validation. No full-load, staging or production-equivalent pass is claimed.",
+            "The first eight-user full attempt from d3176e98 used a shared loopback address. The invoice list applies an existing 60-per-minute IP quota because this decorator does not set scope to user. The run was intentionally interrupted after 324 HTTP 429 responses. Its partial report has no p99 and is not a passing full-load receipt.",
+            "The partial eight-user report recorded p95 above the 20% regression guard for electricity preview 501 ms, order submission 1292 ms, wallet payment 788 ms, invoice list 394 ms and CRM search 2171 ms. Upload reservation and private alert fan-out passed their p95 thresholds in that partial run but lacked full sample counts. Both staging resource caps and the broad CRM match make the result specific to that disposable environment.",
+            "The revised fixture passes up to 50 test-network client addresses through the disposable API’s single explicitly trusted loopback hop. The compiled smoke passed all seven operations and verified the actual PostgreSQL invoice quota keys used four distinct addresses. Product proxy policy, quota, business and latency thresholds are unchanged. No full-volume retest or production-equivalent pass is claimed.",
+            "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-load-client-address-fixture",
+              "base_commit": "d3176e986c00da414dc179c858fa4c7147d43e12",
+              "paths": [
+                "apps/api/performance/weekly.k6.mjs",
+                "apps/api/performance/weekly.perf.ts",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
+            }
           ]
         }
       }
@@ -19174,7 +19191,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
+              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
@@ -19230,6 +19247,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Add weekly fixture and report instructions only. Existing objective thresholds and incident guidance are unchanged."
+            },
+            {
+              "batch": "release-0.6-load-client-address-fixture",
+              "base_commit": "d3176e986c00da414dc179c858fa4c7147d43e12",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
             }
           ]
         }
@@ -511672,7 +511697,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
+              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -511687,6 +511712,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Add weekly fixture and report instructions only. Existing objective thresholds and incident guidance are unchanged."
+            },
+            {
+              "batch": "release-0.6-load-client-address-fixture",
+              "base_commit": "d3176e986c00da414dc179c858fa4c7147d43e12",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
             }
           ]
         }
@@ -511719,7 +511752,8 @@
           "docs/operations/service-objectives.md"
         ],
         "batches": [
-          "release-0.6-weekly-isolated-load-scenarios"
+          "release-0.6-weekly-isolated-load-scenarios",
+          "release-0.6-load-client-address-fixture"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -511731,11 +511765,11 @@
             },
             {
               "path": "apps/api/performance/weekly.k6.mjs",
-              "sha256": "8ff2f015946c051bc7455b295db5f8c1a6674863fdca11de905703150b5d371d"
+              "sha256": "7efde50d28bf3f6675815bbc0d145fa441b2cde064bdd2eb9ff609e4a882a5aa"
             },
             {
               "path": "apps/api/performance/weekly.perf.ts",
-              "sha256": "d181218e802f3c507ade98cceb2807f1a861b92a2b3dd72a8b7bc46a2a09a70b"
+              "sha256": "d11c411335ce70d7f713ed84b034327594a31e870860d1a889006eda5054bf36"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -511779,14 +511813,30 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
+              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
             }
           ],
           "checks": [
             "Found no existing executable weekly load workload after checking the current workflow and application fixture paths. Reused the reviewed latency budgets, compiled production API, exact migration template and real private operations receiver with isolated synthetic accounts.",
             "The checksum-verified Grafana k6 v2.3.0 Linux binary passed the loopback-only origin guard and the compiled PostgreSQL smoke through all 207 migrations. Four fresh attempts per each of the seven scenarios completed with zero failed checks. The database verified exact counts for electricity orders, fully paid invoices, wallet debits, authorized storage reservations, alert receipts and three private delivery intents per alert.",
             "The weekly full fixture is configured for 1,000 distinct synthetic customers, 5,000 background profiles, twelve historic invoices plus one payable invoice per customer, Persian and English payloads and eight concurrent users. The report keeps p99 unavailable below 1,000 completed samples. The schedule pins the executable SHA-256 and keeps all runtime traffic on loopback.",
-            "The reported p95 rehearsal budgets remain 300/500 ms. The scheduled regression guard applies the existing 20% tolerance and fails missing samples or an unsuccessful operation. The workflow passed actionlint and the touched files passed formatting, ESLint and diff validation. No full-load, staging or production-equivalent pass is claimed."
+            "The reported p95 rehearsal budgets remain 300/500 ms. The scheduled regression guard applies the existing 20% tolerance and fails missing samples or an unsuccessful operation. The workflow passed actionlint and the touched files passed formatting, ESLint and diff validation. No full-load, staging or production-equivalent pass is claimed.",
+            "The first eight-user full attempt from d3176e98 used a shared loopback address. The invoice list applies an existing 60-per-minute IP quota because this decorator does not set scope to user. The run was intentionally interrupted after 324 HTTP 429 responses. Its partial report has no p99 and is not a passing full-load receipt.",
+            "The partial eight-user report recorded p95 above the 20% regression guard for electricity preview 501 ms, order submission 1292 ms, wallet payment 788 ms, invoice list 394 ms and CRM search 2171 ms. Upload reservation and private alert fan-out passed their p95 thresholds in that partial run but lacked full sample counts. Both staging resource caps and the broad CRM match make the result specific to that disposable environment.",
+            "The revised fixture passes up to 50 test-network client addresses through the disposable API’s single explicitly trusted loopback hop. The compiled smoke passed all seven operations and verified the actual PostgreSQL invoice quota keys used four distinct addresses. Product proxy policy, quota, business and latency thresholds are unchanged. No full-volume retest or production-equivalent pass is claimed.",
+            "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-load-client-address-fixture",
+              "base_commit": "d3176e986c00da414dc179c858fa4c7147d43e12",
+              "paths": [
+                "apps/api/performance/weekly.k6.mjs",
+                "apps/api/performance/weekly.perf.ts",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
+            }
           ]
         }
       }
@@ -511806,7 +511856,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Run all 1,000 samples per path with the declared fixture cardinality and inspect each operation’s p50, p95 and p99. Prove production-equivalent capacity and index/cardinality evidence separately."
+        "Diagnose the five observed p95 misses, starting with the broad CRM search query plan. Retest the corrected full 1,000-sample workload and retain actual p50/p95/p99 and exact financial and queue counts.",
+        "Prove production-equivalent host topology, data/index cardinality and the declared latency budgets separately."
       ],
       "owner": null,
       "depends_on": [],
@@ -511820,7 +511871,8 @@
           "docs/operations/service-objectives.md"
         ],
         "batches": [
-          "release-0.6-weekly-isolated-load-scenarios"
+          "release-0.6-weekly-isolated-load-scenarios",
+          "release-0.6-load-client-address-fixture"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -511832,11 +511884,11 @@
             },
             {
               "path": "apps/api/performance/weekly.k6.mjs",
-              "sha256": "8ff2f015946c051bc7455b295db5f8c1a6674863fdca11de905703150b5d371d"
+              "sha256": "7efde50d28bf3f6675815bbc0d145fa441b2cde064bdd2eb9ff609e4a882a5aa"
             },
             {
               "path": "apps/api/performance/weekly.perf.ts",
-              "sha256": "d181218e802f3c507ade98cceb2807f1a861b92a2b3dd72a8b7bc46a2a09a70b"
+              "sha256": "d11c411335ce70d7f713ed84b034327594a31e870860d1a889006eda5054bf36"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -511880,14 +511932,30 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
+              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
             }
           ],
           "checks": [
             "Found no existing executable weekly load workload after checking the current workflow and application fixture paths. Reused the reviewed latency budgets, compiled production API, exact migration template and real private operations receiver with isolated synthetic accounts.",
             "The checksum-verified Grafana k6 v2.3.0 Linux binary passed the loopback-only origin guard and the compiled PostgreSQL smoke through all 207 migrations. Four fresh attempts per each of the seven scenarios completed with zero failed checks. The database verified exact counts for electricity orders, fully paid invoices, wallet debits, authorized storage reservations, alert receipts and three private delivery intents per alert.",
             "The weekly full fixture is configured for 1,000 distinct synthetic customers, 5,000 background profiles, twelve historic invoices plus one payable invoice per customer, Persian and English payloads and eight concurrent users. The report keeps p99 unavailable below 1,000 completed samples. The schedule pins the executable SHA-256 and keeps all runtime traffic on loopback.",
-            "The reported p95 rehearsal budgets remain 300/500 ms. The scheduled regression guard applies the existing 20% tolerance and fails missing samples or an unsuccessful operation. The workflow passed actionlint and the touched files passed formatting, ESLint and diff validation. No full-load, staging or production-equivalent pass is claimed."
+            "The reported p95 rehearsal budgets remain 300/500 ms. The scheduled regression guard applies the existing 20% tolerance and fails missing samples or an unsuccessful operation. The workflow passed actionlint and the touched files passed formatting, ESLint and diff validation. No full-load, staging or production-equivalent pass is claimed.",
+            "The first eight-user full attempt from d3176e98 used a shared loopback address. The invoice list applies an existing 60-per-minute IP quota because this decorator does not set scope to user. The run was intentionally interrupted after 324 HTTP 429 responses. Its partial report has no p99 and is not a passing full-load receipt.",
+            "The partial eight-user report recorded p95 above the 20% regression guard for electricity preview 501 ms, order submission 1292 ms, wallet payment 788 ms, invoice list 394 ms and CRM search 2171 ms. Upload reservation and private alert fan-out passed their p95 thresholds in that partial run but lacked full sample counts. Both staging resource caps and the broad CRM match make the result specific to that disposable environment.",
+            "The revised fixture passes up to 50 test-network client addresses through the disposable API’s single explicitly trusted loopback hop. The compiled smoke passed all seven operations and verified the actual PostgreSQL invoice quota keys used four distinct addresses. Product proxy policy, quota, business and latency thresholds are unchanged. No full-volume retest or production-equivalent pass is claimed.",
+            "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-load-client-address-fixture",
+              "base_commit": "d3176e986c00da414dc179c858fa4c7147d43e12",
+              "paths": [
+                "apps/api/performance/weekly.k6.mjs",
+                "apps/api/performance/weekly.perf.ts",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
+            }
           ]
         }
       }
@@ -512186,7 +512254,8 @@
           "docs/operations/service-objectives.md"
         ],
         "batches": [
-          "release-0.6-weekly-isolated-load-scenarios"
+          "release-0.6-weekly-isolated-load-scenarios",
+          "release-0.6-load-client-address-fixture"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -512198,11 +512267,11 @@
             },
             {
               "path": "apps/api/performance/weekly.k6.mjs",
-              "sha256": "8ff2f015946c051bc7455b295db5f8c1a6674863fdca11de905703150b5d371d"
+              "sha256": "7efde50d28bf3f6675815bbc0d145fa441b2cde064bdd2eb9ff609e4a882a5aa"
             },
             {
               "path": "apps/api/performance/weekly.perf.ts",
-              "sha256": "d181218e802f3c507ade98cceb2807f1a861b92a2b3dd72a8b7bc46a2a09a70b"
+              "sha256": "d11c411335ce70d7f713ed84b034327594a31e870860d1a889006eda5054bf36"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -512246,14 +512315,30 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
+              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
             }
           ],
           "checks": [
             "Found no existing executable weekly load workload after checking the current workflow and application fixture paths. Reused the reviewed latency budgets, compiled production API, exact migration template and real private operations receiver with isolated synthetic accounts.",
             "The checksum-verified Grafana k6 v2.3.0 Linux binary passed the loopback-only origin guard and the compiled PostgreSQL smoke through all 207 migrations. Four fresh attempts per each of the seven scenarios completed with zero failed checks. The database verified exact counts for electricity orders, fully paid invoices, wallet debits, authorized storage reservations, alert receipts and three private delivery intents per alert.",
             "The weekly full fixture is configured for 1,000 distinct synthetic customers, 5,000 background profiles, twelve historic invoices plus one payable invoice per customer, Persian and English payloads and eight concurrent users. The report keeps p99 unavailable below 1,000 completed samples. The schedule pins the executable SHA-256 and keeps all runtime traffic on loopback.",
-            "The reported p95 rehearsal budgets remain 300/500 ms. The scheduled regression guard applies the existing 20% tolerance and fails missing samples or an unsuccessful operation. The workflow passed actionlint and the touched files passed formatting, ESLint and diff validation. No full-load, staging or production-equivalent pass is claimed."
+            "The reported p95 rehearsal budgets remain 300/500 ms. The scheduled regression guard applies the existing 20% tolerance and fails missing samples or an unsuccessful operation. The workflow passed actionlint and the touched files passed formatting, ESLint and diff validation. No full-load, staging or production-equivalent pass is claimed.",
+            "The first eight-user full attempt from d3176e98 used a shared loopback address. The invoice list applies an existing 60-per-minute IP quota because this decorator does not set scope to user. The run was intentionally interrupted after 324 HTTP 429 responses. Its partial report has no p99 and is not a passing full-load receipt.",
+            "The partial eight-user report recorded p95 above the 20% regression guard for electricity preview 501 ms, order submission 1292 ms, wallet payment 788 ms, invoice list 394 ms and CRM search 2171 ms. Upload reservation and private alert fan-out passed their p95 thresholds in that partial run but lacked full sample counts. Both staging resource caps and the broad CRM match make the result specific to that disposable environment.",
+            "The revised fixture passes up to 50 test-network client addresses through the disposable API’s single explicitly trusted loopback hop. The compiled smoke passed all seven operations and verified the actual PostgreSQL invoice quota keys used four distinct addresses. Product proxy policy, quota, business and latency thresholds are unchanged. No full-volume retest or production-equivalent pass is claimed.",
+            "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-load-client-address-fixture",
+              "base_commit": "d3176e986c00da414dc179c858fa4c7147d43e12",
+              "paths": [
+                "apps/api/performance/weekly.k6.mjs",
+                "apps/api/performance/weekly.perf.ts",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
+            }
           ]
         }
       }
@@ -513637,7 +513722,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
+              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -513652,6 +513737,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Add weekly fixture and report instructions only. Existing objective thresholds and incident guidance are unchanged."
+            },
+            {
+              "batch": "release-0.6-load-client-address-fixture",
+              "base_commit": "d3176e986c00da414dc179c858fa4c7147d43e12",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
             }
           ]
         }
@@ -516961,7 +517054,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
+              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -516988,6 +517081,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Add weekly fixture and report instructions only. Existing objective thresholds and incident guidance are unchanged."
+            },
+            {
+              "batch": "release-0.6-load-client-address-fixture",
+              "base_commit": "d3176e986c00da414dc179c858fa4c7147d43e12",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
             }
           ]
         }
@@ -517267,7 +517368,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "a736f684a972459fd56f648e2d9d6774243b2bf27cb5f89b378c4c0c436e20e4"
+              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
             },
             {
               "path": "architecture.md",
@@ -517290,6 +517391,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Add weekly fixture and report instructions only. Existing objective thresholds and incident guidance are unchanged."
+            },
+            {
+              "batch": "release-0.6-load-client-address-fixture",
+              "base_commit": "d3176e986c00da414dc179c858fa4c7147d43e12",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
             }
           ]
         }
@@ -905518,6 +905627,232 @@
             "regressionThresholdMs": 600,
             "p50Ms": 47.719995999999995,
             "p95Ms": 88.31999269999999,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": false
+          }
+        ]
+      }
+    },
+    "release-0.6-load-client-address-fixture": {
+      "batch": "release-0.6-load-client-address-fixture",
+      "base_commit": "d3176e986c00da414dc179c858fa4c7147d43e12",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.02",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.11.03.03",
+        "06-security-testing-observability.md#T-06.11.03.06"
+      ],
+      "changed_paths": [
+        "apps/api/performance/weekly.k6.mjs",
+        "apps/api/performance/weekly.perf.ts",
+        "docs/operations/service-objectives.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/performance/weekly.k6.mjs",
+          "sha256": "7efde50d28bf3f6675815bbc0d145fa441b2cde064bdd2eb9ff609e4a882a5aa"
+        },
+        {
+          "path": "apps/api/performance/weekly.perf.ts",
+          "sha256": "d11c411335ce70d7f713ed84b034327594a31e870860d1a889006eda5054bf36"
+        },
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
+        }
+      ],
+      "checks": [
+        "The first eight-user full attempt from d3176e98 used a shared loopback address. The invoice list applies an existing 60-per-minute IP quota because this decorator does not set scope to user. The run was intentionally interrupted after 324 HTTP 429 responses. Its partial report has no p99 and is not a passing full-load receipt.",
+        "The partial eight-user report recorded p95 above the 20% regression guard for electricity preview 501 ms, order submission 1292 ms, wallet payment 788 ms, invoice list 394 ms and CRM search 2171 ms. Upload reservation and private alert fan-out passed their p95 thresholds in that partial run but lacked full sample counts. Both staging resource caps and the broad CRM match make the result specific to that disposable environment.",
+        "The revised fixture passes up to 50 test-network client addresses through the disposable API’s single explicitly trusted loopback hop. The compiled smoke passed all seven operations and verified the actual PostgreSQL invoice quota keys used four distinct addresses. Product proxy policy, quota, business and latency thresholds are unchanged. No full-volume retest or production-equivalent pass is claimed.",
+        "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "native_log": "performance-smoke-trusted-proxy-native.log",
+      "native_log_sha256": "2f030497c2e36d80319a89a5d158bc5125fbaac84b4bd35e9470823b2c94dc68",
+      "stopped_full_report": {
+        "source": "d3176e986c00da414dc179c858fa4c7147d43e12",
+        "environment": "isolated-load",
+        "concurrency": 8,
+        "requestedSamples": 1000,
+        "warmupIterations": 0,
+        "dataset": {
+          "customerAccounts": 1000,
+          "backgroundProfiles": 5000,
+          "seededInvoices": 13000,
+          "operationsRecipients": 3
+        },
+        "failedChecks": 324,
+        "operations": [
+          {
+            "operation": "electricity_preview",
+            "completed": 388,
+            "budgetP95Ms": 300,
+            "regressionThresholdMs": 360,
+            "p50Ms": 360.533138,
+            "p95Ms": 501.32470495,
+            "p99Ms": null,
+            "withinBudget": false,
+            "regression": true
+          },
+          {
+            "operation": "order_submission",
+            "completed": 386,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 876.7260715,
+            "p95Ms": 1292.2671435,
+            "p99Ms": null,
+            "withinBudget": false,
+            "regression": true
+          },
+          {
+            "operation": "wallet_payment",
+            "completed": 384,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 510.7602005,
+            "p95Ms": 787.6860440999997,
+            "p99Ms": null,
+            "withinBudget": false,
+            "regression": true
+          },
+          {
+            "operation": "invoice_list",
+            "completed": 60,
+            "budgetP95Ms": 300,
+            "regressionThresholdMs": 360,
+            "p50Ms": 265.0217325,
+            "p95Ms": 393.66403419999995,
+            "p99Ms": null,
+            "withinBudget": false,
+            "regression": true
+          },
+          {
+            "operation": "crm_search",
+            "completed": 382,
+            "budgetP95Ms": 300,
+            "regressionThresholdMs": 360,
+            "p50Ms": 1406.886428,
+            "p95Ms": 2171.4233911999995,
+            "p99Ms": null,
+            "withinBudget": false,
+            "regression": true
+          },
+          {
+            "operation": "upload_authorization",
+            "completed": 382,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 308.1363765,
+            "p95Ms": 495.6096252,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": true
+          },
+          {
+            "operation": "notification_fanout",
+            "completed": 382,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 110.661209,
+            "p95Ms": 206.56668774999997,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": true
+          }
+        ]
+      },
+      "stopped_full_log_sha256": "f0f099234d34a7809e42e6303d1f39ed1810be1ae840f4d10f2ad27d05bf25ea",
+      "isolated_smoke": {
+        "source": "d3176e986c00da414dc179c858fa4c7147d43e12",
+        "environment": "isolated-load",
+        "concurrency": 2,
+        "requestedSamples": 4,
+        "warmupIterations": 0,
+        "dataset": {
+          "customerAccounts": 4,
+          "backgroundProfiles": 12,
+          "seededInvoices": 52,
+          "operationsRecipients": 3,
+          "clientAddresses": 4
+        },
+        "failedChecks": 0,
+        "operations": [
+          {
+            "operation": "electricity_preview",
+            "completed": 4,
+            "budgetP95Ms": 300,
+            "regressionThresholdMs": 360,
+            "p50Ms": 162.979019,
+            "p95Ms": 229.15906404999998,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": false
+          },
+          {
+            "operation": "order_submission",
+            "completed": 4,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 334.8098585,
+            "p95Ms": 388.45859735,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": false
+          },
+          {
+            "operation": "wallet_payment",
+            "completed": 4,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 125.4554905,
+            "p95Ms": 148.41685575,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": false
+          },
+          {
+            "operation": "invoice_list",
+            "completed": 4,
+            "budgetP95Ms": 300,
+            "regressionThresholdMs": 360,
+            "p50Ms": 73.0295685,
+            "p95Ms": 79.112393,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": false
+          },
+          {
+            "operation": "crm_search",
+            "completed": 4,
+            "budgetP95Ms": 300,
+            "regressionThresholdMs": 360,
+            "p50Ms": 58.812725,
+            "p95Ms": 72.35379935,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": false
+          },
+          {
+            "operation": "upload_authorization",
+            "completed": 4,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 142.4151175,
+            "p95Ms": 195.72764945,
+            "p99Ms": null,
+            "withinBudget": true,
+            "regression": false
+          },
+          {
+            "operation": "notification_fanout",
+            "completed": 4,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 53.420587999999995,
+            "p95Ms": 82.8934743,
             "p99Ms": null,
             "withinBudget": true,
             "regression": false

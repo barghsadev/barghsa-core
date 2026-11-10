@@ -48,6 +48,8 @@ on a candidate ref. It builds the compiled API, applies production migrations
 to disposable PostgreSQL and uses 1,000 synthetic customer accounts, 5,000
 background profiles and eight concurrent k6 users. Each iteration uses a
 distinct customer and writes new orders, payments and upload reservations.
+The fixture passes up to 50 synthetic client addresses through its trusted
+loopback hop. The existing invoice-list quota remains active for each address.
 The protected loopback operations receiver enqueues private inbox delivery for
 three synthetic staff recipients. The upload path measures authorization and signing.
 It issues no object upload. Provider delivery is outside this workload.

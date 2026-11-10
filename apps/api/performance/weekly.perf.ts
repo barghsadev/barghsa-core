@@ -20,6 +20,7 @@ function createActors(samples: number) {
     csrf: randomUUID(),
     orderKey: randomUUID(),
     paymentKey: randomUUID(),
+    clientIp: `198.51.100.${(index % 50) + 1}`,
     ...(index % 2
       ? { locale: 'en', street: 'Performance Avenue', search: 'Performance', fileName: 'proof.pdf' }
       : { locale: 'fa', street: 'خیابان آزمایشی', search: 'آزمایشی', fileName: 'مدرک.pdf' }),
@@ -128,7 +129,7 @@ it('measures the seven production entry points with isolated PostgreSQL fixtures
   });
   try {
     // The presign operation needs an origin and synthetic credentials but performs no object PUT.
-    http = await startHttpFixture(process.env.TEST_DATABASE_URL, 'http://127.0.0.1:9');
+    http = await startHttpFixture(process.env.TEST_DATABASE_URL, 'http://127.0.0.1:9', '127.0.0.1');
     server.listen(0, '127.0.0.1');
     await once(server, 'listening');
     const address = server.address();
@@ -191,7 +192,8 @@ it('measures the seven production entry points with isolated PostgreSQL fixtures
               (SELECT count(*)::int FROM wallet_transactions WHERE type='payment' AND ref_id=ANY($2::text[])) AS debits,
               (SELECT count(*)::int FROM storage_records WHERE storage_key LIKE 'uploads/document/%') AS reservations,
               (SELECT count(*)::int FROM operations_alert_receipts) AS alerts,
-              (SELECT count(*)::int FROM notification_outbox WHERE event_key='admin.operations_alert') AS alerts_enqueued`,
+              (SELECT count(*)::int FROM notification_outbox WHERE event_key='admin.operations_alert') AS alerts_enqueued,
+              (SELECT count(*)::int FROM rate_limit_windows WHERE NOT security AND key LIKE 'invoices:list:user:198.51.100.%') AS invoice_client_addresses`,
       [actors.map((actor) => actor.invoiceId), actors.map((actor) => actor.invoiceId)]
     );
     expect(rows).toEqual([
@@ -202,6 +204,7 @@ it('measures the seven production entry points with isolated PostgreSQL fixtures
         reservations: samples,
         alerts: samples,
         alerts_enqueued: 3 * samples,
+        invoice_client_addresses: new Set(actors.map((actor) => actor.clientIp)).size,
       },
     ]);
   } finally {
