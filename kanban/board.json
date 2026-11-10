@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T16:45:35+00:00",
-  "source_commit": "a8dc7da4ab80444098304888ffa29befe90f480f",
+  "updated": "2026-11-10T16:53:15+00:00",
+  "source_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5582,7 +5582,8 @@
       "launch_required": true,
       "remaining": [
         "Actual scheduled run 42789410833 reported all 40 shards with 127 unexpected outcomes and 18 flakes. The customer request, owned-read and Firefox document replays passed. The Firefox electricity submission race and the Persian saving touch-target flake now have source-bound local passing evidence. Resolve remaining failures and repeat the complete matrix on the exact candidate. The solar Submit request touch target also has source-bound passing geometry and mobile gate receipts.",
-        "Registration, MFA, legal onboarding, electricity and wallet, saving, consultation, solar construction and admin configuration have targeted source-bound receipts. The exact hosted release matrix and strict rollup still need a clean pass. The cancellation and OTP repairs have targeted local browser receipts."
+        "Registration, MFA, legal onboarding, electricity and wallet, saving, consultation, solar construction and admin configuration have targeted source-bound receipts. The exact hosted release matrix and strict rollup still need a clean pass. The cancellation and OTP repairs have targeted local browser receipts.",
+        "The exact 150bec1e browser matrix exposed Firefox invitation focus and Mobile Safari account-menu/custom-trigger failures. Final focused Linux Firefox/Mobile Safari, Chromium, Mobile Chrome and native mobile combobox runs passed. Read back all hosted outcomes and run the complete matrix on the final release candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -5661,7 +5662,8 @@
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": null
       }
@@ -5931,7 +5933,8 @@
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": null
       }
@@ -14269,7 +14272,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": null
       }
@@ -57135,7 +57139,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -57179,7 +57184,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -57664,6 +57669,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-authentication-journeys/acceptance-proof.json"
               ],
               "scope": "Only changed bindings renewed: additive anonymous published-terms metadata/OpenAPI with all existing methods/tests exact; auth-entry-only current-session gate with all other root gates exact; local informational meter/predictable-password minimum preserved; ten UI-only copy values and two additive i18n exports; test fixture/required meter assertions updated without weakening critical assertions. Exact scope proofs,121 native,101 UI,118 i18n,78 distinct browser and all89 original budgets apply. Task/release status, unmet criteria, financial/business routes and independent live gates unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -57946,7 +57959,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -57998,7 +58012,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -58729,6 +58743,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -58935,7 +58957,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -58983,7 +59006,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -59484,6 +59507,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-workspace-navigation/acceptance-proof.json"
               ],
               "scope": "Scoped renewal only: current native/39UI/118i18n/100distinct browser checks, final14 navigation renewals, exact retained engines/guards/business sources, default-auth BrandMark proof,16 additive dictionary values and all original numerical budgets retained with explicit startup parents/compact bar and separately tested click-only gates. Layout/profile identity/rich switch changes preserve money, grants, current authority, captured target/confirmation and stale-response boundaries. Existing task/release status, unmet criteria, historical evidence and live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -59756,7 +59787,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-additive-agent-permissions-across-current-business-consumers",
@@ -59768,7 +59800,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -60876,6 +60908,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -61082,7 +61122,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -61126,7 +61167,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -61627,6 +61668,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-authentication-journeys/acceptance-proof.json"
               ],
               "scope": "Only changed bindings renewed: additive anonymous published-terms metadata/OpenAPI with all existing methods/tests exact; auth-entry-only current-session gate with all other root gates exact; local informational meter/predictable-password minimum preserved; ten UI-only copy values and two additive i18n exports; test fixture/required meter assertions updated without weakening critical assertions. Exact scope proofs,121 native,101 UI,118 i18n,78 distinct browser and all89 original budgets apply. Task/release status, unmet criteria, financial/business routes and independent live gates unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -62511,7 +62560,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -62527,7 +62577,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -62641,6 +62691,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-workspace-navigation/acceptance-proof.json"
               ],
               "scope": "Scoped renewal only: current native/39UI/118i18n/100distinct browser checks, final14 navigation renewals, exact retained engines/guards/business sources, default-auth BrandMark proof,16 additive dictionary values and all original numerical budgets retained with explicit startup parents/compact bar and separately tested click-only gates. Layout/profile identity/rich switch changes preserve money, grants, current authority, captured target/confirmation and stale-response boundaries. Existing task/release status, unmet criteria, historical evidence and live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -504052,7 +504110,8 @@
         "batches": [
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "source-bound-legal-agent-invitation-and-permissions-browser-journey",
@@ -504076,7 +504135,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -504117,6 +504176,16 @@
             "Six local production-build cases passed in Persian and English across Firefox, Mobile Chrome and Mobile Safari. Four existing invitation-recovery cases passed in Firefox and Mobile Chrome. Focused format, lint and diff checks passed. The test uses controlled API responses and performs no real invitation or financial action.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            }
           ]
         }
       }
@@ -524183,7 +524252,8 @@
           "release-0.5-route-census-closure",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-native-csp-and-combobox-recovery"
+          "release-0.6-native-csp-and-combobox-recovery",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -524191,7 +524261,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/combo-box-component.spec.ts",
-              "sha256": "6d1e83ea8fd7d67b2426e8cede0fba6a11b38ba7c1c107f4661b55575f81ef76"
+              "sha256": "eecdf16933dcfe3bd01b06af03282c0e0a1685efd3c1e52f3ea3c4d5e4227966"
             },
             {
               "path": "apps/web/e2e/email-provider-settings.spec.ts",
@@ -524392,6 +524462,16 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/combo-box-component.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ]
         }
@@ -524429,7 +524509,8 @@
           "release-0.5-route-census-closure",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-native-csp-and-combobox-recovery"
+          "release-0.6-native-csp-and-combobox-recovery",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -524437,7 +524518,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/combo-box-component.spec.ts",
-              "sha256": "6d1e83ea8fd7d67b2426e8cede0fba6a11b38ba7c1c107f4661b55575f81ef76"
+              "sha256": "eecdf16933dcfe3bd01b06af03282c0e0a1685efd3c1e52f3ea3c4d5e4227966"
             },
             {
               "path": "apps/web/e2e/email-provider-settings.spec.ts",
@@ -524638,6 +524719,16 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/combo-box-component.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ]
         }
@@ -524675,7 +524766,8 @@
           "release-0.5-route-census-closure",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-native-csp-and-combobox-recovery"
+          "release-0.6-native-csp-and-combobox-recovery",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -524683,7 +524775,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/combo-box-component.spec.ts",
-              "sha256": "6d1e83ea8fd7d67b2426e8cede0fba6a11b38ba7c1c107f4661b55575f81ef76"
+              "sha256": "eecdf16933dcfe3bd01b06af03282c0e0a1685efd3c1e52f3ea3c4d5e4227966"
             },
             {
               "path": "apps/web/e2e/email-provider-settings.spec.ts",
@@ -524884,6 +524976,16 @@
               "batch": "release-0.5-route-census-closure",
               "base_commit": "054e9d662b3f017f4ba07154000ef26ad167ae29",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-census-closure/route-census-proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/combo-box-component.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ]
         }
@@ -531339,7 +531441,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-conversation-identity-rtl-native-checkboxes"
+          "release-0.6-conversation-identity-rtl-native-checkboxes",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -531359,7 +531462,7 @@
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
-              "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
+              "sha256": "08cb74d42b80499c455fa7b63e7e49de784ca5c41291753da332d58c7f59b051"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -532097,6 +532200,16 @@
               "base_commit": "270eedb3bbf6fd2df6679e4a7a49b821290ecfe2",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/conversation-identity.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            }
           ]
         }
       }
@@ -532259,7 +532372,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-conversation-identity-rtl-native-checkboxes"
+          "release-0.6-conversation-identity-rtl-native-checkboxes",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -532279,7 +532393,7 @@
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
-              "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
+              "sha256": "08cb74d42b80499c455fa7b63e7e49de784ca5c41291753da332d58c7f59b051"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -533017,6 +533131,16 @@
               "base_commit": "270eedb3bbf6fd2df6679e4a7a49b821290ecfe2",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/conversation-identity.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            }
           ]
         }
       }
@@ -533120,7 +533244,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-conversation-identity-rtl-native-checkboxes"
+          "release-0.6-conversation-identity-rtl-native-checkboxes",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -533140,7 +533265,7 @@
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
-              "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
+              "sha256": "08cb74d42b80499c455fa7b63e7e49de784ca5c41291753da332d58c7f59b051"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -533877,6 +534002,16 @@
               "batch": "release-0.5-conditional-heading-acceptance",
               "base_commit": "270eedb3bbf6fd2df6679e4a7a49b821290ecfe2",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/conversation-identity.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ]
         }
@@ -550338,7 +550473,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-consultation-and-threshold-browser-recovery",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -550350,7 +550486,7 @@
             },
             {
               "path": "apps/web/e2e/combo-box-component.spec.ts",
-              "sha256": "6d1e83ea8fd7d67b2426e8cede0fba6a11b38ba7c1c107f4661b55575f81ef76"
+              "sha256": "eecdf16933dcfe3bd01b06af03282c0e0a1685efd3c1e52f3ea3c4d5e4227966"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -550842,6 +550978,16 @@
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-target-and-fields/proof.json",
           "scope_dispositions": [
             "Touch acceptance uses coarse-pointer CSS and device-pixel measurements. The populated matrix is supplemented by interaction tests for overlays, protected and conditional forms."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/combo-box-component.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            }
           ]
         }
       }
@@ -555448,7 +555594,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -555560,7 +555707,7 @@
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
-              "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
+              "sha256": "08cb74d42b80499c455fa7b63e7e49de784ca5c41291753da332d58c7f59b051"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -555928,7 +556075,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/e2e/telegram-link.spec.ts",
@@ -556941,6 +557088,15 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/conversation-identity.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ]
         }
@@ -557024,7 +557180,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557052,7 +557209,7 @@
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
-              "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
+              "sha256": "08cb74d42b80499c455fa7b63e7e49de784ca5c41291753da332d58c7f59b051"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -557490,6 +557647,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/conversation-identity.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ]
         }
@@ -558565,7 +558730,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558593,7 +558759,7 @@
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
-              "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
+              "sha256": "08cb74d42b80499c455fa7b63e7e49de784ca5c41291753da332d58c7f59b051"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -559031,6 +559197,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/conversation-identity.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ]
         }
@@ -559156,7 +559330,8 @@
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559388,7 +559563,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -559925,6 +560100,16 @@
               "base_commit": "8537a580ac5e95b51ae7d6407da33f3d21c5642d",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-offer-layout/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            }
           ]
         }
       }
@@ -560049,7 +560234,8 @@
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560281,7 +560467,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -560818,6 +561004,16 @@
               "base_commit": "8537a580ac5e95b51ae7d6407da33f3d21c5642d",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-offer-layout/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            }
           ]
         }
       }
@@ -560900,7 +561096,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560928,7 +561125,7 @@
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
-              "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
+              "sha256": "08cb74d42b80499c455fa7b63e7e49de784ca5c41291753da332d58c7f59b051"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -561366,6 +561563,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/conversation-identity.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ]
         }
@@ -561491,7 +561696,8 @@
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561723,7 +561929,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -562259,6 +562465,16 @@
               "batch": "release-0.5-consultation-offer-layout",
               "base_commit": "8537a580ac5e95b51ae7d6407da33f3d21c5642d",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-offer-layout/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ]
         }
@@ -611532,7 +611748,8 @@
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -611688,7 +611905,7 @@
             },
             {
               "path": "apps/web/e2e/conversation-identity.spec.ts",
-              "sha256": "3130d3676d8deabc99e25731ab148ea9cfd673dda99a855265237c3f95294544"
+              "sha256": "08cb74d42b80499c455fa7b63e7e49de784ca5c41291753da332d58c7f59b051"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -612136,7 +612353,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/e2e/telegram-link.spec.ts",
@@ -614349,6 +614566,17 @@
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
             "Domain-validated feedback follows the existing command adapters. Conditional UI adoption, hosted GitHub enforcement and live Sentry delivery have separate criteria."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/conversation-identity.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            }
           ]
         }
       }
@@ -699643,7 +699871,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -699731,7 +699960,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+              "sha256": "7cc7e23adab8815b2f9a28af5d100f2ecb1755a96aa19a046a5afdbe740650d0"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -699747,7 +699976,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/package.json",
@@ -700109,6 +700338,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -700307,7 +700545,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -700395,7 +700634,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+              "sha256": "7cc7e23adab8815b2f9a28af5d100f2ecb1755a96aa19a046a5afdbe740650d0"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -700411,7 +700650,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/package.json",
@@ -700773,6 +701012,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -700971,7 +701219,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -701059,7 +701308,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+              "sha256": "7cc7e23adab8815b2f9a28af5d100f2ecb1755a96aa19a046a5afdbe740650d0"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -701075,7 +701324,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/package.json",
@@ -701437,6 +701686,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -701633,7 +701891,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -701721,7 +701980,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+              "sha256": "7cc7e23adab8815b2f9a28af5d100f2ecb1755a96aa19a046a5afdbe740650d0"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -701737,7 +701996,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/package.json",
@@ -702099,6 +702358,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -702295,7 +702563,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -702383,7 +702652,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+              "sha256": "7cc7e23adab8815b2f9a28af5d100f2ecb1755a96aa19a046a5afdbe740650d0"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -702399,7 +702668,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/package.json",
@@ -702761,6 +703030,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -702959,7 +703237,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -703047,7 +703326,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+              "sha256": "7cc7e23adab8815b2f9a28af5d100f2ecb1755a96aa19a046a5afdbe740650d0"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -703063,7 +703342,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/package.json",
@@ -703425,6 +703704,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -703622,7 +703910,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -703710,7 +703999,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+              "sha256": "7cc7e23adab8815b2f9a28af5d100f2ecb1755a96aa19a046a5afdbe740650d0"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -703726,7 +704015,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/package.json",
@@ -704088,6 +704377,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -704285,7 +704583,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -704373,7 +704672,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+              "sha256": "7cc7e23adab8815b2f9a28af5d100f2ecb1755a96aa19a046a5afdbe740650d0"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -704389,7 +704688,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/package.json",
@@ -704751,6 +705050,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -704948,7 +705256,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -705036,7 +705345,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+              "sha256": "7cc7e23adab8815b2f9a28af5d100f2ecb1755a96aa19a046a5afdbe740650d0"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -705052,7 +705361,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/package.json",
@@ -705414,6 +705723,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -705611,7 +705929,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -705699,7 +706018,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+              "sha256": "7cc7e23adab8815b2f9a28af5d100f2ecb1755a96aa19a046a5afdbe740650d0"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -705715,7 +706034,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/package.json",
@@ -706077,6 +706396,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -706274,7 +706602,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -706362,7 +706691,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+              "sha256": "7cc7e23adab8815b2f9a28af5d100f2ecb1755a96aa19a046a5afdbe740650d0"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -706378,7 +706707,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/package.json",
@@ -706740,6 +707069,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -706937,7 +707275,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -707025,7 +707364,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
-              "sha256": "b0da1258c80ea743ec1c71c2d7538d8e60bdf1f5afa55185210af062adf2d206"
+              "sha256": "7cc7e23adab8815b2f9a28af5d100f2ecb1755a96aa19a046a5afdbe740650d0"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -707041,7 +707380,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/package.json",
@@ -707403,6 +707742,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -744837,7 +745185,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -744997,7 +745346,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -745316,6 +745665,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -745507,7 +745864,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -745667,7 +746025,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -745986,6 +746344,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -746177,7 +746543,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -746337,7 +746704,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -746656,6 +747023,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -746848,7 +747223,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -747008,7 +747384,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -747327,6 +747703,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -747518,7 +747902,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -747678,7 +748063,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -747997,6 +748382,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -748188,7 +748581,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -748348,7 +748742,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -748667,6 +749061,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -748858,7 +749260,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -749018,7 +749421,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -749337,6 +749740,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -749529,7 +749940,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -749689,7 +750101,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -750008,6 +750420,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -750199,7 +750619,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -750359,7 +750780,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -750678,6 +751099,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -750869,7 +751298,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -751029,7 +751459,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -751348,6 +751778,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -764623,7 +765061,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -768434,6 +768872,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+              "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
             }
           ],
           "presentation_renewals": [
@@ -768862,7 +769308,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ]
       }
     },
@@ -780957,7 +781404,8 @@
         "Run the full hosted browser matrix against the exact next candidate and retain the seven-day report. The prior c20816f0 matrix finished and failed. Focused native checks cover its diagnosed failures, including the pinned Firefox runtime, receipt details, CSP provenance, combobox validation focus and migrated reconciliation queue.",
         "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "The primary mobile populated-paint measurement now excludes demonstrated test-runner polling delay. All 12 focused cases passed with unchanged budgets. Verify the repaired hosted integrity check before closing the release gate.",
-        "Nightly 42817801007 exposed additional login and electricity timing/overlay flakes and Linux WebKit Terms selection failures. The focused repairs pass locally; the hosted candidate rerun and other matrix outcomes remain open."
+        "Nightly 42817801007 exposed additional login and electricity timing/overlay flakes and Linux WebKit Terms selection failures. The focused repairs pass locally; the hosted candidate rerun and other matrix outcomes remain open.",
+        "The generated contract now matches the rate-limit routes and contact-proof registration response. The exact hosted quality check is pending. Scope-tested touch and focus fixes cover observed hosted browser failures. Remaining matrix jobs and strict rollup are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -781114,7 +781562,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-browser-keyboard-and-mobile-touch"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -894286,6 +894735,99 @@
         42853254050,
         42854992746
       ]
+    },
+    "release-0.6-browser-keyboard-and-mobile-touch": {
+      "batch": "release-0.6-browser-keyboard-and-mobile-touch",
+      "base_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02",
+        "02-auth-users-admin.md#T-05.04.01",
+        "02-auth-users-admin.md#T-05.04.02",
+        "02-auth-users-admin.md#T-05.04.03",
+        "02-auth-users-admin.md#T-05.04.04",
+        "02-auth-users-admin.md#T-05.04.05",
+        "02-auth-users-admin.md#T-05.05.02",
+        "06-security-testing-observability.md#T-06.10.03.05",
+        "07-ui-ux-design.md#T-07.01.03.06",
+        "07-ui-ux-design.md#T-07.01.03.07",
+        "07-ui-ux-design.md#T-07.01.03.08",
+        "07-ui-ux-design.md#T-07.01.04.02",
+        "07-ui-ux-design.md#T-07.01.04.03",
+        "07-ui-ux-design.md#T-07.01.04.04",
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.19.01.01",
+        "07-ui-ux-design.md#T-07.19.01.02",
+        "07-ui-ux-design.md#T-07.19.01.03",
+        "07-ui-ux-design.md#T-07.19.02.01",
+        "07-ui-ux-design.md#T-07.19.02.02",
+        "07-ui-ux-design.md#T-07.19.02.03",
+        "07-ui-ux-design.md#T-07.19.02.04",
+        "07-ui-ux-design.md#T-07.19.02.05",
+        "07-ui-ux-design.md#T-07.19.02.06",
+        "07-ui-ux-design.md#T-07.19.02.07",
+        "07-ui-ux-design.md#T-07.19.02.08",
+        "07-ui-ux-design.md#T-07.19.02.09",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/combo-box-component.spec.ts",
+        "apps/web/e2e/conversation-identity.spec.ts",
+        "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+        "apps/web/e2e/fixtures/combo-box/index.html",
+        "apps/web/e2e/team.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/combo-box-component.spec.ts",
+          "sha256": "eecdf16933dcfe3bd01b06af03282c0e0a1685efd3c1e52f3ea3c4d5e4227966"
+        },
+        {
+          "path": "apps/web/e2e/conversation-identity.spec.ts",
+          "sha256": "08cb74d42b80499c455fa7b63e7e49de784ca5c41291753da332d58c7f59b051"
+        },
+        {
+          "path": "apps/web/e2e/dashboard-upcoming-invoices.spec.ts",
+          "sha256": "7cc7e23adab8815b2f9a28af5d100f2ecb1755a96aa19a046a5afdbe740650d0"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/combo-box/index.html",
+          "sha256": "8ed4f0c52fceb9dc93a2ce7fc0bcc739225e0ca5e935c3e85544b5761978aca9"
+        },
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+        }
+      ],
+      "checks": [
+        "Pinned Linux Node 24.22.2, Firefox 159 revision 1575 and Playwright 1.65.0 pass both invitation cases after explicitly proving real input focus before Escape. The original isolated replay also passed both cases; hosted Firefox shard 8 failed both, so broad hosted acceptance stays open.",
+        "Linux Mobile Safari passes the three failing hosted account-menu and dashboard cases with real touch, verified expanded menu, fresh identity content and observed document language. The original isolated Mobile Safari replay passed two cases and hit the 30 s budget on the final ticket interaction in the Persian case. The final three pass with the original assertions and budgets.",
+        "Five focused Chromium cases and nine Mobile Chrome customer/staff and dashboard cases pass. Eight scoped combobox cases pass in Mobile Safari and Mobile Chrome across both locales and themes after aligning the fixture viewport with the application and tapping the custom trigger. The first four tap-only cases timed out while the fixture page root intercepted the pointer. The final tests assert the device viewport and pass with the original 30 s test and 5 s assertion budgets. Keyboard, form, privacy, payload, retry and accessibility assertions remain in place. Web strict types, lint, formatting and diff validation pass.",
+        "Hosted run 42851100246 at 150bec1e has failures in Firefox shard 8 and Mobile Safari shards 1 and 2. Desktop WebKit shard 2 also failed and is under separate investigation. A clean full-matrix result and seven-day historical report are still required. No release or notification was triggered."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "source_scope_proof": "browser-keyboard-mobile-touch-source-proof.json",
+      "source_scope_proof_sha256": "deb65a06de1c3cf096a51e15e1fc59cd7e87d7eebc3ae038ab832092ac91ed0c"
     }
   },
   "historical_improvements": [
@@ -894333,7 +894875,7 @@
       "01-platform-infrastructure.md#T-05.05.01",
       "release-readiness#R-05.02"
     ],
-    "goal": "Diagnose the exact hosted Firefox invitation dialog failures and read back remaining matrix outcomes before repeating any release check."
+    "goal": "Read back terminal browser results and repair demonstrated failures before running the final exact matrix and strict report."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

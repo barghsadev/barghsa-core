@@ -41,10 +41,28 @@ async function shell(page: Page, locale: 'en' | 'fa', staff: boolean) {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.setViewportSize({ width: 390, height: 844 });
 }
+
+async function openIdentityEditor(page: Page, locale: 'en' | 'fa', isMobile: boolean) {
+  const menu = page.getByRole('button', { name: shellText('accountMenu', locale), exact: true });
+  if (isMobile) await menu.tap();
+  else await menu.click();
+  await expect(menu).toHaveAttribute('aria-expanded', 'true');
+  const title = identityText('conversationIdentity.title', locale);
+  const account = page
+    .locator('[data-slot="popover-content"]')
+    .filter({ has: page.getByRole('button', { name: title, exact: true }) });
+  await expect(account.getByText('private-login@example.test', { exact: true })).toBeVisible();
+  const action = account.getByRole('button', { name: title, exact: true });
+  if (isMobile) await action.tap();
+  else await action.click();
+  return page.getByRole('dialog', { name: title });
+}
+
 for (const staff of [false, true])
   for (const locale of ['en', 'fa'] as const) {
     test(`conversation identity saves verified photos, survives retry and removes shared details (${staff ? 'staff' : 'customer'}, ${locale})`, async ({
       page,
+      isMobile,
     }) => {
       await shell(page, locale, staff);
       const copy = (key: string) => identityText(`conversationIdentity.${key}`, locale);
@@ -177,14 +195,7 @@ for (const staff of [false, true])
       await page.evaluate(() => {
         document.cookie = 'barghsa_csrf=identity-csrf; path=/';
       });
-      const openEditor = async () => {
-        await page
-          .getByRole('button', { name: shellText('accountMenu', locale), exact: true })
-          .click();
-        await page.getByRole('button', { name: copy('title'), exact: true }).click();
-        return page.getByRole('dialog', { name: copy('title') });
-      };
-      const editor = await openEditor();
+      const editor = await openIdentityEditor(page, locale, isMobile);
       await expect(editor.getByLabel(copy('name'), { exact: true })).toHaveValue('');
       await expect(editor).toContainText(copy('description'));
       await expect(
@@ -241,7 +252,7 @@ for (const staff of [false, true])
           'private-login@example.test'
         );
       }
-      const again = await openEditor();
+      const again = await openIdentityEditor(page, locale, isMobile);
       await expect(again.getByLabel(copy('name'), { exact: true })).toHaveValue(
         identity.displayName!
       );
@@ -283,6 +294,7 @@ for (const staff of [false, true])
     });
     test(`conversation identity recovers read/conflict failures with an accessible preserved draft (${staff ? 'staff' : 'customer'}, ${locale})`, async ({
       page,
+      isMobile,
     }, testInfo) => {
       await shell(page, locale, staff);
       let reads = 0,
@@ -340,11 +352,7 @@ for (const staff of [false, true])
       });
       await page.clock.install();
       await page.goto(staff ? '/admin/tickets' : '/tickets');
-      await page
-        .getByRole('button', { name: shellText('accountMenu', locale), exact: true })
-        .click();
-      await page.getByRole('button', { name: copy('title'), exact: true }).click();
-      const editor = page.getByRole('dialog', { name: copy('title') });
+      const editor = await openIdentityEditor(page, locale, isMobile);
       try {
         await expect.poll(() => reads).toBe(1);
         await expect(editor.getByRole('status')).toHaveText(copy('loading'));

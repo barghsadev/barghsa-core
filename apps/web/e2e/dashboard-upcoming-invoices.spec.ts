@@ -5,6 +5,7 @@ import { shellText } from '@barghsa/i18n/shell';
 test('dashboard shows invoices, orders and contracts, then clears them after switching profiles', async ({
   page,
   baseURL,
+  isMobile,
 }) => {
   await page.addInitScript(() => localStorage.setItem('barghsa.locale', 'en'));
   await page
@@ -214,11 +215,18 @@ test('dashboard shows invoices, orders and contracts, then clears them after swi
   async function switchLanguage(name: string, locale: 'en' | 'fa') {
     const control = page.getByRole('button', { name, exact: true });
     const inAccountMenu = !(await control.isVisible());
-    if (inAccountMenu)
-      await page
-        .getByRole('button', { name: shellText('accountMenu', locale), exact: true })
-        .click();
-    await control.click();
+    if (inAccountMenu) {
+      const menu = page.getByRole('button', {
+        name: shellText('accountMenu', locale),
+        exact: true,
+      });
+      if (isMobile) await menu.tap();
+      else await menu.click();
+      await expect(menu).toHaveAttribute('aria-expanded', 'true');
+    }
+    if (isMobile) await control.tap();
+    else await control.click();
+    await expect(page.locator('html')).toHaveAttribute('lang', locale === 'en' ? 'fa' : 'en');
     if (inAccountMenu) {
       await page.keyboard.press('Escape');
       await expect(

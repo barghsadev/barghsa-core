@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T16:45:35+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T16:53:15+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Diagnose the exact hosted Firefox invitation dialog failures and read back remaining matrix outcomes before repeating any release check.
+Read back terminal browser results and repair demonstrated failures before running the final exact matrix and strict report.
 
 - `01-platform-infrastructure.md#T-01.04.04`: Configure Playwright for E2E testing
 - `01-platform-infrastructure.md#T-01.04.06`: Configure flaky-test quarantine process

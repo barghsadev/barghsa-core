@@ -414,7 +414,9 @@ for (const locale of ['fa', 'en'] as const) {
     await role.selectOption('Finance');
     await expect(role).toHaveValue('Finance');
     await expect(dialog.getByRole('status')).toContainText('Example company');
-    await input.press('Escape');
+    await input.click();
+    await expect(input).toBeFocused();
+    await page.keyboard.press('Escape');
     await expect(dialog).toHaveCount(0);
     await expect(trigger).toBeFocused();
     expect(sent).toEqual([]);

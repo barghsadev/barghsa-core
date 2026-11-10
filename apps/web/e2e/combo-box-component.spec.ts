@@ -49,8 +49,11 @@ for (const locale of ['en', 'fa'])
   for (const theme of ['light', 'dark']) {
     test(`search, keyboard highlight, custom trigger and form roundtrip (${locale}, ${theme})`, async ({
       page,
+      isMobile,
     }) => {
       await page.goto(`${url}?locale=${locale}&theme=${theme}`);
+      if (isMobile)
+        expect(await page.evaluate(() => window.innerWidth)).toBe(page.viewportSize()?.width);
       const fa = locale === 'fa';
       const billing = fa ? 'صورتحساب' : 'Billing';
       const orders = fa ? 'سفارش‌ها' : 'Orders';
@@ -96,7 +99,8 @@ for (const locale of ['en', 'fa'])
       await expect(trigger).toHaveAttribute('data-custom-trigger', 'true');
       await expect(trigger).toContainText(billing);
       await expect(trigger.locator('svg')).toHaveCount(1);
-      await trigger.click();
+      if (isMobile) await trigger.tap();
+      else await trigger.click();
       await expect(category).toHaveAttribute('aria-expanded', 'true');
       await expect(page.getByRole('listbox')).toBeVisible();
       await expect(page.locator('[data-slot="combobox-popup"]')).toHaveCSS('opacity', '1');
