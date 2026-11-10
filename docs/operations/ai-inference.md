@@ -18,6 +18,8 @@ inference in a new UTC month resets their counters. [Approved AI budget design](
 
 Check `GET /health/ready` on the private AI port for its database connectivity and active-call saturation. Staff with `admin:ai:models` can use `GET /api/ai/health` for queue and circuit state. Core `/api/health/ready` stays independent of the AI process. If the AI process is unavailable, agent chat returns `AI_INFERENCE_UNAVAILABLE` (503); budget and circuit state are not charged as a provider failure.
 
+Configure `AI_INFERENCE_URL` as the direct private origin. The API rejects redirects on both completion and health requests. It caps the decoded completion response at 256 KiB and health and saturation responses at 4 KiB before parsing them. The 32,000-character reply limit still applies after decoding.
+
 The private API scrape exposes completion duration and count by model and
 outcome. It counts each admitted inference-worker attempt, including recovery
 probes. The token counter uses only usage reported by a completion provider.

@@ -1,6 +1,9 @@
 import { expect, it, vi } from 'vitest';
+import { once } from 'node:events';
+import { createServer, type Server } from 'node:http';
 import {
   createHttpPaymentGateway,
+  createZarinpalPaymentGateway,
   isPaymentGatewayRejectedError,
   type PaymentGatewayFetch,
 } from './payment-gateway.js';
@@ -185,4 +188,93 @@ it.each(['inquiryUrl', 'verifyUrl'] as const)('rejects insecure %s configuration
       [key]: 'http://psp.example.test/endpoint',
     })
   ).toThrow('https URL');
+});
+
+function defaultHttpGateway() {
+  return createHttpPaymentGateway({
+    requestUrl: 'https://psp.example.test/request',
+    inquiryUrl: 'https://psp.example.test/inquiry',
+    verifyUrl: 'https://psp.example.test/verify',
+    apiKey: 'fixture-key',
+  });
+}
+
+it('never follows provider redirects from either adapter or any operation', async () => {
+  const received: string[] = [];
+  const redirected: string[] = [];
+  const destination = createServer((request, response) => {
+    redirected.push(request.url ?? '');
+    response.writeHead(200).end('{}');
+  });
+  const origin = createServer((request, response) => {
+    received.push(request.url?.split('?')[0] ?? '');
+    response.writeHead(307, { location: `${address(destination)}/other` }).end();
+  });
+  const servers = [destination, origin];
+  for (const server of servers) {
+    server.listen(0, '127.0.0.1');
+    await once(server, 'listening');
+  }
+  const fetchOnWire = globalThis.fetch;
+  const routeToFixture = vi.spyOn(globalThis, 'fetch').mockImplementation((input, init) => {
+    const endpoint = new URL(String(input));
+    return fetchOnWire(`${address(origin)}${endpoint.pathname}${endpoint.search}`, init);
+  });
+
+  function address(server: Server) {
+    const binding = server.address();
+    if (!binding || typeof binding === 'string') throw new Error('Missing fixture port');
+    return `http://127.0.0.1:${binding.port}`;
+  }
+
+  try {
+    const zarinpal = createZarinpalPaymentGateway({ merchantId: 'fixture-merchant' });
+    for (const gateway of [defaultHttpGateway(), zarinpal]) {
+      for (const operation of ['startPayment', 'recoverPayment', 'verifyPayment'] as const) {
+        const error: unknown = await gateway[operation]({ ...start, ...verify }).catch(
+          (error: unknown) => error
+        );
+        expect(error).toBeInstanceOf(TypeError);
+        expect(isPaymentGatewayRejectedError(error)).toBe(false);
+      }
+    }
+    expect(received).toEqual([
+      '/request',
+      '/inquiry',
+      '/verify',
+      '/pg/v4/payment/request.json',
+      '/pg/v4/payment/unVerified.json',
+      '/pg/v4/payment/verify.json',
+    ]);
+    expect(redirected).toEqual([]);
+  } finally {
+    routeToFixture.mockRestore();
+    await Promise.all(
+      servers.map((server) => new Promise<void>((resolve) => server.close(() => resolve())))
+    );
+  }
+});
+
+it('requires a bounded receipt before accepting a paid status or classifying a refusal', async () => {
+  const paid = { paid: true, refId: 'ref-on-wire' };
+  const padding = 'x'.repeat(10 * 1024 * 1024);
+  const transport = vi
+    .spyOn(globalThis, 'fetch')
+    .mockResolvedValueOnce(Response.json({ ...paid, padding }))
+    .mockResolvedValueOnce(Response.json({ error: 'rejected', padding }, { status: 400 }))
+    .mockResolvedValueOnce(Response.json(paid));
+  try {
+    const gateway = defaultHttpGateway();
+    await expect(gateway.verifyPayment(verify)).rejects.toThrow('invalid JSON (HTTP 200)');
+    const error: unknown = await gateway.startPayment(start).catch((error: unknown) => error);
+    expect(error).toMatchObject({ message: expect.stringContaining('invalid JSON (HTTP 400)') });
+    expect(isPaymentGatewayRejectedError(error)).toBe(false);
+    await expect(gateway.verifyPayment(verify)).resolves.toEqual({
+      paid: true,
+      providerRefId: paid.refId,
+    });
+    expect(transport).toHaveBeenCalledTimes(3);
+  } finally {
+    transport.mockRestore();
+  }
 });

@@ -42,6 +42,12 @@ Origin/cookie credentials. Exact request replay retains its authority; changed
 amount/order/callback returns409. Verification remains unpaid until a protected
 operator command settles that exact authority/order/amount.
 
+Configure direct HTTPS endpoints for server-side payment requests, inquiries and
+verification. The HTTP and ZarinPal adapters refuse transport redirects and cap
+decoded JSON responses at 10 MiB. A transport failure or an oversized response
+leaves the outcome uncertain. Keep the original payment identity for inquiry and
+reconciliation. The checkout URL still comes from the validated provider receipt.
+
 For an authorized synthetic staging payment only, POST JSON to
 `/__staging/payment/settle` with `idempotencyKey`, `orderId`, `authority` and
 numeric `amount`, using the separate operator bearer token. The response supplies

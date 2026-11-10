@@ -4,6 +4,21 @@ import {
   type ChatCompletionInput,
   type ChatCompletionResult,
 } from '@barghsa/shared/ai-models';
+import { readCappedBytes } from '../storage/read-capped-bytes.js';
+
+// A 32,000-character reply fits even when JSON escapes every UTF-16 code unit.
+const MAX_COMPLETION_BYTES = 256 * 1024;
+const MAX_STATUS_BYTES = 4 * 1024;
+
+async function readWorkerJson(response: Response, limit: number): Promise<unknown> {
+  if (!response.body) return null;
+  try {
+    const { bytes, truncated } = await readCappedBytes(response.body, limit);
+    return truncated ? null : JSON.parse(new TextDecoder().decode(bytes));
+  } catch {
+    return null;
+  }
+}
 
 function unavailable(): HttpException {
   return new HttpException({ statusCode: 503, error: 'AI_INFERENCE_UNAVAILABLE' }, 503);
@@ -62,19 +77,23 @@ export async function completeViaAiWorker(
         },
       }),
       signal: AbortSignal.timeout(25_000),
+      redirect: 'error',
     });
   } catch {
     throw unavailable();
   }
   if (response.status === 503) {
-    const body = (await response.json().catch(() => null)) as { error?: unknown } | null;
+    const body = (await readWorkerJson(response, MAX_STATUS_BYTES)) as { error?: unknown } | null;
     if (body?.error === 'AI_INFERENCE_BUSY')
       throw new HttpException({ statusCode: 503, error: 'AI_INFERENCE_BUSY' }, 503);
     throw unavailable();
   }
-  if (response.status === 502) throw new Error('ai_completion_provider_unavailable');
-  if (response.status !== 200) throw unavailable();
-  const body = await response.json().catch(() => null);
+  if (response.status !== 200) {
+    await response.body?.cancel().catch(() => {});
+    if (response.status === 502) throw new Error('ai_completion_provider_unavailable');
+    throw unavailable();
+  }
+  const body = await readWorkerJson(response, MAX_COMPLETION_BYTES);
   if (!validResult(body)) throw unavailable();
   return body;
 }
@@ -107,11 +126,18 @@ export async function readAiWorkerHealth(): Promise<{
   try {
     const response = await fetch(new URL('/health/ready', base), {
       signal: AbortSignal.timeout(1_000),
+      redirect: 'error',
     });
-    if (!response.ok) return unavailable;
-    const body = (await response.json()) as Record<string, unknown>;
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => {});
+      return unavailable;
+    }
+    const body = (await readWorkerJson(response, MAX_STATUS_BYTES)) as Record<
+      string,
+      unknown
+    > | null;
     if (
-      body.status !== 'ok' ||
+      body?.status !== 'ok' ||
       !Number.isSafeInteger(body.active) ||
       !Number.isSafeInteger(body.maxConcurrency) ||
       typeof body.saturated !== 'boolean'

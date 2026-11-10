@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { isIP } from 'node:net';
+import { readCappedBytes } from '../storage/read-capped-bytes.js';
 
 /**
  * Payment gateway port used by online wallet top-up initiation
@@ -152,6 +153,22 @@ export type PaymentGatewayFetch = (
   status: number;
   json: () => Promise<unknown>;
 }>;
+
+const MAX_GATEWAY_RESPONSE_BYTES = 10 * 1024 * 1024;
+
+const fetchPaymentGateway: PaymentGatewayFetch = async (input, init) => {
+  const response = await fetch(input, { ...init, redirect: 'error' });
+  return {
+    ok: response.ok,
+    status: response.status,
+    async json() {
+      if (!response.body) throw new SyntaxError('Empty payment gateway response');
+      const { bytes, truncated } = await readCappedBytes(response.body, MAX_GATEWAY_RESPONSE_BYTES);
+      if (truncated) throw new SyntaxError('Payment gateway response exceeds limit');
+      return JSON.parse(new TextDecoder().decode(bytes));
+    },
+  };
+};
 
 function isProductionEnv(env: NodeJS.ProcessEnv): boolean {
   return env.NODE_ENV === 'production';
@@ -471,7 +488,7 @@ export function createHttpPaymentGateway(options: {
   fetchImpl?: PaymentGatewayFetch;
   allowedHosts?: readonly string[];
 }): PaymentGateway {
-  const fetchImpl = options.fetchImpl ?? (fetch as PaymentGatewayFetch);
+  const fetchImpl = options.fetchImpl ?? fetchPaymentGateway;
   const timeoutMs = options.timeoutMs ?? DEFAULT_PAYMENT_GATEWAY_TIMEOUT_MS;
   const startUrlRaw = options.startUrl ? stripTrailingSlash(options.startUrl) : undefined;
   const allowedHosts =
@@ -680,7 +697,7 @@ export function createZarinpalPaymentGateway(options: {
   fetchImpl?: PaymentGatewayFetch;
   allowedHosts?: readonly string[];
 }): PaymentGateway {
-  const fetchImpl = options.fetchImpl ?? (fetch as PaymentGatewayFetch);
+  const fetchImpl = options.fetchImpl ?? fetchPaymentGateway;
   const timeoutMs = options.timeoutMs ?? DEFAULT_PAYMENT_GATEWAY_TIMEOUT_MS;
   const requestUrl = options.requestUrl ?? DEFAULT_ZARINPAL_REQUEST_URL;
   const startPayUrlRaw = stripTrailingSlash(options.startPayUrl ?? DEFAULT_ZARINPAL_START_PAY_URL);

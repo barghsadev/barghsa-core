@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T09:06:17+00:00",
-  "source_commit": "69e43e1b5f4c26807c536c13067deee68343a38c",
+  "updated": "2026-11-10T09:23:25+00:00",
+  "source_commit": "c63e51b558ce3fd1286db9a9277392cb1b5f69ea",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -108341,7 +108341,8 @@
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "done",
@@ -108405,11 +108406,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.ts",
@@ -110899,7 +110900,8 @@
           "release-0.6-immutable-staging-acceptance",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -110979,11 +110981,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -111291,7 +111293,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "packages/db/drizzle/production/0273_telegram_profile_linkage.sql",
@@ -147578,7 +147580,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -147606,7 +147609,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -147900,7 +147903,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-provider-callbacks",
@@ -147968,7 +147972,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -152663,7 +152667,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-wallet-profile-topup-admission"
+          "release-0.6-wallet-profile-topup-admission",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-provider-callbacks",
@@ -152731,7 +152736,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -462981,7 +462986,8 @@
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463045,11 +463051,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.ts",
@@ -463483,7 +463489,8 @@
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463547,11 +463554,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.ts",
@@ -463987,7 +463994,8 @@
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464051,11 +464059,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.ts",
@@ -464489,7 +464497,8 @@
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464553,11 +464562,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.ts",
@@ -470508,7 +470517,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "done",
@@ -470576,11 +470586,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -470756,7 +470766,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -471091,7 +471101,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "done",
@@ -471159,11 +471170,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -471339,7 +471350,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -471672,7 +471683,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "done",
@@ -471740,11 +471752,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -471920,7 +471932,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -472253,7 +472265,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -472321,11 +472334,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -472501,7 +472514,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -473333,7 +473346,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "done",
@@ -473401,11 +473415,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -473581,7 +473595,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -473961,7 +473975,8 @@
           "release-0.6-immutable-staging-acceptance",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -474041,11 +474056,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -474353,7 +474368,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -475127,7 +475142,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "done",
@@ -475195,11 +475211,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -475375,7 +475391,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -475707,7 +475723,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "done",
@@ -475775,11 +475792,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -475955,7 +475972,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -476288,7 +476305,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "done",
@@ -476356,11 +476374,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -476536,7 +476554,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -476870,7 +476888,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -476938,11 +476957,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -477118,7 +477137,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -477474,7 +477493,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "done",
@@ -477542,11 +477562,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -477722,7 +477742,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -478054,7 +478074,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "status": "done",
@@ -478122,11 +478143,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -478302,7 +478323,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -488408,7 +488429,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Inventory remaining external provider transports and process-wide egress controls. The electricity and saving bill adapters now use a shared bounded transport for deployment-configured origins."
+        "Inventory the remaining provider transports and process-wide egress controls. Private AI worker and payment gateway transports now reject redirects and bound response reads alongside the existing bill adapters."
       ],
       "owner": null,
       "depends_on": [],
@@ -488417,7 +488438,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-provider-egress-regressions",
-          "release-0.6-bill-provider-network-boundaries"
+          "release-0.6-bill-provider-network-boundaries",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": null
       }
@@ -488493,7 +488515,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "AI, web-source and bill transports refuse all redirects. Verify equivalent behavior for the remaining external providers."
+        "The private AI worker, external AI, web-source, bill and payment gateway transports refuse all redirects. Verify equivalent behavior for the remaining external providers."
       ],
       "owner": null,
       "depends_on": [],
@@ -488502,7 +488524,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-provider-egress-regressions",
-          "release-0.6-bill-provider-network-boundaries"
+          "release-0.6-bill-provider-network-boundaries",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": null
       }
@@ -488522,7 +488545,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "AI, web-source and bill transports have bounded deadlines and response sizes. Verify the remaining providers and deploy-time constraints."
+        "The private AI worker, external AI, web-source, bill and payment gateway transports have bounded deadlines and response sizes. Verify the remaining providers and deploy-time constraints."
       ],
       "owner": null,
       "depends_on": [],
@@ -488531,7 +488554,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-provider-egress-regressions",
-          "release-0.6-bill-provider-network-boundaries"
+          "release-0.6-bill-provider-network-boundaries",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": null
       }
@@ -489763,7 +489787,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-ai-quotas-and-budgets",
@@ -489832,7 +489857,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             }
           ]
         }
@@ -490934,7 +490959,8 @@
         "batches": [
           "release-0.6-security-scenario-and-signed-fixture-reconciliation",
           "release-0.6-shared-webhook-signature-verification",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-payment-signature-merchant-and-server-settlement",
@@ -490974,7 +491000,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
             }
           ],
           "checks": [
@@ -494507,7 +494533,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-domain-unit-acceptance"
+          "release-0.6-domain-unit-acceptance",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "source-bound-domain-unit-tests",
@@ -494555,7 +494582,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
-              "sha256": "8b275a988a09206b3feb59c78ba5a01c54faef7b8aa8efc4f5e25f2606696147"
+              "sha256": "caf55b622346eeafd6977ebaa77325dcf3641521d364d22159f96bc0e551f130"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.test.ts",
@@ -494563,7 +494590,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
             },
             {
               "path": "apps/web/package.json",
@@ -495283,7 +495310,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -495295,7 +495323,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
-              "sha256": "8b275a988a09206b3feb59c78ba5a01c54faef7b8aa8efc4f5e25f2606696147"
+              "sha256": "caf55b622346eeafd6977ebaa77325dcf3641521d364d22159f96bc0e551f130"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.test.ts",
@@ -495303,7 +495331,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
             },
             {
               "path": "deploy/staging/payment-sandbox.mjs",
@@ -496233,7 +496261,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -496245,7 +496274,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
-              "sha256": "8b275a988a09206b3feb59c78ba5a01c54faef7b8aa8efc4f5e25f2606696147"
+              "sha256": "caf55b622346eeafd6977ebaa77325dcf3641521d364d22159f96bc0e551f130"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.test.ts",
@@ -496253,7 +496282,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
             },
             {
               "path": "deploy/staging/payment-sandbox.mjs",
@@ -497068,7 +497097,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -497180,7 +497210,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
             }
           ],
           "checks": [
@@ -500396,7 +500426,8 @@
         "batches": [
           "release-0.6-ai-inference-metrics",
           "release-0.6-runtime-failure-log-redaction",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-ai-provider-attempts-and-durable-budget-metrics",
@@ -500428,15 +500459,15 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.ts",
@@ -501774,7 +501805,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-payment-idempotency-conflict-p1",
@@ -501826,7 +501858,7 @@
             },
             {
               "path": "docs/operations/staging-payment-sandbox.md",
-              "sha256": "3e7f3dca369843582ace04e2b1ad181a397fea22d194a2304d0ef6a89c7d9c06"
+              "sha256": "875888b12de02a783b1b4b0334880608048fda335845bfc7811e3a2a60ba22d0"
             },
             {
               "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
@@ -501895,7 +501927,8 @@
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -501943,7 +501976,7 @@
             },
             {
               "path": "docs/operations/staging-payment-sandbox.md",
-              "sha256": "3e7f3dca369843582ace04e2b1ad181a397fea22d194a2304d0ef6a89c7d9c06"
+              "sha256": "875888b12de02a783b1b4b0334880608048fda335845bfc7811e3a2a60ba22d0"
             },
             {
               "path": "apps/api/src/wallet/payment-callback-verifier.ts",
@@ -502931,7 +502964,8 @@
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -502999,7 +503033,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -503087,7 +503121,8 @@
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -503155,7 +503190,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -503244,7 +503279,8 @@
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -503312,7 +503348,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -503427,7 +503463,8 @@
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-ai-quotas-and-budget-evidence"
+          "release-0.6-ai-quotas-and-budget-evidence",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -503495,7 +503532,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -695603,7 +695640,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -695679,11 +695717,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -696309,7 +696347,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -696385,11 +696424,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -697017,7 +697056,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -697093,11 +697133,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -697723,7 +697763,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -697799,11 +697840,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -698428,7 +698469,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -698504,11 +698546,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -699632,7 +699674,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -699708,11 +699751,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -700338,7 +700381,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -700414,11 +700458,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -701045,7 +701089,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -701121,11 +701166,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -701751,7 +701796,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -701827,11 +701873,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -702455,7 +702501,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -702531,11 +702578,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -703159,7 +703206,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -703235,11 +703283,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -703863,7 +703911,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-guarded-customer-stream-and-isolated-admin-chat",
@@ -703939,11 +703988,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -747932,7 +747981,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
@@ -751274,7 +751323,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ]
       }
     },
@@ -756111,11 +756161,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -758183,7 +758233,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "docs/operations/async-jobs.md",
@@ -759975,7 +760025,8 @@
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-database-protection-export-leases",
           "release-0.6-alert-runbook-references-and-review",
-          "release-0.6-worker-outbox-dashboard"
+          "release-0.6-worker-outbox-dashboard",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -760148,11 +760199,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
-              "sha256": "9c7a9a50cb6ab49aa8f05758048cb698fcc2738ffd19da93f751e1b4dec077ab"
+              "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
-              "sha256": "b0301c6214f33ab9fdede638a368f2caa439749b197a83daef89807e822c146d"
+              "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-queue.test.ts",
@@ -762180,7 +762231,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "a565b29a8638d63a42ddbcc38e6d8515f93e27511b6b1ba3b596aedf60d816a8"
+              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
             },
             {
               "path": "docs/operations/async-jobs.md",
@@ -763878,7 +763929,8 @@
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-database-protection-export-leases",
           "release-0.6-alert-runbook-references-and-review",
-          "release-0.6-worker-outbox-dashboard"
+          "release-0.6-worker-outbox-dashboard",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -767863,7 +767915,6 @@
       "remaining": [
         "Reconcile every epic-01 and epic-06 criterion with current source and operational evidence. Apply the approved direct-main workflow while preserving all production gates.",
         "The initial production browser run had 70 unexpected cases. All affected cohorts now have targeted Chromium and mobile Safari evidence. Finish the full candidate matrix, source coverage and receipt review.",
-        "Protected preflight 42752579875 failed two upload reservation mock expectations. The updated expectations retain uploader, purpose, trusted size and exact optional scan-job arguments. All 97 affected local tests passed. Verify the cumulative exact-SHA hosted checks.",
         "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
@@ -767973,7 +768024,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-upload-preflight-reservation-assertions",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-ai-and-payment-transport-boundaries"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -874639,6 +874691,101 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/postgresql-dashboard",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "7b204fb44ae52f9863676e2106a0e47730504da00cbc8a4a8d27b77bf937a39a"
+    },
+    "release-0.6-ai-and-payment-transport-boundaries": {
+      "batch": "release-0.6-ai-and-payment-transport-boundaries",
+      "base_commit": "c63e51b558ce3fd1286db9a9277392cb1b5f69ea",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.04.01",
+        "06-security-testing-observability.md#T-06.04.04.04",
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/ai-agents/ai-inference-client.test.ts",
+        "apps/api/src/ai-agents/ai-inference-client.ts",
+        "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
+        "apps/api/src/wallet/payment-gateway.ts",
+        "docs/operations/ai-inference.md",
+        "docs/operations/staging-payment-sandbox.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-client.test.ts",
+          "sha256": "41f578d82ac05500d25c82024e0c6307af056b759cc282ac5a612b5b5bde308c"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-client.ts",
+          "sha256": "b4a1aae35b4324529c3e74226aaacc7d2a3e22591b1779917ae34be5382d738b"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-inference-routed-http.integration.test.ts",
+          "sha256": "9a4879b297b767eec8ffcba00c3932d36a9d0467ae55d36a84e4e02c14f5fce8"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
+          "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-website-chat-http.integration.test.ts",
+          "sha256": "bc0ab653e2f02f9265f6bcfdfaadcd59661e8e4416735aa27cc9073f21dc923f"
+        },
+        {
+          "path": "apps/api/src/storage/read-capped-bytes.ts",
+          "sha256": "32d3044d546e60e501e053fefd5c8ca14be0af73ec8cdef189dbd33f726dbf22"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback-recovery.test.ts",
+          "sha256": "3444386194784e0983f7f658d97885796dae6fcaddcf25828d500d189e0288ff"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup.service.test.ts",
+          "sha256": "6d6e34467e43413aca948f4d7c7f4dc1fdc6ec42c78aaca63d6be3338744436f"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
+          "sha256": "874713c339f14fd3aeb1abc502f041095124288f74b5ecf6f75190b760424fca"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
+          "sha256": "caf55b622346eeafd6977ebaa77325dcf3641521d364d22159f96bc0e551f130"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway.test.ts",
+          "sha256": "ad52b2aa1d07f79905aa4dc20c86c3435beaf6ef4f4152847b849a638534b246"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway.ts",
+          "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
+        },
+        {
+          "path": "apps/worker/src/ai-inference/server.ts",
+          "sha256": "f7bd8c1159a48ed6cfb2f017f57c75f151f1cbd1729c84d693456e38aa927220"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+        },
+        {
+          "path": "docs/operations/ai-inference.md",
+          "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+        },
+        {
+          "path": "docs/operations/staging-payment-sandbox.md",
+          "sha256": "875888b12de02a783b1b4b0334880608048fda335845bfc7811e3a2a60ba22d0"
+        }
+      ],
+      "checks": [
+        "The previous cumulative candidate f457724f passed all seven jobs in hosted run 42785801243, including combined coverage and the required integrity check. GitHub confirmed that exact SHA on main. This receipt does not cover the later transport changes or replace the final release rehearsal.",
+        "The dedicated AI client rejects redirects on completion and health, preserving the private header and prompt boundary. It limits decoded completion JSON to 256 KiB and health and saturation JSON to 4 KiB. Existing timeouts, valid reply character limit, infrastructure errors and provider failures retain their semantics.",
+        "Twelve related API unit cases passed, including actual loopback refusal of redirected requests, oversized response rejection and an escaped reply at the existing maximum. The isolated mounted admin preview passed on its own, with the private completion and API returning HTTP 200. A broader tunnel run returned 30 passed and nine failures, seven of them runner timeouts. The two assertion failures and two selected affected caller cases passed with unchanged assertions on isolated replay. The remaining timed-out broader cases were not accepted as passed.",
+        "Both production payment adapters now use the same default transport, which refuses redirects and caps decoded JSON at 10 MiB. An oversized or redirected request stays uncertain. Existing checkout URL authority checks, provider receipt validation and wallet credit rules are preserved.",
+        "The 152 payment transport and callback verification unit cases and 43 top-up caller unit cases passed. The remaining 15 recovery cases initially did not execute without PostgreSQL. All 15 then passed against the isolated PostgreSQL fixture. The fixture applied the same 206 production migrations and was removed.",
+        "API build and typecheck, focused lint and formatting checks passed. The launch tasks for process-wide egress, DNS/IP and deploy-time constraints retain their remaining criteria. No live PSP calls or payment movements were performed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/security-boundary-native",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "c175e20560c0df6e08efd597f89d88c5ddf007490e922a669a1ef9016175d41c"
     }
   },
   "historical_improvements": [
