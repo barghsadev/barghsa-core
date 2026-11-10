@@ -8,6 +8,19 @@ Direct pushes to `main` require **Verify monorepo integrity** on the exact candi
 
 Nightly jobs are separate from the integrity check. The release workflow in `kanban/WORKFLOW.md` governs when to enqueue staging after the verified release push.
 
+## Local Git checks
+
+The root ESLint flat configuration delegates to the shared TypeScript, Node and
+React rules. CI checks the full workspace with `pnpm lint` and checks formatting
+separately with `pnpm format:check`.
+
+The workspace install configures Husky in a local Git checkout. If install
+scripts are disabled locally, run `pnpm prepare` to enable the hooks. A commit
+runs ESLint and Prettier on staged TypeScript and runs Prettier on staged JSON,
+Markdown and YAML. Commitlint validates the commit subject against the
+conventional types used by this repository. CI and production installs skip
+local hook setup and use the hosted checks.
+
 ## Backend test databases
 
 The same Vitest configurations drive CI and local runs. Every tested workspace

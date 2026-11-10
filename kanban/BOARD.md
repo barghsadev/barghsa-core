@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T04:09:38+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T04:15:57+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1105 | Accepted with unchanged source bindings. |
-| verify | 218 | Existing work may be complete; inspect evidence before building. |
+| done | 1107 | Accepted with unchanged source bindings. |
+| verify | 216 | Existing work may be complete; inspect evidence before building. |
 | partial | 38 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1072,9 +1072,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-07.02.03` | verify | Earlier deferred | Implement configuration rollback |
 | `01-platform-infrastructure.md#T-07.02.04` | verify | Earlier deferred | Create secrets encryption and masking service |
 | `01-platform-infrastructure.md#T-07.02.05` | verify | Earlier deferred | Implement provider configuration lifecycle with test-send |
-| `01-platform-infrastructure.md#T-07.03.01` | verify | Earlier deferred | Create shared ESLint configuration |
+| `01-platform-infrastructure.md#T-07.03.01` | done | Earlier deferred | Create shared ESLint configuration |
 | `01-platform-infrastructure.md#T-07.03.02` | done | Earlier deferred | Configure Prettier with consistent formatting |
-| `01-platform-infrastructure.md#T-07.03.03` | verify | Earlier deferred | Set up Husky, lint-staged, and commitlint |
+| `01-platform-infrastructure.md#T-07.03.03` | done | Earlier deferred | Set up Husky, lint-staged, and commitlint |
 | `01-platform-infrastructure.md#T-07.03.04` | done | Earlier deferred | Create `.editorconfig` and `.vscode` workspace settings |
 | `01-platform-infrastructure.md#T-07.04.01` | done | Earlier deferred | Create incident runbooks directory (`docs/runbooks/`) |
 | `01-platform-infrastructure.md#T-07.04.02` | verify | Earlier deferred | Create initial ADRs |
