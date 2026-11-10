@@ -1196,6 +1196,9 @@ for (const locale of ['fa', 'en'] as const)
         await page.locator('#username').fill(username);
         await page.locator('#username').press('Tab');
         await page.locator('#password').fill(password);
+        const strength = page.locator('#password-strength').getByRole('progressbar');
+        await expect(strength).toHaveAttribute('aria-busy', 'false');
+        await expect(strength).toHaveAttribute('aria-valuenow', '100');
         await page.getByRole('checkbox').check();
         await page.locator('main button[type=submit]').click();
         await expect(page).toHaveURL(/\/register\/verify\?/);
