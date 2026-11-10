@@ -45,10 +45,12 @@ export class AgentRoleGuard implements CanActivate {
       this.reflector.get<AgentPermission>(AGENT_PERMISSION_KEY, context.getHandler()) ??
       this.reflector.get<AgentPermission>(AGENT_PERMISSION_KEY, context.getClass());
 
-    // No permission required — allow
     if (!requiredPermission) {
       this.logger.warn('AgentRoleGuard used without @RequireAgentPermission() decorator');
-      return true;
+      throw new ForbiddenException({
+        statusCode: 403,
+        error: ErrorCodes.AUTHZ_FORBIDDEN.code,
+      });
     }
 
     const http = context.switchToHttp();

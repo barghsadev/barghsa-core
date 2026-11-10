@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T06:00:29+00:00",
-  "source_commit": "efdf845d68291a79c1d1efae8cf718da1be81b76",
+  "updated": "2026-11-10T06:02:48+00:00",
+  "source_commit": "e954781da3c20f85bfb885363ac8530b09d8addd",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -484598,7 +484598,8 @@
           "release-0.6-authority-for-queued-and-private-results",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-agent-guard-requires-capability"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -484606,7 +484607,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "112c2fda14acffc8ed027a359e5d210f49a1f849de13d0b302eb8f4ce388d59e"
+              "sha256": "8d1552aa40152208d5beba3f8ee3d3e7d33073b88ebc8b768463daa0af31d4c5"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -484720,19 +484721,69 @@
         "story": "06-security-testing-observability.md#spec-2ce6d1b092d4"
       },
       "requirement": "| T-06.03.01.03 | Implement NestJS guard/decorator for endpoint-level permission checks | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-agent-guard-requires-capability"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "e954781da3c20f85bfb885363ac8530b09d8addd",
+          "checks": [
+            "The existing registered agent role guard admitted a request without permission metadata. The strengthened regression reproduced this fallback and now requires denial before role lookup.",
+            "A real Nest Reflector and decorators prove class-level fallback, handler override and the required-permission header. Existing tests retain exact capabilities, additive agent grants, owner behavior and denial without a session, profile or matching role.",
+            "All 32 related role, controller, profile and step-up tests passed. API typecheck, lint, formatting and diff checks passed. Existing domain-specific authorization in production routes remains separately covered."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/profiles/agent-permission.decorator.ts",
+              "sha256": "39708c52d59b2eff1bf25a9fe0d764e5db94a8d7dece6de7a2d03ea357f2e3ed"
+            },
+            {
+              "path": "apps/api/src/profiles/agent-role.guard.test.ts",
+              "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
+            },
+            {
+              "path": "apps/api/src/profiles/agent-role.guard.ts",
+              "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.controller.test.ts",
+              "sha256": "c8409ca80d4cb61d1e5600d1c3b9732afe5ac6cf3537601f750221d3b04bd7cd"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.service.ts",
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.module.ts",
+              "sha256": "83525d284b8c7a1a2ac2990952a7badd7138d1d15f9ebd9daaa22914605e228e"
+            },
+            {
+              "path": "apps/api/src/session/step-up.guard.test.ts",
+              "sha256": "959323fbb2ad7263b587ea2b6332186623372d98c15d1b45f965b7406b2870f0"
+            },
+            {
+              "path": "apps/api/src/session/step-up.guard.ts",
+              "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+            },
+            {
+              "path": "docs/security/authorization.md",
+              "sha256": "8d1552aa40152208d5beba3f8ee3d3e7d33073b88ebc8b768463daa0af31d4c5"
+            },
+            {
+              "path": "packages/shared/src/agent-permissions/index.ts",
+              "sha256": "8c8bf060d6a1354c0ba93a1210b51dd86a13adce0cc9d6f4d02a33e4c0ae3bbd"
+            }
+          ]
+        }
       }
     },
     {
@@ -484790,7 +484841,8 @@
           "release-0.6-authority-for-queued-and-private-results",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-agent-guard-requires-capability"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -484911,7 +484963,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "112c2fda14acffc8ed027a359e5d210f49a1f849de13d0b302eb8f4ce388d59e"
+              "sha256": "8d1552aa40152208d5beba3f8ee3d3e7d33073b88ebc8b768463daa0af31d4c5"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -484955,7 +485007,8 @@
           "release-0.6-authority-for-queued-and-private-results",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-agent-guard-requires-capability"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -484963,7 +485016,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "112c2fda14acffc8ed027a359e5d210f49a1f849de13d0b302eb8f4ce388d59e"
+              "sha256": "8d1552aa40152208d5beba3f8ee3d3e7d33073b88ebc8b768463daa0af31d4c5"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -491277,7 +491330,8 @@
           "release-0.6-authority-for-queued-and-private-results",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-agent-guard-requires-capability"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -491289,7 +491343,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "112c2fda14acffc8ed027a359e5d210f49a1f849de13d0b302eb8f4ce388d59e"
+              "sha256": "8d1552aa40152208d5beba3f8ee3d3e7d33073b88ebc8b768463daa0af31d4c5"
             },
             {
               "path": "docs/threat-model.md",
@@ -729007,7 +729061,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-agent-guard-requires-capability"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -729031,11 +729086,11 @@
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
-              "sha256": "e1206d2b6f9eb28b30951a339e1019caa64154d6dbc9fc79ee5ce3ee68acbc04"
+              "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.ts",
-              "sha256": "a1cf99f4d4c7d46d9716e6e35d93f46adf958697712f7917d5872300cb4970c4"
+              "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.test.ts",
@@ -729659,7 +729714,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-agent-guard-requires-capability"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -729683,11 +729739,11 @@
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
-              "sha256": "e1206d2b6f9eb28b30951a339e1019caa64154d6dbc9fc79ee5ce3ee68acbc04"
+              "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.ts",
-              "sha256": "a1cf99f4d4c7d46d9716e6e35d93f46adf958697712f7917d5872300cb4970c4"
+              "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.test.ts",
@@ -730311,7 +730367,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-agent-guard-requires-capability"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -730335,11 +730392,11 @@
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
-              "sha256": "e1206d2b6f9eb28b30951a339e1019caa64154d6dbc9fc79ee5ce3ee68acbc04"
+              "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.ts",
-              "sha256": "a1cf99f4d4c7d46d9716e6e35d93f46adf958697712f7917d5872300cb4970c4"
+              "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.test.ts",
@@ -730964,7 +731021,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-agent-guard-requires-capability"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -730988,11 +731046,11 @@
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
-              "sha256": "e1206d2b6f9eb28b30951a339e1019caa64154d6dbc9fc79ee5ce3ee68acbc04"
+              "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.ts",
-              "sha256": "a1cf99f4d4c7d46d9716e6e35d93f46adf958697712f7917d5872300cb4970c4"
+              "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.test.ts",
@@ -731616,7 +731674,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-agent-guard-requires-capability"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -731640,11 +731699,11 @@
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
-              "sha256": "e1206d2b6f9eb28b30951a339e1019caa64154d6dbc9fc79ee5ce3ee68acbc04"
+              "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.ts",
-              "sha256": "a1cf99f4d4c7d46d9716e6e35d93f46adf958697712f7917d5872300cb4970c4"
+              "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.test.ts",
@@ -732268,7 +732327,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-agent-guard-requires-capability"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -732292,11 +732352,11 @@
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
-              "sha256": "e1206d2b6f9eb28b30951a339e1019caa64154d6dbc9fc79ee5ce3ee68acbc04"
+              "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.ts",
-              "sha256": "a1cf99f4d4c7d46d9716e6e35d93f46adf958697712f7917d5872300cb4970c4"
+              "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.test.ts",
@@ -732920,7 +732980,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-agent-guard-requires-capability"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -732944,11 +733005,11 @@
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
-              "sha256": "e1206d2b6f9eb28b30951a339e1019caa64154d6dbc9fc79ee5ce3ee68acbc04"
+              "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.ts",
-              "sha256": "a1cf99f4d4c7d46d9716e6e35d93f46adf958697712f7917d5872300cb4970c4"
+              "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.test.ts",
@@ -733573,7 +733634,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-agent-guard-requires-capability"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -733597,11 +733659,11 @@
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
-              "sha256": "e1206d2b6f9eb28b30951a339e1019caa64154d6dbc9fc79ee5ce3ee68acbc04"
+              "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.ts",
-              "sha256": "a1cf99f4d4c7d46d9716e6e35d93f46adf958697712f7917d5872300cb4970c4"
+              "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.test.ts",
@@ -734225,7 +734287,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-agent-guard-requires-capability"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -734249,11 +734312,11 @@
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
-              "sha256": "e1206d2b6f9eb28b30951a339e1019caa64154d6dbc9fc79ee5ce3ee68acbc04"
+              "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.ts",
-              "sha256": "a1cf99f4d4c7d46d9716e6e35d93f46adf958697712f7917d5872300cb4970c4"
+              "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.test.ts",
@@ -734877,7 +734940,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-agent-guard-requires-capability"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -734901,11 +734965,11 @@
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
-              "sha256": "e1206d2b6f9eb28b30951a339e1019caa64154d6dbc9fc79ee5ce3ee68acbc04"
+              "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.ts",
-              "sha256": "a1cf99f4d4c7d46d9716e6e35d93f46adf958697712f7917d5872300cb4970c4"
+              "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
             },
             {
               "path": "apps/api/src/profiles/agents.controller.test.ts",
@@ -868218,6 +868282,68 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/saving-finance-scope",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "17c8b33d860b144c4286180c40ad06a7613b458847daeda490274f17038a0039"
+    },
+    "release-0.6-agent-guard-requires-capability": {
+      "batch": "release-0.6-agent-guard-requires-capability",
+      "base_commit": "e954781da3c20f85bfb885363ac8530b09d8addd",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.01.03"
+      ],
+      "changed_paths": [
+        "apps/api/src/profiles/agent-role.guard.test.ts",
+        "apps/api/src/profiles/agent-role.guard.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/agent-permission.decorator.ts",
+          "sha256": "39708c52d59b2eff1bf25a9fe0d764e5db94a8d7dece6de7a2d03ea357f2e3ed"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-role.guard.test.ts",
+          "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-role.guard.ts",
+          "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.controller.test.ts",
+          "sha256": "c8409ca80d4cb61d1e5600d1c3b9732afe5ac6cf3537601f750221d3b04bd7cd"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.module.ts",
+          "sha256": "83525d284b8c7a1a2ac2990952a7badd7138d1d15f9ebd9daaa22914605e228e"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.test.ts",
+          "sha256": "959323fbb2ad7263b587ea2b6332186623372d98c15d1b45f965b7406b2870f0"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.ts",
+          "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "8d1552aa40152208d5beba3f8ee3d3e7d33073b88ebc8b768463daa0af31d4c5"
+        },
+        {
+          "path": "packages/shared/src/agent-permissions/index.ts",
+          "sha256": "8c8bf060d6a1354c0ba93a1210b51dd86a13adce0cc9d6f4d02a33e4c0ae3bbd"
+        }
+      ],
+      "checks": [
+        "The existing registered agent role guard admitted a request without permission metadata. The strengthened regression reproduced this fallback and now requires denial before role lookup.",
+        "A real Nest Reflector and decorators prove class-level fallback, handler override and the required-permission header. Existing tests retain exact capabilities, additive agent grants, owner behavior and denial without a session, profile or matching role.",
+        "All 32 related role, controller, profile and step-up tests passed. API typecheck, lint, formatting and diff checks passed. Existing domain-specific authorization in production routes remains separately covered."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/agent-guard-closed",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "b73ff1895a760dcc2194e9bb1b76da7ee4f4bfee57a1804fc0f68d945438fd34"
     }
   },
   "historical_improvements": [

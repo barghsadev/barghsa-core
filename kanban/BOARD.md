@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T06:00:29+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T06:02:48+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1124 | Accepted with unchanged source bindings. |
-| verify | 186 | Existing work may be complete; inspect evidence before building. |
+| done | 1125 | Accepted with unchanged source bindings. |
+| verify | 185 | Existing work may be complete; inspect evidence before building. |
 | partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1144,7 +1144,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.02.04.05` | done | Recorded batch work | Write CORS integration tests: valid origin, invalid origin, credentialed request, preflight |
 | `06-security-testing-observability.md#T-06.03.01.01` | done | Recorded batch work | Design authorization policy engine: roles, capabilities/permissions, resource types, scopes (profile, system) |
 | `06-security-testing-observability.md#T-06.03.01.02` | verify | Inventory needed | Implement `AuthorizationService` with deny-by-default policy resolution |
-| `06-security-testing-observability.md#T-06.03.01.03` | verify | Inventory needed | Implement NestJS guard/decorator for endpoint-level permission checks |
+| `06-security-testing-observability.md#T-06.03.01.03` | done | Recorded batch work | Implement NestJS guard/decorator for endpoint-level permission checks |
 | `06-security-testing-observability.md#T-06.03.01.04` | partial | Recorded batch work | Implement profile-scoped data access: load resources by both `id` and `activeProfileId`; reject cross-profile access |
 | `06-security-testing-observability.md#T-06.03.01.05` | done | Recorded batch work | Extend authorization to background workers, AI tool calls, file access URLs, exports, and admin actions |
 | `06-security-testing-observability.md#T-06.03.01.06` | done | Recorded batch work | Implement staff role permissions: deny-by-default, additive by role (CS, CRM, Finance, Legal, Ops, Admin) |

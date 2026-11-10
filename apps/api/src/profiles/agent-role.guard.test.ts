@@ -3,7 +3,7 @@ import { ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AgentRoleGuard } from './agent-role.guard.js';
 import { AgentsService } from './agents.service.js';
-import './agent-permission.decorator.js';
+import { RequireAgentPermission } from './agent-permission.decorator.js';
 
 describe('AgentRoleGuard', () => {
   let guard: AgentRoleGuard;
@@ -90,11 +90,38 @@ describe('AgentRoleGuard', () => {
     await expect(guard.canActivate(mockContext)).rejects.toThrow(ForbiddenException);
   });
 
-  it('allows access when no @RequireAgentPermission() is set (pass-through)', async () => {
+  it('denies access without a declared permission before reading agent roles', async () => {
     vi.mocked(mockReflector.get).mockReturnValue(undefined);
 
-    const result = await guard.canActivate(mockContext);
-    expect(result).toBe(true);
+    await expect(guard.canActivate(mockContext)).rejects.toThrow(ForbiddenException);
+    expect(mockAgentsService.getAgentRoles).not.toHaveBeenCalled();
+  });
+
+  it('honors the controller permission and a more specific handler declaration', async () => {
+    @RequireAgentPermission('invoices:view')
+    class AgentRoutes {
+      invoices() {
+        return true;
+      }
+
+      @RequireAgentPermission('orders:create')
+      submit() {
+        return true;
+      }
+    }
+
+    guard = new AgentRoleGuard(new Reflector(), mockAgentsService);
+    vi.mocked(mockAgentsService.getAgentRoles).mockResolvedValue(['Finance']);
+    mockContext.getClass.mockReturnValue(AgentRoutes);
+    mockContext.getHandler.mockReturnValue(AgentRoutes.prototype.invoices);
+    await expect(guard.canActivate(mockContext)).resolves.toBe(true);
+
+    mockContext.getHandler.mockReturnValue(AgentRoutes.prototype.submit);
+    await expect(guard.canActivate(mockContext)).rejects.toThrow(ForbiddenException);
+    expect(mockGetResponse.setHeader).toHaveBeenCalledWith(
+      'X-Required-Permission',
+      'orders:create'
+    );
   });
 
   it('supports additive roles — Manager + Finance combined', async () => {
