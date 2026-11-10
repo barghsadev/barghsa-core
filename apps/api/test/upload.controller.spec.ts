@@ -9,6 +9,7 @@ import type { StorageProvider } from '@barghsa/shared/storage';
 import { StorageObjectNotFound } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from '../src/storage/index.js';
 import { ProfilesService } from '../src/profiles/profiles.service.js';
+import { RateLimitService } from '../src/rate-limit/rate-limit.service.js';
 import { UploadController } from '../src/upload/upload.controller.js';
 import { UploadService } from '../src/upload/upload.service.js';
 import {
@@ -111,6 +112,10 @@ describe('UploadController', () => {
       controllers: [UploadController],
       providers: [
         UploadService,
+        {
+          provide: RateLimitService,
+          useValue: { enforceSecurityRateLimit: vi.fn().mockResolvedValue(undefined) },
+        },
         {
           provide: ProfilesService,
           useValue: {

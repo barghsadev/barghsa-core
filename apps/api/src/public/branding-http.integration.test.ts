@@ -72,6 +72,10 @@ beforeAll(async () => {
 }, 40_000);
 beforeEach(async () => {
   await http.pool.query('DELETE FROM brand_config');
+  // The independent storage-policy scenarios share a fixture account.
+  await http.pool.query('SELECT rate_limit_rolling_reset(true, $1)', [
+    'upload:user:branding-review',
+  ]);
   await http.pool.query(
     "UPDATE users SET is_admin=true WHERE user_id='branding-review'; UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='branding-review'"
   );
@@ -615,6 +619,39 @@ it('seals both images in one version, rolls back an invalid second asset and pre
   );
   expect(next.config.logoUrl).toBe(faviconUrl);
   expect(next.config.faviconUrl).toBe(logoUrl);
+});
+
+it('returns 429 before reserving a twenty-first upload for the fixture account', async () => {
+  const key = 'upload:user:branding-review';
+  for (let count = 1; count <= 19; count++) {
+    const seeded = await http.pool.query(
+      'SELECT count FROM rate_limit_rolling(true, $1, 60000, 20, true)',
+      [key]
+    );
+    expect(seeded.rows).toEqual([{ count }]);
+  }
+  const details = {
+    fileName: 'quota-probe.png',
+    contentType: 'image/png',
+    fileSize: png.length,
+    category: 'image',
+  };
+  const admitted = await request('upload/presigned-url', 'POST', details);
+  expect(admitted.status, await admitted.clone().text()).toBe(200);
+  const upload = z
+    .object({ key: z.string(), presignedUrl: z.string() })
+    .parse(await admitted.json());
+  const denied = await request('upload/presigned-url', 'POST', details, 'customer');
+  expect(denied.status, await denied.clone().text()).toBe(429);
+  expect(Number(denied.headers.get('Retry-After'))).toBeGreaterThan(0);
+  expect(
+    (
+      await http.pool.query(
+        `SELECT storage_key FROM storage_records WHERE file_name=$1 AND metadata->>'uploadedBy'=$2`,
+        [details.fileName, 'branding-review']
+      )
+    ).rows
+  ).toEqual([{ storage_key: upload.key }]);
 });
 
 it('keeps unrecorded uploads unverified while the policy store is unavailable', async () => {

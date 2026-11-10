@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T07:24:00+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T07:37:48+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1141 | Accepted with unchanged source bindings. |
-| verify | 167 | Existing work may be complete; inspect evidence before building. |
+| done | 1142 | Accepted with unchanged source bindings. |
+| verify | 166 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1319,7 +1319,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.11.03.05` | verify | Inventory needed | Set up CI performance budget: route JS size, Core Web Vitals regression check for primary mobile flows |
 | `06-security-testing-observability.md#T-06.11.03.06` | verify | Inventory needed | Schedule weekly performance regression run in staging |
 | `06-security-testing-observability.md#T-06.11.04.01` | verify | Inventory needed | Write failure-injection tests: provider timeout → circuit breaker → queue; Redis unavailable → fallback to PG |
-| `06-security-testing-observability.md#T-06.11.04.02` | verify | Inventory needed | Write worker reliability tests: crash during job → reprocess or dead-letter; duplicate delivery → idempotency |
+| `06-security-testing-observability.md#T-06.11.04.02` | done | Recorded batch work | Write worker reliability tests: crash during job → reprocess or dead-letter; duplicate delivery → idempotency |
 | `06-security-testing-observability.md#T-06.11.04.03` | verify | Inventory needed | Write DB connection exhaustion test: pool full → queue/backpressure → graceful degradation |
 | `06-security-testing-observability.md#T-06.11.04.04` | verify | Inventory needed | Schedule quarterly PostgreSQL restore test: measure RPO/RTO, document in runbook |
 | `06-security-testing-observability.md#T-06.11.04.05` | verify | Inventory needed | Schedule quarterly object storage recovery test: version retrieval, policy enforcement, orphan detection |

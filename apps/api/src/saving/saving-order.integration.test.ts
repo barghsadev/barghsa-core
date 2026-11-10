@@ -5183,16 +5183,32 @@ it('excludes foreign financial links from saving reads and customer changes', as
         input.agreementVersionId,
       ]
     );
-    await client.query(
-      `INSERT INTO contracts(id,profile_id,order_id,service_type,state,current_version_id)
-       VALUES($1,$2,$3,'savings','AwaitingStaffReview',$4)`,
-      [contractId, foreignProfile, orderId, versionId]
-    );
+    const insertForeignContract = () =>
+      client.query(
+        `INSERT INTO contracts(id,profile_id,order_id,service_type,state,current_version_id)
+         VALUES($1,$2,$3,'savings','Draft',$4)`,
+        [contractId, foreignProfile, orderId, versionId]
+      );
+    await client.query('SAVEPOINT before_legacy_contract');
+    await expect(insertForeignContract()).rejects.toMatchObject({
+      code: '23514',
+      message: 'Contract order profile/type mismatch',
+    });
+    await client.query('ROLLBACK TO SAVEPOINT before_legacy_contract');
+    // Simulate a corrupt legacy association in this isolated schema. Restore
+    // the guard before commit and before making any customer request.
+    await client.query('ALTER TABLE contracts DISABLE TRIGGER contracts_guard');
+    await insertForeignContract();
     await client.query(
       `INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by)
        VALUES($1,$2,1,jsonb_build_object('text','Foreign fixture'),'Foreign fixture','saving-order-staff')`,
       [versionId, contractId]
     );
+    await client.query("UPDATE contracts SET state='AwaitingStaffReview' WHERE id=$1", [
+      contractId,
+    ]);
+    await client.query('SET CONSTRAINTS ALL IMMEDIATE');
+    await client.query('ALTER TABLE contracts ENABLE TRIGGER contracts_guard');
     await client.query(
       `INSERT INTO invoices(id,profile_id,order_id,type,state,total_amount,issued_at,payable_from)
        VALUES($1,$2,$3,'auto','Unpaid',500,NOW(),NOW())`,
@@ -5217,10 +5233,14 @@ it('excludes foreign financial links from saving reads and customer changes', as
   const detail = await request(base, 'GET');
   expect(detail.status, http.logs()).toBe(200);
   expect(await detail.json()).toMatchObject({ ...scoped, can_edit: false });
-  const list = await request(`/api/saving/orders?profileId=${input.profileId}`, 'GET');
+  const list = await request(
+    `/api/saving/orders?profileId=${input.profileId}&q=${savingId}`,
+    'GET'
+  );
   expect(list.status, http.logs()).toBe(200);
   expect(await list.json()).toMatchObject({
-    orders: expect.arrayContaining([expect.objectContaining(scoped)]),
+    orders: [expect.objectContaining(scoped)],
+    nextBefore: null,
   });
   const change = {
     hardwareProductId: input.hardwareProductId,

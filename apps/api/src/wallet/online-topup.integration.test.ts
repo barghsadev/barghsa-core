@@ -21,7 +21,7 @@
  *      and does not insert a Pending row (T-04.2.02.06).
  */
 
-import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterAll, vi } from 'vitest';
 import { BadRequestException, ConflictException, HttpException } from '@nestjs/common';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { WalletService, type WalletQueryClient } from './wallet.service.js';
@@ -108,6 +108,15 @@ describe('OnlineTopUpService — real PostgreSQL (T-04.2.02.01)', () => {
       [limitActor.sessionId, limitActor.userId, limitActor.csrfToken]
     );
   }, 60_000);
+
+  beforeEach(async () => {
+    // Keep the shared ledger history while isolating each scenario's admission window.
+    for (const profileId of [PROFILE_A, PROFILE_B]) {
+      await ctx.pool.query('SELECT rate_limit_rolling_reset(true, $1)', [
+        `wallet:top-up:profile:${profileId}`,
+      ]);
+    }
+  });
 
   afterAll(async () => {
     poolHolder.pool = null;
