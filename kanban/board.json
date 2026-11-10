@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T08:58:33+00:00",
-  "source_commit": "004d94efb958918d4d1c69f061a7b34dc4677929",
+  "updated": "2026-11-10T09:03:29+00:00",
+  "source_commit": "90e274b43e2c1dd001cc7fcf787d475013fd4d74",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -74479,7 +74479,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -75323,7 +75324,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -79573,7 +79574,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -79601,7 +79603,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -79820,7 +79822,8 @@
         "batches": [
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-external-provider-metrics-reconciliation"
+          "release-0.6-external-provider-metrics-reconciliation",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "kind": "unchanged-audit-bindings",
@@ -79836,11 +79839,11 @@
             },
             {
               "path": "deploy/monitoring/grafana-notifications-dashboard.json",
-              "sha256": "b63109ca9c47fd898c17a93845137ddfe0411c43f10129e70790ee52003ecc9b"
+              "sha256": "0d2fd0f445a3adc9cffde072373572c031b73324504d4e5a261a268f29ea343c"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             }
           ],
           "checks": [
@@ -88102,7 +88105,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -88298,7 +88302,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -89073,7 +89077,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -89269,7 +89274,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -90044,7 +90049,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -90240,7 +90246,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -91016,7 +91022,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -91212,7 +91219,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -91987,7 +91994,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -92183,7 +92191,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -92961,7 +92969,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -93097,7 +93106,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -93719,7 +93728,8 @@
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -93879,7 +93889,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -94376,7 +94386,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -94572,7 +94583,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -448550,7 +448561,8 @@
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448770,7 +448782,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -450096,7 +450108,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-provider-timeout-and-redis-recovery",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -450252,7 +450265,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -500041,7 +500054,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-runtime-failure-log-redaction"
+          "release-0.6-runtime-failure-log-redaction",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-provider-attribution-and-circuit-metrics",
@@ -500089,7 +500103,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -500555,19 +500569,53 @@
         "story": "06-security-testing-observability.md#spec-487bc630b048"
       },
       "requirement": "| T-06.14.02.04 | Create Worker/Outbox dashboard: queue depth, oldest age, processing rate, retries, dead-letter count | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-worker-outbox-dashboard"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-worker-outbox-dashboard",
+          "reviewed_sha": "90e274b43e2c1dd001cc7fcf787d475013fd4d74",
+          "checks": [
+            "The existing Grafana dashboard now covers queue depth, oldest pending and eligible age, processed outbox row rate, channel retry rate and dead-letter count. The existing queries, data source, panel identities, thresholds and layout are preserved.",
+            "An isolated pinned Prometheus 3.5.0 promtool fixture passed the three exact added queries across two staging worker replicas and separate production series. Source review matched the query metric names to the worker instrumentation and the committed processing and retry paths.",
+            "JSON and layout validation and diff checks passed. This repository dashboard creation is complete. Live import, operator-facing alert links and receipt verification are tracked separately. The newly added panels were checked with synthetic metrics."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.ts",
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
+            },
+            {
+              "path": "apps/worker/src/notifications/worker-metrics.ts",
+              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+            },
+            {
+              "path": "deploy/monitoring/grafana-notifications-dashboard.json",
+              "sha256": "0d2fd0f445a3adc9cffde072373572c031b73324504d4e5a261a268f29ea343c"
+            },
+            {
+              "path": "deploy/monitoring/notification-alerts.yml",
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
+            },
+            {
+              "path": "deploy/monitoring/staging-prometheus.yml",
+              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+            },
+            {
+              "path": "docs/operations/notification-monitoring.md",
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
+            }
+          ]
+        }
       }
     },
     {
@@ -500862,7 +500910,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-external-provider-metrics-reconciliation",
           "release-0.6-latency-rehearsal-budgets",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -500882,7 +500931,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             }
           ],
           "checks": [
@@ -501025,7 +501074,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-external-provider-metrics-reconciliation",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -501065,7 +501115,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             }
           ],
           "checks": [
@@ -758050,7 +758100,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-notifications-dashboard.json",
-              "sha256": "b63109ca9c47fd898c17a93845137ddfe0411c43f10129e70790ee52003ecc9b"
+              "sha256": "0d2fd0f445a3adc9cffde072373572c031b73324504d4e5a261a268f29ea343c"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -758110,7 +758160,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -759889,7 +759939,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -762046,7 +762097,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-notifications-dashboard.json",
-              "sha256": "b63109ca9c47fd898c17a93845137ddfe0411c43f10129e70790ee52003ecc9b"
+              "sha256": "0d2fd0f445a3adc9cffde072373572c031b73324504d4e5a261a268f29ea343c"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -762106,7 +762157,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "2b3936287f1800fc74bc82eaa58ba824a25542a215e230a724880994fbfb4e90"
+              "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -763791,7 +763842,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-worker-outbox-dashboard"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -874466,6 +874518,51 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/alert-runbook-links",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "7f3afb42518feeb7a774071cb6a24bfa8387f4706b2d07b64d2a7dc94b3e561c"
+    },
+    "release-0.6-worker-outbox-dashboard": {
+      "batch": "release-0.6-worker-outbox-dashboard",
+      "base_commit": "90e274b43e2c1dd001cc7fcf787d475013fd4d74",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.14.02.04"
+      ],
+      "changed_paths": [
+        "deploy/monitoring/grafana-notifications-dashboard.json",
+        "docs/operations/notification-monitoring.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
+        },
+        {
+          "path": "apps/worker/src/notifications/worker-metrics.ts",
+          "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+        },
+        {
+          "path": "deploy/monitoring/grafana-notifications-dashboard.json",
+          "sha256": "0d2fd0f445a3adc9cffde072373572c031b73324504d4e5a261a268f29ea343c"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.yml",
+          "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "db4d4f31c48cf809107c38b4311e69adcb8e4d008189e9522d5c8dd0f8dac489"
+        }
+      ],
+      "checks": [
+        "The existing Grafana dashboard now covers queue depth, oldest pending and eligible age, processed outbox row rate, channel retry rate and dead-letter count. The existing queries, data source, panel identities, thresholds and layout are preserved.",
+        "An isolated pinned Prometheus 3.5.0 promtool fixture passed the three exact added queries across two staging worker replicas and separate production series. Source review matched the query metric names to the worker instrumentation and the committed processing and retry paths.",
+        "JSON and layout validation and diff checks passed. This repository dashboard creation is complete. Live import, operator-facing alert links and receipt verification are tracked separately. The newly added panels were checked with synthetic metrics."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/worker-outbox-dashboard",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "af4c387c423dcd50de59fb92f4492d20c3c4ca4a10763525d249919b48a3856d"
     }
   },
   "historical_improvements": [

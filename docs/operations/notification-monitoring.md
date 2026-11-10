@@ -46,6 +46,8 @@ Select the intended Prometheus instance in the dashboard's **Prometheus** data-s
 
 The rules use the maximum open dead-letter count across worker replicas, rather than summing copies of the same database count. They remove only `instance` and `pod` labels. Keep identical remaining labels for replicas of one database and distinct environment/database labels for separate deployments.
 
+Compare oldest pending age with oldest eligible age when investigating backlog. The eligible series uses the same replica aggregation as the backlog alerts. The processing and retry panel shows leased outbox rows processed per second and committed channel retries scheduled per second. Prometheus calculates the rate per replica before summing by environment and database so worker restarts do not turn counter resets into spikes. [Prometheus rate](https://prometheus.io/docs/prometheus/latest/querying/functions/#rate).
+
 - Any open failure lasting 10 minutes raises `NotificationDeadLettersPending`.
 - At least 20 open failures lasting 5 minutes raises `NotificationDeadLettersAccumulating`.
 

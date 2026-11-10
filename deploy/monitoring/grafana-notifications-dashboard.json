@@ -72,6 +72,11 @@
           "expr": "notifications_outbox_age_seconds",
           "legendFormat": "oldest pending",
           "refId": "A"
+        },
+        {
+          "expr": "max without (instance, pod) (notifications_eligible_outbox_age_seconds)",
+          "legendFormat": "oldest eligible ({{environment}})",
+          "refId": "B"
         }
       ],
       "title": "Notification outbox age (s)",
@@ -254,6 +259,38 @@
       ],
       "title": "Delivery failure ratio (5m)",
       "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "description": "Per-second rates over five minutes. A processed outbox row can schedule a retry for more than one channel.",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "min": 0,
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 24 },
+      "id": 6,
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "sum by (environment, database) (rate(notifications_outbox_processing_seconds_count[5m]))",
+          "legendFormat": "rows processed ({{environment}})",
+          "refId": "A"
+        },
+        {
+          "expr": "sum by (environment, database) (rate(notifications_scheduled_retries_total[5m]))",
+          "legendFormat": "channel retries scheduled ({{environment}})",
+          "refId": "B"
+        }
+      ],
+      "title": "Outbox processing and retry rates",
+      "type": "timeseries"
     }
   ],
   "refresh": "30s",
@@ -277,6 +314,6 @@
   "timezone": "",
   "title": "Barghsa — Notifications & Outbox",
   "uid": "barghsa-notifications",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
