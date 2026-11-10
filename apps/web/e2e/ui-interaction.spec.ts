@@ -202,7 +202,7 @@ for (const fa of [false, true])
       await expect(unavailable).toBeFocused();
       await accessible(page);
       await page.screenshot({
-        path: `test-results/tooltip-${fa ? 'fa' : 'en'}-${theme}-${info.project.name}.png`,
+        path: info.outputPath(`tooltip-${fa ? 'fa' : 'en'}-${theme}-${info.project.name}.png`),
       });
       await page.keyboard.press('Escape');
       await expect(page.getByRole('tooltip')).toHaveCount(0);

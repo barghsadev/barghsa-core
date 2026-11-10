@@ -1276,12 +1276,11 @@ for (const locale of ['en', 'fa'] as const) {
     await page
       .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Retry', exact: true })
       .click();
-    await page
-      .getByRole('button', {
-        name: locale === 'fa' ? 'ادامه تنظیم پروفایل' : 'Resume profile setup',
-        exact: true,
-      })
-      .click();
+    const resume = page.getByRole('button', {
+      name: locale === 'fa' ? 'ادامه تنظیم پروفایل' : 'Resume profile setup',
+      exact: true,
+    });
+    await resume.click();
     await expect(page).toHaveURL(new RegExp(`/onboarding/individual/${profileId}(?:\\?step=1)?$`));
     expect(state.starts).toHaveLength(1);
     await expect(
@@ -1291,15 +1290,11 @@ for (const locale of ['en', 'fa'] as const) {
       })
     ).toBeVisible();
     await page.goto('/onboarding');
+    await expect(resume).toBeVisible();
     state.personalDone = true;
     state.companyDone = true;
     await page.reload();
-    await page
-      .getByRole('button', {
-        name: locale === 'fa' ? 'ادامه تنظیم پروفایل' : 'Resume profile setup',
-        exact: true,
-      })
-      .click();
+    await resume.click();
     await expect(page).toHaveURL(new RegExp(`/onboarding/complete\\?journeyId=${journeyId}$`));
     await expect(page.locator('dl[aria-label]')).toHaveCount(2);
     expect(state.finishes).toHaveLength(0);

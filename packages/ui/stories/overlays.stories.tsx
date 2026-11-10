@@ -229,7 +229,7 @@ export const Tooltips: Story = () => {
   const text = useStoryText();
   return (
     <UI.TooltipProvider delay={200}>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 max-sm:flex-col max-sm:items-center">
         {(['top', 'bottom', 'left', 'right'] as const).map((side) => (
           <UI.Tooltip key={side}>
             <UI.TooltipTrigger render={<UI.Button variant="outline" />}>{side}</UI.TooltipTrigger>

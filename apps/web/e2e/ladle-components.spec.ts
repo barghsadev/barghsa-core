@@ -642,9 +642,13 @@ for (const rtl of [false, true]) {
       await expect(card).toHaveCSS('cursor', 'pointer');
       const shadow = await card.evaluate((node) => getComputedStyle(node).boxShadow);
       await card.hover();
-      await expect
-        .poll(() => card.evaluate((node) => getComputedStyle(node).boxShadow))
-        .not.toBe(shadow);
+      if (await page.evaluate(() => matchMedia('(hover: hover)').matches)) {
+        await expect
+          .poll(() => card.evaluate((node) => getComputedStyle(node).boxShadow))
+          .not.toBe(shadow);
+      } else {
+        await expect(card).toHaveCSS('box-shadow', shadow);
+      }
       await visit('buttons');
       await page.getByRole('button', { name: 'default', exact: true }).first().press('Enter');
       await expect(page.getByRole('status')).toContainText('1');

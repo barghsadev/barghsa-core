@@ -282,7 +282,7 @@ export const Calendars: Story = () => {
   const [date, setDate] = useState<Date | undefined>();
   const [range, setRange] = useState<DateRange | undefined>();
   return (
-    <div className="flex flex-wrap gap-8">
+    <div className="flex flex-wrap gap-8 max-[359px]:-mx-6 max-[359px]:justify-center">
       <UI.Calendar
         mode="single"
         selected={date}

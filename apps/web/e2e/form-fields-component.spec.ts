@@ -169,10 +169,21 @@ for (const locale of ['en', 'fa'] as const) {
     const multi = page.getByRole('combobox', { name: names.multi, exact: true });
     await multi.fill(actions.beta);
     await page.getByRole('option', { name: actions.beta, exact: true }).click();
-    await page.keyboard.press('Escape');
-    await page
-      .getByRole('button', { name: `${actions.remove} ${actions.alpha}`, exact: true })
-      .click();
+    // Escape clears selections when the primitive has already closed its popup.
+    await page.getByRole('slider', { name: names.slider, exact: true }).focus();
+    await expect(multi).toHaveAttribute('aria-expanded', 'false');
+    const removePrevious = page.getByRole('button', {
+      name: `${actions.remove} ${actions.alpha}`,
+      exact: true,
+    });
+    const remove = page.getByRole('button', {
+      name: `${actions.remove} ${actions.beta}`,
+      exact: true,
+    });
+    await expect(remove).toBeVisible();
+    await removePrevious.click();
+    await expect(removePrevious).toHaveCount(0);
+    await expect(remove).toBeVisible();
     await page.getByRole('slider', { name: names.slider, exact: true }).press('ArrowUp');
     await page
       .getByRole('slider', { name: locale === 'fa' ? 'کمینه' : 'Minimum', exact: true })
@@ -198,10 +209,6 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(page.getByRole('combobox', { name: names[name], exact: true })).toBeDisabled();
     for (const role of ['checkbox', 'switch', 'radio', 'slider'] as const)
       for (const control of await page.getByRole(role).all()) await expect(control).toBeDisabled();
-    const remove = page.getByRole('button', {
-      name: `${actions.remove} ${actions.beta}`,
-      exact: true,
-    });
     await expect(remove).toBeDisabled();
     await remove.evaluate((element) => (element as HTMLElement).click());
     await page.locator('form').evaluate((element) => {

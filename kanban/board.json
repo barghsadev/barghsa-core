@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T09:37:31+00:00",
-  "source_commit": "7bb80d201151f194dd7735b5ce1a2430ac80da57",
+  "updated": "2026-11-10T09:48:03+00:00",
+  "source_commit": "e9e42d7239e72cc0fa5a4567d519a2cf41d3cbeb",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5544,7 +5544,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the next actual scheduled run and its 40 exact shard outcomes. Targeted diagnostics cover the known deterministic failures in run 42644986543. The historical two first-attempt Mobile Safari document timeouts were not reproducible in eight local repeats and need scheduled evidence.",
+        "Read all 40 exact outcomes of actual scheduled run 42789410833. The run reaches browser assertions, and the first catalogue, tooltip, onboarding and form cases have targeted corrections. Staff invoice and wallet receipt previews, consultation and role cases still require diagnosis and exact checks.",
         "Bind current critical registration, MFA, legal onboarding, electricity and wallet, saving, solar construction and admin browser journeys to the accepted release source."
       ],
       "owner": null,
@@ -5604,7 +5604,8 @@
           "release-0.6-nightly-hosted-portable-browser-captures",
           "release-0.6-nightly-documents-timeout-repeat",
           "release-0.6-nightly-critical-browser-journeys",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": null
       }
@@ -5792,7 +5793,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify hosted nightly browser outcome and quarantine receipts after correcting the deterministic failures in run 42644986543. All six earlier jobs reached tests and then timed out.",
+        "Verify actual nightly browser outcome and quarantine receipts. Run 42789410833 recorded deterministic failures and flakes, and the first affected cases have local replay evidence. Complete the remaining browser corrections and preserve the strict flake guard.",
         "Record the strict promotion report from the exact accepted candidate in the production approval package. The CLI and manual CI release path enforce the guard and the synthetic controls passed."
       ],
       "owner": null,
@@ -5856,7 +5857,8 @@
           "release-0.6-nightly-real-admin-journeys",
           "release-0.6-nightly-hosted-portable-browser-captures",
           "release-0.6-nightly-documents-timeout-repeat",
-          "release-0.6-nightly-critical-browser-journeys"
+          "release-0.6-nightly-critical-browser-journeys",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": null
       }
@@ -13998,7 +14000,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record a complete actual 02:00 UTC scheduled run across Chromium, Firefox, WebKit and both mobile projects with the exact per-shard results.",
+        "Read back a complete actual scheduled 40-shard run across Chromium, Firefox, WebKit and both mobile projects. GitHub started run 42789410833 on November 10 at 09:17 UTC for the configured 02:00 UTC schedule. All 40 jobs were created and complete outcomes are pending.",
         "Read back the advisory, Drizzle drift, navigation and seven-day outcome reports from an actual scheduled run. The rollup publishes internally in GitHub Actions and reports missing outcomes explicitly.",
         "Verify runtime-generated navigation destinations against current complete journey evidence and configure an authorized dedicated results receiver. The registered shell and literal/template JSX links have local evidence."
       ],
@@ -14045,7 +14047,8 @@
           "release-0.6-nightly-real-admin-journeys",
           "release-0.6-nightly-hosted-portable-browser-captures",
           "release-0.6-nightly-documents-timeout-repeat",
-          "release-0.6-nightly-critical-browser-journeys"
+          "release-0.6-nightly-critical-browser-journeys",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": null
       }
@@ -35046,7 +35049,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35070,7 +35074,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -35799,7 +35803,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35855,7 +35860,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/verification-banner.spec.ts",
@@ -36468,7 +36473,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -36484,7 +36490,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -36708,7 +36714,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -36732,7 +36739,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/src/lib/profile-digits.ts",
@@ -36982,7 +36989,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -37010,7 +37018,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.ts",
@@ -37224,7 +37232,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -37240,7 +37249,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
@@ -37452,7 +37461,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -37468,7 +37478,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -37774,7 +37784,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -37798,7 +37809,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -484871,7 +484882,8 @@
           "release-0.6-staging-pilot-proxy-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -484899,7 +484911,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
@@ -505262,7 +505274,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-transaction-provider-static-guard",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -505282,7 +505295,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -505714,7 +505727,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/primitives.stories.tsx",
@@ -505726,7 +505739,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/stories/workflows.stories.tsx",
@@ -506370,7 +506383,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -506386,7 +506400,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -506398,7 +506412,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -506854,7 +506868,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/pagination.stories.tsx",
@@ -506870,7 +506884,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/stories/workflows.stories.tsx",
@@ -507237,7 +507251,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -507253,7 +507268,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -507265,7 +507280,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -507721,7 +507736,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/pagination.stories.tsx",
@@ -507737,7 +507752,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/stories/workflows.stories.tsx",
@@ -507989,7 +508004,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-transaction-provider-static-guard",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -508009,7 +508025,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -508441,7 +508457,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/primitives.stories.tsx",
@@ -508453,7 +508469,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/stories/workflows.stories.tsx",
@@ -508876,7 +508892,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -508892,7 +508909,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -508904,7 +508921,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -509360,7 +509377,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/pagination.stories.tsx",
@@ -509376,7 +509393,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/stories/workflows.stories.tsx",
@@ -509630,7 +509647,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-transaction-provider-static-guard",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -509650,7 +509668,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -510082,7 +510100,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/primitives.stories.tsx",
@@ -510094,7 +510112,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/stories/workflows.stories.tsx",
@@ -510517,7 +510535,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -510533,7 +510552,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -510545,7 +510564,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -511001,7 +511020,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/pagination.stories.tsx",
@@ -511017,7 +511036,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/stories/workflows.stories.tsx",
@@ -511273,7 +511292,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511289,7 +511309,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -511301,7 +511321,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -511757,7 +511777,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/pagination.stories.tsx",
@@ -511773,7 +511793,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/stories/workflows.stories.tsx",
@@ -512027,7 +512047,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -512043,7 +512064,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -512055,7 +512076,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -512341,7 +512362,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -512357,7 +512379,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -512938,7 +512960,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -512954,7 +512977,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -513535,7 +513558,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -513551,7 +513575,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -514132,7 +514156,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -514148,7 +514173,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -514721,7 +514746,8 @@
           "release-0.5-component-direction-matrix",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -514729,7 +514755,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -514781,7 +514807,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -515044,7 +515070,8 @@
           "release-0.5-component-direction-matrix",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -515052,7 +515079,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -515104,7 +515131,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -515367,7 +515394,8 @@
           "release-0.5-component-direction-matrix",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -515375,7 +515403,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -515427,7 +515455,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -515690,7 +515718,8 @@
           "release-0.5-component-direction-matrix",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -515698,7 +515727,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -515750,7 +515779,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -516019,7 +516048,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -516035,7 +516065,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -516047,7 +516077,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -516099,7 +516129,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/tailwind.config.ts",
@@ -516313,7 +516343,8 @@
           "release-0.5-responsive-and-rtl",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-protected-staff-browser-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -516337,7 +516368,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
@@ -516401,11 +516432,11 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             }
           ],
           "checks": [
@@ -516555,7 +516586,8 @@
           "release-0.5-responsive-and-rtl",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-protected-staff-browser-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -516579,7 +516611,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
@@ -516643,11 +516675,11 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             }
           ],
           "checks": [
@@ -516797,7 +516829,8 @@
           "release-0.5-responsive-and-rtl",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-protected-staff-browser-closure",
-          "release-0.5-route-census-closure"
+          "release-0.5-route-census-closure",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -516821,7 +516854,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/src/pages/AdminDeliveryProvidersPage.tsx",
@@ -516885,11 +516918,11 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             }
           ],
           "checks": [
@@ -517048,7 +517081,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -517060,7 +517094,7 @@
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
-              "sha256": "830b9da74e4d6851f7023a9454aeebebac4dd8b13a4da41c3fdb10c27356ce6c"
+              "sha256": "19827daf7837226098bd3aec10857402d84ceb74e22dc4329a74f94470909095"
             },
             {
               "path": "apps/web/e2e/ui-controls.spec.ts",
@@ -517348,7 +517382,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -517360,7 +517395,7 @@
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
-              "sha256": "830b9da74e4d6851f7023a9454aeebebac4dd8b13a4da41c3fdb10c27356ce6c"
+              "sha256": "19827daf7837226098bd3aec10857402d84ceb74e22dc4329a74f94470909095"
             },
             {
               "path": "apps/web/e2e/ui-controls.spec.ts",
@@ -517648,7 +517683,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -517660,7 +517696,7 @@
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
-              "sha256": "830b9da74e4d6851f7023a9454aeebebac4dd8b13a4da41c3fdb10c27356ce6c"
+              "sha256": "19827daf7837226098bd3aec10857402d84ceb74e22dc4329a74f94470909095"
             },
             {
               "path": "apps/web/e2e/ui-controls.spec.ts",
@@ -517948,7 +517984,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -517960,7 +517997,7 @@
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
-              "sha256": "830b9da74e4d6851f7023a9454aeebebac4dd8b13a4da41c3fdb10c27356ce6c"
+              "sha256": "19827daf7837226098bd3aec10857402d84ceb74e22dc4329a74f94470909095"
             },
             {
               "path": "apps/web/e2e/ui-controls.spec.ts",
@@ -518248,7 +518285,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -518260,7 +518298,7 @@
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
-              "sha256": "830b9da74e4d6851f7023a9454aeebebac4dd8b13a4da41c3fdb10c27356ce6c"
+              "sha256": "19827daf7837226098bd3aec10857402d84ceb74e22dc4329a74f94470909095"
             },
             {
               "path": "apps/web/e2e/ui-controls.spec.ts",
@@ -518546,7 +518584,8 @@
           "release-0.5-final-ui-evidence",
           "release-0.5-verified-command-rejection",
           "release-0.5-settings-response-feedback",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -518554,7 +518593,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
-              "sha256": "830b9da74e4d6851f7023a9454aeebebac4dd8b13a4da41c3fdb10c27356ce6c"
+              "sha256": "19827daf7837226098bd3aec10857402d84ceb74e22dc4329a74f94470909095"
             },
             {
               "path": "apps/web/e2e/profile-address-forms-fixture.ts",
@@ -518900,7 +518939,8 @@
           "release-0.5-final-ui-evidence",
           "release-0.5-verified-command-rejection",
           "release-0.5-settings-response-feedback",
-          "release-0.5-component-direction-matrix"
+          "release-0.5-component-direction-matrix",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -518908,7 +518948,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
-              "sha256": "830b9da74e4d6851f7023a9454aeebebac4dd8b13a4da41c3fdb10c27356ce6c"
+              "sha256": "19827daf7837226098bd3aec10857402d84ceb74e22dc4329a74f94470909095"
             },
             {
               "path": "apps/web/e2e/profile-address-forms-fixture.ts",
@@ -519823,7 +519863,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -519847,7 +519888,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/profile-picker.spec.ts",
@@ -519863,7 +519904,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -520216,7 +520257,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -520232,7 +520274,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/shared-loading-adoption.spec.ts",
@@ -520248,7 +520290,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -521240,7 +521282,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -521256,7 +521299,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -521268,7 +521311,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -538076,7 +538119,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -538088,7 +538132,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
@@ -538405,7 +538449,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -538453,7 +538498,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -538613,7 +538658,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -538827,7 +538872,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -538875,7 +538921,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -539035,7 +539081,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -539247,7 +539293,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539295,7 +539342,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -539455,7 +539502,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -539667,7 +539714,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539715,7 +539763,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -539875,7 +539923,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -540082,7 +540130,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540102,7 +540151,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
@@ -540403,7 +540452,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540423,7 +540473,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
@@ -540724,7 +540774,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540744,7 +540795,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
@@ -541045,7 +541096,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -541065,7 +541117,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
@@ -542029,7 +542081,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -542057,7 +542110,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
@@ -545661,7 +545714,8 @@
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545713,7 +545767,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -545845,11 +545899,11 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -546116,7 +546170,8 @@
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546168,7 +546223,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -546300,11 +546355,11 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -547034,7 +547089,8 @@
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -547262,7 +547318,7 @@
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
-              "sha256": "830b9da74e4d6851f7023a9454aeebebac4dd8b13a4da41c3fdb10c27356ce6c"
+              "sha256": "19827daf7837226098bd3aec10857402d84ceb74e22dc4329a74f94470909095"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -547294,7 +547350,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
@@ -547326,7 +547382,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/order-comment-form-fixture.ts",
@@ -548580,7 +548636,8 @@
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548640,7 +548697,7 @@
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
-              "sha256": "830b9da74e4d6851f7023a9454aeebebac4dd8b13a4da41c3fdb10c27356ce6c"
+              "sha256": "19827daf7837226098bd3aec10857402d84ceb74e22dc4329a74f94470909095"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -548648,7 +548705,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -549081,7 +549138,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -549097,7 +549155,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
@@ -549614,7 +549672,8 @@
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549666,7 +549725,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -549798,11 +549857,11 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -550074,7 +550133,8 @@
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550134,7 +550194,7 @@
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
-              "sha256": "830b9da74e4d6851f7023a9454aeebebac4dd8b13a4da41c3fdb10c27356ce6c"
+              "sha256": "19827daf7837226098bd3aec10857402d84ceb74e22dc4329a74f94470909095"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -550142,7 +550202,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -550630,7 +550690,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550782,7 +550843,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -550794,7 +550855,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -551074,7 +551135,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/primitives.stories.tsx",
@@ -551491,7 +551552,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551643,7 +551705,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -551655,7 +551717,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -551935,7 +551997,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/primitives.stories.tsx",
@@ -552325,7 +552387,8 @@
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552385,7 +552448,7 @@
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
-              "sha256": "830b9da74e4d6851f7023a9454aeebebac4dd8b13a4da41c3fdb10c27356ce6c"
+              "sha256": "19827daf7837226098bd3aec10857402d84ceb74e22dc4329a74f94470909095"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -552393,7 +552456,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -552881,7 +552944,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553033,7 +553097,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -553045,7 +553109,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -553325,7 +553389,7 @@
             },
             {
               "path": "packages/ui/stories/overlays.stories.tsx",
-              "sha256": "0b443f3fa26fda2fbad5ec6a7737bef0b8471dbeeaacc326719063301db96b21"
+              "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
             },
             {
               "path": "packages/ui/stories/primitives.stories.tsx",
@@ -553822,7 +553886,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553890,7 +553955,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -554442,7 +554507,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -554760,7 +554825,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554828,7 +554894,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -555380,7 +555446,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -555698,7 +555764,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555766,7 +555833,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -556318,7 +556385,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -556636,7 +556703,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556704,7 +556772,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -557256,7 +557324,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -557574,7 +557642,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557642,7 +557711,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -558194,7 +558263,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -558512,7 +558581,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558580,7 +558650,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -559132,7 +559202,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -559450,7 +559520,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559518,7 +559589,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -560070,7 +560141,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -560388,7 +560459,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560456,7 +560528,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -561008,7 +561080,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -561326,7 +561398,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561394,7 +561467,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -561946,7 +562019,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -562264,7 +562337,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -562332,7 +562406,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -562884,7 +562958,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -563202,7 +563276,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -563270,7 +563345,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -563822,7 +563897,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -564140,7 +564215,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -564208,7 +564284,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -564760,7 +564836,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -565078,7 +565154,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565146,7 +565223,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -565698,7 +565775,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -566016,7 +566093,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -566084,7 +566162,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -566636,7 +566714,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -566954,7 +567032,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567022,7 +567101,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -567574,7 +567653,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -567892,7 +567971,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567960,7 +568040,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -568512,7 +568592,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -568830,7 +568910,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -568898,7 +568979,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -569450,7 +569531,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -569768,7 +569849,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569836,7 +569918,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -570388,7 +570470,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -570706,7 +570788,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -570774,7 +570857,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -571326,7 +571409,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -571644,7 +571727,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -571712,7 +571796,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -572264,7 +572348,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -572559,7 +572643,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -572607,7 +572692,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -572767,7 +572852,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -572979,7 +573064,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -573027,7 +573113,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -573187,7 +573273,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -573399,7 +573485,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -573447,7 +573534,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -573607,7 +573694,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -573819,7 +573906,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -573867,7 +573955,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -574027,7 +574115,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -574244,7 +574332,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -574292,7 +574381,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -574452,7 +574541,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -574670,7 +574759,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -574718,7 +574808,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -574878,7 +574968,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -575090,7 +575180,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -575138,7 +575229,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -575298,7 +575389,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -575510,7 +575601,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -575558,7 +575650,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -575718,7 +575810,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -575931,7 +576023,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -575979,7 +576072,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -576139,7 +576232,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -576353,7 +576446,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -576401,7 +576495,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -576561,7 +576655,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -576773,7 +576867,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -576821,7 +576916,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -576981,7 +577076,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -577194,7 +577289,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577242,7 +577338,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "ea0ac289196c062fee4d95d5e45cbc8c987f2385fe4ec310843380cd9debff40"
+              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -577402,7 +577498,7 @@
             },
             {
               "path": "packages/ui/stories/widgets.stories.tsx",
-              "sha256": "4da3fc339121147e5a63052e0f61b956d0f228ce690e80129108cb14ad16681b"
+              "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
             },
             {
               "path": "packages/ui/tsup.config.ts",
@@ -577661,7 +577757,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577701,7 +577798,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -579555,7 +579652,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -579595,7 +579693,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -581450,7 +581548,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -581490,7 +581589,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -583314,7 +583413,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583354,7 +583454,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -585204,7 +585304,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585244,7 +585345,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -587103,7 +587204,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587143,7 +587245,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -588975,7 +589077,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -589015,7 +589118,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -590811,7 +590914,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590851,7 +590955,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -592647,7 +592751,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592687,7 +592792,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -594484,7 +594589,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -594524,7 +594630,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -596320,7 +596426,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -596360,7 +596467,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -602047,7 +602154,8 @@
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -602443,7 +602551,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -632259,7 +632367,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -632299,7 +632408,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -634091,7 +634200,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -634131,7 +634241,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -635923,7 +636033,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -635963,7 +636074,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -637755,7 +637866,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -637795,7 +637907,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -639587,7 +639699,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -639627,7 +639740,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -641419,7 +641532,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -641459,7 +641573,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -643251,7 +643365,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -643291,7 +643406,7 @@
             },
             {
               "path": "apps/web/e2e/ui-interaction.spec.ts",
-              "sha256": "c184bcf86351fa28d6fea06f4ada1f6e4c25209ea74b5e35bd651a90e4330ea8"
+              "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
             },
             {
               "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
@@ -705831,7 +705946,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -705927,7 +706043,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -706520,7 +706636,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -706616,7 +706733,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -707208,7 +707325,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -707304,7 +707422,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -707898,7 +708016,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -707994,7 +708113,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -708588,7 +708707,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -708684,7 +708804,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -709275,7 +709395,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -709371,7 +709492,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -709962,7 +710083,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -710058,7 +710180,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -710650,7 +710772,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -710746,7 +710869,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -711337,7 +711460,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -711433,7 +711557,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -712025,7 +712149,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -712121,7 +712246,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -733570,7 +733695,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-workspace-pending-performance-correction",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -733714,7 +733840,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -734228,7 +734354,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-workspace-pending-performance-correction",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -734372,7 +734499,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -734886,7 +735013,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-workspace-pending-performance-correction",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -735030,7 +735158,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -735545,7 +735673,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-workspace-pending-performance-correction",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -735689,7 +735818,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -736203,7 +736332,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-workspace-pending-performance-correction",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -736347,7 +736477,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -736861,7 +736991,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-workspace-pending-performance-correction",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -737005,7 +737136,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -737519,7 +737650,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-workspace-pending-performance-correction",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -737663,7 +737795,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -738178,7 +738310,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-workspace-pending-performance-correction",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -738322,7 +738455,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -738836,7 +738969,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-workspace-pending-performance-correction",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -738980,7 +739114,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -739494,7 +739628,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-workspace-pending-performance-correction",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -739638,7 +739773,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -767018,7 +767153,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "f6a1e668523685b5cad4eceedb835943117a0998ba3660d016718d48c9b02ca4"
+              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -769081,7 +769216,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-workspace-pending-performance-correction",
-          "release-0.6-auth-form-testing-library"
+          "release-0.6-auth-form-testing-library",
+          "release-0.6-first-scheduled-browser-corrections"
         ]
       }
     },
@@ -769186,7 +769322,7 @@
       "launch_required": true,
       "remaining": [
         "Reconcile every epic-01 and epic-06 criterion with current source and operational evidence. Apply the approved direct-main workflow while preserving all production gates.",
-        "The initial production browser run had 70 unexpected cases. All affected cohorts now have targeted Chromium and mobile Safari evidence. Finish the full candidate matrix, source coverage and receipt review.",
+        "Finish the full exact candidate browser matrix, source coverage and receipt review. The first targeted corrections from scheduled run 42789410833 passed locally. Remaining scheduled failures include staff receipt previews, consultation controls and role comparisons.",
         "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
@@ -769297,7 +769433,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-browser-rehearsal-targeted-corrections",
-          "release-0.6-ai-and-payment-transport-boundaries"
+          "release-0.6-ai-and-payment-transport-boundaries",
+          "release-0.6-first-scheduled-browser-corrections"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -876410,6 +876547,97 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/dashboard-testing-library",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "3b01557b973ca3e49313419a2da34e6246b9b4dfb1d8eaafaaf7c39192fb7247"
+    },
+    "release-0.6-first-scheduled-browser-corrections": {
+      "batch": "release-0.6-first-scheduled-browser-corrections",
+      "base_commit": "e9e42d7239e72cc0fa5a4567d519a2cf41d3cbeb",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/form-fields-component.spec.ts",
+        "apps/web/e2e/ladle-components.spec.ts",
+        "apps/web/e2e/onboarding-wizard.spec.ts",
+        "apps/web/e2e/ui-interaction.spec.ts",
+        "packages/ui/stories/overlays.stories.tsx",
+        "packages/ui/stories/widgets.stories.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "d8fd9f966e5488307a2e91535b326ff64960f2d8c7f433e7a100c53089dfb1c2"
+        },
+        {
+          "path": "apps/web/e2e/form-fields-component.spec.ts",
+          "sha256": "19827daf7837226098bd3aec10857402d84ceb74e22dc4329a74f94470909095"
+        },
+        {
+          "path": "apps/web/e2e/ladle-components.spec.ts",
+          "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+        },
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+        },
+        {
+          "path": "apps/web/e2e/ui-interaction.spec.ts",
+          "sha256": "34e8907228032b6f73c466ce8f7c7372ad1cb559247bb55fbe2dd923f1693259"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "packages/ui/.ladle/components.tsx",
+          "sha256": "df293b4683adbf0584ae529c6db47c09b6d16d80d46d611db8514a85b3f6c309"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/combo-box.tsx",
+          "sha256": "6d3114a38a21a31889a9a255a6118a6f841109f3b4b24eeb924077d9f91e8ced"
+        },
+        {
+          "path": "packages/ui/src/components/ui/calendar.tsx",
+          "sha256": "1343ad0379632800e43d73837a4ab22939ac9f7db56fb6fc23afe1b8bd2ac88a"
+        },
+        {
+          "path": "packages/ui/src/components/ui/card.tsx",
+          "sha256": "9e75f68b7716b2e2e022fb42efc93ae81f55e5b86fca797b041963e02c48db8c"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tooltip.tsx",
+          "sha256": "54e08779c6516999d0c5f6a7a37005ebabe2f2e48e241f927c3033b247eff7fc"
+        },
+        {
+          "path": "packages/ui/src/form/choice-fields.tsx",
+          "sha256": "0e0b52b77fac2607d64488c2e0837a9ef09c898911391cc3917b0091a472e069"
+        },
+        {
+          "path": "packages/ui/stories/overlays.stories.tsx",
+          "sha256": "3822cc6f5c3a78f0081326fb3c3c114bce5b1e87614dde7ceada8352c227baaf"
+        },
+        {
+          "path": "packages/ui/stories/widgets.stories.tsx",
+          "sha256": "39ab61c617179860f842c7a0f3dc6335eebee691f23c41c9ec308ccb20075652"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "The actual schedule event created 40 browser shards on exact main 55753b1c. The first completed failures provided real browser results rather than pre-discovery failures. No completed schedule rollup is claimed.",
+        "The Pixel 5 geometry probe reproduced the 332 px document at a requested 320 px viewport. The narrow calendar preview now fits 320 px while keeping 44 px day controls. Desktop hover still requires a changed interactive card shadow, and a touch context must keep its non-hover shadow.",
+        "The pinned combobox primitive clears selections when Escape reaches a closed popup. The form test now moves focus to close the popup and checks explicit chip removal, retained selection and the existing duplicate-submission and final payload safeguards. Firefox now waits for recovered onboarding to render before reloading; creation and completion assertions are unchanged.",
+        "The Pixel 5 tooltip probe reproduced the expected right-side tooltip flipping left because only about 70 px was available. Centering the narrow story controls keeps sufficient space and the exact side, focus, descriptions and accessibility assertions. Screenshot paths now use the test output directory.",
+        "Local replays passed 24 calendar and primitive cases, 36 form adapter cases, eight Firefox onboarding cases and 12 tooltip cases. Two Persian Mobile Safari tooltip invocations initially hit output storage exhaustion and passed after an isolated RAM-backed retry. The 80 related cases preserve the original assertions and runtime safeguards.",
+        "Ladle builds, web typecheck, focused lint, formatting and diff checks passed. Later completed scheduled shards exposed additional staff receipt, consultation and role cases. Their verification remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-42789410833",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "450e4220cb4868b43730ea769ee2519e5f7f958fff27533d889f9e16a859bcc1"
     }
   },
   "historical_improvements": [
