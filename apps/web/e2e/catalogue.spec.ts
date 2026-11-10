@@ -110,9 +110,13 @@ for (const locale of ['en', 'fa'])
       page.getByRole('tab', { name: fa ? 'طرح‌های صرفه‌جویی' : 'Saving plans', exact: true })
     ).toHaveAttribute('aria-selected', 'true');
     await page.keyboard.press('Home');
+    await expect(consultation).toHaveAttribute('aria-selected', 'true');
     await expect(consultation).toBeFocused();
     await page.keyboard.press(fa ? 'ArrowRight' : 'ArrowLeft');
-    await expect(
-      page.getByRole('tab', { name: fa ? 'طرح‌های صرفه‌جویی' : 'Saving plans', exact: true })
-    ).toBeFocused();
+    const saving = page.getByRole('tab', {
+      name: fa ? 'طرح‌های صرفه‌جویی' : 'Saving plans',
+      exact: true,
+    });
+    await expect(saving).toHaveAttribute('aria-selected', 'true');
+    await expect(saving).toBeFocused();
   });
