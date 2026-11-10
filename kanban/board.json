@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T00:49:30+00:00",
-  "source_commit": "fe3417a8d8d445cb3be7110e93a8089709c1957e",
+  "updated": "2026-11-10T00:54:59+00:00",
+  "source_commit": "eb1518c1150d4464265778a938901cb4857e5dc8",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5042,7 +5042,8 @@
         "batches": [
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-proxy-trust-and-request-limits",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -5062,7 +5063,7 @@
             },
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/cache-control.interceptor.ts",
@@ -5075,7 +5076,8 @@
           ],
           "checks": [
             "The generated manifests contain 544 app entries and 29 auth entries. Both exact outputs serve content-hashed JavaScript and CSS with one-year immutable caching, and HTML with private no-store. The API's global private no-store policy was verified on live v0.5 success and authentication denial. CDN-ready output is distinct from external CDN rollout.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       }
@@ -6019,7 +6021,8 @@
           "release-0.6-stable-error-catalogue",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "source-bound-runtime-and-outbox-reconciliation",
@@ -6027,7 +6030,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/app.module.ts",
@@ -6107,7 +6110,8 @@
             "14 cases passed through the compiled API and isolated migrated PostgreSQL. Authentication, validation, unmatched routes and oversized requests used private error handling, and an AI-model background job persisted the same correlation ID returned to the caller.",
             "Reused the native worker assertion that retry and encrypted-message erasure preserve the request correlation without logging message content. The worker source, test, migrations and lock match the prior accepted native run.",
             "Renewed only the stable catalogue binding after a four-value AI severity metadata repair. Existing error codes, HTTP response metadata and affected consumer tests match.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       }
@@ -9976,7 +9980,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-api-and-worker-process-verification",
@@ -9984,7 +9989,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/shutdown.service.ts",
@@ -10051,7 +10056,8 @@
             "Both compiled NestJS HTTP shutdown cases passed with real PostgreSQL. The listener refused new work while an accepted response drained and the process exited 0. An unfinished request crossed the configured deadline and exited 1. Both shutdown unit cases passed, including independently closing shared resources when one close fails.",
             "All 16 compiled worker cases passed with PostgreSQL. This includes SIGTERM/SIGINT drain, health and metrics, in-flight work, deadline exit 1, queued work preserved, no duplicate provider request after graceful/forced/bookkeeping-failure shutdown, reconciliation, service workflow, contract and notification callers.",
             "The compiled migration now runs once per process suite. The uniquely named, disconnected template is cloned to an independently owned database per test. Only fixture setup changed. The bytes of every test body are identical, as are all runtime sources. The initial disk-backed run exceeded its test limit during the repeated migrations; the new full disk-backed run passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       }
@@ -12445,7 +12451,8 @@
           "release-0.6-pilot-proxy-and-cache-policy",
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-pilot-and-commercial-topology-documentation",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -12477,12 +12484,13 @@
             },
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             }
           ],
           "checks": [
             "The actual compiled app and auth asset responses have one-year immutable caching for hashes and private no-store HTML. The unchanged NGINX fixture verified seven static, private and error cache policies and gzip. Live staging success and authentication-denial API responses both sent the exact private, no-cache, no-store, must-revalidate directive. There is no separate external CDN deployment claim.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       }
@@ -12560,7 +12568,8 @@
         "batches": [
           "release-0.6-pilot-proxy-and-cache-policy",
           "release-0.6-pilot-and-commercial-topology-documentation",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -12584,7 +12593,7 @@
             },
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/orders/products.controller.ts",
@@ -12597,7 +12606,8 @@
           ],
           "checks": [
             "All 11 unit and six migrated PostgreSQL HTTP cases passed. Exact SHA-256 tags produce empty 304s for authorized geography reference data, change with new data and cannot bypass session revocation. Profile and wallet GET/HEAD keep full authorized status and privacy without validators. The live catalogue serves current prices and availability and remains outside ETag negotiation, as documented.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       }
@@ -474496,7 +474506,8 @@
         "batches": [
           "release-0.6-password-hash-calibration",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -474516,7 +474527,7 @@
             },
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/auth/auth.controller.ts",
@@ -474574,7 +474585,8 @@
           "checks": [
             "Reviewed password creation and verification, controller response assembly, private response caching and the staff temporary-password exception. Native bootstrap explicitly asserted that the password and activation secrets do not reach logs or audit results. Link activation, registration, reset and forced-change cases passed with current compiled bindings.",
             "The added Operations-role, foreign order UUID and hostile payment-return assertions passed against the compiled app. Existing role, order and read-only return assertions were preserved.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       }
@@ -477130,7 +477142,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -477138,7 +477151,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -477201,7 +477214,8 @@
             "Per-session token persisted with the session; missing, stale, or unmatched headers cannot extend or mutate it, including after a lock wait. Anonymous challenges use their independent store.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "private_monitoring_source_renewal": {
             "batch": "release-0.6-private-api-monitoring",
@@ -477252,7 +477266,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -477260,7 +477275,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -477323,7 +477338,8 @@
             "Global unsafe-session guard and public challenge checks exercised through real HTTP, with independent owner-approved signed/native exceptions preserved.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "private_monitoring_source_renewal": {
             "batch": "release-0.6-private-api-monitoring",
@@ -477372,7 +477388,8 @@
           "release-0.6-private-api-monitoring",
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -477380,7 +477397,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -477427,7 +477444,8 @@
             "Exact APP_PUBLIC_URL origin; Referer fallback only when Origin is absent. A foreign browser cannot consume a valid challenge, and the trusted browser can use it once.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "private_monitoring_source_renewal": {
             "batch": "release-0.6-private-api-monitoring",
@@ -477627,7 +477645,8 @@
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -477635,7 +477654,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -477690,7 +477709,8 @@
             "Guard failures yield a stable safe error and correlation ID; warning telemetry omits submitted tokens, request credentials and foreign header values.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "private_monitoring_source_renewal": {
             "batch": "release-0.6-private-api-monitoring",
@@ -477730,7 +477750,8 @@
           "release-0.6-session-lifetimes-cookies-and-refresh",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -477738,7 +477759,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -477801,7 +477822,8 @@
             "Migrated HTTP proves valid, missing, expired, rotated and foreign proof, rejected cross-site authentication, and revalidation after concurrent session mutation.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "The exact compiled API and source-bound session HTTP suite passed 17 cases on isolated PostgreSQL 16, including the owner-approved null location even for a public IP and legacy country metadata. Existing authentication, CSRF, expiry, step-up, revoke-all and forced-change assertions passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "private_monitoring_source_renewal": {
             "batch": "release-0.6-private-api-monitoring",
@@ -478064,7 +478086,8 @@
           "release-0.6-private-api-monitoring",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-proxy-trust-and-request-limits",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -478072,7 +478095,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/csp-report/csp-report-http.integration.test.ts",
@@ -478095,7 +478118,8 @@
             "Bounded native-report endpoint configured in the web header and staging ingress. Migrated HTTP proves provenance, sanitized correlation logs, limits and safe native cookie handling; independent live endpoint status readback was 204 and 403.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "private_monitoring_source_renewal": {
             "batch": "release-0.6-private-api-monitoring",
@@ -478595,11 +478619,16 @@
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "apps/api/src/app.factory.ts",
+          "apps/api/src/auth/navigation-http.integration.test.ts",
+          "docs/security/security-verification.md"
+        ],
         "batches": [
           "release-0.6-browser-response-policy",
           "release-0.6-proxy-security-headers",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": null
       }
@@ -478660,7 +478689,8 @@
           "release-0.6-private-api-monitoring",
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -478668,7 +478698,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -478690,7 +478720,8 @@
           "checks": [
             "Production HTTPS app origin is matched exactly from APP_PUBLIC_URL, never incoming host or wildcard.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "private_monitoring_source_renewal": {
             "batch": "release-0.6-private-api-monitoring",
@@ -478727,7 +478758,8 @@
           "release-0.6-private-api-monitoring",
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -478735,7 +478767,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -478757,7 +478789,8 @@
           "checks": [
             "Only the exact configured origin receives credentialed CORS; wildcard, suffix spoofing, foreign schemes, opaque origin and invalid configuration do not.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "private_monitoring_source_renewal": {
             "batch": "release-0.6-private-api-monitoring",
@@ -478794,7 +478827,8 @@
           "release-0.6-private-api-monitoring",
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -478802,7 +478836,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -478824,7 +478858,8 @@
           "checks": [
             "Allowlist contains the six required read/write methods and the actual API JSON, CSRF, idempotency and draft headers. Response access includes the caller's retry timing.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "private_monitoring_source_renewal": {
             "batch": "release-0.6-private-api-monitoring",
@@ -478861,7 +478896,8 @@
           "release-0.6-private-api-monitoring",
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -478869,7 +478905,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -478891,7 +478927,8 @@
           "checks": [
             "Real HTTP preflight verifies 3600 seconds and the origin variance.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "private_monitoring_source_renewal": {
             "batch": "release-0.6-private-api-monitoring",
@@ -478928,7 +478965,8 @@
           "release-0.6-private-api-monitoring",
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "targeted_browser_boundary_and_migrated_http",
@@ -478936,7 +478974,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -478958,7 +478996,8 @@
           "checks": [
             "Real Express/Nest HTTP coverage proves trusted and untrusted origins, credentialed preflight and guarded browser authentication.",
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-origin-acceptance-receipt.json",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "private_monitoring_source_renewal": {
             "batch": "release-0.6-private-api-monitoring",
@@ -479429,7 +479468,8 @@
         "batches": [
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-authenticated-staging-zap-integration"
+          "release-0.6-authenticated-staging-zap-integration",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -479441,7 +479481,7 @@
             },
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
@@ -479469,7 +479509,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
+              "sha256": "8e10b9cde5f95db7312749563d5231a95993a1f19f2eb987db8d1b59cf82b6d3"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -479502,7 +479542,8 @@
             "The append-only table rejects UPDATE, DELETE and TRUNCATE. The dashboard request applies the current wildcard/admin and session boundary, and denied commands preserve the business audit table. An unavailable audit table preserves the public denial and emits a sanitized diagnostic.",
             "The existing order-role case timed out at the unchanged 5-second fixture limit. The controlled diagnostic ran every existing assertion and measured 7115 ms with the audit hook and 7903 ms without it on the same isolated host and schema. Treat both diagnostic runs as behavior and timing evidence only. The normal-limit hosted affected-suite check remains required for this exact batch.",
             "The Drizzle snapshot adds only the authorization_denials table and index, with ordered expand-only migration 0284. The generated OpenAPI delta is confined to the audit scope.",
-            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       },
@@ -479546,7 +479587,8 @@
         "batches": [
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authenticated-staging-zap-integration",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -479602,7 +479644,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
+              "sha256": "8e10b9cde5f95db7312749563d5231a95993a1f19f2eb987db8d1b59cf82b6d3"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -479622,7 +479664,8 @@
             "All 23 targeted web cases passed across the viewer, admin settings navigation, layout and account context. The initial local disk error interrupted discovery. A serial run passed 20 cases and the interrupted layout suite passed its two cases separately after disposing of generated API output. The revised viewer suite passed ten cases, including the account and navigation authority reset.",
             "The viewer exercises the same bounded response contract, displays the stored decision fields and clears details on a 403. API, worker and web type checks, shared package exports, contract drift, changed-file lint, navigation and formatting passed.",
             "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       },
@@ -483048,7 +483091,8 @@
         "batches": [
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-browser-and-edge-privacy",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -483056,7 +483100,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/error-http.integration.test.ts",
@@ -483085,7 +483129,8 @@
           ],
           "checks": [
             "Node startup pins the existing header and request timeouts and maximum header count. JSON and form limits are explicit at 100 KiB, with the existing endpoint-specific limits preserved. Native migrated HTTP cases reject both oversized ordinary encodings before routing and preserve private parser errors. Pilot and staging templates validate header/body limits, the large permitted upload, SSE and WebSocket behavior. Existing strict raw HTTP parser controls and production Node options remain enforced.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       }
@@ -483140,7 +483185,8 @@
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -483148,7 +483194,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/common/proxy-trust.ts",
@@ -483181,7 +483227,8 @@
           ],
           "checks": [
             "Three compiled API proxy cases cover untrusted, trusted and invalid configuration. Both isolated NGINX profiles overwrite forged forwarded addresses. Live v0.5 staging reads back only the Docker bridge gateway as the trusted hop and binds API port 4000 to loopback.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       }
@@ -483491,7 +483538,8 @@
           "release-0.6-source-grounded-threat-model-and-review",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authenticated-staging-zap-integration"
+          "release-0.6-authenticated-staging-zap-integration",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -483499,7 +483547,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
+              "sha256": "8e10b9cde5f95db7312749563d5231a95993a1f19f2eb987db8d1b59cf82b6d3"
             },
             {
               "path": "docs/threat-model.md",
@@ -483510,7 +483558,8 @@
             "The exception register requires threat and candidate identity, accountable owner, justification, compensating controls, expiry, explicit approval and retest. The initial register has zero approved entries. Existing open release gates stay open.",
             "The existing security scope guide gained the repeatable compiled HTTP regression invocation.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       },
@@ -483627,7 +483676,8 @@
           "release-0.6-security-scenario-and-signed-fixture-reconciliation",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authenticated-staging-zap-integration"
+          "release-0.6-authenticated-staging-zap-integration",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -483635,7 +483685,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
+              "sha256": "8e10b9cde5f95db7312749563d5231a95993a1f19f2eb987db8d1b59cf82b6d3"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -483646,7 +483696,8 @@
             "The checked scope enumerates auth, sessions, MFA, CSRF, CSP, BOLA/IDOR, rate limits, SSRF, uploads, webhooks, wallet/payment and the owner-approved read-only AI boundary. It specifies test accounts, isolated providers, evidence, cleanup and repeat triggers. Live scanning and independent execution remain separate.",
             "The existing security scope guide gained the repeatable compiled HTTP regression invocation.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       },
@@ -483678,7 +483729,8 @@
           "release-0.6-security-incident-and-review-prerequisites",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authenticated-staging-zap-integration"
+          "release-0.6-authenticated-staging-zap-integration",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "verified-partial-security-operations-prerequisites",
@@ -483686,7 +483738,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
+              "sha256": "8e10b9cde5f95db7312749563d5231a95993a1f19f2eb987db8d1b59cf82b6d3"
             },
             {
               "path": "docs/threat-model.md",
@@ -483697,7 +483749,8 @@
             "The reviewed penetration-test scope and source-grounded threat model are available for reviewer selection and scheduling. A search of the repository found no independent reviewer assignment, approved budget, or scheduled review window.",
             "The existing security scope guide gained the repeatable compiled HTTP regression invocation.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       },
@@ -483727,7 +483780,8 @@
           "release-0.6-security-scenario-and-signed-fixture-reconciliation",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authenticated-staging-zap-integration"
+          "release-0.6-authenticated-staging-zap-integration",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -483735,7 +483789,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
+              "sha256": "8e10b9cde5f95db7312749563d5231a95993a1f19f2eb987db8d1b59cf82b6d3"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -483746,7 +483800,8 @@
             "Critical and high findings with a credible production path block release. A permitted risk disposition must identify its owner, evidence, compensating control, expiry and retest. The policy is source-bound. Live review and individual dispositions require separate evidence.",
             "The existing security scope guide gained the repeatable compiled HTTP regression invocation.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       },
@@ -483777,7 +483832,8 @@
           "docs/security/security-verification.md"
         ],
         "batches": [
-          "release-0.6-authenticated-staging-zap-integration"
+          "release-0.6-authenticated-staging-zap-integration",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -483793,7 +483849,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
+              "sha256": "8e10b9cde5f95db7312749563d5231a95993a1f19f2eb987db8d1b59cf82b6d3"
             }
           ],
           "checks": [
@@ -483801,7 +483857,8 @@
             "The native pinned ZAP 2.17.0 daemon reported 62 enabled rules. The first protocol smoke used an incorrect Docker-mapped authority, and the second needed the documented named sendRequest result. The final source uses ZAP’s virtual API host and named receipt, uses silent mode and verified removal of its temporary container.",
             "The same runner bytes exercised eight actual API probes against TLS-verified staging v0.5.0 at dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c. The anonymous session returned 401, the exact synthetic session and five service/profile reads returned 200, and a guessed order returned the opaque 404.",
             "ZAP found seven Low instances each of rules 10035 and 10037. A separate direct TLS response verified the staging edge omits HSTS and forwards X-Powered-By: Express. The probe reported no Medium or High finding. Final candidate retest, HSTS topology review and independent penetration testing remain separate.",
-            "Cleanup archived the synthetic profile, disabled the dedicated account, revoked its only session and verified that the revoked cookie returns 401. The report excludes credentials, identifiers and response bodies."
+            "Cleanup archived the synthetic profile, disabled the dedicated account, revoked its only session and verified that the revoked cookie returns 401. The report excludes credentials, identifiers and response bodies.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       },
@@ -483838,7 +483895,8 @@
         "batches": [
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authenticated-staging-zap-integration"
+          "release-0.6-authenticated-staging-zap-integration",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -483850,7 +483908,7 @@
             },
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/auth/login-rate-http.integration.test.ts",
@@ -483898,7 +483956,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
+              "sha256": "8e10b9cde5f95db7312749563d5231a95993a1f19f2eb987db8d1b59cf82b6d3"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -483912,7 +483970,8 @@
             "The rebuilt application passed all 11 provider HTTP and 60 provider self-test cases. The real SMTP connection-test route records the blocked private destination and the isolated listener observes zero connections. The live external provider evidence remains a separate gate.",
             "The current security verification guide lists the reproducible HTTP subset. API typecheck, lint, formatting and diff checks passed.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       },
@@ -486666,7 +486725,8 @@
           "docs/security/security-verification.md"
         ],
         "batches": [
-          "release-0.6-authenticated-staging-zap-integration"
+          "release-0.6-authenticated-staging-zap-integration",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -486682,7 +486742,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
+              "sha256": "8e10b9cde5f95db7312749563d5231a95993a1f19f2eb987db8d1b59cf82b6d3"
             }
           ],
           "checks": [
@@ -486690,7 +486750,8 @@
             "The native pinned ZAP 2.17.0 daemon reported 62 enabled rules. The first protocol smoke used an incorrect Docker-mapped authority, and the second needed the documented named sendRequest result. The final source uses ZAP’s virtual API host and named receipt, uses silent mode and verified removal of its temporary container.",
             "The same runner bytes exercised eight actual API probes against TLS-verified staging v0.5.0 at dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c. The anonymous session returned 401, the exact synthetic session and five service/profile reads returned 200, and a guessed order returned the opaque 404.",
             "ZAP found seven Low instances each of rules 10035 and 10037. A separate direct TLS response verified the staging edge omits HSTS and forwards X-Powered-By: Express. The probe reported no Medium or High finding. Final candidate retest, HSTS topology review and independent penetration testing remain separate.",
-            "Cleanup archived the synthetic profile, disabled the dedicated account, revoked its only session and verified that the revoked cookie returns 401. The report excludes credentials, identifiers and response bodies."
+            "Cleanup archived the synthetic profile, disabled the dedicated account, revoked its only session and verified that the revoked cookie returns 401. The report excludes credentials, identifiers and response bodies.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       },
@@ -486720,7 +486781,8 @@
           "release-0.6-security-scenario-and-signed-fixture-reconciliation",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authenticated-staging-zap-integration"
+          "release-0.6-authenticated-staging-zap-integration",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -486728,7 +486790,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
+              "sha256": "8e10b9cde5f95db7312749563d5231a95993a1f19f2eb987db8d1b59cf82b6d3"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -486840,7 +486902,8 @@
             "The source-matching 50 native payment cases include stale, invalid and repeated callback inputs, durable retries and duplicate settlement protection. The matrix separates authored regression cases from authenticated staging DAST and the independent review.",
             "The existing security scope guide gained the repeatable compiled HTTP regression invocation.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ]
         }
       },
@@ -488634,7 +488697,8 @@
         "batches": [
           "release-0.6-private-api-monitoring",
           "release-0.6-proxy-trust-and-request-limits",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -488642,7 +488706,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.ts",
@@ -488668,7 +488732,8 @@
           "checks": [
             "A real production-compiled Nest/Express process and disposable PostgreSQL database verified successful, malformed, unauthorized and unknown-route responses, count and histogram buckets, collapsed profile IDs and unmatched paths, absence of private input, and probe exclusions.",
             "Four adjacent native suites passed 19 cases before the final label-only normalization. The previously failing RED test then passed unchanged on the final code. API typecheck, SWC build, changed-file ESLint, formatting and three-file Semgrep pass.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/private-api-monitoring-proof.json"
         }
@@ -529766,7 +529831,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -529782,7 +529848,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -530281,7 +530347,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Customer primary tabs are Home/Electricity orders/Wallet/Profile plus More when authorized; staff tabs prioritize actual operation grants. All granted remaining pages remain reachable exactly once. Native server grants and client allowlist prevent manufacturing missing links. Initial compact bar, deferred More/error fallback and exact active-page markers verified in FA/EN and both browser projects.",
           "limitations": [
@@ -530573,7 +530640,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -530589,7 +530657,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -531088,7 +531156,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Compact topbar retains linked brand icon, hamburger, notification bell and account avatar/profile identity with the required operating-context marker. Theme/language and secondary account actions remain in the account menu. Eight-width no-overflow, permission/context and keyboard checks pass.",
           "limitations": [
@@ -531379,7 +531448,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -531395,7 +531465,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -531894,7 +531964,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Tablet768–1023px uses a60px rail with accessible labels and at least44x44 targets. It expands by tap/menu, keyboard focus and hover on hover-capable devices. Phone drawer and full desktop sidebar remain available; current page and focus/More recovery are retained.",
           "limitations": [
@@ -631211,7 +631282,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -631291,7 +631363,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -631819,7 +631891,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "PasswordField retains four visual segments and an accessible numeric progress estimate, gray empty/red weak/orange fair/yellow strong/green very strong states, hidden empty idle feedback, visible focused or nonempty feedback, reserved layout space and reduced-motion-aware slide/fade transitions. Final FA/EN component and production browser checks include blur, empty, loading, stale input, download failure and recovery.",
           "limitations": [
@@ -632052,7 +632125,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -632132,7 +632206,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -632660,7 +632734,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Owner approved local zxcvbn on2026-11-06 with all required UI. Original estimator factory, 0–4 score mapping and all ten original predictable/long-password assertions remain exact. No third-party request or password transmission; the interaction-only estimator and localized feedback preserve original initial/interaction budgets.",
           "limitations": [
@@ -632893,7 +632968,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -632973,7 +633049,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -633501,7 +633577,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "All five exact Persian/English display labels and level-specific improvement hints are verified independently against fixed expected strings, numeric scores and distinct segment colors. Locale and input own the current assessment; stale results cannot replace it.",
           "limitations": [
@@ -633734,7 +633811,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -633814,7 +633892,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -634342,7 +634420,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Meter remains informational. Existing minimum-password function/backend validation unchanged; a predictable password meeting the minimum remains submittable with valid current consent. Original strength and backend password-policy assertions retained.",
           "limitations": [
@@ -634575,7 +634654,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -634655,7 +634735,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -635183,7 +635263,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Existing trailing visibility toggle is type=button, switches password/text with aria-pressed and retains its accessible localized label. It does not submit forms or force estimator loading when disabled for login.",
           "limitations": [
@@ -635422,7 +635503,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -635438,7 +635520,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -635937,7 +636019,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Rich profile dropdown shows active initials/name/type, current accessible choices with avatar/name/type/verification badges, checked selection and profile-management link. Fresh account/revision-owned reads use the existing strict parser and cancel obsolete reads. Lazy-choice failure preserves context and offers explicit reload; no POST occurs during this failure.",
           "limitations": [
@@ -636228,7 +636311,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -636244,7 +636328,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -636743,7 +636827,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Compact ProfileBadge uses the same account-owned directory as the picker, shows current initials/type icon/name, truncates safely with full-name title and preserves the separate visible customer/staff marker. Missing/unavailable profile metadata is withheld rather than borrowing another scope.",
           "limitations": [
@@ -637034,7 +637119,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -637050,7 +637136,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -637549,7 +637635,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "A captured, target-bound switch blocks the workspace with a full-page non-dismissible loading/recovery view, including inert fallback before modal code loads. Exact response plus fresh current directory must confirm the target. Unknown replies hold without replay, recheck usesGET only, accepted changes persist backend preference and reset private queries/requests/tabs. Existing default-setting and invitation CSRF tests retained.",
           "limitations": [
@@ -637840,7 +637927,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -637856,7 +637944,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -638355,7 +638443,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Unverified profiles can be selected/read while existing verification banner and server commercial-order guards remain authoritative. Status badges expose verified/unverified without granting permissions. Native profile verification/context cases and existing verification sources retained; no commercial gate changed.",
           "limitations": [
@@ -638650,7 +638739,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -638666,7 +638756,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -639165,7 +639255,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Owner approved on2026-11-06 the existing explicit-ID or server-owned active-preference representation. Current ownership/active-agent checks, exact target receipt plus fresh confirmation, old-response suppression and cross-tab reset verified. Native foreign/suspended/agent contexts and late old wallet/notification values remain isolated; no profile header migration or financial-rule change.",
           "limitations": [
@@ -639456,7 +639547,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -639472,7 +639564,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -639971,7 +640063,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "AppShell retains shared directional flex layout, existing sidebar/topbar CSS variables, scrollable bounded main content, skip link and account banners. Desktop sidebar and responsive rail/phone surfaces verified; event/media/Escape logic retained byte-exact.",
           "limitations": [
@@ -640262,7 +640355,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -640278,7 +640372,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -640777,7 +640871,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Sidebar now includes brand at its head, profile picker below when expanded, grouped permitted links, directional icons, active marker and responsive expansion. Labels remain accessible in collapsed mode. Administrative links reflect actual backend grants rather than a frontend role-name assumption.",
           "limitations": [
@@ -641069,7 +641164,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -641085,7 +641181,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -641584,7 +641680,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Topbar retains language/theme controls, current notification bell and account popover, with compact preferences in that popover. Current profile identity is supplied through a customer-only slot; staff does not fetch customer profile authority. Root auth BrandMark default rendering remains exact and login light/dark FA/EN checks pass.",
           "limitations": [
@@ -641876,7 +641973,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -641892,7 +641990,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -642391,7 +642489,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "ProfileMenu keeps current account avatar/name/email/mobile, My Profile/settings/logout, explicit operating-context indicator and authorized staff/customer switch. Current authority/error recovery and session CSRF/one-context behavior remain unchanged; native and both browser contexts pass.",
           "limitations": [
@@ -642683,7 +642782,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -642699,7 +642799,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -643198,7 +643298,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Bottom bar shows up to four granted primary destinations plus More, reflects the true active route, preserves every remaining granted link, closes on navigation/desktop transition and restores focus. Phone/desktop/keyboard/RTL and failed bar/sheet recovery pass. Its initial payload remains counted under original page limits.",
           "limitations": [
@@ -643490,7 +643591,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -643506,7 +643608,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -644005,7 +644107,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Existing BreadcrumbBar keeps current route/path, localized root and safe detail label, collapsed parent disclosure, Escape/focus restoration and true list-return links. Raw record IDs never appear as breadcrumb labels. Real route/consent recovery tests retained across both projects.",
           "limitations": [
@@ -644297,7 +644400,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -644313,7 +644417,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -644812,7 +644916,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Navigation is resolved from current server grants and profile type. Client local labels/icons only filter known routes from that configuration; missing or wrong-area configuration fails closed and can refresh. Native per-permission/operating-context tests and restricted-menu browser cases pass.",
           "limitations": [
@@ -645104,7 +645209,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -645120,7 +645226,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -645619,7 +645725,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Customer service/account destinations and staff operations/settings groups remain backend-filtered, including all four services, CRM, document templates and finance/administration where granted. Personal customer work and staff operations retain their explicit authorized operating-context boundary.",
           "limitations": [
@@ -645911,7 +646018,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -645927,7 +646035,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -646426,7 +646534,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Legal profiles expose legal-profile/team/agent routes only with corresponding current grants; Individual profiles expose personal-profile/saving routes. Shared service links retain their own server permission boundaries. Current backend navigation tests and FA/EN customer/staff menu checks pass.",
           "limitations": [
@@ -646718,7 +646827,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -646734,7 +646844,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -647233,7 +647343,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Owner approved current router-context reuse with fresh authority on navigation/profile/permission changes instead of immutable session-long grants. Existing current-session/navigation parsers/providers and backend permission resolution remain byte-exact. Revocation, restricted configuration and context change tests pass.",
           "limitations": [
@@ -647518,7 +647629,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -647598,7 +647710,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -648126,7 +648238,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Existing AuthLayout uses two equal desktop columns, configured local brand/title/slogan, three localized value propositions with icons, centered constrained forms and root version. Reviewed desktop FA/EN captures and theme/keyboard/axe checks retain this layout.",
           "limitations": [
@@ -648359,7 +648472,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -648439,7 +648553,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -648967,7 +649081,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Existing mobile layout stacks a compact linked brand above full-width constrained forms and hides desktop propositions. Final MobileChrome FA/EN light/dark screenshots, no-horizontal-overflow and touch/keyboard/auth journey checks passed.",
           "limitations": [
@@ -649200,7 +649315,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -649280,7 +649396,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -649808,7 +649924,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Separate public auth entry and nested layout render no AppShell, sidebar/topbar/bottom tabs or account data. Delayed current-session and expired-session tests verify forms never render before the entry decision and private dashboard/profile/admin/financial reads do not occur for guests.",
           "limitations": [
@@ -650041,7 +650158,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -650121,7 +650239,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -650649,7 +650767,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Existing language switch stays at the directional trailing edge before login/registration and updates lang/dir immediately without losing form state. Chosen language survives reload and later visits in an English browser; current FA/EN journeys and localized errors remain valid.",
           "limitations": [
@@ -650882,7 +651001,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -650962,7 +651082,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -651490,7 +651610,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "New current uncached session check precedes auth forms. Signed-in visitors to login/register/register-verify/forgot-password/activation enter canonical /app with unchanged role/terms/profile/onboarding gates; expired sessions retain public form access. Desktop/mobile tests cover delayed ownership and no private content flash.",
           "limitations": [
@@ -651723,7 +651844,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -651803,7 +651925,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -652331,7 +652453,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Existing login accepts normalized email/mobile and preserves raw password, explicit errors/restart for uncertain results, current CSRF, captured requests and disabled states. Visibility, recovery/registration links, conditional OTP/trust-device stage, light/dark/FA/EN/keyboard/a11y and successful ownership handoff verified. Duplicate link-prompt copy corrected.",
           "limitations": [
@@ -652564,7 +652687,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -652644,7 +652768,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -653172,7 +653296,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Existing registration keeps current immutable terms receipt, acceptance checkbox/exact link, username/password minimum and local meter, login/recovery links and subsequent owned OTP stage. Rejected/uncertain starts cannot duplicate or silently switch a captured submission; native and browser consent/security assertions remain intact.",
           "limitations": [
@@ -653405,7 +653530,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -653485,7 +653611,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -654013,7 +654139,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Existing password recovery keeps generic start, owned OTP/reset capability, confirm/new-password meter, validation/cooldown, safe rejected-value retention, captured uncertain outcomes and accepted success redirect/toast to login. No automatic retry of possibly consumed reset authority.",
           "limitations": [
@@ -654246,7 +654373,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -654326,7 +654454,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -654854,7 +654982,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Existing OtpInput preserves six digits, autofocus/advance, paste/backspace, numeric-keyboard normalization, LTR digit order in RTL and60-second resend. Registration auto-completion and explicit login Verify/trust opt-in remain distinct. Component, native and production browser checks preserve code/expiry/cooldown/uncertain-result safeguards.",
           "limitations": [
@@ -655087,7 +655216,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -655167,7 +655297,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -655695,7 +655825,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Existing required-change stage remains in the public login layout, requires confirmation and minimum-valid password, shows meter, emits success toast, clears accepted credential/grant state and returns to login. Native tests retain one-use grant, old-session revocation and pre-session ownership/security safeguards.",
           "limitations": [
@@ -655928,7 +656059,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -656008,7 +656140,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -656536,7 +656668,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Existing terms content/date/language/exact-version reader now includes public published-version history with20-row keyset pagination, immutable IDs/public labels/publication times only, draft/unknown cursor equivalence and malformed/repeated cursor400. History retry preserves document/prior rows and exact cursor; viewing creates zero acceptances. Existing current-version commercial guards and acceptance receipts unchanged.",
           "limitations": [
@@ -656769,7 +656902,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-suppress-api-framework-header"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -656849,7 +656983,7 @@
             },
             {
               "path": "apps/api/src/auth/navigation-http.integration.test.ts",
-              "sha256": "11daa36b36ac6a19ecfd23dc105202a5726ea05d885593efd524913b9fdc9bc3"
+              "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
             },
             {
               "path": "apps/api/src/auth/navigation.test.ts",
@@ -657377,7 +657511,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed only the changed test-file binding against the current activation or invoice contract. Current credentials and activation/expiry/revocation checks, exact masked invoice error, fault-injection reachability, rollback and durable state assertions passed. No product path changed in this fixture batch.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "criterion_result": "Six OTP page messages now use conditional delivery wording with the same masked destinations. Existing generic start and backend challenge/registration/reset response boundaries unchanged; no provider acceptance claim or account-existence disclosure added. Actual OTP delivery remains on the protected contact path, not general inbox.",
           "limitations": [
@@ -752567,7 +752702,7 @@
             },
             {
               "path": "apps/api/src/app.factory.ts",
-              "sha256": "98f751fd48ef7d15d1bd341b9e8d0f9aa50c32bd98e0bfaa9662a6cf9d79fd97"
+              "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
             },
             {
               "path": "apps/api/src/app.module.ts",
@@ -752917,7 +753052,8 @@
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes."
+            "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
+            "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -753043,7 +753179,8 @@
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-calendar-utilities-and-exact-price-proof",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-suppress-api-framework-header"
         ]
       }
     },
@@ -850984,6 +851121,106 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/authorization-audit-route-budget",
       "source_scope_proof": "repair-source-proof.json",
       "source_scope_proof_sha256": "c1d64a3c49eb4b103c9753e654b4ca508cd66b6b6f34321ef33226393caa802a"
+    },
+    "release-0.6-suppress-api-framework-header": {
+      "batch": "release-0.6-suppress-api-framework-header",
+      "base_commit": "eb1518c1150d4464265778a938901cb4857e5dc8",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.03.05",
+        "01-platform-infrastructure.md#T-01.05.01",
+        "01-platform-infrastructure.md#T-03.03.02",
+        "01-platform-infrastructure.md#T-04.04.04",
+        "01-platform-infrastructure.md#T-04.04.05",
+        "06-security-testing-observability.md#T-06.01.01.07",
+        "06-security-testing-observability.md#T-06.02.01.01",
+        "06-security-testing-observability.md#T-06.02.01.02",
+        "06-security-testing-observability.md#T-06.02.01.03",
+        "06-security-testing-observability.md#T-06.02.01.06",
+        "06-security-testing-observability.md#T-06.02.01.07",
+        "06-security-testing-observability.md#T-06.02.02.03",
+        "06-security-testing-observability.md#T-06.02.03.04",
+        "06-security-testing-observability.md#T-06.02.04.01",
+        "06-security-testing-observability.md#T-06.02.04.02",
+        "06-security-testing-observability.md#T-06.02.04.03",
+        "06-security-testing-observability.md#T-06.02.04.04",
+        "06-security-testing-observability.md#T-06.02.04.05",
+        "06-security-testing-observability.md#T-06.03.01.09",
+        "06-security-testing-observability.md#T-06.03.01.10",
+        "06-security-testing-observability.md#T-06.07.03.02",
+        "06-security-testing-observability.md#T-06.07.03.04",
+        "06-security-testing-observability.md#T-06.08.01.04",
+        "06-security-testing-observability.md#T-06.08.02.01",
+        "06-security-testing-observability.md#T-06.08.02.02",
+        "06-security-testing-observability.md#T-06.08.02.03",
+        "06-security-testing-observability.md#T-06.08.02.04",
+        "06-security-testing-observability.md#T-06.08.02.05",
+        "06-security-testing-observability.md#T-06.11.02.01",
+        "06-security-testing-observability.md#T-06.11.02.02",
+        "06-security-testing-observability.md#T-06.14.01.02",
+        "07-ui-ux-design.md#T-07.04.02.01",
+        "07-ui-ux-design.md#T-07.04.02.02",
+        "07-ui-ux-design.md#T-07.04.02.03",
+        "07-ui-ux-design.md#T-07.14.01.01",
+        "07-ui-ux-design.md#T-07.14.01.02",
+        "07-ui-ux-design.md#T-07.14.01.03",
+        "07-ui-ux-design.md#T-07.14.01.04",
+        "07-ui-ux-design.md#T-07.14.01.05",
+        "07-ui-ux-design.md#T-07.15.01.01",
+        "07-ui-ux-design.md#T-07.15.01.02",
+        "07-ui-ux-design.md#T-07.15.01.03",
+        "07-ui-ux-design.md#T-07.15.01.04",
+        "07-ui-ux-design.md#T-07.15.01.05",
+        "07-ui-ux-design.md#T-07.16.01.01",
+        "07-ui-ux-design.md#T-07.16.01.02",
+        "07-ui-ux-design.md#T-07.16.01.03",
+        "07-ui-ux-design.md#T-07.16.01.04",
+        "07-ui-ux-design.md#T-07.16.01.05",
+        "07-ui-ux-design.md#T-07.16.01.06",
+        "07-ui-ux-design.md#T-07.16.01.07",
+        "07-ui-ux-design.md#T-07.16.02.01",
+        "07-ui-ux-design.md#T-07.16.02.02",
+        "07-ui-ux-design.md#T-07.16.02.03",
+        "07-ui-ux-design.md#T-07.17.01.01",
+        "07-ui-ux-design.md#T-07.17.01.02",
+        "07-ui-ux-design.md#T-07.17.01.03",
+        "07-ui-ux-design.md#T-07.17.01.04",
+        "07-ui-ux-design.md#T-07.17.01.05",
+        "07-ui-ux-design.md#T-07.17.02.01",
+        "07-ui-ux-design.md#T-07.17.02.02",
+        "07-ui-ux-design.md#T-07.17.02.03",
+        "07-ui-ux-design.md#T-07.17.02.04",
+        "07-ui-ux-design.md#T-07.17.02.05",
+        "07-ui-ux-design.md#T-07.17.02.06",
+        "07-ui-ux-design.md#T-07.17.02.07",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/app.factory.ts",
+        "apps/api/src/auth/navigation-http.integration.test.ts",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/app.factory.ts",
+          "sha256": "f96486507194e3c4925c45c3c6f2e56d91a24ebfd2c1e9466f503b303d13d48f"
+        },
+        {
+          "path": "apps/api/src/auth/navigation-http.integration.test.ts",
+          "sha256": "2d756087c75245049438d88a609b236ece57aaf405767406d00aa6e5b2d7592e"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "8e10b9cde5f95db7312749563d5231a95993a1f19f2eb987db8d1b59cf82b6d3"
+        }
+      ],
+      "checks": [
+        "The native v0.5.0 authenticated ZAP report identified seven Low instances of rule 10037. Direct TLS verification showed the staging API exposed X-Powered-By: Express.",
+        "The compiled API now disables the framework-identifying header in the existing Express startup. In the isolated PostgreSQL fixture both authenticated 200 and anonymous 401 responses omit it. All eight navigation and eight audit tests passed with one freshly migrated, non-connectable template. No existing permission, cache or correlation assertion changed.",
+        "API typecheck, changed-file lint, documentation formatting and diff checks passed. Verify the exact v0.6.0 staged ingress through the final ZAP run. HSTS activation remains tied to verified production TLS and subdomain impact."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/authorization-header-privacy",
+      "source_scope_proof": "header-source-proof.json",
+      "source_scope_proof_sha256": "34a85cb3c2ce32451f19ac8c8976d49801d3c747feb82678885c634d6651e19c"
     }
   },
   "historical_improvements": [

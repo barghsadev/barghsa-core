@@ -67,6 +67,7 @@ async function staff(permissions: unknown, admin = false) {
 it('returns private session-bound navigation with the current individual profile, without exposing role data', async () => {
   const response = await read();
   expect(response.status).toBe(200);
+  expect(response.headers.has('x-powered-by')).toBe(false);
   expect(response.headers.get('cache-control')).toBe(
     'private, no-cache, no-store, must-revalidate'
   );
@@ -200,7 +201,9 @@ it('matches electricity, saving and bank-receipt queue read guards for narrowly 
   ).toBe(200);
 });
 it('returns no navigation for unauthenticated, disabled or revoked sessions', async () => {
-  expect((await fetch(`${http.base}/api/auth/user`)).status).toBe(401);
+  const anonymous = await fetch(`${http.base}/api/auth/user`);
+  expect(anonymous.status).toBe(401);
+  expect(anonymous.headers.has('x-powered-by')).toBe(false);
   await http.pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id='viewer'");
   expect((await read()).status).toBe(401);
   await http.pool.query("UPDATE users SET disabled_at=NULL WHERE user_id='viewer'");

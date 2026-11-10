@@ -116,6 +116,7 @@ Review medium findings and record their disposition with the exact candidate
 receipt. Run this check again after the final candidate is available.
 
 The first staging rehearsal found two low-risk rules across the API reads.
-The live edge omitted HSTS and forwarded `X-Powered-By: Express`. Keep HSTS
-activation tied to the TLS and subdomain review and check the framework header
-again on the release candidate. [HSTS rule](https://www.zaproxy.org/docs/alerts/10035/), [Framework header rule](https://www.zaproxy.org/docs/alerts/10037/).
+The live edge omitted HSTS and forwarded `X-Powered-By: Express`. The API
+disables the framework header at startup. Check the header through the live
+candidate's ingress and keep HSTS activation tied to the TLS and subdomain
+review. [HSTS rule](https://www.zaproxy.org/docs/alerts/10035/), [Framework header rule](https://www.zaproxy.org/docs/alerts/10037/).

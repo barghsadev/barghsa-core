@@ -27,6 +27,7 @@ export async function createApplication() {
   app
     .getHttpAdapter()
     .getInstance()
+    .disable('x-powered-by')
     .set('etag', false)
     .set('trust proxy', proxies.length ? proxies : false);
   app.use(observeHttpRequest);
