@@ -11,6 +11,9 @@
       "path": "packages/i18n"
     },
     {
+      "path": "packages/api-client"
+    },
+    {
       "path": "packages/ui"
     },
     {

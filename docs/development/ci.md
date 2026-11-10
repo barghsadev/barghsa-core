@@ -25,6 +25,18 @@ Markdown and YAML. Commitlint validates the commit subject against the
 conventional types used by this repository. CI and production installs skip
 local hook setup and use the hosted checks.
 
+## API contracts
+
+`@barghsa/api-client` exports the OpenAPI `paths`, `operations` and `components`
+types for TypeScript clients. Generate the committed API snapshot and client
+types together with `pnpm contract:update` after an intentional API change.
+Review both outputs with the implementation. CI compares the compiled API
+snapshot and checks the generated client types for drift.
+
+Keep existing consumers compatible when removing a field or changing its
+type. Introduce a new API version or retain the previous contract through a
+documented migration window before removing it.
+
 ## Backend test databases
 
 The same Vitest configurations drive CI and local runs. Every tested workspace

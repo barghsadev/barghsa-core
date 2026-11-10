@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T04:22:18+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T04:26:02+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1110 | Accepted with unchanged source bindings. |
-| verify | 213 | Existing work may be complete; inspect evidence before building. |
+| done | 1111 | Accepted with unchanged source bindings. |
+| verify | 212 | Existing work may be complete; inspect evidence before building. |
 | partial | 38 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1081,7 +1081,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-07.04.03` | done | Earlier deferred | Create deployment guide |
 | `01-platform-infrastructure.md#T-07.04.04` | done | Earlier deferred | Create incident response plan |
 | `01-platform-infrastructure.md#T-07.05.01` | verify | Earlier deferred | Enforce “no external call inside a database transaction” |
-| `01-platform-infrastructure.md#T-07.05.02` | verify | Earlier deferred | Generate and verify TypeScript API client contracts from OpenAPI |
+| `01-platform-infrastructure.md#T-07.05.02` | done | Earlier deferred | Generate and verify TypeScript API client contracts from OpenAPI |
 | `01-platform-infrastructure.md#T-07.05.03` | done | Earlier deferred | Verify health-endpoint middleware exclusions |
 | `01-platform-infrastructure.md#T-07.05.04` | done | Earlier deferred | Document and gate module extraction criteria |
 | `06-security-testing-observability.md#T-06.01.01.01` | done | Recorded batch work | Implement `PasswordService` with Argon2id via Node.js crypto bindings (e.g. `argon2` npm package) |
