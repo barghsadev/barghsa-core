@@ -81,7 +81,7 @@ for (const locale of ['en', 'fa']) {
       release();
     }
     await expect(dialog).toHaveCount(0);
-    await expect(panel.getByRole('status')).toHaveText(savedText);
+    await expect(panel.getByRole('status').filter({ hasText: savedText })).toHaveText(savedText);
     expect(writes).toEqual([{ ttlSeconds: 120, expectedVersion: 0 }]);
     await page.reload();
     await expect(input).toHaveValue('120');

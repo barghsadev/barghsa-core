@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T11:58:41+00:00",
-  "source_commit": "8f763647cd01d628fd19fdc97642b6e0723c0eb3",
+  "updated": "2026-11-10T12:05:22+00:00",
+  "source_commit": "37ea774e755759a0ff41c2c7cd5a64c2e0805729",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5555,7 +5555,7 @@
       "launch_required": true,
       "remaining": [
         "Actual scheduled run 42789410833 reported all 40 shards with 127 unexpected outcomes and 18 flakes. The customer request, owned-read and Firefox document replays passed. The Firefox electricity submission race and the Persian saving touch-target flake now have source-bound local passing evidence. Resolve remaining failures and repeat the complete matrix on the exact candidate. The solar Submit request touch target also has source-bound passing geometry and mobile gate receipts.",
-        "Bind current critical registration, MFA, legal onboarding, electricity and wallet, saving, solar construction and admin browser journeys to the accepted release source. The saving payment and fulfillment journey has separate local acceptance."
+        "Registration, MFA, legal onboarding, electricity and wallet, saving, consultation, solar construction and admin configuration have targeted source-bound receipts. The exact hosted release matrix and strict rollup still need a clean pass. The cancellation and OTP repairs have targeted local browser receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -5624,7 +5624,8 @@
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-solar-request-touch-target"
+          "release-0.6-solar-request-touch-target",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": null
       }
@@ -30174,7 +30175,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -30462,7 +30464,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security.tsx",
@@ -49932,7 +49934,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -50036,7 +50039,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useListQuery.ts",
@@ -51238,7 +51241,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -51290,7 +51294,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useListQuery.ts",
@@ -52418,7 +52422,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -52482,7 +52487,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useListQuery.ts",
@@ -53601,7 +53606,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -53645,7 +53651,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/pages/AdminLayout.tsx",
@@ -55330,7 +55336,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -55414,7 +55421,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -56085,7 +56092,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -56145,7 +56153,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
@@ -56464,7 +56472,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -56520,7 +56529,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
@@ -57267,7 +57276,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -57331,7 +57341,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
@@ -59055,7 +59065,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-legal-agent-invitation-and-permissions-browser-journey"
+          "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-additive-agent-permissions-across-current-business-consumers",
@@ -59071,7 +59082,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -60367,7 +60378,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -60427,7 +60439,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/lib/invitation-action.ts",
@@ -65437,7 +65449,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-manual-verification-mode-and-unavailable-api",
@@ -65477,7 +65490,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useSettingsSnapshot.ts",
@@ -94096,7 +94109,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-alert-runbook-references-and-review",
-          "release-0.6-worker-outbox-dashboard"
+          "release-0.6-worker-outbox-dashboard",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -94224,7 +94238,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/lib/email-providers-api.ts",
@@ -96665,7 +96679,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -96853,7 +96868,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.test.tsx",
@@ -98100,7 +98115,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -98288,7 +98304,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.test.tsx",
@@ -105524,7 +105540,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -105712,7 +105729,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.test.tsx",
@@ -108736,7 +108753,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -108960,7 +108978,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -109388,7 +109406,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -109588,7 +109607,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -110037,7 +110056,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -110161,7 +110181,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -110578,7 +110598,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -110706,7 +110727,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -112577,7 +112598,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -112817,7 +112839,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -113311,7 +113333,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -113551,7 +113574,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -115913,7 +115936,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -116153,7 +116177,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useLocale.ts",
@@ -116856,7 +116880,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -116928,7 +116953,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/lib/staff-access-form-schemas.ts",
@@ -171483,7 +171508,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -171631,7 +171657,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -172508,7 +172534,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -172656,7 +172683,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -173536,7 +173563,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -173684,7 +173712,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -174562,7 +174590,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -174710,7 +174739,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -175587,7 +175616,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -175735,7 +175765,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -176612,7 +176642,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -176760,7 +176791,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -177636,7 +177667,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -177784,7 +177816,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -178663,7 +178695,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -178811,7 +178844,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -179688,7 +179721,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -179836,7 +179870,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -180713,7 +180747,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -180861,7 +180896,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -181739,7 +181774,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -181887,7 +181923,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -182764,7 +182800,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -182912,7 +182949,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -183788,7 +183825,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -183936,7 +183974,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -184813,7 +184851,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -184961,7 +185000,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -382685,7 +382724,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -382905,7 +382945,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
+              "sha256": "af8efcc627db9c5dec1d86d22e915f8341a93540117469ef0128c4cc34a880f1"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -382917,7 +382957,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -382933,7 +382973,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -383991,7 +384031,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -384211,7 +384252,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
+              "sha256": "af8efcc627db9c5dec1d86d22e915f8341a93540117469ef0128c4cc34a880f1"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -384223,7 +384264,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -384239,7 +384280,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -385297,7 +385338,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -385517,7 +385559,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
+              "sha256": "af8efcc627db9c5dec1d86d22e915f8341a93540117469ef0128c4cc34a880f1"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -385529,7 +385571,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -385545,7 +385587,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -386603,7 +386645,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -386823,7 +386866,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
+              "sha256": "af8efcc627db9c5dec1d86d22e915f8341a93540117469ef0128c4cc34a880f1"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -386835,7 +386878,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -386851,7 +386894,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -387910,7 +387953,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -388130,7 +388174,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
+              "sha256": "af8efcc627db9c5dec1d86d22e915f8341a93540117469ef0128c4cc34a880f1"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -388142,7 +388186,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -388158,7 +388202,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -454157,7 +454201,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -454245,7 +454290,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -454442,7 +454487,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -454530,7 +454576,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -454729,7 +454775,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -454817,7 +454864,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -455014,7 +455061,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455102,7 +455150,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -455300,7 +455348,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455388,7 +455437,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -464420,7 +464469,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464644,7 +464694,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -464925,7 +464975,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -465149,7 +465200,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -465432,7 +465483,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -465656,7 +465708,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -465937,7 +465989,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -466161,7 +466214,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useWizardForm.ts",
@@ -466439,7 +466492,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -466639,7 +466693,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -466908,7 +466962,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -467108,7 +467163,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -467379,7 +467434,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -467579,7 +467635,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -467849,7 +467905,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -468049,7 +468106,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -468310,7 +468367,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -468434,7 +468492,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -468697,7 +468755,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -468821,7 +468880,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -469080,7 +469139,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -469204,7 +469264,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -469470,7 +469530,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -469598,7 +469659,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -469963,7 +470024,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -470091,7 +470153,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -470482,7 +470544,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -470610,7 +470673,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -470974,7 +471037,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -471102,7 +471166,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -471491,7 +471555,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -471619,7 +471684,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/lib/ai-agent-form.ts",
@@ -524047,7 +524112,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -524339,7 +524405,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -525471,7 +525537,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -525675,7 +525742,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
@@ -526385,7 +526452,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526589,7 +526657,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
@@ -527240,7 +527308,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -527444,7 +527513,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TicketIntakeForm.tsx",
@@ -528145,7 +528214,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-contract-amendment-invoice-readback-browser-journey"
+          "release-0.6-contract-amendment-invoice-readback-browser-journey",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -528205,11 +528275,11 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.tsx",
@@ -528285,7 +528355,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -529014,7 +529084,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -529306,7 +529377,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -544188,7 +544259,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -544248,7 +544320,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -549228,7 +549300,8 @@
           "release-0.6-effective-brand-rollback-browser-journey",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -549288,7 +549361,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
+              "sha256": "af8efcc627db9c5dec1d86d22e915f8341a93540117469ef0128c4cc34a880f1"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -549532,7 +549605,7 @@
             },
             {
               "path": "apps/web/e2e/otp-config.spec.ts",
-              "sha256": "9990746dbdb1af0db4a18cbf2165e1366de290a7dbde7460f61cdaa39b1f3bb0"
+              "sha256": "4c9ededdc7e280a95ac12febc462f51a928bfc0f0f6fb16f5fb7f59b0c5ce6f8"
             },
             {
               "path": "apps/web/e2e/password-recovery-forms.spec.ts",
@@ -549808,7 +549881,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -550040,7 +550113,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -556078,7 +556151,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556182,7 +556256,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -557019,7 +557093,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557123,7 +557198,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -557960,7 +558035,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558064,7 +558140,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -558901,7 +558977,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559005,7 +559082,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -559842,7 +559919,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559946,7 +560024,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -560783,7 +560861,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560887,7 +560966,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -561724,7 +561803,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561828,7 +561908,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -562665,7 +562745,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -562769,7 +562850,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -563606,7 +563687,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -563710,7 +563792,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -564547,7 +564629,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -564651,7 +564734,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -565488,7 +565571,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565592,7 +565676,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -566429,7 +566513,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -566533,7 +566618,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -567370,7 +567455,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567474,7 +567560,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -568311,7 +568397,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -568415,7 +568502,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -569252,7 +569339,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569356,7 +569444,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -570193,7 +570281,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -570297,7 +570386,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -571134,7 +571223,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -571238,7 +571328,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -572075,7 +572165,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -572179,7 +572270,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -573016,7 +573107,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -573120,7 +573212,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -573957,7 +574049,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -574061,7 +574154,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/ThemeSwitcher.tsx",
@@ -580041,7 +580134,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -580113,7 +580207,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -580125,7 +580219,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -580317,7 +580411,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -581942,7 +582036,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582014,7 +582109,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -582026,7 +582121,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -582218,7 +582313,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -583844,7 +583939,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583916,7 +584012,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -583928,7 +584024,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -584120,7 +584216,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -585715,7 +585811,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585787,7 +585884,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -585799,7 +585896,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -585991,7 +586088,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -587612,7 +587709,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587684,7 +587782,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -587696,7 +587794,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -587888,7 +587986,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -589518,7 +589616,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -589590,7 +589689,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -589602,7 +589701,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -589794,7 +589893,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -591397,7 +591496,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -591469,7 +591569,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -591481,7 +591581,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -591673,7 +591773,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -593240,7 +593340,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -593312,7 +593413,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -593324,7 +593425,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -593516,7 +593617,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -595083,7 +595184,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -595155,7 +595257,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -595167,7 +595269,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -595359,7 +595461,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -596927,7 +597029,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -596999,7 +597102,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -597011,7 +597114,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -597203,7 +597306,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -598770,7 +598873,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -598842,7 +598946,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -598854,7 +598958,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -599046,7 +599150,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -600608,7 +600712,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -600860,7 +600965,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -602544,7 +602649,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -602796,7 +602902,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -604519,7 +604625,8 @@
           "release-0.6-effective-brand-rollback-browser-journey",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -604591,7 +604698,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
+              "sha256": "af8efcc627db9c5dec1d86d22e915f8341a93540117469ef0128c4cc34a880f1"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -605255,7 +605362,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -605271,7 +605378,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -605675,7 +605782,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -607432,7 +607539,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -607469,6 +607577,10 @@
             {
               "path": "apps/web/build.mjs",
               "sha256": "faf67d198f475cd57d4f1750eb0d766428cdcd71ae06db8e289397a49efebe6e"
+            },
+            {
+              "path": "apps/web/e2e/cancellation-forms.spec.ts",
+              "sha256": "af8efcc627db9c5dec1d86d22e915f8341a93540117469ef0128c4cc34a880f1"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -607511,12 +607623,20 @@
               "sha256": "abafe797c2a563c55e7186aef41041a61f7b4429e0e9d0bd88ff61cc70a1a55b"
             },
             {
+              "path": "apps/web/src/components/ContractCancellationEditor.tsx",
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
+            },
+            {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
               "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
               "sha256": "bb03bbe34660905721f1a339ee0f59db023be90ce37517ec57159d268fc6b1de"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -607684,7 +607804,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -607879,8 +607999,16 @@
               "sha256": "3832dc5ac1cf82990181fad48fe9ba55bc496522d3312ab85b00856c458011c9"
             },
             {
+              "path": "apps/web/src/lib/contract-detail-records.ts",
+              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
+            },
+            {
               "path": "apps/web/src/lib/contracts.ts",
               "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
+            },
+            {
+              "path": "apps/web/src/lib/document-records.ts",
+              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -608917,14 +609045,6 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
-            },
-            {
-              "path": "apps/web/src/lib/document-records.ts",
-              "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
-            },
-            {
-              "path": "apps/web/src/lib/contract-detail-records.ts",
-              "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
             }
           ],
           "checks": [
@@ -608973,7 +609093,8 @@
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta."
+            "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
+            "Scheduled Mobile Safari run 42789410833 job 129738700024 showed repeated toast interception of the cancellation Check current status control. Customer and staff cancellation confirmations now show errors inline, preserving the dialog alert and the persistent recovery notice. Exact command binding, validation, read-before-retry, stale-scope denial, and financial confirmation assertions remain."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -609368,7 +609489,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -609620,7 +609742,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -611304,7 +611426,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -611556,7 +611679,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -613240,7 +613363,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -613492,7 +613616,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -615176,7 +615300,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -615428,7 +615553,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -617112,7 +617237,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -617364,7 +617490,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -619048,7 +619174,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -619300,7 +619427,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -620984,7 +621111,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -621236,7 +621364,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -622920,7 +623048,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -623172,7 +623301,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -624856,7 +624985,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -625108,7 +625238,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -626792,7 +626922,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -627044,7 +627175,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -628698,7 +628829,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-contract-amendment-invoice-readback-browser-journey"
+          "release-0.6-contract-amendment-invoice-readback-browser-journey",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -628758,11 +628890,11 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.tsx",
@@ -628838,7 +628970,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -629485,7 +629617,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -629737,7 +629870,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -631421,7 +631554,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -631673,7 +631807,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -633450,7 +633584,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-solar-request-touch-target"
+          "release-0.6-solar-request-touch-target",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
@@ -633665,7 +633800,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
@@ -634788,7 +634923,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -634860,7 +634996,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -634872,7 +635008,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -635064,7 +635200,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -636627,7 +636763,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -636699,7 +636836,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -636711,7 +636848,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -636903,7 +637040,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -638466,7 +638603,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -638538,7 +638676,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -638550,7 +638688,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -638742,7 +638880,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -640305,7 +640443,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -640377,7 +640516,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -640389,7 +640528,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -640581,7 +640720,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -642144,7 +642283,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -642216,7 +642356,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -642228,7 +642368,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -642420,7 +642560,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -643983,7 +644123,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -644055,7 +644196,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -644067,7 +644208,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -644259,7 +644400,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -645822,7 +645963,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -645894,7 +646036,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -645906,7 +646048,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.test.tsx",
@@ -646098,7 +646240,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.test.tsx",
@@ -723483,7 +723625,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -723679,7 +723822,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -724081,7 +724224,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -724277,7 +724421,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -724678,7 +724822,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -724874,7 +725019,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -725277,7 +725422,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -725473,7 +725619,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -725874,7 +726020,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -726070,7 +726217,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -726471,7 +726618,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -726667,7 +726815,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useAccountTime.tsx",
@@ -736536,7 +736684,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -736752,7 +736901,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -737199,7 +737348,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -737415,7 +737565,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -737862,7 +738012,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -738078,7 +738229,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -738526,7 +738677,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -738742,7 +738894,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -739189,7 +739341,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -739405,7 +739558,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -739852,7 +740005,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -740068,7 +740222,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -740515,7 +740669,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -740731,7 +740886,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -741179,7 +741334,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -741395,7 +741551,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -741842,7 +741998,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -742058,7 +742215,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -742505,7 +742662,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -742721,7 +742879,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -743752,7 +743910,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-protected-contract-and-finance",
           "release-0.5-route-census-closure",
-          "release-0.5-action-contrast"
+          "release-0.5-action-contrast",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-admin-settings-adoption",
@@ -743796,7 +743955,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/pages/AdminEmailProvidersPage.tsx",
@@ -745108,7 +745267,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -745144,7 +745304,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
@@ -745367,7 +745527,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -745407,7 +745568,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -745606,7 +745767,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -745650,7 +745812,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -745859,7 +746021,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-admin-safety-and-team-ui-journeys",
@@ -745887,7 +746050,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -746083,7 +746246,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-admin-safety-and-team-ui-journeys",
@@ -746119,7 +746283,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -746354,7 +746518,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-verification-settings",
@@ -746530,7 +746695,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/VerificationPolicySettings.tsx",
@@ -746879,7 +747044,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -746971,7 +747137,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -747346,7 +747512,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "verified-admin-safety-and-team-ui-journeys",
@@ -747382,7 +747549,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
@@ -747619,7 +747786,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -747711,7 +747879,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/hooks/useCatalogueResource.ts",
@@ -753125,7 +753293,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -755635,7 +755803,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-contract-amendment-invoice-readback-browser-journey"
+          "release-0.6-contract-amendment-invoice-readback-browser-journey",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ]
       }
     },
@@ -756139,7 +756308,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -757323,7 +757492,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
+              "sha256": "af8efcc627db9c5dec1d86d22e915f8341a93540117469ef0128c4cc34a880f1"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -757335,7 +757504,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
@@ -757351,7 +757520,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestQueue.tsx",
@@ -760335,7 +760504,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ]
       }
     },
@@ -761827,7 +761997,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -764351,7 +764521,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -765832,7 +766003,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TemplatePreviewPanel.tsx",
@@ -768258,7 +768429,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -768713,7 +768885,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TelegramLinkPanel.tsx",
@@ -769998,7 +770170,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-solar-request-touch-target"
+          "release-0.6-solar-request-touch-target",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ]
       }
     },
@@ -770170,11 +770343,11 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationEditor.tsx",
-              "sha256": "16c0b0736a6812e013e8a04b08af50c65375cc7a11e8cc6344fed7d78b92d27c"
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
-              "sha256": "f3fa4f5f09b41397a66f78ce375568531caadf661fe41844dc545e6026d0297b"
+              "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
             },
             {
               "path": "apps/web/src/components/ContractContextEditor.tsx",
@@ -770550,7 +770723,7 @@
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
-              "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+              "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
             },
             {
               "path": "apps/web/src/components/TeamMemberFields.tsx",
@@ -772153,7 +772326,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-solar-request-touch-target",
-          "release-0.6-registration-and-onboarding-browser-journeys"
+          "release-0.6-registration-and-onboarding-browser-journeys",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ]
       }
     },
@@ -772388,7 +772562,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-profile-isolation-and-calendar-browser-evidence",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -880979,6 +881154,85 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-provider-loopback",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "f9c08ec1bf133e658fec2aee2926d644c4c47f1714ade1eb08c1a73d51b0bc2d"
+    },
+    "release-0.6-cancellation-recovery-and-otp-browser-fixes": {
+      "batch": "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+      "base_commit": "37ea774e755759a0ff41c2c7cd5a64c2e0805729",
+      "task_keys": [
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "07-ui-ux-design.md#T-07.11.01.04"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/cancellation-forms.spec.ts",
+        "apps/web/e2e/otp-config.spec.ts",
+        "apps/web/src/components/ContractCancellationEditor.tsx",
+        "apps/web/src/components/ContractCancellationRequestPanel.tsx",
+        "apps/web/src/components/TeamActionDialog.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/cancellation-forms.spec.ts",
+          "sha256": "af8efcc627db9c5dec1d86d22e915f8341a93540117469ef0128c4cc34a880f1"
+        },
+        {
+          "path": "apps/web/e2e/order-comment-forms.spec.ts",
+          "sha256": "733135dac199380ddc73f92d69bd6fc7dbd74c39f2181fa0ae4912571c7a63f2"
+        },
+        {
+          "path": "apps/web/e2e/otp-config.spec.ts",
+          "sha256": "4c9ededdc7e280a95ac12febc462f51a928bfc0f0f6fb16f5fb7f59b0c5ce6f8"
+        },
+        {
+          "path": "apps/web/e2e/staff-operation-tables.spec.ts",
+          "sha256": "9b2bbca8cf4640b0d2d2072bab38d1596a7b6c4d13690a74d691e6ec238af039"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/ContractCancellationEditor.tsx",
+          "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
+        },
+        {
+          "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+          "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+        },
+        {
+          "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
+          "sha256": "bb03bbe34660905721f1a339ee0f59db023be90ce37517ec57159d268fc6b1de"
+        },
+        {
+          "path": "apps/web/src/components/ContractCancellationRequestPanel.tsx",
+          "sha256": "439b64fad533362958be7d48d9e9e42736c28680372a710805a7713474a37c65"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.multipart.test.tsx",
+          "sha256": "a663a310313a9321cedb8778508027d115c29dde2a36aa50787ec79764ee1f61"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "e36d67a87ca0cbc7c30258352b137373344fdbcf1be845145a66ec8aeaf03077"
+        },
+        {
+          "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
+          "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Scheduled Mobile Safari run 42789410833 job 129738700024 showed repeated toast interception of the cancellation Check current status control. Customer and staff cancellation confirmations now show errors inline, preserving the dialog alert and the persistent recovery notice. Exact command binding, validation, read-before-retry, stale-scope denial, and financial confirmation assertions remain.",
+        "Scheduled jobs 129738700112 and 129738700133 showed the OTP save case matching both its progress status and exact completion notice. The test now scopes the status to the saved notice and retains exact text, write count, CSRF, password step-up, version and reload assertions.",
+        "All 35 targeted production browser cases passed with no flaky, failed or skipped outcomes. These include 26 cancellation, seven OTP, and two existing staff comment cases. The staff comment cases passed locally; the prior hosted outcomes still need the exact clean matrix. The prior consultation 320 px overflow was already addressed by c05c08d1 and the current Mobile Chrome check passed unchanged.",
+        "Focused cancellation and shared dialog tests passed all 72 cases. The production web build, all 102 route and interaction gzip budgets, web type checking, lint and diff checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/cancellation-and-otp-browser-recovery",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "9e0599837da1f9693fdf1a6f744ed26a972368079668d4a6d2c1a5506f1aa1b0"
     }
   },
   "historical_improvements": [

@@ -419,6 +419,11 @@ for (const surface of ['customer', 'rejection', 'decision'] as const)
           exact: true,
         });
         await expect(unconfirmed).toBeVisible();
+        await expect(
+          page
+            .locator('[data-sonner-toast]')
+            .filter({ hasText: confirmationText('unconfirmed', locale) })
+        ).toHaveCount(0);
         await expect(reason).toBeDisabled();
         f.setReadFailure(true);
         await check.click();

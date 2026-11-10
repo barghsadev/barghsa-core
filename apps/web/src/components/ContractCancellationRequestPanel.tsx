@@ -383,6 +383,7 @@ function RequestWorkspace({
       {action ? (
         <TeamActionDialog
           action={action}
+          toastErrors={false}
           confirmationDisabled={unavailable || loading || error || denied}
           finalFocus={() => document.getElementById('request-reason-' + id)}
           onClose={() => {

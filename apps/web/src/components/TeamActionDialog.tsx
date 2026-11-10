@@ -56,6 +56,7 @@ export function TeamActionDialog({
   summary,
   confirmationDisabled = false,
   focusConfirmation = false,
+  toastErrors = true,
   onClose,
   onSuccess,
   finalFocus,
@@ -80,6 +81,7 @@ export function TeamActionDialog({
   focusConfirmation?: boolean;
   summary?: ReactNode;
   confirmationDisabled?: boolean;
+  toastErrors?: boolean;
   onDenied?: (status?: 401 | 403) => void;
   onValidationError?: (fields: unknown[]) => boolean;
   onUnconfirmed?: () => void;
@@ -179,7 +181,7 @@ export function TeamActionDialog({
     const showError = (message: string, uncertain = false) => {
       const feedback = uncertain ? confirmationText('unconfirmed', locale) : message;
       setError(feedback);
-      if (owned()) sendToast(uncertain ? 'warning' : 'error', feedback);
+      if (toastErrors && owned()) sendToast(uncertain ? 'warning' : 'error', feedback);
     };
     let commandSent = false;
     try {
