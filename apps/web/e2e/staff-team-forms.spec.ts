@@ -173,6 +173,12 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.getByRole('button', { name: text('edit'), exact: true }).click();
       await expect(tags).toHaveValue('finance, billing');
+      await page.evaluate(async () => {
+        const animations = [...document.querySelectorAll('[data-sonner-toast]')].flatMap((notice) =>
+          notice.getAnimations()
+        );
+        await Promise.all(animations.map((animation) => animation.finished.catch(() => {})));
+      });
       const result = await new AxeBuilder({ page })
         .include('section')
         .withTags(['wcag2a', 'wcag2aa'])

@@ -50,6 +50,9 @@ for (const locale of ['en', 'fa'])
       );
       await page.setViewportSize({ width: 390, height: 844 });
       await page.goto(area === 'admin' ? '/admin/failed-notifications' : '/dashboard');
+      await expect(
+        page.locator(`main#main-content[data-area="${area === 'admin' ? 'admin' : 'dashboard'}"]`)
+      ).toBeVisible();
       await skipToMain(page, locale);
       const nav = page.locator(area === 'admin' ? '#admin-navigation' : '#dashboard-navigation');
       const menu = page.getByRole('button', { name: fa ? 'فهرست' : 'Menu', exact: true });

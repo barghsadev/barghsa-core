@@ -82,11 +82,10 @@ for (const [locale, theme] of [
   };
   const cancel = (page: Page) =>
     page.getByRole('dialog').getByRole('button', { name: t('team.cancel', locale), exact: true });
-  test(`paid saving hardware charge and cancellation retain independent reasons and exact commands (${locale}, ${theme})`, async ({
+  test(`paid saving hardware charge retains independent reasons and exact commands (${locale}, ${theme})`, async ({
     page,
   }, info) => {
-    const { state, persistHardware, persistCancellation, nextPendingUpgrade } =
-      await setupSavingHardwareForms(page, locale);
+    const { state, persistHardware } = await setupSavingHardwareForms(page, locale);
     const release = await holdSchema(page);
     await page.goto(`/admin/saving-orders?lane=fulfillment&orderId=${savingChangeOrder}`);
     const hardwareForm = page.getByTestId('saving-staff-hardware-form');
@@ -138,7 +137,7 @@ for (const [locale, theme] of [
     await expect(page.getByRole('dialog')).toHaveCount(0);
     state.hardwarePreviewMode = 'success';
     await preview().click();
-    let dialog = page.getByRole('dialog');
+    const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(copy('staffHardwareOutcome.additional_charge'));
     await expect(dialog).toContainText(copy('staffHardwareTargetTotal'));
     await expect(dialog).toContainText(copy('staffReviewContractVersion'));
@@ -214,6 +213,31 @@ for (const [locale, theme] of [
     );
     await expect(addressReason).toHaveValue('  Independent address explanation  ');
     await expect(note).toHaveValue('  Independent public delivery note  ');
+    await expect(page.getByTestId(`saving-upgrade-cancel-form-${upgradeId}`)).toBeVisible();
+  });
+
+  test(`paid saving hardware cancellation retains independent reasons and exact commands (${locale}, ${theme})`, async ({
+    page,
+  }, info) => {
+    const { state, persistHardware, persistCancellation, nextPendingUpgrade } =
+      await setupSavingHardwareForms(page, locale);
+    const upgrade = {
+      expectedVersionId: changeVersion,
+      expectedHardwareId: currentHardware,
+      hardwareProductId: replacementHardware,
+      reason: 'Higher-price device requested',
+    };
+    persistHardware({
+      ...upgrade,
+      expectedReviewHash: savingHardwareReview(state.details.get(savingChangeOrder)!, upgrade).hash,
+      idempotencyKey: '00000000-0000-4000-8000-000000000123',
+    });
+    await page.goto(`/admin/saving-orders?lane=fulfillment&orderId=${savingChangeOrder}`);
+    const addressForm = page.getByTestId('saving-staff-address-form');
+    const addressReason = page.locator('#saving-amend-reason');
+    const note = page.locator('#saving-staff-note');
+    await addressReason.fill('  Independent address explanation  ');
+    await note.fill('  Independent public delivery note  ');
     const row = page.getByTestId(`saving-upgrade-cancel-form-${upgradeId}`);
     const rowReason = page.locator(`#saving-upgrade-cancel-${upgradeId}`);
     await expect(rowReason).toHaveAttribute('aria-required', 'true');
@@ -247,7 +271,7 @@ for (const [locale, theme] of [
     await expect(row.getByRole('alert')).toContainText(copy('staffReviewError'));
     state.cancelPreviewMode = 'success';
     await rowSubmit().click();
-    dialog = page.getByRole('dialog');
+    const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(copy('staffUpgradeCancellationRelease'));
     await expect(dialog).toContainText(copy('staffUpgradeCancellationOutcome'));
     await acknowledge(page, 'both');

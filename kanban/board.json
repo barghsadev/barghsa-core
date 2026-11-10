@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T15:20:23+00:00",
-  "source_commit": "be4700a3ce2f0765fe38554804184343de6c923f",
+  "updated": "2026-11-10T15:26:02+00:00",
+  "source_commit": "571e6ab71dad1b7f8e2a2076262cf0e4d8dcd116",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5645,7 +5645,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-isolated-live-scanner-and-safari-recovery",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": null
       }
@@ -5910,7 +5911,8 @@
           "release-0.6-solar-request-touch-target",
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-browser-stable-native-feedback",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": null
       }
@@ -44386,7 +44388,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -44458,7 +44461,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/e2e/terms-theme.spec.ts",
@@ -44847,7 +44850,8 @@
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -45775,7 +45779,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -45847,7 +45852,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/e2e/terms-theme.spec.ts",
@@ -46236,7 +46241,8 @@
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -47172,7 +47178,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -47244,7 +47251,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/e2e/terms-theme.spec.ts",
@@ -47633,7 +47640,8 @@
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -62484,7 +62492,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -62664,7 +62673,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
+              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -63016,7 +63025,8 @@
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -63604,7 +63614,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -63784,7 +63795,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
+              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -64136,7 +64147,8 @@
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -64724,7 +64736,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -64904,7 +64917,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
+              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -65256,7 +65269,8 @@
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -99936,7 +99950,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -100116,7 +100131,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
+              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -100468,7 +100483,8 @@
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -100988,7 +101004,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -101168,7 +101185,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
+              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -101520,7 +101537,8 @@
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -102046,7 +102064,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -102226,7 +102245,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
+              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -102578,7 +102597,8 @@
             "Bindings renewed by release-0.5-coverage-remaining-branches: normal manifest behavior and all 27 test assertion bodies are preserved, and exact protected admin and consultation fixture checks pass. No production source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
-            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain."
+            "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-support-escalation",
           "limitations": [
@@ -504639,7 +504659,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": null
       }
@@ -545153,7 +545174,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545181,7 +545203,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
@@ -545315,7 +545337,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-and-rtl",
           "limitations": [
@@ -545478,7 +545501,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545506,7 +545530,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
@@ -545640,7 +545664,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-and-rtl",
           "limitations": [
@@ -545803,7 +545828,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545831,7 +545857,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
@@ -545965,7 +545991,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-and-rtl",
           "limitations": [
@@ -546128,7 +546155,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546156,7 +546184,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/e2e/staff-dashboard-widgets.spec.ts",
@@ -546290,7 +546318,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-responsive-and-rtl",
           "limitations": [
@@ -547712,7 +547741,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -547844,7 +547874,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -548233,7 +548263,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Customer primary tabs are Home/Electricity orders/Wallet/Profile plus More when authorized; staff tabs prioritize actual operation grants. All granted remaining pages remain reachable exactly once. Native server grants and client allowlist prevent manufacturing missing links. Initial compact bar, deferred More/error fallback and exact active-page markers verified in FA/EN and both browser projects.",
           "limitations": [
@@ -548539,7 +548570,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -548671,7 +548703,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -549060,7 +549092,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Compact topbar retains linked brand icon, hamburger, notification bell and account avatar/profile identity with the required operating-context marker. Theme/language and secondary account actions remain in the account menu. Eight-width no-overflow, permission/context and keyboard checks pass.",
           "limitations": [
@@ -549365,7 +549398,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -549497,7 +549531,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -549886,7 +549920,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Tablet768–1023px uses a60px rail with accessible labels and at least44x44 targets. It expands by tap/menu, keyboard focus and hover on hover-capable devices. Phone drawer and full desktop sidebar remain available; current page and focus/More recovery are retained.",
           "limitations": [
@@ -552208,7 +552243,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -552576,7 +552612,7 @@
             },
             {
               "path": "apps/web/e2e/saving-hardware-forms.spec.ts",
-              "sha256": "4f7aacd16a0f6516f166d765218100d065b2b64b660ee7eaa542cd94a9da4a5a"
+              "sha256": "ec263d88bb26f25a000d47f8a162fa26612fce5c369f2bcf0738c33f2d130878"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -552672,7 +552708,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
+              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
             },
             {
               "path": "apps/web/e2e/staff-wallet-ledger.spec.ts",
@@ -553680,7 +553716,8 @@
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
             "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
             "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch.",
-            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
           "scope_dispositions": [
@@ -555869,7 +555906,8 @@
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556065,7 +556103,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
@@ -556381,7 +556419,8 @@
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -556752,7 +556791,8 @@
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556948,7 +556988,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
@@ -557264,7 +557304,8 @@
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -558173,7 +558214,8 @@
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558369,7 +558411,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
@@ -558685,7 +558727,8 @@
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -607825,7 +607868,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -608297,7 +608341,7 @@
             },
             {
               "path": "apps/web/e2e/saving-hardware-forms.spec.ts",
-              "sha256": "4f7aacd16a0f6516f166d765218100d065b2b64b660ee7eaa542cd94a9da4a5a"
+              "sha256": "ec263d88bb26f25a000d47f8a162fa26612fce5c369f2bcf0738c33f2d130878"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -608401,7 +608445,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
+              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -610631,7 +610675,8 @@
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
             "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
             "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch.",
-            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -655507,7 +655552,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -655639,7 +655685,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -656028,7 +656074,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Rich profile dropdown shows active initials/name/type, current accessible choices with avatar/name/type/verification badges, checked selection and profile-management link. Fresh account/revision-owned reads use the existing strict parser and cancel obsolete reads. Lazy-choice failure preserves context and offers explicit reload; no POST occurs during this failure.",
           "limitations": [
@@ -656333,7 +656380,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -656465,7 +656513,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -656854,7 +656902,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Compact ProfileBadge uses the same account-owned directory as the picker, shows current initials/type icon/name, truncates safely with full-name title and preserves the separate visible customer/staff marker. Missing/unavailable profile metadata is withheld rather than borrowing another scope.",
           "limitations": [
@@ -657159,7 +657208,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -657291,7 +657341,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -657680,7 +657730,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "A captured, target-bound switch blocks the workspace with a full-page non-dismissible loading/recovery view, including inert fallback before modal code loads. Exact response plus fresh current directory must confirm the target. Unknown replies hold without replay, recheck usesGET only, accepted changes persist backend preference and reset private queries/requests/tabs. Existing default-setting and invitation CSRF tests retained.",
           "limitations": [
@@ -657985,7 +658036,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -658117,7 +658169,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -658506,7 +658558,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Unverified profiles can be selected/read while existing verification banner and server commercial-order guards remain authoritative. Status badges expose verified/unverified without granting permissions. Native profile verification/context cases and existing verification sources retained; no commercial gate changed.",
           "limitations": [
@@ -658815,7 +658868,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -658947,7 +659001,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -659336,7 +659390,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Owner approved on2026-11-06 the existing explicit-ID or server-owned active-preference representation. Current ownership/active-agent checks, exact target receipt plus fresh confirmation, old-response suppression and cross-tab reset verified. Native foreign/suspended/agent contexts and late old wallet/notification values remain isolated; no profile header migration or financial-rule change.",
           "limitations": [
@@ -659641,7 +659696,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -659773,7 +659829,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -660162,7 +660218,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "AppShell retains shared directional flex layout, existing sidebar/topbar CSS variables, scrollable bounded main content, skip link and account banners. Desktop sidebar and responsive rail/phone surfaces verified; event/media/Escape logic retained byte-exact.",
           "limitations": [
@@ -660467,7 +660524,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -660599,7 +660657,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -660988,7 +661046,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Sidebar now includes brand at its head, profile picker below when expanded, grouped permitted links, directional icons, active marker and responsive expansion. Labels remain accessible in collapsed mode. Administrative links reflect actual backend grants rather than a frontend role-name assumption.",
           "limitations": [
@@ -661294,7 +661353,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -661426,7 +661486,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -661815,7 +661875,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Topbar retains language/theme controls, current notification bell and account popover, with compact preferences in that popover. Current profile identity is supplied through a customer-only slot; staff does not fetch customer profile authority. Root auth BrandMark default rendering remains exact and login light/dark FA/EN checks pass.",
           "limitations": [
@@ -662121,7 +662182,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -662253,7 +662315,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -662642,7 +662704,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "ProfileMenu keeps current account avatar/name/email/mobile, My Profile/settings/logout, explicit operating-context indicator and authorized staff/customer switch. Current authority/error recovery and session CSRF/one-context behavior remain unchanged; native and both browser contexts pass.",
           "limitations": [
@@ -662948,7 +663011,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -663080,7 +663144,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -663469,7 +663533,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Bottom bar shows up to four granted primary destinations plus More, reflects the true active route, preserves every remaining granted link, closes on navigation/desktop transition and restores focus. Phone/desktop/keyboard/RTL and failed bar/sheet recovery pass. Its initial payload remains counted under original page limits.",
           "limitations": [
@@ -663775,7 +663840,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -663907,7 +663973,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -664296,7 +664362,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Existing BreadcrumbBar keeps current route/path, localized root and safe detail label, collapsed parent disclosure, Escape/focus restoration and true list-return links. Raw record IDs never appear as breadcrumb labels. Real route/consent recovery tests retained across both projects.",
           "limitations": [
@@ -664602,7 +664669,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -664734,7 +664802,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -665123,7 +665191,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Navigation is resolved from current server grants and profile type. Client local labels/icons only filter known routes from that configuration; missing or wrong-area configuration fails closed and can refresh. Native per-permission/operating-context tests and restricted-menu browser cases pass.",
           "limitations": [
@@ -665429,7 +665498,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -665561,7 +665631,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -665950,7 +666020,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Customer service/account destinations and staff operations/settings groups remain backend-filtered, including all four services, CRM, document templates and finance/administration where granted. Personal customer work and staff operations retain their explicit authorized operating-context boundary.",
           "limitations": [
@@ -666256,7 +666327,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -666388,7 +666460,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -666777,7 +666849,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Legal profiles expose legal-profile/team/agent routes only with corresponding current grants; Individual profiles expose personal-profile/saving routes. Shared service links retain their own server permission boundaries. Current backend navigation tests and FA/EN customer/staff menu checks pass.",
           "limitations": [
@@ -667083,7 +667156,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -667215,7 +667289,7 @@
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
-              "sha256": "cb1d35d449136ddf19a4f588c1bd41dec7868834dae2fc109beec213bb6d2948"
+              "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
             },
             {
               "path": "apps/web/entry-routes.js",
@@ -667604,7 +667678,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Owner approved current router-context reuse with fresh authority on navigation/profile/permission changes instead of immutable session-long grants. Existing current-session/navigation parsers/providers and backend permission resolution remain byte-exact. Revocation, restricted configuration and context change tests pass.",
           "limitations": [
@@ -751341,7 +751416,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "current_acceptance": {
           "kind": "verified-admin-safety-and-team-ui-journeys",
@@ -751353,7 +751429,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
+              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -751449,7 +751525,8 @@
             "Renewed the named original route and recovery cases on both production-browser projects. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-staff-configuration-adoption/proof.json",
             "All 45 assignment settings checks passed. The 401 fixture renders the login link and remounts on renewed authority; the 403 path retains refresh. Both still clear private rows, pending confirmation and edits.",
             "The hosted failures were a mock Response type and an unsupported syntax in the router fixture. The exact fixtures now use a native Response and a minimal link mock. All 55 cases in the two files, web typecheck and targeted Semgrep passed; product behavior and financial/security checks are unchanged.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "criterion_result": "Existing team CRUD, current staff membership, member-bound lead, round-robin/expertise/load strategies and team escalation/fallback routing verified. Read recovery, stale membership/rules, preserved drafts, unverified write/reset, captured step-up, localizations, keyboard and mobile forms pass. Native routing/permission/audit evidence remains current.",
           "limitations": [
@@ -759865,7 +759942,7 @@
             },
             {
               "path": "apps/web/e2e/staff-team-forms.spec.ts",
-              "sha256": "813129e9f7876aef62361b1995e049ce73aea65562eb9afa905853c42f49f060"
+              "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
             },
             {
               "path": "apps/web/e2e/staff-teams.spec.ts",
@@ -762756,7 +762833,8 @@
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
-            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
+            "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/staff-order-detail-authority",
@@ -764376,7 +764454,8 @@
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ]
       }
     },
@@ -776504,7 +776583,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-isolated-live-scanner-and-safari-recovery",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
-          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+          "release-0.6-native-safari-saving-shell-staff-team"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -888347,6 +888427,81 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/team-native-cancel-signout",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "565de65bf7328b14b76942d0ac9cd81479c55cbaad999a4811c41257309e27b9"
+    },
+    "release-0.6-native-safari-saving-shell-staff-team": {
+      "batch": "release-0.6-native-safari-saving-shell-staff-team",
+      "base_commit": "571e6ab71dad1b7f8e2a2076262cf0e4d8dcd116",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "02-auth-users-admin.md#T-04.01.01",
+        "02-auth-users-admin.md#T-04.01.02",
+        "02-auth-users-admin.md#T-04.01.03",
+        "02-auth-users-admin.md#T-06.01.01",
+        "02-auth-users-admin.md#T-06.01.02",
+        "02-auth-users-admin.md#T-06.01.03",
+        "02-auth-users-admin.md#T-09.08.01",
+        "02-auth-users-admin.md#T-09.08.02",
+        "02-auth-users-admin.md#T-09.08.03",
+        "06-security-testing-observability.md#T-06.12.05.01",
+        "07-ui-ux-design.md#T-07.04.01.01",
+        "07-ui-ux-design.md#T-07.04.01.02",
+        "07-ui-ux-design.md#T-07.04.01.03",
+        "07-ui-ux-design.md#T-07.04.01.04",
+        "07-ui-ux-design.md#T-07.04.02.01",
+        "07-ui-ux-design.md#T-07.04.02.02",
+        "07-ui-ux-design.md#T-07.04.02.03",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.15.01.01",
+        "07-ui-ux-design.md#T-07.15.01.02",
+        "07-ui-ux-design.md#T-07.15.01.03",
+        "07-ui-ux-design.md#T-07.15.01.04",
+        "07-ui-ux-design.md#T-07.15.01.05",
+        "07-ui-ux-design.md#T-07.16.01.01",
+        "07-ui-ux-design.md#T-07.16.01.02",
+        "07-ui-ux-design.md#T-07.16.01.03",
+        "07-ui-ux-design.md#T-07.16.01.04",
+        "07-ui-ux-design.md#T-07.16.01.05",
+        "07-ui-ux-design.md#T-07.16.01.06",
+        "07-ui-ux-design.md#T-07.16.01.07",
+        "07-ui-ux-design.md#T-07.16.02.01",
+        "07-ui-ux-design.md#T-07.16.02.02",
+        "07-ui-ux-design.md#T-07.16.02.03",
+        "07-ui-ux-design.md#T-07.30.02.16",
+        "release-readiness#R-02.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/saving-hardware-forms.spec.ts",
+        "apps/web/e2e/shell-navigation.spec.ts",
+        "apps/web/e2e/staff-team-forms.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/saving-hardware-forms.spec.ts",
+          "sha256": "ec263d88bb26f25a000d47f8a162fa26612fce5c369f2bcf0738c33f2d130878"
+        },
+        {
+          "path": "apps/web/e2e/shell-navigation.spec.ts",
+          "sha256": "f827618105f12b07ff6ed2b5e98b47f0cfd4c722d5caea62ed403b42378828f6"
+        },
+        {
+          "path": "apps/web/e2e/staff-team-forms.spec.ts",
+          "sha256": "5197ea153200952c8c0ea9ea2bc59afe417b57c82d76ca0a680b5bed25047e08"
+        }
+      ],
+      "checks": [
+        "Hosted Mobile Safari shard 7 (42834362257 job 129892516789) reached different late steps of the combined saving charge and cancellation test as its original 30-second deadline elapsed. Both command phases now run separately at the same deadline. The charge case confirms the pending cancellation row and the cancellation case begins from an equivalent stored receipt using the existing fixture. All original exact commands, amount, idempotency, step-up, hold, draft, denial and retry assertions remain. Eight Firefox and Mobile Safari cases passed without retries.",
+        "The hosted shell failure trace showed Enter on the loading skip link followed by replacement of the focused loading landmark with the actual admin main. The test now waits for the workspace landmark before the unchanged real Tab, Enter, focus, unchanged URL and navigation assertions. All eight selected Mobile Safari shell cases passed in the mixed diagnostic run. That run had separate failed staff-team assertions and does not count as a full pass.",
+        "The hosted staff-team trace sampled a translucent success toast at 4.19:1 while it was fading. The Axe scan still includes the same sections and contrast rule after the current toast transitions settle. All eight focused Mobile Safari cases passed across both locales and themes with no retries. The earlier diagnostic assumption that the toast stays present after reopening the editor was removed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/native-safari-saving-shell-staff-team",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "fb4c5b9372378c9cc7a5110188b258a44492d92823925babc4395c5e36eaa265"
     }
   },
   "historical_improvements": [
