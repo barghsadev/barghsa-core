@@ -1,4 +1,4 @@
-import { isBlockedIp } from '../auth-delivery/smtp-network-guard.js';
+import { hostIsAllowlisted, isBlockedIp } from '../auth-delivery/smtp-network-guard.js';
 import { isIP, type LookupFunction } from 'node:net';
 import { request as httpRequest } from 'node:http';
 import { request as httpsRequest } from 'node:https';
@@ -21,7 +21,7 @@ import { promises as dns } from 'node:dns';
  *   private/reserved ranges before any request is attempted. A deployment
  *   allow-list (`AI_MODEL_BASE_URL_ALLOWLIST`) explicitly opts hosts out of
  *   the block (e.g. a local Ollama endpoint in development).
- * - The base URL must be http(s); other schemes are refused.
+ * - The base URL must use HTTPS unless its host is explicitly allow-listed.
  * - Results carry only safe, non-secret diagnostics: HTTP status, a
  *   truncated provider error string, and the parsed response text preview.
  *   The API token is never surfaced, and error bodies are trimmed before
@@ -84,13 +84,10 @@ const RESPONSE_MAX_BYTES = 64 * 1024;
 const guardedLookup: LookupFunction = (hostname, options, callback) => {
   void dns.lookup(hostname, { all: true, verbatim: true }).then(
     (addresses) => {
-      const allowed = (process.env[AI_MODEL_ALLOWLIST_ENV] ?? '')
-        .split(',')
-        .some(
-          (host) =>
-            host.trim().toLowerCase().replace(/\.$/, '') ===
-            hostname.toLowerCase().replace(/\.$/, '')
-        );
+      const allowed = hostIsAllowlisted(
+        hostname,
+        (process.env[AI_MODEL_ALLOWLIST_ENV] ?? '').split(',')
+      );
       if (
         !addresses.length ||
         (!allowed && addresses.some(({ address }) => isBlockedIp(address)))
@@ -303,12 +300,21 @@ export class AiModelTester {
         latencyMs: 0,
       };
     }
+    const hostname = url.hostname.replace(/^\[|\]$/g, '').replace(/\.$/, '');
+    const allowed = hostIsAllowlisted(hostname, this.allowlist());
+    if (url.protocol === 'http:' && !allowed) {
+      return {
+        ok: false,
+        error: 'Base URL must use HTTPS unless the host is explicitly allow-listed',
+        latencyMs: 0,
+      };
+    }
     const timeoutMs = Math.max(1, Math.floor(Math.min(this.timeoutMs(), budgetMs ?? Infinity)));
     let timer: ReturnType<typeof setTimeout> | undefined;
     let blocked: string | null;
     try {
       blocked = await Promise.race([
-        this.guardHost(url.hostname),
+        allowed ? Promise.resolve(null) : this.guardHost(hostname),
         new Promise<string>((resolve) => {
           timer = setTimeout(() => resolve('host lookup timed out'), timeoutMs);
           timer.unref();
@@ -373,24 +379,16 @@ export class AiModelTester {
 
   /**
    * SSRF guard. Returns a human-readable reason when `host` is blocked,
-   * or null when the host may be dialed. Allow-listed hosts bypass the
-   * private-range check.
+   * or null when the host may be dialed.
    */
   private async guardHost(host: string): Promise<string | null> {
-    const h = host
-      .trim()
-      .toLowerCase()
-      .replace(/^\[|\]$/g, '')
-      .replace(/\.$/, '');
-    if (!h) return 'empty host';
-    const allowlist = this.allowlist();
-    if (allowlist.includes(h)) return null;
+    if (!host) return 'empty host';
     let ips: string[];
     try {
       ips =
-        isIP(h) !== 0
-          ? [h]
-          : (await dns.lookup(h, { all: true, verbatim: true })).map((r) => r.address);
+        isIP(host) !== 0
+          ? [host]
+          : (await dns.lookup(host, { all: true, verbatim: true })).map((r) => r.address);
     } catch (err) {
       return `host could not be resolved: ${safeErrorDetail((err as Error).message)}`;
     }

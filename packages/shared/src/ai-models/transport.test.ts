@@ -39,20 +39,26 @@ afterEach(() => {
 });
 
 describe('AI provider socket transport', () => {
-  it('rejects a private DNS answer at connection time after a public preflight', async () => {
-    const hits = vi.fn();
-    await withProvider(hits, async (port) => {
-      vi.stubEnv('AI_MODEL_BASE_URL_ALLOWLIST', '');
-      const resolve = vi.spyOn(resolver, 'lookup');
-      resolve.mockResolvedValueOnce([{ address: '8.8.8.8', family: 4 }]);
-      resolve.mockResolvedValue([{ address: '127.0.0.1', family: 4 }]);
-      const result = await test(`http://rebind.example.test:${port}/v1`);
-      expect(result.ok).toBe(false);
-      expect(result.error).toContain('not allowed');
-      expect(resolve).toHaveBeenCalledTimes(2);
-      expect(hits).not.toHaveBeenCalled();
-    });
-  });
+  it.each([
+    { address: '127.0.0.1', family: 4 },
+    { address: '64:ff9b::a9fe:a9fe', family: 6 },
+  ])(
+    'rejects rebound DNS address $address at connection time after a public preflight',
+    async (privateAnswer) => {
+      const hits = vi.fn();
+      await withProvider(hits, async (port) => {
+        vi.stubEnv('AI_MODEL_BASE_URL_ALLOWLIST', '');
+        const resolve = vi.spyOn(resolver, 'lookup');
+        resolve.mockResolvedValueOnce([{ address: '8.8.8.8', family: 4 }]);
+        resolve.mockResolvedValue([privateAnswer]);
+        const result = await test(`https://rebind.example.test:${port}/v1`);
+        expect(result.ok).toBe(false);
+        expect(result.error).toContain('not allowed');
+        expect(resolve).toHaveBeenCalledTimes(2);
+        expect(hits).not.toHaveBeenCalled();
+      });
+    }
+  );
 
   it.each(['openai_compatible', 'anthropic'] as const)(
     'preserves the allowed host and %s request shape',
@@ -80,7 +86,7 @@ describe('AI provider socket transport', () => {
           });
         },
         async (port) => {
-          vi.stubEnv('AI_MODEL_BASE_URL_ALLOWLIST', 'local-provider.example.test');
+          vi.stubEnv('AI_MODEL_BASE_URL_ALLOWLIST', ' LOCAL-PROVIDER.EXAMPLE.TEST. ');
           const resolve = vi
             .spyOn(resolver, 'lookup')
             .mockResolvedValue([{ address: '127.0.0.1', family: 4 }]);
@@ -132,22 +138,22 @@ describe('AI provider socket transport', () => {
   });
 
   it('does not follow a provider redirect', async () => {
-    let hits = 0;
-    await withProvider(
-      (_request, response) => {
-        hits++;
-        response.writeHead(302, { location: '/private' });
+    const redirected = vi.fn<RequestListener>((_request, response) => response.end());
+    await withProvider(redirected, async (destinationPort) => {
+      const origin = vi.fn<RequestListener>((_request, response) => {
+        response.writeHead(302, { location: `http://127.0.0.1:${destinationPort}/private` });
         response.end();
-      },
-      async (port) => {
+      });
+      await withProvider(origin, async (port) => {
         vi.stubEnv('AI_MODEL_BASE_URL_ALLOWLIST', '127.0.0.1');
         expect(await test(`http://127.0.0.1:${port}/v1`)).toMatchObject({
           ok: false,
           error: expect.stringContaining('redirects'),
         });
-        expect(hits).toBe(1);
-      }
-    );
+        expect(origin).toHaveBeenCalledOnce();
+        expect(redirected).not.toHaveBeenCalled();
+      });
+    });
   });
 
   it('aborts a provider that never replies', async () => {
@@ -167,7 +173,7 @@ it('bounds a stalled DNS preflight without starting the transport', async () => 
   vi.stubEnv('AI_MODEL_BASE_URL_ALLOWLIST', '');
   vi.stubEnv('AI_MODEL_TEST_TIMEOUT_MS', '1000');
   const lookup = vi.spyOn(resolver, 'lookup').mockReturnValue(new Promise(() => {}));
-  const pending = test('http://stalled.example.test/v1');
+  const pending = test('https://stalled.example.test/v1');
   await vi.advanceTimersByTimeAsync(1000);
   expect(await pending).toMatchObject({
     ok: false,

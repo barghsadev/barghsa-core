@@ -2,7 +2,7 @@ import PDFDocument from 'pdfkit';
 import yazl from 'yazl';
 import { expect, it } from 'vitest';
 import type { StorageProvider } from '@barghsa/shared/storage';
-import { chunkText, documentText } from './extraction.js';
+import { chunkText, documentText, webText } from './extraction.js';
 
 function storage(bytes: Buffer): StorageProvider {
   return {
@@ -71,4 +71,10 @@ it('rejects a fake DOCX and bounds chunk overlap', async () => {
   ).rejects.toThrow('kb_invalid_docx');
   expect(chunkText('x'.repeat(250), 100, 20).map((part) => part.length)).toEqual([100, 100, 90]);
   expect(() => chunkText('hello', 100, 100)).toThrow('kb_invalid_chunking');
+});
+
+it('refuses a translated metadata address as a web source', async () => {
+  await expect(webText('https://[64:ff9b::a9fe:a9fe]/latest')).rejects.toThrow(
+    'Destination host is not allowed'
+  );
 });

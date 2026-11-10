@@ -194,6 +194,15 @@ describe('AiModelTester (T-09.11.01)', () => {
   });
 
   describe('SSRF guard', () => {
+    it('refuses a plain HTTP provider before sending its credential', async () => {
+      const client = okClient(200, '{}');
+      const tester = new AiModelTester(client);
+      const result = await tester.test(input({ baseUrl: 'http://8.8.8.8/v1' }));
+      expect(result.ok).toBe(false);
+      expect(result.error).toMatch(/must use HTTPS/);
+      expect(client.request).not.toHaveBeenCalled();
+    });
+
     it('blocks loopback base URLs', async () => {
       const tester = new AiModelTester(okClient(200, '{}'));
       const result = await tester.test(input({ baseUrl: 'https://127.0.0.1/v1' }));
@@ -209,17 +218,24 @@ describe('AiModelTester (T-09.11.01)', () => {
     });
 
     it('blocks link-local and metadata endpoints', async () => {
-      const tester = new AiModelTester(okClient(200, '{}'));
-      for (const base of ['https://169.254.169.254/latest', 'https://192.168.1.1/v1']) {
+      const client = okClient(200, '{}');
+      const tester = new AiModelTester(client);
+      for (const base of [
+        'https://169.254.169.254/latest',
+        'https://192.168.1.1/v1',
+        'https://[64:ff9b::a9fe:a9fe]/latest',
+        'https://[64:ff9b:1::]/latest',
+      ]) {
         const result = await tester.test(input({ baseUrl: base }));
         expect(result.ok).toBe(false);
         expect(result.error).toMatch(/not allowed/);
       }
+      expect(client.request).not.toHaveBeenCalled();
     });
 
     it('honors the deployment allow-list for local endpoints', async () => {
       const prev = process.env.AI_MODEL_BASE_URL_ALLOWLIST;
-      process.env.AI_MODEL_BASE_URL_ALLOWLIST = 'localhost';
+      process.env.AI_MODEL_BASE_URL_ALLOWLIST = 'LOCALHOST.';
       try {
         const tester = new AiModelTester(okClient(200, JSON.stringify({ ok: true })));
         const result = await tester.test(input({ baseUrl: 'http://localhost:11434/v1' }));

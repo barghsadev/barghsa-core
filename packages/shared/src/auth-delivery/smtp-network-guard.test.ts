@@ -42,6 +42,10 @@ for (const ip of [
   '::ffff:127.0.0.1',
   '::ffff:a00:1',
   '0:0:0:0:0:ffff:c0a8:101',
+  '::a9fe:a9fe',
+  '64:ff9b::169.254.169.254',
+  '64:ff9b::c0a8:101',
+  '64:ff9b:1:ffff::1',
   'fe80::1%eth0',
   '',
   'not-an-ip',
@@ -68,6 +72,7 @@ for (const ip of [
   '2001:4860:4860:0:0:0:0:8888',
   '::ffff:8.8.8.8',
   '::ffff:808:808',
+  '64:ff9b::808:808',
   '2606:4700::8.8.8.8',
 ])
   it(`permits address outside the guarded ranges ${ip}`, () => expect(isBlockedIp(ip)).toBe(false));

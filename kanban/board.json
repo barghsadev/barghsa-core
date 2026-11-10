@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T04:31:57+00:00",
-  "source_commit": "40a3e06d4cadccc8db5909fd2f341eeb0f91c5c5",
+  "updated": "2026-11-10T04:38:36+00:00",
+  "source_commit": "4268f758d5eead0b91a83892f943deee93283459",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -74233,7 +74233,8 @@
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -75081,7 +75082,7 @@
             },
             {
               "path": "docs/operations/ai-model-tests.md",
-              "sha256": "9a97aa231d15a907784f6baf548c859b1ccd0bb6b156932a4a4e3939a7323380"
+              "sha256": "6b30575ac8b4c1f77b71e4a473b4f57eddca7a55fb2a4f58deb83fa3f4abbe21"
             }
           ],
           "checks": [
@@ -79311,7 +79312,8 @@
           "release-0.6-external-provider-metrics-reconciliation",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -79379,7 +79381,7 @@
             },
             {
               "path": "docs/operations/ai-model-tests.md",
-              "sha256": "9a97aa231d15a907784f6baf548c859b1ccd0bb6b156932a4a4e3939a7323380"
+              "sha256": "6b30575ac8b4c1f77b71e4a473b4f57eddca7a55fb2a4f58deb83fa3f4abbe21"
             }
           ],
           "checks": [
@@ -87810,7 +87812,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -88082,11 +88085,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
-              "sha256": "99492745946331661bf919c9251976d7efe2d576bd15bc2534a47dd433f7e946"
+              "sha256": "98fda46c7808d40611d31efd60220615139f0956a094158c796c65d602360c51"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
@@ -88774,7 +88777,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -89046,11 +89050,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
-              "sha256": "99492745946331661bf919c9251976d7efe2d576bd15bc2534a47dd433f7e946"
+              "sha256": "98fda46c7808d40611d31efd60220615139f0956a094158c796c65d602360c51"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
@@ -89738,7 +89742,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -90010,11 +90015,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
-              "sha256": "99492745946331661bf919c9251976d7efe2d576bd15bc2534a47dd433f7e946"
+              "sha256": "98fda46c7808d40611d31efd60220615139f0956a094158c796c65d602360c51"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
@@ -90703,7 +90708,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -90975,11 +90981,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
-              "sha256": "99492745946331661bf919c9251976d7efe2d576bd15bc2534a47dd433f7e946"
+              "sha256": "98fda46c7808d40611d31efd60220615139f0956a094158c796c65d602360c51"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
@@ -91667,7 +91673,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -91939,11 +91946,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
-              "sha256": "99492745946331661bf919c9251976d7efe2d576bd15bc2534a47dd433f7e946"
+              "sha256": "98fda46c7808d40611d31efd60220615139f0956a094158c796c65d602360c51"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
@@ -92634,7 +92641,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -92838,7 +92846,7 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/shared/src/notification-delivery/email-breaker.ts",
@@ -92894,7 +92902,7 @@
             },
             {
               "path": "docs/operations/ai-model-tests.md",
-              "sha256": "9a97aa231d15a907784f6baf548c859b1ccd0bb6b156932a4a4e3939a7323380"
+              "sha256": "6b30575ac8b4c1f77b71e4a473b4f57eddca7a55fb2a4f58deb83fa3f4abbe21"
             }
           ],
           "checks": [
@@ -93384,7 +93392,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -93612,7 +93621,7 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/shared/src/notification-delivery/email-breaker.ts",
@@ -94034,7 +94043,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -94306,11 +94316,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
-              "sha256": "99492745946331661bf919c9251976d7efe2d576bd15bc2534a47dd433f7e946"
+              "sha256": "98fda46c7808d40611d31efd60220615139f0956a094158c796c65d602360c51"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
@@ -107913,7 +107923,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -107929,7 +107940,7 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -108037,11 +108048,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
@@ -108065,7 +108076,7 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/db/src/schema/ai-models.ts",
@@ -108556,7 +108567,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -108592,7 +108604,7 @@
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
-              "sha256": "a5b2f85c5de12ff7eb35acb6e0593fd9901d737fc5539aac8456413edd6d484c"
+              "sha256": "7e7e24b1b5404f9cdfd238b67b514c19a37914794879a67f7fe5d62eb413d69e"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.ts",
@@ -108688,11 +108700,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -110459,7 +110471,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -110931,15 +110944,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "packages/shared/src/errors/domain-error-codes.ts",
@@ -446506,7 +446519,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -446730,7 +446744,7 @@
             },
             {
               "path": "docs/operations/ai-model-tests.md",
-              "sha256": "9a97aa231d15a907784f6baf548c859b1ccd0bb6b156932a4a4e3939a7323380"
+              "sha256": "6b30575ac8b4c1f77b71e4a473b4f57eddca7a55fb2a4f58deb83fa3f4abbe21"
             }
           ],
           "checks": [
@@ -448034,7 +448048,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448266,7 +448281,7 @@
             },
             {
               "path": "docs/operations/ai-model-tests.md",
-              "sha256": "9a97aa231d15a907784f6baf548c859b1ccd0bb6b156932a4a4e3939a7323380"
+              "sha256": "6b30575ac8b4c1f77b71e4a473b4f57eddca7a55fb2a4f58deb83fa3f4abbe21"
             }
           ],
           "checks": [
@@ -460789,7 +460804,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460805,7 +460821,7 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -460913,11 +460929,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
@@ -460941,7 +460957,7 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/db/src/schema/ai-models.ts",
@@ -461283,7 +461299,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461299,7 +461316,7 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -461407,11 +461424,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
@@ -461435,7 +461452,7 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/db/src/schema/ai-models.ts",
@@ -461779,7 +461796,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461795,7 +461813,7 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -461903,11 +461921,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
@@ -461931,7 +461949,7 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/db/src/schema/ai-models.ts",
@@ -462273,7 +462291,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462289,7 +462308,7 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
@@ -462397,11 +462416,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
@@ -462425,7 +462444,7 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/db/src/schema/ai-models.ts",
@@ -462766,7 +462785,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462802,7 +462822,7 @@
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
-              "sha256": "a5b2f85c5de12ff7eb35acb6e0593fd9901d737fc5539aac8456413edd6d484c"
+              "sha256": "7e7e24b1b5404f9cdfd238b67b514c19a37914794879a67f7fe5d62eb413d69e"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.ts",
@@ -462898,11 +462918,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -463226,7 +463246,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463262,7 +463283,7 @@
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
-              "sha256": "a5b2f85c5de12ff7eb35acb6e0593fd9901d737fc5539aac8456413edd6d484c"
+              "sha256": "7e7e24b1b5404f9cdfd238b67b514c19a37914794879a67f7fe5d62eb413d69e"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.ts",
@@ -463358,11 +463379,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -463688,7 +463709,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463724,7 +463746,7 @@
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
-              "sha256": "a5b2f85c5de12ff7eb35acb6e0593fd9901d737fc5539aac8456413edd6d484c"
+              "sha256": "7e7e24b1b5404f9cdfd238b67b514c19a37914794879a67f7fe5d62eb413d69e"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.ts",
@@ -463820,11 +463842,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -464149,7 +464171,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464185,7 +464208,7 @@
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
-              "sha256": "a5b2f85c5de12ff7eb35acb6e0593fd9901d737fc5539aac8456413edd6d484c"
+              "sha256": "7e7e24b1b5404f9cdfd238b67b514c19a37914794879a67f7fe5d62eb413d69e"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.ts",
@@ -464281,11 +464304,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -468261,7 +468284,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -468557,15 +468581,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -468841,7 +468865,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -469137,15 +469162,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -469419,7 +469444,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -469715,15 +469741,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -469997,7 +470023,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -470293,15 +470320,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -471074,7 +471101,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -471370,15 +471398,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -471697,7 +471725,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -472173,15 +472202,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "packages/shared/src/errors/domain-error-codes.ts",
@@ -472860,7 +472889,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -473156,15 +473186,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -473437,7 +473467,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -473733,15 +473764,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -474015,7 +474046,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -474311,15 +474343,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -474594,7 +474626,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -474890,15 +474923,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -475195,7 +475228,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -475491,15 +475525,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -475772,7 +475806,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -476068,15 +476103,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -484770,18 +484805,20 @@
         "story": "06-security-testing-observability.md#spec-6e7648c47f2c"
       },
       "requirement": "| T-06.04.04.01 | Implement SSRF guard middleware: intercept all outbound HTTP requests from the application | L |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Inventory external provider transports and process-wide egress controls. The guarded HTTP and SMTP paths are covered here. Electricity and saving bill adapters still use direct fetch with implicit redirects."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-provider-egress-regressions"
+        ],
         "current_acceptance": null
       }
     },
@@ -484796,18 +484833,20 @@
         "story": "06-security-testing-observability.md#spec-6e7648c47f2c"
       },
       "requirement": "| T-06.04.04.02 | Build allowlist-based URL validator: permit only configured HTTPS hosts, reject IP literals when hostname expected | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Reconcile public HTTPS sources, configured provider origins and intentional deployment-only local exceptions across all outbound transports. The connection tester now requires HTTPS unless its exact host is explicitly allow-listed."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-provider-egress-regressions"
+        ],
         "current_acceptance": null
       }
     },
@@ -484822,18 +484861,20 @@
         "story": "06-security-testing-observability.md#spec-6e7648c47f2c"
       },
       "requirement": "| T-06.04.04.03 | Block private/link-local/metadata IP ranges (127.0.0.0/8, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16, ::1, fd00::/8) | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "The common IP classifier covers private, loopback, mapped, link-local, metadata and standard IPv6 translation forms. Verify remaining outbound transports and the production egress policy, including intentional internal services."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-provider-egress-regressions"
+        ],
         "current_acceptance": null
       }
     },
@@ -484848,18 +484889,20 @@
         "story": "06-security-testing-observability.md#spec-6e7648c47f2c"
       },
       "requirement": "| T-06.04.04.04 | Enforce redirect limits (e.g. max 5 redirects) and verify each redirect destination | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "AI connection testing, completion, embedding and knowledge URL transport have a zero-redirect limit. Close implicit redirect handling in the electricity and saving bill adapters and verify the remaining provider transports."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-provider-egress-regressions"
+        ],
         "current_acceptance": null
       }
     },
@@ -484874,18 +484917,20 @@
         "story": "06-security-testing-observability.md#spec-6e7648c47f2c"
       },
       "requirement": "| T-06.04.04.05 | Set strict timeouts, response-size caps (e.g. 10MB) per outbound call | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "AI and web-source transports have bounded deadlines and response sizes. Verify bounds across the remaining provider transports, including the bill adapters that currently decode responses without a byte cap."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-provider-egress-regressions"
+        ],
         "current_acceptance": null
       }
     },
@@ -484900,19 +484945,87 @@
         "story": "06-security-testing-observability.md#spec-6e7648c47f2c"
       },
       "requirement": "| T-06.04.04.06 | Write SSRF injection tests: internal IPs, metadata endpoints (169.254.169.254), redirect to private, DNS rebinding | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-provider-egress-regressions"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "4268f758d5eead0b91a83892f943deee93283459",
+          "checks": [
+            "Seven newly asserted unsafe or inconsistent behaviors reproduced before the fix. AI connection tests now refuse public HTTP before sending the token and retain the exact normalized allow-list for intentionally trusted hosts.",
+            "The shared IP classifier blocks IPv4-compatible and local-use translation ranges, as well as private addresses embedded in the well-known NAT64 prefix. A public IPv4 destination in the well-known prefix remains accepted.",
+            "The shared suite passed 152 tests across AI, authentication, email and SMTP. Socket tests reject loopback and translated metadata DNS rebinding after public preflight, refuse a real redirect to a separate loopback server and retain timeout, size and valid local request assertions.",
+            "The shared ESM and CommonJS build passed all 33 export checks. The API SMTP callers passed 36 tests and worker source extraction passed three, including rejecting translated metadata at the actual web-source entry point. Lint, formatting and diff checks passed.",
+            "The worker queue integration suite requires PostgreSQL setup and was not run successfully in this local batch. Its mocked provider wiring is unchanged. The remaining all-provider egress audit and live launch gates remain open."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/provider-config/smtp-connection-tester.service.test.ts",
+              "sha256": "ba35566323b647108b102f5f8f088299040c0c4b1d76a63d5112c9ff0cad62f9"
+            },
+            {
+              "path": "apps/api/src/provider-config/smtp-network-guard.test.ts",
+              "sha256": "25b3beb916ef08e17168f360a0758aa31590054f06b7b962b8aa40a6b7cb5356"
+            },
+            {
+              "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
+              "sha256": "7e7e24b1b5404f9cdfd238b67b514c19a37914794879a67f7fe5d62eb413d69e"
+            },
+            {
+              "path": "apps/worker/src/knowledge-bases/extraction.ts",
+              "sha256": "24df42c0de53542b469ca0954979275a7936294e85cfc43509d3b0e2d1cb2f22"
+            },
+            {
+              "path": "docs/operations/ai-model-tests.md",
+              "sha256": "6b30575ac8b4c1f77b71e4a473b4f57eddca7a55fb2a4f58deb83fa3f4abbe21"
+            },
+            {
+              "path": "packages/shared/src/ai-models/completion.ts",
+              "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
+            },
+            {
+              "path": "packages/shared/src/ai-models/embedding.ts",
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
+            },
+            {
+              "path": "packages/shared/src/ai-models/guarded-http.ts",
+              "sha256": "975ee8868bed3981f83413aae4540ac0d59c12253744157fa17955104fbc6e6d"
+            },
+            {
+              "path": "packages/shared/src/ai-models/tester.test.ts",
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
+            },
+            {
+              "path": "packages/shared/src/ai-models/tester.ts",
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
+            },
+            {
+              "path": "packages/shared/src/ai-models/transport.test.ts",
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
+              "sha256": "98fda46c7808d40611d31efd60220615139f0956a094158c796c65d602360c51"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/email.ts",
+              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+            }
+          ]
+        }
       }
     },
     {
@@ -486879,7 +486992,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-invoice-error-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -486931,7 +487045,7 @@
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
-              "sha256": "a5b2f85c5de12ff7eb35acb6e0593fd9901d737fc5539aac8456413edd6d484c"
+              "sha256": "7e7e24b1b5404f9cdfd238b67b514c19a37914794879a67f7fe5d62eb413d69e"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.ts",
@@ -492118,7 +492232,8 @@
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -492182,7 +492297,7 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/notification-delivery/smtp.test.ts",
@@ -751395,7 +751510,7 @@
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
-              "sha256": "a5b2f85c5de12ff7eb35acb6e0593fd9901d737fc5539aac8456413edd6d484c"
+              "sha256": "7e7e24b1b5404f9cdfd238b67b514c19a37914794879a67f7fe5d62eb413d69e"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.ts",
@@ -752167,15 +752282,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.test.ts",
@@ -752199,11 +752314,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
-              "sha256": "99492745946331661bf919c9251976d7efe2d576bd15bc2534a47dd433f7e946"
+              "sha256": "98fda46c7808d40611d31efd60220615139f0956a094158c796c65d602360c51"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/shared/src/errors/domain-error-codes.ts",
@@ -753409,7 +753524,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -755362,7 +755478,7 @@
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
-              "sha256": "a5b2f85c5de12ff7eb35acb6e0593fd9901d737fc5539aac8456413edd6d484c"
+              "sha256": "7e7e24b1b5404f9cdfd238b67b514c19a37914794879a67f7fe5d62eb413d69e"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.ts",
@@ -756134,15 +756250,15 @@
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
-              "sha256": "368445725dc89c7b7c66aaee8511dee941963170fa88a1db1a714b12efd70be8"
+              "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
             },
             {
               "path": "packages/shared/src/ai-models/tester.ts",
-              "sha256": "c3d090bf585eec8af2293a2f16c6aaa850b4774aea31e822e227dd5bf0a4dfa9"
+              "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
             },
             {
               "path": "packages/shared/src/ai-models/transport.test.ts",
-              "sha256": "38798bd8e30a1f57459c3f186220454f110959e00f2a4815207bad469914b42f"
+              "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.test.ts",
@@ -756166,11 +756282,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
-              "sha256": "99492745946331661bf919c9251976d7efe2d576bd15bc2534a47dd433f7e946"
+              "sha256": "98fda46c7808d40611d31efd60220615139f0956a094158c796c65d602360c51"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
-              "sha256": "f37baff14568fa7899febf6d76e4a8a39c6769917c19146bdda84881ad11350e"
+              "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
             },
             {
               "path": "packages/shared/src/notification-delivery/branding.test.ts",
@@ -757282,7 +757398,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-provider-egress-regressions"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -863288,6 +863405,103 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/transaction-static-guard",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "41f2c95db884179f189b661ca0e5f96e5eaaded4a0edb5b18964feddda992eb1"
+    },
+    "release-0.6-provider-egress-regressions": {
+      "batch": "release-0.6-provider-egress-regressions",
+      "base_commit": "4268f758d5eead0b91a83892f943deee93283459",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.04.01",
+        "06-security-testing-observability.md#T-06.04.04.02",
+        "06-security-testing-observability.md#T-06.04.04.03",
+        "06-security-testing-observability.md#T-06.04.04.04",
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "06-security-testing-observability.md#T-06.04.04.06"
+      ],
+      "changed_paths": [
+        "apps/worker/src/knowledge-bases/extraction.test.ts",
+        "docs/operations/ai-model-tests.md",
+        "packages/shared/src/ai-models/tester.test.ts",
+        "packages/shared/src/ai-models/tester.ts",
+        "packages/shared/src/ai-models/transport.test.ts",
+        "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
+        "packages/shared/src/auth-delivery/smtp-network-guard.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
+          "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+        },
+        {
+          "path": "apps/api/src/provider-config/smtp-connection-tester.service.test.ts",
+          "sha256": "ba35566323b647108b102f5f8f088299040c0c4b1d76a63d5112c9ff0cad62f9"
+        },
+        {
+          "path": "apps/api/src/provider-config/smtp-network-guard.test.ts",
+          "sha256": "25b3beb916ef08e17168f360a0758aa31590054f06b7b962b8aa40a6b7cb5356"
+        },
+        {
+          "path": "apps/api/src/saving/bill-verification.provider.ts",
+          "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+        },
+        {
+          "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
+          "sha256": "7e7e24b1b5404f9cdfd238b67b514c19a37914794879a67f7fe5d62eb413d69e"
+        },
+        {
+          "path": "apps/worker/src/knowledge-bases/extraction.ts",
+          "sha256": "24df42c0de53542b469ca0954979275a7936294e85cfc43509d3b0e2d1cb2f22"
+        },
+        {
+          "path": "docs/operations/ai-model-tests.md",
+          "sha256": "6b30575ac8b4c1f77b71e4a473b4f57eddca7a55fb2a4f58deb83fa3f4abbe21"
+        },
+        {
+          "path": "packages/shared/src/ai-models/completion.ts",
+          "sha256": "72b2e835621d1b80a98f8db820d14b64330579a1d45f0bbd8afb2f3580b540db"
+        },
+        {
+          "path": "packages/shared/src/ai-models/embedding.ts",
+          "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
+        },
+        {
+          "path": "packages/shared/src/ai-models/guarded-http.ts",
+          "sha256": "975ee8868bed3981f83413aae4540ac0d59c12253744157fa17955104fbc6e6d"
+        },
+        {
+          "path": "packages/shared/src/ai-models/tester.test.ts",
+          "sha256": "b63c47313e5535e38dfe93cf4394cc5025507a1649b875ba31a07da6fc04a5bd"
+        },
+        {
+          "path": "packages/shared/src/ai-models/tester.ts",
+          "sha256": "b0a8fb323535f11d73a7b5a578f390057137d8bcd77c0af6d95fc126a92dc9b0"
+        },
+        {
+          "path": "packages/shared/src/ai-models/transport.test.ts",
+          "sha256": "63ac27a543ba3d241e4be75d6fd0083b251a87887d440b3b9e3de6fa159232d7"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
+          "sha256": "98fda46c7808d40611d31efd60220615139f0956a094158c796c65d602360c51"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
+          "sha256": "e32e84b1cf060c4f03050542d8f81a5336dcaaf7ccdd20a53672ef41aac42c58"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email.ts",
+          "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+        }
+      ],
+      "checks": [
+        "Seven newly asserted unsafe or inconsistent behaviors reproduced before the fix. AI connection tests now refuse public HTTP before sending the token and retain the exact normalized allow-list for intentionally trusted hosts.",
+        "The shared IP classifier blocks IPv4-compatible and local-use translation ranges, as well as private addresses embedded in the well-known NAT64 prefix. A public IPv4 destination in the well-known prefix remains accepted.",
+        "The shared suite passed 152 tests across AI, authentication, email and SMTP. Socket tests reject loopback and translated metadata DNS rebinding after public preflight, refuse a real redirect to a separate loopback server and retain timeout, size and valid local request assertions.",
+        "The shared ESM and CommonJS build passed all 33 export checks. The API SMTP callers passed 36 tests and worker source extraction passed three, including rejecting translated metadata at the actual web-source entry point. Lint, formatting and diff checks passed.",
+        "The worker queue integration suite requires PostgreSQL setup and was not run successfully in this local batch. Its mocked provider wiring is unchanged. The remaining all-provider egress audit and live launch gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/provider-egress",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "1c502709810935be1080dddc28a609afff62ac07913a6bcd0d69d46a0c59a94c"
     }
   },
   "historical_improvements": [

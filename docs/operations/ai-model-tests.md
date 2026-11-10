@@ -4,6 +4,8 @@ Apply production migration 0115 before deploying this API/worker pair. The model
 
 Both processes need access to the same database. Configure the same AI_MODEL_ENCRYPTION_KEY in API and worker. The worker uses AI_MODEL_BASE_URL_ALLOWLIST and AI_MODEL_TEST_TIMEOUT_MS, default 15 seconds with a maximum of 60 seconds. A private provider host requires an explicit allow-list entry. The socket validates the actual DNS answers, preserves the original TLS host, refuses redirects, and caps responses at 64 KiB. Returned previews/errors are redacted and bounded.
 
+Use HTTPS for public model providers. A plain HTTP connection test is accepted only for an exact host in `AI_MODEL_BASE_URL_ALLOWLIST`, matching the completion and embedding transport policy. Use that exception for an intentional trusted local connection.
+
 AI_MODEL_TEST_WAIT_MS controls how long the API waits, default 75 seconds and bounded to 1–90 seconds. Set the reverse proxy request/read timeout above that budget. The UI shows its existing pending confirmation state during the wait. If no worker completes the job before the deadline, the API returns AI_MODEL_TEST_EXPIRED with HTTP 504 and cancels outstanding work. It does not mark the model reachable. Worker requests use the remaining job/lease budget as their timeout.
 
 Each worker polls once per second and processes one request at a time. Multiple worker processes can claim independently. A lease lasts 70 seconds and can be recovered once after interruption, within the original job deadline. A repeated probe can incur a second provider request after an ambiguous crash. The lease token prevents the former worker from storing a late result. Expired requests and exhausted leases are not retried. Worker draining includes its active model test.

@@ -105,15 +105,15 @@ function isBlockedIpv6(ip: string): boolean {
   }
   const value = ipv6ToBigInt(lower);
   if (value === null) return true;
-  // URL parsers normalize mapped IPv4 to hex, e.g. ::ffff:7f00:1.
-  // Check the embedded address regardless of dotted or expanded spelling.
-  if (value >> 32n === 0xffffn) {
+  // URL parsers can normalize the IPv4 tail to hex. Check the embedded address
+  // in IPv4-mapped addresses and the well-known NAT64 prefix (RFC 6052).
+  if (value >> 32n === 0xffffn || ipv6InRange(value, '64:ff9b::/96')) {
     const embedded = Number(value & 0xffffffffn);
     return isBlockedIpv4([24, 16, 8, 0].map((shift) => (embedded >>> shift) & 255).join('.'));
   }
   return [
-    '::1/128', // loopback
-    '::/128', // unspecified
+    '::/96', // deprecated IPv4-compatible range, including loopback and unspecified
+    '64:ff9b:1::/48', // local-use translation prefix (RFC 8215)
     'fc00::/7', // unique-local
     'fe80::/10', // link-local
     'ff00::/8', // multicast
