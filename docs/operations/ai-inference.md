@@ -27,7 +27,15 @@ The monthly spend gauge uses the current UTC month's charges for models with
 configured budgets. An older ledger period reads as zero until the existing
 lazy reset runs on inference. Read concurrency, queue depth, saturation and
 admission rejections alongside those metrics. The labels contain model IDs
-and fixed categories. Keep billing reconciliation on the durable ledger.
+and fixed categories.
+
+Import `deploy/monitoring/grafana-ai-usage-dashboard.json` into private Grafana
+and select the Prometheus data source that scrapes the API. The cost panel sums
+each replica's increase in committed USD charges over the preceding UTC day.
+Budget denials and rolled-back calls add no charge. Provider-reported tokens and
+completion errors have separate panels. Models without a configured budget have
+no charge series. Scrape gaps and process exits can leave cost samples incomplete.
+Use the budget ledger and provider billing to reconcile charges.
 
 Use the AI chat switch in `/admin/maintenance` to pause new customer, public, staff and Telegram questions before inference. The customer AI page shows the configured notice and support link. Telegram linking stays available. A paused Telegram question records `maintenance_active` without generating or sending an answer. Core readiness, support and the isolated admin model test stay available.
 

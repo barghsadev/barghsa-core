@@ -1,6 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import type { ChatCompletionInput, ChatCompletionResult } from '@barghsa/shared/ai-models';
+import { observeAiModelBudgetCharge } from '../metrics/ai-inference-metrics.js';
 
 interface BudgetRow {
   monthly_token_limit: string | null;
@@ -110,6 +111,7 @@ export async function completeWithinModelBudget(
         ]);
     }
     await client.query('COMMIT');
+    observeAiModelBudgetCharge(modelId, charge);
     return completion;
   } catch (error) {
     await client.query('ROLLBACK').catch(() => undefined);

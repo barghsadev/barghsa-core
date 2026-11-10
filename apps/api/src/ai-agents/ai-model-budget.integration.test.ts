@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, expect, it } from 'vitest';
+import promClient from 'prom-client';
 import type { ChatCompletionInput } from '@barghsa/shared/ai-models';
 import { closeDbPools, createDbPool } from '@barghsa/db';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -94,6 +95,20 @@ it('charges actual cost, alerts model operators once at 80%, and serializes comp
      WHERE model_id=$1`,
     [modelId, reserve + 1]
   );
+  const samplePrefix = `ai_model_budget_charged_usd_total{model_id="${modelId}"} `;
+  const spend = async () =>
+    (await promClient.register.getSingleMetricAsString('ai_model_budget_charged_usd_total'))
+      .split('\n')
+      .find((line) => line.startsWith(samplePrefix));
+  const beforeSpend = await spend();
+  const providerError = new Error('provider failed before producing a completion');
+  await expect(
+    completeWithinModelBudget(modelId, input, async () => {
+      throw providerError;
+    })
+  ).rejects.toBe(providerError);
+  expect(await spend()).toBe(beforeSpend);
+
   let releaseFirst!: () => void;
   const firstGate = new Promise<void>((resolve) => {
     releaseFirst = resolve;
@@ -117,6 +132,8 @@ it('charges actual cost, alerts model operators once at 80%, and serializes comp
   expect((await first).reply).toBe('first');
   await expect(second).rejects.toMatchObject({ status: 429 });
   expect(secondCalls).toBe(0);
+  const firstCharge = `${samplePrefix}${reserve / 1_000_000}`;
+  expect(await spend()).toBe(firstCharge);
   expect(
     (
       await http.pool.query(
@@ -139,4 +156,15 @@ it('charges actual cost, alerts model operators once at 80%, and serializes comp
     })
   ).rejects.toMatchObject({ status: 429 });
   expect(secondCalls).toBe(0);
+  expect(await spend()).toBe(firstCharge);
+
+  await http.pool.query(
+    "UPDATE ai_model_budgets SET period_start=date_trunc('month',now())-interval '1 month' WHERE model_id=$1",
+    [modelId]
+  );
+  await completeWithinModelBudget(modelId, input, async () => ({
+    reply: 'new period',
+    tokenUsage: { input: reserve - 10, output: 10 },
+  }));
+  expect(await spend()).toBe(`${samplePrefix}${(reserve * 2) / 1_000_000}`);
 }, 30_000);

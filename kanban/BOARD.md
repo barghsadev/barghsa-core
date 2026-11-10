@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1196 | Accepted with unchanged source bindings. |
-| verify | 106 | Existing work may be complete; inspect evidence before building. |
+| done | 1197 | Accepted with unchanged source bindings. |
+| verify | 105 | Existing work may be complete; inspect evidence before building. |
 | partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1381,7 +1381,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.14.02.07` | verify | Inventory needed | Create Payments/Wallet/Refunds dashboard: transaction volume, success rate, refund count/value, mismatch alerts |
 | `06-security-testing-observability.md#T-06.14.02.08` | verify | Inventory needed | Create Storage/Uploads dashboard: upload count, size distribution, scan state, malware count |
 | `06-security-testing-observability.md#T-06.14.02.09` | verify | Inventory needed | Create Notifications dashboard: delivery rate by channel, queue age, failure breakdown, bounce rate |
-| `06-security-testing-observability.md#T-06.14.02.10` | verify | Inventory needed | Create AI Usage/Cost dashboard: request volume, token usage, cost per model per day, error rate |
+| `06-security-testing-observability.md#T-06.14.02.10` | done | Recorded batch work | Create AI Usage/Cost dashboard: request volume, token usage, cost per model per day, error rate |
 | `06-security-testing-observability.md#T-06.14.02.11` | verify | Inventory needed | Add production release markers to all dashboards (annotation per deploy) |
 | `06-security-testing-observability.md#T-06.14.03.01` | verify | Inventory needed | Implement monthly cost tracking instrumentation: compute (per environment), PostgreSQL, object storage/egress, Redis, notification providers, observability stack, AI provider/model |
 | `06-security-testing-observability.md#T-06.14.03.02` | verify | Inventory needed | Expose unit-cost metrics: cost per active profile, cost per order |

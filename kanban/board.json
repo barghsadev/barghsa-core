@@ -13623,7 +13623,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "4bfc3cbe89ec7491edf87d2d423a403bf5a9f62a17e07ddb42619e3f1f4779ef"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -13693,6 +13693,14 @@
                 "apps/api/src/wallet/wallet.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ]
         }
@@ -112228,11 +112236,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
@@ -112562,6 +112570,15 @@
                 "apps/worker/src/ai-models/test-runner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -114931,11 +114948,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -115203,7 +115220,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "packages/db/drizzle/production/0273_telegram_profile_linkage.sql",
@@ -115717,6 +115734,16 @@
                 "Dockerfile.base"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -473530,11 +473557,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
@@ -473864,6 +473891,15 @@
                 "apps/worker/src/ai-models/test-runner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -474049,11 +474085,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
@@ -474383,6 +474419,15 @@
                 "apps/worker/src/ai-models/test-runner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -474570,11 +474615,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
@@ -474904,6 +474949,15 @@
                 "apps/worker/src/ai-models/test-runner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -475089,11 +475143,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
@@ -475423,6 +475477,15 @@
                 "apps/worker/src/ai-models/test-runner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -481410,11 +481473,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -481550,7 +481613,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -481783,6 +481846,16 @@
                 "apps/api/src/ai-agents/ai-agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -482011,11 +482084,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -482151,7 +482224,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -482384,6 +482457,16 @@
                 "apps/api/src/ai-agents/ai-agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -482610,11 +482693,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -482750,7 +482833,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -482983,6 +483066,16 @@
                 "apps/api/src/ai-agents/ai-agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -483209,11 +483302,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -483349,7 +483442,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -483606,6 +483699,16 @@
                 "apps/api/src/ai-agents/ai-agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -483802,11 +483905,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -483942,7 +484045,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "8446213b115cc641c87c08e039e71181fdffa490771a0163a71c80c3d8a0936c"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -484131,6 +484234,16 @@
                 "apps/api/src/ai-agents/ai-agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ]
         },
@@ -484316,11 +484429,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -484456,7 +484569,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -484689,6 +484802,16 @@
                 "apps/api/src/ai-agents/ai-agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -484977,11 +485100,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -485249,7 +485372,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -485787,6 +485910,16 @@
                 "Dockerfile.base"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -486168,11 +486301,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -486308,7 +486441,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -486541,6 +486674,16 @@
                 "apps/api/src/ai-agents/ai-agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -486766,11 +486909,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -486906,7 +487049,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -487139,6 +487282,16 @@
                 "apps/api/src/ai-agents/ai-agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -487365,11 +487518,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -487505,7 +487658,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -487738,6 +487891,16 @@
                 "apps/api/src/ai-agents/ai-agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -487965,11 +488128,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -488105,7 +488268,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -488362,6 +488525,16 @@
                 "apps/api/src/ai-agents/ai-agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -488587,11 +488760,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -488727,7 +488900,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -488960,6 +489133,16 @@
                 "apps/api/src/ai-agents/ai-agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -489185,11 +489368,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -489325,7 +489508,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -489558,6 +489741,16 @@
                 "apps/api/src/ai-agents/ai-agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -503295,11 +503488,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-stateless-knowledge.service.ts",
@@ -503335,7 +503528,19 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ]
         }
@@ -518990,7 +519195,7 @@
             },
             {
               "path": "apps/api/src/metrics/ai-inference-metrics.ts",
-              "sha256": "eca447ca827b1b483051ff5bad0041948389212cadb271121ac4943b27f8294c"
+              "sha256": "1b271072dc3deb0e7d9c42297547e669ac1c2cce31fad37fc5cf6097277cb499"
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
@@ -519006,6 +519211,16 @@
             "Hosted full run 42709841616 job 129476154430 passed 17,055 package tests at fa7d7416, including all 60 provider self-test cases. Provider source, fixture, consumer and lockfile paths match this batch. The attempted isolated rerun stopped at SSH transfer before running tests and is excluded.",
             "Reused 23 current worker receiver/provider cases and 15 AI PostgreSQL/API cases, which cover state changes, retired providers and independent circuit and budget samples. The strict image license step failed separately. The full browser and combined coverage results remain pending.",
             "Current provider tester injection was verified in the compiled app. All 11 HTTP and 60 native provider self-test cases passed. The step-up, contact, guard, activation, receipt and secret handling assertions remain enforced."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/metrics/ai-inference-metrics.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
+            }
           ]
         }
       },
@@ -519285,7 +519500,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/metrics/ai-inference-metrics.ts",
-              "sha256": "eca447ca827b1b483051ff5bad0041948389212cadb271121ac4943b27f8294c"
+              "sha256": "1b271072dc3deb0e7d9c42297547e669ac1c2cce31fad37fc5cf6097277cb499"
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
@@ -519309,7 +519524,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "apps/api/src/ai-agents/ai-inference-client.ts",
@@ -519329,11 +519544,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-worker-process-http.integration.test.ts",
@@ -519362,6 +519577,19 @@
             "12 focused unit cases and 15 isolated PostgreSQL/API cases passed. Native checks preserve failure and probe boundaries, actual charging, no secrets or prompts in labels, and the compiled scrape across a controlled database outage.",
             "API build, generated contract check, typecheck, targeted lint and formatting passed. Metered counts use fixed outcome/direction labels and internal model IDs. Model pricing and provider fallback behavior keep their approved budget semantics.",
             "Renewed the affected source bindings against the exact bounded policy, isolated 207-migration native API and caller tests, unchanged defaults and targeted web admin checks. The separately recorded Telegram native deadline is still open."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "apps/api/src/metrics/ai-inference-metrics.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
+            }
           ]
         }
       },
@@ -519676,19 +519904,70 @@
         "story": "06-security-testing-observability.md#spec-487bc630b048"
       },
       "requirement": "| T-06.14.02.10 | Create AI Usage/Cost dashboard: request volume, token usage, cost per model per day, error rate | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-ai-usage-and-cost-dashboard"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-grafana-queries-and-native-budget-charge",
+          "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+          "checks": [
+            "The private Grafana dashboard covers completion attempts, provider-reported input/output tokens, preceding UTC day budget charges per model and five-minute error ratio. JSON data source, layout and the UTC daily step were validated.",
+            "All four exact panel expressions passed promtool 3.15.0 on the monitoring image, with distinct environments, multiple API replicas, a spend counter reset, a zero-error model and an idle model with no cost or error-ratio sample.",
+            "Ten Linux integration cases passed on all 207 production migrations for budget charging and the direct circuit-breaker caller. They verified exact post-commit USD samples, provider failure and budget-denial exclusion, monotonic spend across monthly reset, preserved caller serialization, one 80% notice and probe charging. The first budget run exposed a trailing-newline fixture expectation; the final test compares the complete sample line. Two passing metrics HTTP cases from that run cover database outage, circuit and monthly gauge readback, with unchanged compiled sources.",
+            "TypeScript, changed-file ESLint, Prettier, whitespace and exact native source comparisons passed. Only the private metrics registry receives the post-commit budget charge, with a model ID and value. The durable accounting and privacy boundary remain authoritative. Live Grafana import and final environment readback are separate release operations."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
+              "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
+              "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
+            },
+            {
+              "path": "apps/api/src/ai-agents/ai-model-budget.ts",
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
+            },
+            {
+              "path": "apps/api/src/metrics/ai-inference-metrics.ts",
+              "sha256": "1b271072dc3deb0e7d9c42297547e669ac1c2cce31fad37fc5cf6097277cb499"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
+              "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
+            },
+            {
+              "path": "apps/api/src/metrics/metrics.service.ts",
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
+            },
+            {
+              "path": "deploy/monitoring/grafana-ai-usage-dashboard.json",
+              "sha256": "53c706f481949ed499258f2c368d7d1e1703547cf8d05b0ec4faf4ca8a44fbc0"
+            },
+            {
+              "path": "deploy/monitoring/staging-prometheus.yml",
+              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+            },
+            {
+              "path": "docs/operations/ai-inference.md",
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
+            }
+          ]
+        }
       }
     },
     {
@@ -522065,7 +522344,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -522136,6 +522415,14 @@
                 "apps/api/src/wallet/wallet.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ]
         }
@@ -522235,7 +522522,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -522306,6 +522593,14 @@
                 "apps/api/src/wallet/wallet.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ]
         }
@@ -522406,7 +522701,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -522477,6 +522772,14 @@
                 "apps/api/src/wallet/wallet.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ]
         }
@@ -522603,7 +522906,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
@@ -522674,6 +522977,14 @@
                 "apps/api/src/wallet/wallet.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ]
         }
@@ -721421,11 +721732,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -721870,6 +722181,15 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -722155,11 +722475,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -722604,6 +722924,15 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -722891,11 +723220,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -723340,6 +723669,15 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -723625,11 +723963,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -724074,6 +724412,15 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -724358,11 +724705,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -724807,6 +725154,15 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -725048,11 +725404,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -725408,6 +725764,15 @@
                 "apps/api/src/ai-agents/ai-agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ]
         }
@@ -725601,11 +725966,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -726050,6 +726415,15 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -726335,11 +726709,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -726784,6 +727158,15 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -727070,11 +727453,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -727520,6 +727903,15 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -727804,11 +728196,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -728253,6 +728645,15 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -728536,11 +728937,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -728985,6 +729386,15 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -729268,11 +729678,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -729717,6 +730127,15 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -730000,11 +730419,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -730450,6 +730869,15 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -783935,11 +784363,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -785967,7 +786395,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "docs/operations/async-jobs.md",
@@ -787515,6 +787943,16 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "Document and enforce an additive candidate defect severity gate. Existing task requirements, workflows, release worker behavior, and prior gate rules are preserved. Board integrity and promotion checker tests passed."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "presentation_renewals": [
@@ -788097,11 +788535,11 @@
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
-              "sha256": "a5d1ad1b0fa4b4363874b76959c3b92da49e61863eed8aba8cb0a9d7ef0aa167"
+              "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-budget.ts",
-              "sha256": "058de875bd0de34df4935d864118a62fcbb4b54c3b05cadec241fdbb343151c9"
+              "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
             },
             {
               "path": "apps/api/src/ai-agents/ai-prompt-redaction.test.ts",
@@ -790089,7 +790527,7 @@
             },
             {
               "path": "docs/operations/ai-inference.md",
-              "sha256": "7ea5d5b391677038fbc7cbd0b2fa3ac7c2e44a892cd0c43e375a0963060ac548"
+              "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
             },
             {
               "path": "docs/operations/async-jobs.md",
@@ -791526,6 +791964,16 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "Document and enforce an additive candidate defect severity gate. Existing task requirements, workflows, release worker behavior, and prior gate rules are preserved. Board integrity and promotion checker tests passed."
+            },
+            {
+              "batch": "release-0.6-ai-usage-and-cost-dashboard",
+              "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+              "paths": [
+                "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+                "apps/api/src/ai-agents/ai-model-budget.ts",
+                "docs/operations/ai-inference.md"
+              ],
+              "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -912222,6 +912670,142 @@
           "file": "restore-timer-check.log",
           "sha256": "e789bd7d12b85e294280fb57c786d88bec20a642efc602e63065ec761124c7c2"
         }
+      ]
+    },
+    "release-0.6-ai-usage-and-cost-dashboard": {
+      "batch": "release-0.6-ai-usage-and-cost-dashboard",
+      "base_commit": "6965550b1181b0d09c21bcc3544d344ebd9d970b",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.14.02.10"
+      ],
+      "changed_paths": [
+        "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+        "apps/api/src/ai-agents/ai-model-budget.ts",
+        "apps/api/src/metrics/ai-inference-metrics.ts",
+        "deploy/monitoring/grafana-ai-usage-dashboard.json",
+        "docs/operations/ai-inference.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/ai-agents/ai-model-breaker.integration.test.ts",
+          "sha256": "919a7ebe8103f8c4331ed465d12280c25dc3752475f6e76f67c6b2ec508e56b1"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
+          "sha256": "e086dcb75fd254922e60aa9f660376d54a3b062d8e0b7205b330350ace727f0d"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-budget.integration.test.ts",
+          "sha256": "a06e90e063ee140093c98f6362e6c91cad010772b9cc8b7757c06992adb4487e"
+        },
+        {
+          "path": "apps/api/src/ai-agents/ai-model-budget.ts",
+          "sha256": "b870cf2c866c9d2a486c4b3116b61f2e4ff76880f8424847ee51b4b40ea5ae93"
+        },
+        {
+          "path": "apps/api/src/metrics/ai-inference-metrics.ts",
+          "sha256": "1b271072dc3deb0e7d9c42297547e669ac1c2cce31fad37fc5cf6097277cb499"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
+          "sha256": "c975715a0e2b4f49dcbb56a6251edb8c270691e6ecc67ed8a48e331784208e43"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.service.ts",
+          "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
+        },
+        {
+          "path": "deploy/monitoring/grafana-ai-usage-dashboard.json",
+          "sha256": "53c706f481949ed499258f2c368d7d1e1703547cf8d05b0ec4faf4ca8a44fbc0"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+        },
+        {
+          "path": "docs/operations/ai-inference.md",
+          "sha256": "45a3eb2e6ade9446308f1543893ff49c3dab6574562042cfb6399eb16a4beef5"
+        }
+      ],
+      "checks": [
+        "The private Grafana dashboard covers completion attempts, provider-reported input/output tokens, preceding UTC day budget charges per model and five-minute error ratio. JSON data source, layout and the UTC daily step were validated.",
+        "All four exact panel expressions passed promtool 3.15.0 on the monitoring image, with distinct environments, multiple API replicas, a spend counter reset, a zero-error model and an idle model with no cost or error-ratio sample.",
+        "Ten Linux integration cases passed on all 207 production migrations for budget charging and the direct circuit-breaker caller. They verified exact post-commit USD samples, provider failure and budget-denial exclusion, monotonic spend across monthly reset, preserved caller serialization, one 80% notice and probe charging. The first budget run exposed a trailing-newline fixture expectation; the final test compares the complete sample line. Two passing metrics HTTP cases from that run cover database outage, circuit and monthly gauge readback, with unchanged compiled sources.",
+        "TypeScript, changed-file ESLint, Prettier, whitespace and exact native source comparisons passed. Only the private metrics registry receives the post-commit budget charge, with a model ID and value. The durable accounting and privacy boundary remain authoritative. Live Grafana import and final environment readback are separate release operations."
+      ],
+      "proof_logs": [
+        {
+          "file": "ai-dashboard-promtool.json",
+          "sha256": "56351e8de24d6a2ab2e1140c073375ce1ff8f89770438e15c36f46b2a93d182b"
+        },
+        {
+          "file": "ai-dashboard-promtool.log",
+          "sha256": "2cccf673b548757ecf48f20e0fcebdb6226781c6da6217a945988e10944c0172"
+        },
+        {
+          "file": "budget-native.log",
+          "sha256": "3e6c862f8a225cad30701f1b60df78ed6f684107ba4100f28843cdc9d8e57721"
+        },
+        {
+          "file": "budget-and-breaker-native.log",
+          "sha256": "f4191c38e024914692d56a778480785d082078ad6843d77e30ec9a322c5185a1"
+        },
+        {
+          "file": "review-scope.log",
+          "sha256": "bde78ee3afb24b9f977b83258c34b14c220841f12c101b8e1c8170ab08d6091f"
+        },
+        {
+          "file": "native-final-source.sha256",
+          "sha256": "c3789a4c84896feb11da70ac0c3f2811f4a66230fd116e255771cbe39e5ad546"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        }
+      ],
+      "unchanged_older_bindings": [
+        "01-platform-infrastructure.md#T-05.02.04",
+        "02-auth-users-admin.md#T-09.11.01",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.16.01",
+        "05-notifications-documents-ai.md#T-05.16.02",
+        "05-notifications-documents-ai.md#T-05.16.03",
+        "05-notifications-documents-ai.md#T-05.16.04",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.02",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.02.08",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.01.08",
+        "06-security-testing-observability.md#T-06.17.02.01",
+        "06-security-testing-observability.md#T-06.17.02.02",
+        "06-security-testing-observability.md#T-06.17.02.03",
+        "06-security-testing-observability.md#T-06.17.02.05",
+        "07-ui-ux-design.md#T-07.20.01.01",
+        "07-ui-ux-design.md#T-07.20.01.02",
+        "07-ui-ux-design.md#T-07.20.01.03",
+        "07-ui-ux-design.md#T-07.20.01.04",
+        "07-ui-ux-design.md#T-07.20.01.05",
+        "07-ui-ux-design.md#T-07.20.01.06",
+        "07-ui-ux-design.md#T-07.20.01.07",
+        "07-ui-ux-design.md#T-07.20.01.08",
+        "07-ui-ux-design.md#T-07.21.01.01",
+        "07-ui-ux-design.md#T-07.21.01.02",
+        "07-ui-ux-design.md#T-07.21.01.03",
+        "07-ui-ux-design.md#T-07.21.01.04",
+        "07-ui-ux-design.md#T-07.21.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
       ]
     }
   },

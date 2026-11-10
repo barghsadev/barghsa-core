@@ -14,6 +14,16 @@ const reportedTokens = new promClient.Counter({
   labelNames: ['model_id', 'direction'] as const,
 });
 
+const budgetCharges = new promClient.Counter({
+  name: 'ai_model_budget_charged_usd_total',
+  help: 'USD charged to model budgets after successful ledger commits',
+  labelNames: ['model_id'] as const,
+});
+
+export function observeAiModelBudgetCharge(modelId: string, chargeMicros: bigint): void {
+  budgetCharges.inc({ model_id: modelId }, Number(chargeMicros) / 1_000_000);
+}
+
 export function observeAiModelCompletion(
   modelId: string,
   seconds: number,
