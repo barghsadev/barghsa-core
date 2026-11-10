@@ -213,35 +213,49 @@ describe('runOutboxPoll', () => {
     expect(smsLog?.params[6]).toBe('permanent');
   });
 
-  it('keeps a transient SMS provider outage on the bounded retry schedule', async () => {
-    const { pool, updates } = makePool(['in_app', 'sms']);
-    vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([
-      { ...baseRow, channels: ['in_app', 'sms'] },
-    ]);
-    const sms = {
-      channel: 'sms' as const,
-      send: async () => {
-        throw Object.assign(new Error('SMS.ir request failed'), { httpStatus: 503 });
-      },
-    };
+  it.each([
+    [
+      'transient outage',
+      Object.assign(new Error('SMS.ir request failed'), { httpStatus: 503 }),
+      'transient',
+    ],
+    ['open circuit', new Error('SMS provider circuit is open'), 'provider'],
+  ])(
+    'keeps a fresh SMS occurrence on the bounded retry schedule after %s',
+    async (_, failure, category) => {
+      const { pool, updates } = makePool(['in_app', 'sms']);
+      vi.spyOn(await import('./outbox-reader.js'), 'leaseOutbox').mockResolvedValue([
+        { ...baseRow, channels: ['in_app', 'sms'] },
+      ]);
+      const sms = {
+        channel: 'sms' as const,
+        send: async () => {
+          throw failure;
+        },
+      };
 
-    await runOutboxPoll({
-      pool,
-      transports: { in_app: new FakeTransport('in_app'), sms },
-      availability: fullyAvailable,
-    });
+      await runOutboxPoll({
+        pool,
+        transports: { in_app: new FakeTransport('in_app'), sms },
+        availability: fullyAvailable,
+      });
 
-    const smsJob = updates.find(
-      (update) => update.sql.includes('UPDATE notification_job') && update.params[5] === 'sms'
-    );
-    expect(smsJob?.params[1]).toBe('retrying');
-    expect(smsJob?.params[6]).toBeInstanceOf(Date);
-    const smsLog = updates.find(
-      (update) =>
-        update.sql.includes('INSERT INTO notification_delivery_log') && update.params[1] === 'sms'
-    );
-    expect(smsLog?.params[6]).toBe('transient');
-  });
+      const smsJob = updates.find(
+        (update) => update.sql.includes('UPDATE notification_job') && update.params[5] === 'sms'
+      );
+      expect(smsJob?.params[1]).toBe('retrying');
+      expect(smsJob?.params[3]).toBe(1);
+      expect(smsJob?.params[6]).toBeInstanceOf(Date);
+      expect(
+        updates.some((update) => update.sql.includes('INSERT INTO notification_dead_letter'))
+      ).toBe(false);
+      const smsLog = updates.find(
+        (update) =>
+          update.sql.includes('INSERT INTO notification_delivery_log') && update.params[1] === 'sms'
+      );
+      expect(smsLog?.params[6]).toBe(category);
+    }
+  );
 
   it('marks a row failed permanently and dead-letters its jobs when max attempts are exhausted', async () => {
     notificationsScheduledRetries.reset();

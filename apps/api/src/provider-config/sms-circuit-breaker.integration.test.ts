@@ -57,45 +57,54 @@ const message = (providerId: string) => ({
   parameters: [{ name: 'AMOUNT', value: '5000' }],
 });
 
-it('trips after transient SMS.ir errors, refuses sends, and recovers with one probe', async () => {
-  const request = vi.fn<typeof fetch>().mockResolvedValue(new Response('{}', { status: 503 }));
-  const send = createSmsSender(fixture.pool, request);
-  for (let i = 0; i < 5; i++)
-    await expect(send(message(providerId))).rejects.toThrow('SMS.ir request failed');
-  const breaker = new SmsCircuitBreaker(fixture.pool);
-  expect(await breaker.readState(providerId)).toMatchObject({
-    degraded: true,
-    windowFailures: 5,
-  });
-  expect(
-    (await new SmsProviderConfigService(fixture.pool).list()).find((row) => row.id === providerId)
-  ).toMatchObject({
-    degraded: true,
-    degradedReason: 'SMS provider failure threshold reached',
-    alertHistory: [{ kind: 'circuit_open' }],
-  });
-  await expect(send(message(providerId))).rejects.toThrow('SMS provider circuit is open');
-  expect(request).toHaveBeenCalledTimes(5);
+it.each(['HTTP 503', 'transport timeout'] as const)(
+  'trips after repeated SMS.ir %s failures and recovers with one probe',
+  async (failure) => {
+    const request = vi.fn<typeof fetch>();
+    const messageText =
+      failure === 'HTTP 503' ? 'SMS.ir request failed' : 'Injected provider timeout';
+    if (failure === 'HTTP 503')
+      request.mockImplementation(async () => new Response('{}', { status: 503 }));
+    else request.mockRejectedValue(new DOMException(messageText, 'TimeoutError'));
+    const send = createSmsSender(fixture.pool, request);
+    for (let i = 0; i < 5; i++)
+      await expect(send(message(providerId))).rejects.toThrow(messageText);
+    const breaker = new SmsCircuitBreaker(fixture.pool);
+    expect(await breaker.readState(providerId)).toMatchObject({
+      degraded: true,
+      windowFailures: 5,
+    });
+    expect(
+      (await new SmsProviderConfigService(fixture.pool).list()).find((row) => row.id === providerId)
+    ).toMatchObject({
+      degraded: true,
+      degradedReason: 'SMS provider failure threshold reached',
+      alertHistory: [{ kind: 'circuit_open' }],
+    });
+    await expect(send(message(providerId))).rejects.toThrow('SMS provider circuit is open');
+    expect(request).toHaveBeenCalledTimes(5);
 
-  await fixture.pool.query(
-    "UPDATE sms_provider_configs SET cooldown_until=NOW()-INTERVAL '1 second' WHERE id=$1",
-    [providerId]
-  );
-  request.mockResolvedValue(
-    new Response(JSON.stringify({ status: 1, data: { messageId: 321 } }), { status: 200 })
-  );
-  expect(await send(message(providerId))).toBe('321');
-  expect(await breaker.readState(providerId)).toMatchObject({
-    degraded: false,
-    windowFailures: 0,
-  });
-  expect(
-    (await readProviderAlertHistory(fixture.pool, [providerId], 'sms'))
-      .get(providerId)
-      ?.map((event) => event.kind)
-      .sort()
-  ).toEqual(['circuit_open', 'circuit_recovered']);
-});
+    await fixture.pool.query(
+      "UPDATE sms_provider_configs SET cooldown_until=NOW()-INTERVAL '1 second' WHERE id=$1",
+      [providerId]
+    );
+    request.mockResolvedValue(
+      new Response(JSON.stringify({ status: 1, data: { messageId: 321 } }), { status: 200 })
+    );
+    expect(await send(message(providerId))).toBe('321');
+    expect(request).toHaveBeenCalledTimes(6);
+    expect(await breaker.readState(providerId)).toMatchObject({
+      degraded: false,
+      windowFailures: 0,
+    });
+    expect(
+      (await readProviderAlertHistory(fixture.pool, [providerId], 'sms'))
+        .get(providerId)
+        ?.map((event) => event.kind)
+        .sort()
+    ).toEqual(['circuit_open', 'circuit_recovered']);
+  }
+);
 
 it('pauses credential rejection immediately without counting transient failures or probing', async () => {
   const request = vi.fn<typeof fetch>().mockResolvedValue(new Response('{}', { status: 401 }));

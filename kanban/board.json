@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T08:17:47+00:00",
-  "source_commit": "5e77baad5fb7f8fa94e0c77ecfc3324d015ccfa6",
+  "updated": "2026-11-10T08:47:14+00:00",
+  "source_commit": "55753b1c14a7c24ce092980585d85ea040122682",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -10301,7 +10301,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-worker-and-pool-lifecycle-logs"
+          "release-0.6-worker-and-pool-lifecycle-logs",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "kind": "source-bound-readiness-and-capability-degradation",
@@ -10321,7 +10322,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
             },
             {
               "path": "apps/api/src/health/health.controller.ts",
@@ -39251,7 +39252,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -39311,7 +39313,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -73157,7 +73159,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -73253,7 +73256,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
             },
             {
               "path": "apps/worker/src/notifications/delivery-log.test.ts",
@@ -74467,7 +74470,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-business-state-machine-unit-evidence",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -74571,7 +74575,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
             },
             {
               "path": "apps/worker/src/notifications/delivery-log.test.ts",
@@ -76902,7 +76906,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -77002,7 +77007,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
             },
             {
               "path": "apps/worker/src/notifications/delivery-log.test.ts",
@@ -78322,7 +78327,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -78442,7 +78448,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
             },
             {
               "path": "apps/worker/src/notifications/delivery-log.test.ts",
@@ -95190,7 +95196,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-provider-command-unknown-fields"
+          "release-0.6-provider-command-unknown-fields",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -95226,7 +95233,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
@@ -104281,7 +104288,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-administrative-mutation-log-redaction",
-          "release-0.6-runtime-failure-log-redaction"
+          "release-0.6-runtime-failure-log-redaction",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -104421,7 +104429,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -104685,7 +104693,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-administrative-mutation-log-redaction",
-          "release-0.6-runtime-failure-log-redaction"
+          "release-0.6-runtime-failure-log-redaction",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -104825,7 +104834,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -447076,7 +447085,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-provider-command-unknown-fields"
+          "release-0.6-provider-command-unknown-fields",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -447112,7 +447122,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
@@ -447542,7 +447552,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-provider-command-unknown-fields"
+          "release-0.6-provider-command-unknown-fields",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -447578,7 +447589,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
@@ -448007,7 +448018,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-provider-command-unknown-fields"
+          "release-0.6-provider-command-unknown-fields",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -448043,7 +448055,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
@@ -448474,7 +448486,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-provider-command-unknown-fields"
+          "release-0.6-provider-command-unknown-fields",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448510,7 +448523,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
@@ -449029,7 +449042,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-provider-command-unknown-fields"
+          "release-0.6-provider-command-unknown-fields",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -449069,7 +449083,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
@@ -449596,7 +449610,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -449644,7 +449659,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
@@ -449716,7 +449731,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -450014,7 +450029,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -450142,7 +450158,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
@@ -450574,7 +450590,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -450614,7 +450631,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
@@ -450961,7 +450978,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451001,7 +451019,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
@@ -451348,7 +451366,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451388,7 +451407,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
@@ -497348,12 +497367,10 @@
         "story": "06-security-testing-observability.md#spec-fa8333966eb7"
       },
       "requirement": "| T-06.11.03.05 | Set up CI performance budget: route JS size, Core Web Vitals regression check for primary mobile flows | M |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Verify the exact hosted correction with the same primary mobile performance budgets and retain its successful artifact. The first hosted run at a4d1aec0 passed all login cases and all LCP/CLS/blocking thresholds, but all eight first-populated history cases failed at 2.68–2.81 seconds. The scoped workspace timing correction passed all 12 local production cases."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -497361,9 +497378,92 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-workspace-pending-performance-correction"
+          "release-0.6-workspace-pending-performance-correction",
+          "release-0.6-hosted-primary-mobile-performance"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "exact-hosted-mobile-performance-gate",
+          "reviewed_sha": "55753b1c14a7c24ce092980585d85ea040122682",
+          "checks": [
+            "GitHub Actions run 42783833343 used exact candidate 55753b1c and passed the unchanged 102 route and interaction budgets, the primary mobile gate and artifact upload in the build and application integrity job.",
+            "The actual artifact has 12 passes, zero failures, skips or flakes. Worst LCP was 1616 ms, first populated render 1926.8 ms, CLS 0.0474 and startup blocking 0 ms. Sign-in and the four populated histories passed in Persian and English using the original profile and unchanged numerical limits.",
+            "The authority regression suite and prior local performance run remain source-bound. The startup blocking metric is a controlled lab measurement. Field interaction latency and live staging promotion are separate evidence."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+            },
+            {
+              "path": ".size-limit.json",
+              "sha256": "7fe0e2dcf8f3b937679e7563754addaf625ef5f5477447f69f499f93e6db6fd9"
+            },
+            {
+              "path": "Dockerfile.web",
+              "sha256": "0cefa7d30daaf37d4f0057958e3573ca0c10e96ee16057defddea38aa4d0fe2b"
+            },
+            {
+              "path": "apps/web/build.mjs",
+              "sha256": "faf67d198f475cd57d4f1750eb0d766428cdcd71ae06db8e289397a49efebe6e"
+            },
+            {
+              "path": "apps/web/compress-static-assets.mjs",
+              "sha256": "36023713dd449b79a0f1ad51cc4e3e3ff1bfd24158c4fc2a21d5f13d200db7b6"
+            },
+            {
+              "path": "apps/web/e2e/customer-service-history-views.spec.ts",
+              "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+            },
+            {
+              "path": "apps/web/e2e/login-ui.spec.ts",
+              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+            },
+            {
+              "path": "apps/web/e2e/primary-mobile-performance.ts",
+              "sha256": "179314a776dc2e08f7a3279492331695b94891b39bb271312a761efb73961cd2"
+            },
+            {
+              "path": "apps/web/history-preloads.mjs",
+              "sha256": "dc445208d9d1b030dfbf17075e48232e52f181f6ed9e01c8fd7d018edefaf181"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "apps/web/server.js",
+              "sha256": "5b266f3ccec28e52f799283a4031b56da02bee1d0ae9872edb5b94cfd1c702cc"
+            },
+            {
+              "path": "apps/web/src/lib/route-bootstrap-read.ts",
+              "sha256": "322598d4968e5db3d2870cab9c51a3a4f213900f6b2c9d0f53fde8ac4ee9508c"
+            },
+            {
+              "path": "apps/web/src/lib/session-role.ts",
+              "sha256": "ea895eb2e1897b094d18e854d7f0251c90af82bb0e71db2db191c77cf7519eb0"
+            },
+            {
+              "path": "apps/web/src/router.tsx",
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+            },
+            {
+              "path": "apps/web/src/routes/_app.tsx",
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
+            },
+            {
+              "path": "docs/route-bundle-budgets.md",
+              "sha256": "c5972456a14687d5e06adb1760d70b4657a841aaef94234cb4f5c0923cccfab1"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "acc5f4df899fea132ed03121d10e205838e901ab9d31cfec30ab08129e1b3ba8"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ]
+        }
       }
     },
     {
@@ -497403,19 +497503,122 @@
         "story": "06-security-testing-observability.md#spec-9df3f15eb1bf"
       },
       "requirement": "| T-06.11.04.01 | Write failure-injection tests: provider timeout → circuit breaker → queue; Redis unavailable → fallback to PG | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-provider-timeout-and-redis-recovery"
+        ],
+        "current_acceptance": {
+          "kind": "source-matched-provider-and-redis-failure-injection",
+          "reviewed_sha": "55753b1c14a7c24ce092980585d85ea040122682",
+          "checks": [
+            "The native production migrator applied all 206 entries. The first remote-database test attempt had three runner timeouts. The retry streamed the same migration bytes with their hashes and enum transaction boundary to a fresh disposable database and passed all six cases with a local-only 20 second runner timeout. Both injected HTTP 503 and TimeoutError paths accumulate five failures, block the next network call, record one circuit-open event, accept one recovery receipt after cooldown and record circuit recovery. No real provider was contacted.",
+            "The focused worker suite passed all 18 cases. A fresh SMS occurrence refused by an open circuit retains bounded retry, with one attempt and no dead-letter entry. The original HTTP 503 case retains its transient error assertion. The two conditions retain their existing separate delivery log categories.",
+            "The source-matched hosted delivery identity (20) and send-receipt (15) cases include actual loopback provider response loss, durable unknown receipt, dead-letter reconciliation hold and no resend after restart or queue reset. The same exact hosted run passed all six config-cache cases, including PostgreSQL fallback after Redis fails without leaking private backend details. Only completed selected test files are reused.",
+            "All 86 related sender, Redis cache and rate-limiter unit tests and seven SMTP wire tests passed. The rate-limiter tests preserve the PostgreSQL quota across Redis loss and recovery. A local optional retry first hit ENOSPC before tests, then used the same test configurations in scratch. API and worker typechecks, scoped lint, formatting and diff checks passed."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/config-cache/config-cache.integration.test.ts",
+              "sha256": "a78b69f7b7f8e268c3f6594cf536a405411dbe39d765c0d273896c36e47e3662"
+            },
+            {
+              "path": "apps/api/src/config-cache/config-cache.service.ts",
+              "sha256": "72398081aea677a3495577ca8effa59594eee1f02988bb982bb6251a03b88e83"
+            },
+            {
+              "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
+            },
+            {
+              "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
+              "sha256": "b9a8d13884ef102eda8b11ff4a6f1663f904768f34a3023e1a3223bacd4dc5d2"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-reader.ts",
+              "sha256": "7c85d1527191627faf3ada68737d4e69021ea2d5e8b03bfc5ab4b1db46046129"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.test.ts",
+              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.ts",
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
+            },
+            {
+              "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
+              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+            },
+            {
+              "path": "apps/worker/src/notifications/send-receipt.ts",
+              "sha256": "4c63b2247d0c93d52fed53332769ffab9b1530f473fddd5886b25632af10b421"
+            },
+            {
+              "path": "apps/worker/src/notifications/sms-transport.ts",
+              "sha256": "6b4225acfc5a85b43f9164b0302cfa61a8c23de3397f4a9f5e7cd06065ede993"
+            },
+            {
+              "path": "docs/runbooks/notification-outage.md",
+              "sha256": "6fea6084ab62bb9f939b56a1b8c3b8d0a33af8e2542532054b2b292938c45b9b"
+            },
+            {
+              "path": "docs/runbooks/redis-loss.md",
+              "sha256": "649c23261fbbfaeb66763b869f8ad3d9ab71a12ec42ce1ddca1749811ca41b5e"
+            },
+            {
+              "path": "packages/db/drizzle/production/0200_sms_provider_circuit_breaker.sql",
+              "sha256": "308c152265cc21a5fdae6c56fb80b4ee8a5a0b4b1e330f6319ec3a0f016c0c60"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "54f63f91368d4dfcefec8b78b045a747bfe6db60c863a3abaec45042ea80745e"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smsir-client.ts",
+              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+            },
+            {
+              "path": "packages/shared/src/config-cache/config-cache.test.ts",
+              "sha256": "627b63a633340301a773cb84dbe3152b4083ca7cb78ab81f48fe62b2461524aa"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/email-breaker.ts",
+              "sha256": "77d78b0e7212a550bc0ecabeeb089aa6c0f3719625d4e7de949f80725871d106"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/email-errors.ts",
+              "sha256": "61f631fb71f65206fba19769f673e4d58e7a3c3821d082105274857c40840754"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/sms.test.ts",
+              "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/sms.ts",
+              "sha256": "6bc26f856a25df6e17b8cc7b6e1dd8c4463ea845f20f96167e3fc624de15fede"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/smtp-wire.test.ts",
+              "sha256": "9cbe6e6e40bd16b28e604d53250ba1a76bcb78d4738a309ea97e2d21b12a9917"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/composite-rate-limiter.test.ts",
+              "sha256": "07443944f164e138023b09567f66af92c9a5ae16b0a9564e9b0197e74e7769ac"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+              "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+            }
+          ]
+        }
       }
     },
     {
@@ -499525,7 +499728,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -499541,7 +499745,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -499859,7 +500063,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -499875,7 +500080,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -756162,7 +756367,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
@@ -757422,7 +757627,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -759370,7 +759575,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -760179,7 +760385,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-              "sha256": "7e14c353b7a05d0896d37c28d7beeb7871712ab268f74e254d2c59e4e9acbc70"
+              "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",
@@ -761415,7 +761621,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "df70a7727dfd637f9a5a3157a0f390a8338af81e803d933e540084a8c802102b"
+              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -763269,7 +763475,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-provider-timeout-and-redis-recovery"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -873530,6 +873737,210 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/mobile-performance-42779839689",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "07e070138d2cad2fec41b02da76a7f27d963ac27245d2810d4044cfc949a3c02"
+    },
+    "release-0.6-hosted-primary-mobile-performance": {
+      "batch": "release-0.6-hosted-primary-mobile-performance",
+      "base_commit": "55753b1c14a7c24ce092980585d85ea040122682",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.11.03.05"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+        },
+        {
+          "path": ".size-limit.json",
+          "sha256": "7fe0e2dcf8f3b937679e7563754addaf625ef5f5477447f69f499f93e6db6fd9"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "0cefa7d30daaf37d4f0057958e3573ca0c10e96ee16057defddea38aa4d0fe2b"
+        },
+        {
+          "path": "apps/web/build.mjs",
+          "sha256": "faf67d198f475cd57d4f1750eb0d766428cdcd71ae06db8e289397a49efebe6e"
+        },
+        {
+          "path": "apps/web/compress-static-assets.mjs",
+          "sha256": "36023713dd449b79a0f1ad51cc4e3e3ff1bfd24158c4fc2a21d5f13d200db7b6"
+        },
+        {
+          "path": "apps/web/e2e/customer-service-history-views.spec.ts",
+          "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+        },
+        {
+          "path": "apps/web/e2e/login-ui.spec.ts",
+          "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+        },
+        {
+          "path": "apps/web/e2e/primary-mobile-performance.ts",
+          "sha256": "179314a776dc2e08f7a3279492331695b94891b39bb271312a761efb73961cd2"
+        },
+        {
+          "path": "apps/web/history-preloads.mjs",
+          "sha256": "dc445208d9d1b030dfbf17075e48232e52f181f6ed9e01c8fd7d018edefaf181"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "5b266f3ccec28e52f799283a4031b56da02bee1d0ae9872edb5b94cfd1c702cc"
+        },
+        {
+          "path": "apps/web/src/lib/route-bootstrap-read.ts",
+          "sha256": "322598d4968e5db3d2870cab9c51a3a4f213900f6b2c9d0f53fde8ac4ee9508c"
+        },
+        {
+          "path": "apps/web/src/lib/session-role.ts",
+          "sha256": "ea895eb2e1897b094d18e854d7f0251c90af82bb0e71db2db191c77cf7519eb0"
+        },
+        {
+          "path": "apps/web/src/router.tsx",
+          "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+        },
+        {
+          "path": "apps/web/src/routes/_app.tsx",
+          "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
+        },
+        {
+          "path": "docs/route-bundle-budgets.md",
+          "sha256": "c5972456a14687d5e06adb1760d70b4657a841aaef94234cb4f5c0923cccfab1"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "acc5f4df899fea132ed03121d10e205838e901ab9d31cfec30ab08129e1b3ba8"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "GitHub Actions run 42783833343 used exact candidate 55753b1c and passed the unchanged 102 route and interaction budgets, the primary mobile gate and artifact upload in the build and application integrity job.",
+        "The actual artifact has 12 passes, zero failures, skips or flakes. Worst LCP was 1616 ms, first populated render 1926.8 ms, CLS 0.0474 and startup blocking 0 ms. Sign-in and the four populated histories passed in Persian and English using the original profile and unchanged numerical limits.",
+        "The authority regression suite and prior local performance run remain source-bound. The startup blocking metric is a controlled lab measurement. Field interaction latency and live staging promotion are separate evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/mobile-performance-42783833343",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "98427d521c1e8b94db78107a3a6f61b93da27dac0afd3a932e4ba4f456c48f98"
+    },
+    "release-0.6-provider-timeout-and-redis-recovery": {
+      "batch": "release-0.6-provider-timeout-and-redis-recovery",
+      "base_commit": "55753b1c14a7c24ce092980585d85ea040122682",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.11.04.01"
+      ],
+      "changed_paths": [
+        "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
+        "apps/worker/src/notifications/outbox-runner.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/config-cache/config-cache.integration.test.ts",
+          "sha256": "a78b69f7b7f8e268c3f6594cf536a405411dbe39d765c0d273896c36e47e3662"
+        },
+        {
+          "path": "apps/api/src/config-cache/config-cache.service.ts",
+          "sha256": "72398081aea677a3495577ca8effa59594eee1f02988bb982bb6251a03b88e83"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
+          "sha256": "4e166c9918f00f61cb14d602b1a0ed1647d623a2f2a8e73efbc4f7afa7753205"
+        },
+        {
+          "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
+          "sha256": "b9a8d13884ef102eda8b11ff4a6f1663f904768f34a3023e1a3223bacd4dc5d2"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-reader.ts",
+          "sha256": "7c85d1527191627faf3ada68737d4e69021ea2d5e8b03bfc5ab4b1db46046129"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.test.ts",
+          "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
+        },
+        {
+          "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
+          "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+        },
+        {
+          "path": "apps/worker/src/notifications/send-receipt.ts",
+          "sha256": "4c63b2247d0c93d52fed53332769ffab9b1530f473fddd5886b25632af10b421"
+        },
+        {
+          "path": "apps/worker/src/notifications/sms-transport.ts",
+          "sha256": "6b4225acfc5a85b43f9164b0302cfa61a8c23de3397f4a9f5e7cd06065ede993"
+        },
+        {
+          "path": "docs/runbooks/notification-outage.md",
+          "sha256": "6fea6084ab62bb9f939b56a1b8c3b8d0a33af8e2542532054b2b292938c45b9b"
+        },
+        {
+          "path": "docs/runbooks/redis-loss.md",
+          "sha256": "649c23261fbbfaeb66763b869f8ad3d9ab71a12ec42ce1ddca1749811ca41b5e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0200_sms_provider_circuit_breaker.sql",
+          "sha256": "308c152265cc21a5fdae6c56fb80b4ee8a5a0b4b1e330f6319ec3a0f016c0c60"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "54f63f91368d4dfcefec8b78b045a747bfe6db60c863a3abaec45042ea80745e"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smsir-client.ts",
+          "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+        },
+        {
+          "path": "packages/shared/src/config-cache/config-cache.test.ts",
+          "sha256": "627b63a633340301a773cb84dbe3152b4083ca7cb78ab81f48fe62b2461524aa"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email-breaker.ts",
+          "sha256": "77d78b0e7212a550bc0ecabeeb089aa6c0f3719625d4e7de949f80725871d106"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email-errors.ts",
+          "sha256": "61f631fb71f65206fba19769f673e4d58e7a3c3821d082105274857c40840754"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/sms.test.ts",
+          "sha256": "bae5fdfab214fde684e868b92ec741da88a7de4becf1084327c0ec3bca03b466"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/sms.ts",
+          "sha256": "6bc26f856a25df6e17b8cc7b6e1dd8c4463ea845f20f96167e3fc624de15fede"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/smtp-wire.test.ts",
+          "sha256": "9cbe6e6e40bd16b28e604d53250ba1a76bcb78d4738a309ea97e2d21b12a9917"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/composite-rate-limiter.test.ts",
+          "sha256": "07443944f164e138023b09567f66af92c9a5ae16b0a9564e9b0197e74e7769ac"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
+          "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+        }
+      ],
+      "checks": [
+        "The native production migrator applied all 206 entries. The first remote-database test attempt had three runner timeouts. The retry streamed the same migration bytes with their hashes and enum transaction boundary to a fresh disposable database and passed all six cases with a local-only 20 second runner timeout. Both injected HTTP 503 and TimeoutError paths accumulate five failures, block the next network call, record one circuit-open event, accept one recovery receipt after cooldown and record circuit recovery. No real provider was contacted.",
+        "The focused worker suite passed all 18 cases. A fresh SMS occurrence refused by an open circuit retains bounded retry, with one attempt and no dead-letter entry. The original HTTP 503 case retains its transient error assertion. The two conditions retain their existing separate delivery log categories.",
+        "The source-matched hosted delivery identity (20) and send-receipt (15) cases include actual loopback provider response loss, durable unknown receipt, dead-letter reconciliation hold and no resend after restart or queue reset. The same exact hosted run passed all six config-cache cases, including PostgreSQL fallback after Redis fails without leaking private backend details. Only completed selected test files are reused.",
+        "All 86 related sender, Redis cache and rate-limiter unit tests and seven SMTP wire tests passed. The rate-limiter tests preserve the PostgreSQL quota across Redis loss and recovery. A local optional retry first hit ENOSPC before tests, then used the same test configurations in scratch. API and worker typechecks, scoped lint, formatting and diff checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/provider-timeout-failure-injection",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "507a78e36a5250b04b9763c51fc200789b856db28a0e561f01b91a73d1e48e2e"
     }
   },
   "historical_improvements": [
