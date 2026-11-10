@@ -3,6 +3,8 @@ import { t as appCopy } from '@barghsa/i18n/app';
 import { t as adminCopy } from '@barghsa/i18n/admin-ui';
 import { tWalletInvoicePayment as walletCopy } from '@barghsa/i18n/wallet-invoice-payment';
 import { contractText as contractCopy } from '@barghsa/i18n/contracts';
+import { tWalletPaymentReturn as returnCopy } from '@barghsa/i18n/wallet-payment-return';
+import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { test, expect } from './coverage-fixture';
 import { electricityPaymentReview } from './electricity-payment-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
@@ -15,6 +17,27 @@ const contractId = '44444444-4444-4444-8444-444444444444';
 const versionId = '55555555-5555-4555-8555-555555555555';
 const transactionId = '66666666-6666-4666-8666-666666666666';
 const amount = '1250000';
+const topUpId = 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee';
+const topUpAmount = 1_000_000;
+const openingBalance = '1000000';
+const fundedBalance = '2000000';
+const gatewayUrl = 'https://gateway.example.test/start';
+const gatewayAuthority = 'fixture-payment-authority';
+const csrf = 'electricity-wallet-csrf';
+const topUpReview = {
+  schemaVersion: 1,
+  scope: { action: 'wallet.online-topup-initiation', profileId, resourceId: profileId },
+  data: {
+    profileId,
+    amountIrR: String(topUpAmount),
+    onlineTopUpLimitIrR: fundedBalance,
+    configVersion: 1,
+    paymentSource: 'external_gateway',
+    stateAfterInitiation: 'Pending',
+    creditRule: 'after_verified_gateway_payment',
+  },
+  hash: 'c'.repeat(64),
+};
 const submittedAt = '2026-09-23T10:00:00.000Z';
 const periodStart = '2026-09-25T20:30:00.000Z';
 const periodEnd = '2026-10-02T20:30:00.000Z';
@@ -71,7 +94,7 @@ const quote = {
   totalKwh: '11',
   averagePowerKw: '0.06547619',
   greenRuleApplies: true,
-  walletBalanceIrR: '2000000',
+  walletBalanceIrR: openingBalance,
   lines: [
     {
       productId: thermal.id,
@@ -100,7 +123,7 @@ const quote = {
   totalIrR: amount,
 };
 
-function paymentReview() {
+function paymentReview(availableBalance = fundedBalance) {
   return electricityPaymentReview({
     profileId,
     orderId,
@@ -109,13 +132,13 @@ function paymentReview() {
     versionId,
     transactionId,
     amount,
-    availableBalance: '2000000',
+    availableBalance,
     submittedAt,
   });
 }
 
 for (const locale of ['en', 'fa'] as const)
-  test(`simple electricity order moves from reviewed quote through payment and contract activation (${locale})`, async ({
+  test(`simple electricity order moves from reviewed quote through wallet funding, payment and contract activation (${locale})`, async ({
     page,
   }) => {
     test.setTimeout(60_000);
@@ -125,6 +148,12 @@ for (const locale of ['en', 'fa'] as const)
     let paid = false;
     let accepted = false;
     let billAvailable = false;
+    let funded = false;
+    let topUpKey: string | undefined;
+    let topUpStarts = 0;
+    let gatewayReturns = 0;
+    let topUpConfirmations = 0;
+    const balance = () => (paid ? '750000' : funded ? fundedBalance : openingBalance);
     const orderSubmissions: Array<Record<string, unknown>> = [];
     const payments: Array<Record<string, unknown>> = [];
     const contractAcceptances: Array<Record<string, unknown>> = [];
@@ -213,8 +242,70 @@ for (const locale of ['en', 'fa'] as const)
       })
     );
     await page.route(`**/api/wallet/${profileId}`, (route) =>
-      route.fulfill({ json: { balance: '2000000', currency: 'IRR' } })
+      route.fulfill({
+        json: {
+          balance: balance(),
+          currency: 'IRR',
+          onlineTopUpLimit: 2_000_000,
+          configVersion: 1,
+        },
+      })
     );
+    await page.route(`**/api/wallet/${profileId}/transactions?*`, (route) =>
+      route.fulfill({ json: { transactions: [], nextCursor: null } })
+    );
+    await page.route(`**/api/wallet/${profileId}/top-ups/review`, (route) => {
+      expect(route.request().method()).toBe('POST');
+      expect(route.request().headers()['x-csrf-token']).toBe(csrf);
+      expect(topUpKey).toBeUndefined();
+      const body = route.request().postDataJSON();
+      expect(body).toEqual({ amount: topUpAmount, idempotencyKey: expect.any(String) });
+      expect(body.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/i);
+      topUpKey = body.idempotencyKey;
+      return route.fulfill({ json: topUpReview });
+    });
+    await page.route(`**/api/wallet/${profileId}/top-ups`, (route) => {
+      expect(route.request().method()).toBe('POST');
+      expect(route.request().headers()['x-csrf-token']).toBe(csrf);
+      expect(topUpKey).toBeDefined();
+      expect(route.request().headers()['idempotency-key']).toBe(topUpKey);
+      expect(route.request().postDataJSON()).toEqual({
+        amount: String(topUpAmount),
+        expectedReviewHash: topUpReview.hash,
+      });
+      topUpStarts++;
+      return route.fulfill({
+        status: 201,
+        json: { transactionId: topUpId, redirectUrl: gatewayUrl },
+      });
+    });
+    await page.route(gatewayUrl, (route) => {
+      expect(route.request().method()).toBe('GET');
+      expect(topUpStarts).toBe(1);
+      gatewayReturns++;
+      const location = new URL('/wallet', page.url());
+      location.searchParams.set('paymentOrderId', topUpId);
+      location.searchParams.set('paymentAuthority', gatewayAuthority);
+      const href = location.href.replaceAll('&', '&amp;');
+      return route.fulfill({
+        contentType: 'text/html',
+        body: `<!doctype html><title>Gateway fixture</title><a href="${href}">Return to merchant</a>`,
+      });
+    });
+    await page.route('**/api/wallet/top-ups/return', (route) => {
+      expect(route.request().method()).toBe('POST');
+      expect(route.request().headers()['x-csrf-token']).toBe(csrf);
+      expect(route.request().postDataJSON()).toEqual({
+        orderId: topUpId,
+        authority: gatewayAuthority,
+      });
+      expect(topUpStarts).toBe(1);
+      expect(gatewayReturns).toBe(1);
+      expect(funded).toBe(false);
+      topUpConfirmations++;
+      funded = true;
+      return route.fulfill({ json: { ok: true, transactionId: topUpId, credited: true } });
+    });
     await page.route('**/api/electricity/preview/simple', (route) =>
       route.fulfill({ json: quote })
     );
@@ -423,12 +514,16 @@ for (const locale of ['en', 'fa'] as const)
             invoiceId,
             profileId,
             remainingAmount: amount,
-            availableBalance: '2000000',
-            canPay: !paid,
-            review: paymentReview(),
+            availableBalance: balance(),
+            canPay: funded && !paid,
+            review: paymentReview(balance()),
           },
         });
+      expect(route.request().method()).toBe('POST');
+      expect(route.request().headers()['x-csrf-token']).toBe(csrf);
+      expect(funded).toBe(true);
       const body = route.request().postDataJSON() as Record<string, unknown>;
+      expect(body.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/i);
       payments.push(body);
       paid = true;
       return route.fulfill({
@@ -732,8 +827,58 @@ for (const locale of ['en', 'fa'] as const)
     await expect(
       page.getByRole('link', { name: appCopy('invoices.details.openContract', locale) })
     ).toHaveAttribute('href', `/contracts?contractId=${contractId}`);
+    await page
+      .context()
+      .addCookies([{ name: 'barghsa_csrf', value: csrf, url: new URL(page.url()).origin }]);
     const wallet = page.locator('#wallet-invoice-payment');
-    await wallet.getByRole('button', { name: walletCopy('pay', locale), exact: true }).click();
+    const payInvoice = wallet.getByRole('button', { name: walletCopy('pay', locale), exact: true });
+    const openWallet = wallet.getByRole('link', {
+      name: appCopy('wallet.funding.open', locale),
+      exact: true,
+    });
+    await expect(openWallet).toHaveAttribute('href', `/wallet?returnInvoiceId=${invoiceId}`);
+    await expect(payInvoice).toBeDisabled();
+    expect(payments).toHaveLength(0);
+    await openWallet.click();
+    const walletBalance = page.getByTestId('wallet-balance');
+    await expect(walletBalance).toContainText(formatCurrencyIrr(openingBalance, locale));
+    await page.getByTestId('wallet-amount').fill(String(topUpAmount));
+    await page.getByTestId('wallet-submit').click();
+    const topUpDialog = page.getByRole('dialog', {
+      name: appCopy('wallet.page.reviewTitle', locale),
+    });
+    const startTopUp = topUpDialog.getByRole('button', {
+      name: appCopy('wallet.page.confirmPayment', locale),
+      exact: true,
+    });
+    await expect(topUpDialog).toContainText(profileId);
+    await expect(topUpDialog).toContainText(formatCurrencyIrr(String(topUpAmount), locale));
+    await expect(startTopUp).toBeDisabled();
+    expect(topUpStarts).toBe(0);
+    await approveRiskConfirmation(page, locale, 'financial');
+    await startTopUp.click();
+    await expect(page).toHaveURL(gatewayUrl);
+    await page.getByRole('link', { name: 'Return to merchant', exact: true }).click();
+    const paymentReturn = page.getByTestId('payment-return');
+    await expect(paymentReturn).toBeVisible();
+    expect(new URL(page.url()).searchParams.get('paymentOrderId')).toBe(topUpId);
+    await expect(walletBalance).toContainText(formatCurrencyIrr(openingBalance, locale));
+    expect(topUpConfirmations).toBe(0);
+    const returnToInvoice = page.getByRole('link', {
+      name: appCopy('wallet.page.returnToInvoice', locale),
+      exact: true,
+    });
+    await expect(returnToInvoice).toHaveAttribute('href', `/invoices/${invoiceId}`);
+    await paymentReturn
+      .getByRole('button', { name: returnCopy('wallet.return.check', locale) })
+      .click();
+    await expect(paymentReturn.getByRole('status')).toHaveText(
+      returnCopy('wallet.return.credited', locale)
+    );
+    await expect(walletBalance).toContainText(formatCurrencyIrr(fundedBalance, locale));
+    expect(topUpConfirmations).toBe(1);
+    await returnToInvoice.click();
+    await payInvoice.click();
     await expect(confirm).toBeDisabled();
     await approveRiskConfirmation(page, locale, 'financial');
     await confirm.click();
