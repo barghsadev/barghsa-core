@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1201 | Accepted with unchanged source bindings. |
-| verify | 101 | Existing work may be complete; inspect evidence before building. |
+| done | 1203 | Accepted with unchanged source bindings. |
+| verify | 99 | Existing work may be complete; inspect evidence before building. |
 | partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1058,7 +1058,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-06.02.05` | done | Earlier acceptance_verified | Localize number/currency formatting |
 | `01-platform-infrastructure.md#T-06.03.01` | done | Earlier deferred | Initialize `packages/ui` with shadcn/ui and Base UI |
 | `01-platform-infrastructure.md#T-06.03.02` | done | Earlier acceptance_verified | Create themed component set with RTL support |
-| `01-platform-infrastructure.md#T-06.03.03` | verify | Earlier acceptance_verified | Implement WCAG 2.2 AA accessibility in all shared components |
+| `01-platform-infrastructure.md#T-06.03.03` | done | Earlier acceptance_verified | Implement WCAG 2.2 AA accessibility in all shared components |
 | `01-platform-infrastructure.md#T-06.03.04` | done | Earlier acceptance_verified | Create localized DatePicker component |
 | `01-platform-infrastructure.md#T-06.03.05` | partial | Earlier partial | Implement theme system with admin overrides |
 | `01-platform-infrastructure.md#T-06.03.06` | done | Earlier acceptance_verified | Create loading/empty/error state components |
@@ -1305,7 +1305,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.03.16` | done | Recorded batch work | Ensure every E2E test runs with Persian (fa) locale as default, verifying RTL layout and Jalali calendar |
 | `06-security-testing-observability.md#T-06.10.03.17` | done | Recorded batch work | Add dedicated English/LTR smoke tests and Gregorian calendar boundary tests |
 | `06-security-testing-observability.md#T-06.11.01.01` | verify | Recorded batch work | Integrate `@axe-core/playwright` into E2E pipeline; run on all critical pages |
-| `06-security-testing-observability.md#T-06.11.01.02` | verify | Recorded batch work | Create accessibility test suite covering: keyboard navigation, focus visibility, contrast, labels, ARIA roles, error announcements, reduced motion |
+| `06-security-testing-observability.md#T-06.11.01.02` | done | Recorded batch work | Create accessibility test suite covering: keyboard navigation, focus visibility, contrast, labels, ARIA roles, error announcements, reduced motion |
 | `06-security-testing-observability.md#T-06.11.01.03` | done | Recorded batch work | Add CI gate: axe violations block PR; track severity |
 | `06-security-testing-observability.md#T-06.11.01.04` | done | Recorded batch work | Document manual testing checklist for screen readers (NVDA/JAWS, VoiceOver) and keyboard-only |
 | `06-security-testing-observability.md#T-06.11.02.01` | done | Recorded batch work | Integrate OWASP ZAP for authenticated API scanning in staging environment |

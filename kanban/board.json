@@ -17587,12 +17587,10 @@
         "story": "01-platform-infrastructure.md#spec-1f5db732e1c9"
       },
       "requirement": "- **T-06.03.03:** Implement WCAG 2.2 AA accessibility in all shared components\n  - **Notes:** Every interactive element has visible focus indicator (2px solid offset ring, not just outline). Color contrast: minimum 4.5:1 for text, 3:1 for large text (18px+). ARIA: `role`, `aria-label`, `aria-describedby`, `aria-errormessage` on form fields. Keyboard: Tab order follows visual order, Escape closes dialogs/dropdowns, Enter toggles selects/checkboxes. Screen reader: live regions for dynamic content (toast, loading state). Reduced motion: `@media (prefers-reduced-motion: reduce)` disables CSS animations and transitions. Components span loading, empty, error, and disabled states.\n  - **Dependencies:** T-06.03.01\n  - **Complexity:** XL",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17891,8 +17889,467 @@
           "apps/web/src/routes/_app/settings/profile.tsx",
           "packages/ui/src/styles.css"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-shared-catalogue-wcag22"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-shared-component-accessibility",
+          "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+          "checks": [
+            "The exact production catalogue build passed 306 Chromium cases with retries disabled, including 280 mounted-story cells (70 stories, two locales and two themes) and 26 keyboard/overlay/interaction cases. All nine axe scan sites use the A/AA tags through WCAG 2.2, including the target-size rule, with the original violation assertions retained.",
+            "Reused matching source-bound cases for skip navigation, visible and forced-color focus, modal focus restoration, names and roles, measured contrast, localized live error announcements, and reduced-motion behavior.",
+            "Hosted job 130049214959 at a51b8b74 passed its 20 exact fast critical cases for login, dashboard, the four service histories, wallet receipt and active contract. These are scoped checks. Full final-candidate critical page and manual assistive-technology verification remain separate release evidence.",
+            "The catalogue build, structured browser results, compiled asset hash inventory, changed-file ESLint, Prettier and whitespace checks passed."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+            },
+            {
+              "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
+              "sha256": "e426afca86cd4123d0e4a9ee77ad67f6496ecc60ba1e4df8e96c0c70bb2b6d15"
+            },
+            {
+              "path": "apps/web/e2e/critical-accessibility.ts",
+              "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
+            },
+            {
+              "path": "apps/web/e2e/customer-service-history-views.spec.ts",
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "231929ebc3795d67d8190975bb6e60e5b580a9b1520c75931b1d39b3f1a6bd75"
+            },
+            {
+              "path": "apps/web/e2e/ladle-components.spec.ts",
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
+            },
+            {
+              "path": "apps/web/e2e/login-ui.spec.ts",
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
+            },
+            {
+              "path": "apps/web/e2e/theme-components.spec.ts",
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
+            },
+            {
+              "path": "apps/web/e2e/ui-identity-loading.spec.ts",
+              "sha256": "e6bbe856eb87f8ef0c98ccc346844b815b91a20b67f44208ab799855892f45d4"
+            },
+            {
+              "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "ee1028396c08b722b5b9b1862c626e445de1f10e296b9622117863109ed29f64"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "3b484e904f53a2d21d1b2dd54ae3c87ed68ca500b76565ba3fc762dc1ecc5cf5"
+            },
+            {
+              "path": "docs/design/accessibility.md",
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+            },
+            {
+              "path": "packages/ui/.ladle/components.tsx",
+              "sha256": "ebbcc957d1d419da0b92ffb090e9b6621b8681a98bba1dd9c321f5ad90b2bc0b"
+            },
+            {
+              "path": "packages/ui/.ladle/config.mjs",
+              "sha256": "2bdbd6a2a75a876ba3b7819dbee5f1432a672ab12003db66c371e7587acc630f"
+            },
+            {
+              "path": "packages/ui/.ladle/styles.css",
+              "sha256": "771b893432c1298c798de80e8e6fdb17fd6c0ff75565828a3ce6431b9a6c5a5b"
+            },
+            {
+              "path": "packages/ui/.ladle/vite.config.mjs",
+              "sha256": "4a7261118fa75f43027327c4299143492647349e3175cee07f30fa6e61bcff12"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "983d68c353e36a19275c5a6184c63f65ec551bb6ccec8f32d419edeeea84a1af"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/animated.tsx",
+              "sha256": "fe50f8889067863df2a795503820b53368176f820ca61ad42deb1a904b3bca02"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/combo-box.tsx",
+              "sha256": "924dccb237bd2f3aaedd05bc9d7aead0798d4f0b5815d3d8cd96f4145648e115"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/data-table-cells.tsx",
+              "sha256": "2e265aa10126fc210a378ef37540844f3e57f2056f5e82fc9f555c09e84f465a"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/data-table.labels.ts",
+              "sha256": "23955ddb08e4046b697912f0588a28c27c7b40c3294374569cc53e32e517135e"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/data-table.tsx",
+              "sha256": "adfd706003f9852ea1dbeeb35db7212e72572b102ca8b29582ea20f5d70740b9"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+              "sha256": "0f72d835c022da52e4e422e5b48166993f0410d8d4133ad16663edac2e5bef89"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/date-time-picker.tsx",
+              "sha256": "76c263fd5ae8a01cef7c10efc10296f48aeddae720b0c8a1f228162c4cdb2a55"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/month-picker.tsx",
+              "sha256": "5f9e1c49b1876dfbb74aae7ce7026c2bc0c9ae2c2cd54197b1b608ed3e82d987"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/multi-select.tsx",
+              "sha256": "af3e54ff5c38a9bd99a23051a6720068718268bb4eace20de5b0f4e60378c837"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/number-field.labels.ts",
+              "sha256": "239cfa89ac000fe1113daee36b20477974377bfb43d94671969c1f57ad47af67"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/number-field.tsx",
+              "sha256": "b00f1a31b5e3ab26c3631e95788363bbdb1b1772ad6d2e3f2b70f1e1c9ac4c41"
+            },
+            {
+              "path": "packages/ui/src/components/ui/accordion.tsx",
+              "sha256": "33ba16eda70a4d74c069ed182a09905a0be820b5143c4ca716b0285a2a4622c1"
+            },
+            {
+              "path": "packages/ui/src/components/ui/alert.tsx",
+              "sha256": "406a5f943e5d95186e19a8cbea49e25dd92b3d4f1dbc2f002c53b79c69fdbad3"
+            },
+            {
+              "path": "packages/ui/src/components/ui/avatar.tsx",
+              "sha256": "93d5bee557c6f8e579a82d0442d4fa1c9d321cccd531b370e9b31e8874de02a8"
+            },
+            {
+              "path": "packages/ui/src/components/ui/badge.tsx",
+              "sha256": "f51a0274e43054dad7fdf51ad884bc0e209e45045f2721354712639fb120e119"
+            },
+            {
+              "path": "packages/ui/src/components/ui/breadcrumb.tsx",
+              "sha256": "8693d748c28d58c692057733d58f87af43eaebd6d8ee783364a3a236ccf0be80"
+            },
+            {
+              "path": "packages/ui/src/components/ui/button.tsx",
+              "sha256": "3a6179e69452f940847f263789a85587ea594c14df539fef910091240b010a84"
+            },
+            {
+              "path": "packages/ui/src/components/ui/calendar.tsx",
+              "sha256": "1343ad0379632800e43d73837a4ab22939ac9f7db56fb6fc23afe1b8bd2ac88a"
+            },
+            {
+              "path": "packages/ui/src/components/ui/card.tsx",
+              "sha256": "9e75f68b7716b2e2e022fb42efc93ae81f55e5b86fca797b041963e02c48db8c"
+            },
+            {
+              "path": "packages/ui/src/components/ui/checkbox.tsx",
+              "sha256": "3d1fc35294dda85c2eed5f68f9aa0b4ae5943d64cc38b943f91f0c7a24bdbdc1"
+            },
+            {
+              "path": "packages/ui/src/components/ui/command.tsx",
+              "sha256": "c6f2e2356e4c6088bb2a91f62d28b01808e44f4c4bdea0ffdb77408e6df53d30"
+            },
+            {
+              "path": "packages/ui/src/components/ui/confirm-dialog.tsx",
+              "sha256": "7538bb3bfacfaced42c3990dc5efea65704f9a1a2cd3892a7d6deab1446f7724"
+            },
+            {
+              "path": "packages/ui/src/components/ui/confirmation-gate.tsx",
+              "sha256": "06aab9fda02d3b329a263c33c29be0b9250a82bc02b6a4e5abe4c9c9f6f4c5e8"
+            },
+            {
+              "path": "packages/ui/src/components/ui/date-range-filter.tsx",
+              "sha256": "2cac0cd195f78a57cbefd517b6650f992e5568576d8f607765196922ffe2d315"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dependent-select.tsx",
+              "sha256": "8b10f92cceed8e99e24c3700ebadde512fdf39f5142df2a2a8635eafbd3b35c8"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dialog.tsx",
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
+              "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dynamic-field-array.tsx",
+              "sha256": "c134eab78ebaca93866fe77ffb4d75508eace6629635dee4d2060f2e6bfc9fbe"
+            },
+            {
+              "path": "packages/ui/src/components/ui/empty.tsx",
+              "sha256": "86c06c1460cd178c25798fb4aee67a31060220040b0d166da21212fe90ed5a7b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/error-state.tsx",
+              "sha256": "6eb37c93527326baf4063cec22a1447ba7d38421d8a1047aff2f9fc98dd73502"
+            },
+            {
+              "path": "packages/ui/src/components/ui/field.tsx",
+              "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+            },
+            {
+              "path": "packages/ui/src/components/ui/filter-apply-context.tsx",
+              "sha256": "059196ac5122ec2b044c9c3b8e4390bd5fadea881c9b7c0758e6cba5dbb2c56a"
+            },
+            {
+              "path": "packages/ui/src/components/ui/input-group.tsx",
+              "sha256": "cfa2fbd99ec046b83d8c4595c0461aa7e456a7f88b7b11cb9d19bc1f547fc3c8"
+            },
+            {
+              "path": "packages/ui/src/components/ui/input.tsx",
+              "sha256": "5f4483d46179659fbe5add07dc7288e657c5b9eb7cc400c36d3938d53e98c211"
+            },
+            {
+              "path": "packages/ui/src/components/ui/job-progress.tsx",
+              "sha256": "ff49c5a88e9904fc1e11d73d72a7e1a235c4e444bb2d84e4aeee23354cbb1d03"
+            },
+            {
+              "path": "packages/ui/src/components/ui/label.tsx",
+              "sha256": "28441c197bc0df9ea8da0b7992952ad22bce260baa81f6f50e405e6ad03b56e5"
+            },
+            {
+              "path": "packages/ui/src/components/ui/list-filter-panel.tsx",
+              "sha256": "52623fb01b6aab1d2857296398de71dc3a4dc7af5d3e5dcd2b7bfcbc52ebd9ce"
+            },
+            {
+              "path": "packages/ui/src/components/ui/list-page.tsx",
+              "sha256": "d3a2094c539a88ee6dd41407123815baf4ab423b1bf4efe6e47d095082ff45c0"
+            },
+            {
+              "path": "packages/ui/src/components/ui/list-sort-dropdown.tsx",
+              "sha256": "0f5d0e42111b6a6e9b816e9d0f49cc46d30d253e25b9aa4ca616dd412fddc2a7"
+            },
+            {
+              "path": "packages/ui/src/components/ui/list-toolbar.tsx",
+              "sha256": "ac5282b860b3d84897ef60f55791c5c2b683567ce545fbba0c690c8a51d0ea5c"
+            },
+            {
+              "path": "packages/ui/src/components/ui/list-view-toggle.tsx",
+              "sha256": "716399ed5cb53a04533a681c3faefdc6da564f7816dbd4e51bde009e7cbe437d"
+            },
+            {
+              "path": "packages/ui/src/components/ui/multi-select-filter.tsx",
+              "sha256": "3e964e1f6b31b3c0a5da4646d4af95925a9d49e9ca1c028049064aa76a2af096"
+            },
+            {
+              "path": "packages/ui/src/components/ui/native-select.tsx",
+              "sha256": "9f77b4a8cab34acff6a9b4169d39d6ce1b98ac7ed01ea1ae62aaa95523efbfd0"
+            },
+            {
+              "path": "packages/ui/src/components/ui/number-filter.tsx",
+              "sha256": "a4a8ccefd983f27680492674ef124e75d0b8a6302c3ec27b1b813e23fc3d3467"
+            },
+            {
+              "path": "packages/ui/src/components/ui/page-states.tsx",
+              "sha256": "f8c394cb82b8ee8ba9c723187b072e4370853270a1fa3778bfb77e023d3e4440"
+            },
+            {
+              "path": "packages/ui/src/components/ui/pagination.tsx",
+              "sha256": "13a65e2f4c75537567c34f1dd7e386346b05fc0b489d1c6e047c59783638f0a2"
+            },
+            {
+              "path": "packages/ui/src/components/ui/popover.tsx",
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
+            },
+            {
+              "path": "packages/ui/src/components/ui/progress.tsx",
+              "sha256": "800d34439e000a174e1a37e01a9b11104da4f630b88f29bebb2f94396b68226b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/radio-group.tsx",
+              "sha256": "90c594481c3797b48b83e27ae8842743b4e21f64b371a17c1617064e274b1cc3"
+            },
+            {
+              "path": "packages/ui/src/components/ui/responsive-layout.tsx",
+              "sha256": "598555556f63803afc4c6f8dc944dc48d87bbedee451ab78939c17befaae5b4f"
+            },
+            {
+              "path": "packages/ui/src/components/ui/scroll-area.tsx",
+              "sha256": "4e817834049fe7e6738f8b23f228f3b15f99316a2fc628e6f4048a81417fdc0d"
+            },
+            {
+              "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
+              "sha256": "190aab68e1033f216b8b96165d840033698308325e29afda7b4c5be562cded81"
+            },
+            {
+              "path": "packages/ui/src/components/ui/select-filter.tsx",
+              "sha256": "b2ff97c12971e98f78fbe47900f081965b5ae26ce263b139b1adfbfd11fe45a0"
+            },
+            {
+              "path": "packages/ui/src/components/ui/select.tsx",
+              "sha256": "f4e5434b0e7c46c3a902545f07b9a0cb84f33378d945c3079683c584f14a129f"
+            },
+            {
+              "path": "packages/ui/src/components/ui/separator.tsx",
+              "sha256": "4ad1667967f512cc945975f8a66247c8b0431e801954b3ce9425178abf72292b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/sheet.tsx",
+              "sha256": "c43c44934ef0e59efd663926c85bc4d1dfcea1b11059cbebf4c7417da6b66286"
+            },
+            {
+              "path": "packages/ui/src/components/ui/skeleton.tsx",
+              "sha256": "105a200e1e4f8dbc670467cbb7750e48ddc66b572f7b1f309b7de2bd18607c70"
+            },
+            {
+              "path": "packages/ui/src/components/ui/slider.tsx",
+              "sha256": "854e4b2651be65b4263c6227d32b52cb41794ac85306c3f6c88840a9eacd210b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/sonner.tsx",
+              "sha256": "35d2e8cc7030bd0c50842a9df59ae5aeab48d32d854267588e65788ec4573588"
+            },
+            {
+              "path": "packages/ui/src/components/ui/status-filter.tsx",
+              "sha256": "4ce50ec2a4423b455a45e3a8a8e4cc5019bd0d4e17fc4ec689b57dafa2da201f"
+            },
+            {
+              "path": "packages/ui/src/components/ui/switch.tsx",
+              "sha256": "37f49fc617930a954b2d5c2a208cec5f5d95acc052c8192d1840914e1e9be73d"
+            },
+            {
+              "path": "packages/ui/src/components/ui/tabs.tsx",
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
+            },
+            {
+              "path": "packages/ui/src/components/ui/text-filter.tsx",
+              "sha256": "10561bc31c73e4cff97698a078e143852601c7bd3e9efd63a15dab3b16e68023"
+            },
+            {
+              "path": "packages/ui/src/components/ui/textarea.tsx",
+              "sha256": "4c49d74c884f22498aae7bd7df7f62e840963a15077bbb5dd4739edb51d9759a"
+            },
+            {
+              "path": "packages/ui/src/components/ui/toast.tsx",
+              "sha256": "3f81743af63793bb58daa299c4dc37695b3f85ac1def7dbaf4a8aae6f4a87219"
+            },
+            {
+              "path": "packages/ui/src/components/ui/tooltip.tsx",
+              "sha256": "54e08779c6516999d0c5f6a7a37005ebabe2f2e48e241f927c3033b247eff7fc"
+            },
+            {
+              "path": "packages/ui/src/components/ui/use-confirm.tsx",
+              "sha256": "06ebb16ee7b1447f3f4b8dcf643ba8f67f38218683bc04d7b5b8bc1af04e6d80"
+            },
+            {
+              "path": "packages/ui/src/components/ui/workflow.tsx",
+              "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+            },
+            {
+              "path": "packages/ui/src/direction-provider.ts",
+              "sha256": "d85fb7cd269d6742ad572d8fde95328b21372580a4d1eb1e12b04354114aa768"
+            },
+            {
+              "path": "packages/ui/src/fonts/fonts.css",
+              "sha256": "a1f68a0120c9ba7279ee54b5c7c728d983b87455bf22cbbe1e9f21f420bb76cb"
+            },
+            {
+              "path": "packages/ui/src/fonts/vazirmatn-OFL.txt",
+              "sha256": "e6f4ce7b6c830d5a25a4f8ac777c267cd7d3c180bc2a7150ca57cbb9b280c4b7"
+            },
+            {
+              "path": "packages/ui/src/fonts/vazirmatn-arabic.woff2",
+              "sha256": "84a382e46c30fb4f73d0e3800c16d0af15888e2731e57fa5f93e2c29a2c6a957"
+            },
+            {
+              "path": "packages/ui/src/fonts/vazirmatn-latin.woff2",
+              "sha256": "d29c041cd4294af893cf3c01dfab6d47202c667ab55d702f68782599918c651d"
+            },
+            {
+              "path": "packages/ui/src/form/bound-field.tsx",
+              "sha256": "81235b023ba78d4a179cb5c934e21e3a42896b860b335ed17c9eb26a68e07e8a"
+            },
+            {
+              "path": "packages/ui/src/form/choice-fields.tsx",
+              "sha256": "0e0b52b77fac2607d64488c2e0837a9ef09c898911391cc3917b0091a472e069"
+            },
+            {
+              "path": "packages/ui/src/form/date-fields.tsx",
+              "sha256": "50564d0a19dc85407682a8bd712189006c13fe29ab5229c1c437d481fe1cee20"
+            },
+            {
+              "path": "packages/ui/src/form/form-step.tsx",
+              "sha256": "9dc98056fbe88c45aecaae17ca7428b8874911f2dc1f7f4dcf2ce0b0062f7eb7"
+            },
+            {
+              "path": "packages/ui/src/form/form.tsx",
+              "sha256": "b3ce9e97a52fda9043c2e5b18dc6b943aa32f58d704187446ed87e5fe3eafa6f"
+            },
+            {
+              "path": "packages/ui/src/form/index.ts",
+              "sha256": "4b34b3ae1a1bee136eb87c13af5134fb0b2c6cabe4d1188d015ce3021621a485"
+            },
+            {
+              "path": "packages/ui/src/form/server-errors.ts",
+              "sha256": "4226cd16c37e5728247b87825b95ff8e9a7302c9ecbaad909e3e96cdda75d90b"
+            },
+            {
+              "path": "packages/ui/src/form/text-fields.tsx",
+              "sha256": "9893a5be67f899144cfaa21730459fe7685ac6a3bb5a8c93ab97a9eb388d3673"
+            },
+            {
+              "path": "packages/ui/src/form/use-zod-form.ts",
+              "sha256": "8826578980a7417672d6052c9d181f52cbc501dabd1aa010595077600fee57b8"
+            },
+            {
+              "path": "packages/ui/src/hooks/use-reduced-motion.ts",
+              "sha256": "2982a6048b8d6ab6aeffa34fe88c633b628f43c8513335ba6671dc0c40b3ac8a"
+            },
+            {
+              "path": "packages/ui/src/index.ts",
+              "sha256": "0f01fd9407bd96e09d1485b1a3ad3473b324668019996cc7057cc3fbfc385f07"
+            },
+            {
+              "path": "packages/ui/src/lib/scroll-keyboard.ts",
+              "sha256": "4369a7e8103d8b5c88c5f572b3157633873aa7fb4077556ce495e5b9f6aa744d"
+            },
+            {
+              "path": "packages/ui/src/lib/utils.ts",
+              "sha256": "9304a861c8673bee09e0f12de31773abbde503b02e59dfd74763ddec2e37cf05"
+            },
+            {
+              "path": "packages/ui/src/sonner.ts",
+              "sha256": "6eaceef7902d210138fe3a3b06b1f437c0a3e5b41846c6af40d77b59746bf910"
+            },
+            {
+              "path": "packages/ui/src/styles.css",
+              "sha256": "6934971e0de9d57aa8b85644cb45668e7618f96bc1d51716d0c04d740a2834d2"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "reused_acceptance": [
+            "07-ui-ux-design.md#T-07.05.01.01",
+            "07-ui-ux-design.md#T-07.05.01.02",
+            "07-ui-ux-design.md#T-07.05.01.03",
+            "07-ui-ux-design.md#T-07.05.01.04",
+            "07-ui-ux-design.md#T-07.05.01.05",
+            "07-ui-ux-design.md#T-07.05.01.08",
+            "07-ui-ux-design.md#T-07.05.01.09",
+            "07-ui-ux-design.md#T-07.08.01.06"
+          ]
+        }
       }
     },
     {
@@ -514071,7 +514528,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The real production-browser and catalogue checks exercise axe-core without excluding Base UI focus sentinels. Verify scans of all required critical pages and states on the exact release candidate, including current browser outcomes and remediation."
+        "Verify every required critical launch page and state on the exact candidate, including the four service journeys, current browser outcomes, and remediation. Hosted a51b8b74 fast checks passed 20 selected cases and the expanded local catalogue passed 306 cases."
       ],
       "owner": null,
       "depends_on": [],
@@ -514079,7 +514536,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-shared-catalogue-wcag22"
         ],
         "current_acceptance": null
       }
@@ -514095,12 +514553,10 @@
         "story": "06-security-testing-observability.md#spec-77cda1ff4488"
       },
       "requirement": "| T-06.11.01.02 | Create accessibility test suite covering: keyboard navigation, focus visibility, contrast, labels, ARIA roles, error announcements, reduced motion | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "The notification editor and delivery window passed localized control labels, focus and inline feedback in six browser cases. Complete the other accessibility dimensions and exact hosted candidate checks separately. The exact local Terms formatting and login challenge fixtures passed. Recheck their hosted results on the next candidate."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -514118,9 +514574,107 @@
         ],
         "batches": [
           "release-0.6-delivery-window-feedback-overlay",
-          "release-0.6-browser-recovery-selection-and-overlay"
+          "release-0.6-browser-recovery-selection-and-overlay",
+          "release-0.6-shared-catalogue-wcag22"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source-bound-shared-component-accessibility",
+          "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+          "checks": [
+            "The exact production catalogue build passed 306 Chromium cases with retries disabled, including 280 mounted-story cells (70 stories, two locales and two themes) and 26 keyboard/overlay/interaction cases. All nine axe scan sites use the A/AA tags through WCAG 2.2, including the target-size rule, with the original violation assertions retained.",
+            "Reused matching source-bound cases for skip navigation, visible and forced-color focus, modal focus restoration, names and roles, measured contrast, localized live error announcements, and reduced-motion behavior.",
+            "Hosted job 130049214959 at a51b8b74 passed its 20 exact fast critical cases for login, dashboard, the four service histories, wallet receipt and active contract. These are scoped checks. Full final-candidate critical page and manual assistive-technology verification remain separate release evidence.",
+            "The catalogue build, structured browser results, compiled asset hash inventory, changed-file ESLint, Prettier and whitespace checks passed."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+            },
+            {
+              "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
+              "sha256": "e426afca86cd4123d0e4a9ee77ad67f6496ecc60ba1e4df8e96c0c70bb2b6d15"
+            },
+            {
+              "path": "apps/web/e2e/critical-accessibility.ts",
+              "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
+            },
+            {
+              "path": "apps/web/e2e/customer-service-history-views.spec.ts",
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
+            },
+            {
+              "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "231929ebc3795d67d8190975bb6e60e5b580a9b1520c75931b1d39b3f1a6bd75"
+            },
+            {
+              "path": "apps/web/e2e/ladle-components.spec.ts",
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
+            },
+            {
+              "path": "apps/web/e2e/login-ui.spec.ts",
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
+            },
+            {
+              "path": "apps/web/e2e/theme-components.spec.ts",
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
+            },
+            {
+              "path": "apps/web/e2e/ui-identity-loading.spec.ts",
+              "sha256": "e6bbe856eb87f8ef0c98ccc346844b815b91a20b67f44208ab799855892f45d4"
+            },
+            {
+              "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "ee1028396c08b722b5b9b1862c626e445de1f10e296b9622117863109ed29f64"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "3b484e904f53a2d21d1b2dd54ae3c87ed68ca500b76565ba3fc762dc1ecc5cf5"
+            },
+            {
+              "path": "docs/design/accessibility.md",
+              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "983d68c353e36a19275c5a6184c63f65ec551bb6ccec8f32d419edeeea84a1af"
+            },
+            {
+              "path": "packages/ui/src/direction-provider.ts",
+              "sha256": "d85fb7cd269d6742ad572d8fde95328b21372580a4d1eb1e12b04354114aa768"
+            },
+            {
+              "path": "packages/ui/src/styles.css",
+              "sha256": "6934971e0de9d57aa8b85644cb45668e7618f96bc1d51716d0c04d740a2834d2"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "reused_acceptance": [
+            "07-ui-ux-design.md#T-07.05.01.01",
+            "07-ui-ux-design.md#T-07.05.01.02",
+            "07-ui-ux-design.md#T-07.05.01.03",
+            "07-ui-ux-design.md#T-07.05.01.04",
+            "07-ui-ux-design.md#T-07.05.01.05",
+            "07-ui-ux-design.md#T-07.05.01.08",
+            "07-ui-ux-design.md#T-07.05.01.09",
+            "07-ui-ux-design.md#T-07.08.01.06"
+          ]
+        }
       }
     },
     {
@@ -524311,7 +524865,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -524999,6 +525553,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ],
           "presentation_renewals": [
@@ -525430,7 +525992,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -526116,6 +526678,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -526314,7 +526884,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -527000,6 +527570,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -527087,7 +527665,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -527775,6 +528353,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ],
           "presentation_renewals": [
@@ -527985,7 +528571,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -528671,6 +529257,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -528760,7 +529354,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -529448,6 +530042,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ],
           "presentation_renewals": [
@@ -529658,7 +530260,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -530344,6 +530946,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -530431,7 +531041,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -531117,6 +531727,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -531201,7 +531819,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -531444,6 +532062,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -531529,7 +532155,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -531923,6 +532549,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ],
           "presentation_renewals": [
@@ -532138,7 +532772,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -532532,6 +533166,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ],
           "presentation_renewals": [
@@ -532747,7 +533389,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -533141,6 +533783,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ],
           "presentation_renewals": [
@@ -533356,7 +534006,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -533750,6 +534400,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ],
           "presentation_renewals": [
@@ -533949,7 +534607,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -534107,6 +534765,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ],
           "presentation_renewals": [
@@ -534276,7 +534942,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -534434,6 +535100,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ],
           "presentation_renewals": [
@@ -534603,7 +535277,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -534761,6 +535435,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ],
           "presentation_renewals": [
@@ -534930,7 +535612,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -535088,6 +535770,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ],
           "presentation_renewals": [
@@ -535272,7 +535962,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -535519,6 +536209,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -539173,7 +539871,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/profile-picker.spec.ts",
@@ -539448,6 +540146,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -539592,7 +540298,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/shared-loading-adoption.spec.ts",
@@ -540549,6 +541255,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -540634,7 +541348,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -540892,6 +541606,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -558147,7 +558869,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
@@ -558406,6 +559128,16 @@
           "scope_dispositions": [
             "Direction and text geometry acceptance covers the component catalogue and canonical product routes, with targeted conditional content across the four launch services.",
             "Remaining touch, form, contrast, recovery and release policy criteria have separate ledger tasks."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            }
           ]
         }
       }
@@ -558521,7 +559253,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -558840,6 +559572,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -558963,7 +559703,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -559282,6 +560022,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -559403,7 +560151,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -559722,6 +560470,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -559843,7 +560599,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -560162,6 +560918,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -560248,7 +561012,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
@@ -560523,6 +561287,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -560603,7 +561375,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
@@ -560878,6 +561650,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -560958,7 +561738,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
@@ -561233,6 +562013,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -561313,7 +562101,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/reconciliation-tables.spec.ts",
@@ -561588,6 +562376,14 @@
                 "packages/ui/README.md"
               ],
               "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -562360,7 +563156,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
@@ -562845,6 +563641,14 @@
                 "apps/web/e2e/combo-box-component.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -566125,7 +566929,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -566472,6 +567276,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -566604,7 +567416,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -566951,6 +567763,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -567800,7 +568620,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/login-native-forms.spec.ts",
@@ -569075,6 +569895,14 @@
                 "apps/web/e2e/account-recovery-closure.spec.ts"
               ],
               "scope": "Close loopback HTTP sockets after native CSP assertions. The remaining test cases, product paths and assertions are byte-identical. Thirty scoped runs passed with retries disabled."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -569227,7 +570055,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -569633,6 +570461,14 @@
                 "apps/web/e2e/conversation-identity.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -569703,7 +570539,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-template-recovery.spec.ts",
@@ -569990,6 +570826,16 @@
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json",
           "scope_dispositions": [
             "Heading and landmark acceptance includes the canonical route inventory and the demonstrated conditional views. The remaining adoption and live policy criteria have their own tasks."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            }
           ]
         }
       }
@@ -570289,7 +571135,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -570636,6 +571482,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -570788,7 +571642,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -571194,6 +572048,14 @@
                 "apps/web/e2e/conversation-identity.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -571475,7 +572337,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -572134,6 +572996,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -572415,7 +573285,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -573074,6 +573944,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -573226,7 +574104,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
@@ -573632,6 +574510,14 @@
                 "apps/web/e2e/conversation-identity.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -573913,7 +574799,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -574572,6 +575458,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         }
@@ -574857,7 +575751,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -575661,6 +576555,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -575825,7 +576727,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -576629,6 +577531,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -576793,7 +577703,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -577597,6 +578507,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -577761,7 +578679,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -578565,6 +579483,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -578729,7 +579655,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -579533,6 +580459,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -579697,7 +580631,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -580501,6 +581435,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -580665,7 +581607,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -581469,6 +582411,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -581633,7 +582583,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -582437,6 +583387,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -582601,7 +583559,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -583405,6 +584363,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -583569,7 +584535,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -584373,6 +585339,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -584537,7 +585511,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -585341,6 +586315,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -585505,7 +586487,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -586309,6 +587291,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -586473,7 +587463,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -587277,6 +588267,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -587441,7 +588439,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -588245,6 +589243,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -588409,7 +589415,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -589213,6 +590219,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -589377,7 +590391,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -590181,6 +591195,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -590345,7 +591367,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -591149,6 +592171,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -591313,7 +592343,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -592117,6 +593147,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -592281,7 +593319,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -593085,6 +594123,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -593249,7 +594295,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -594053,6 +595099,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -594174,7 +595228,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -594493,6 +595547,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -594614,7 +595676,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -594933,6 +595995,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -595054,7 +596124,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -595373,6 +596443,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -595494,7 +596572,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -595813,6 +596891,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -595939,7 +597025,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -596258,6 +597344,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -596385,7 +597479,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -596704,6 +597798,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -596825,7 +597927,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -597144,6 +598246,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -597265,7 +598375,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -597584,6 +598694,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -597706,7 +598824,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -598025,6 +599143,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -598148,7 +599274,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -598467,6 +599593,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -598588,7 +599722,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -598907,6 +600041,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -599029,7 +600171,7 @@
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
-              "sha256": "32acaefe92dd2c3972dcc0acf07c4c8476368c357675e86cbff691ba504317b5"
+              "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
             },
             {
               "path": "apps/web/e2e/language-before-paint.spec.ts",
@@ -599348,6 +600490,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-catalogue-wcag22",
+              "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+              "paths": [
+                "apps/web/e2e/ladle-components.spec.ts"
+              ],
+              "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
             }
           ]
         },
@@ -914134,6 +915284,498 @@
         {
           "file": "ui-date-and-page-states.log",
           "sha256": "f3e76e3ed58b97b68695326394753ce163749df34ba43603b3449b17a03db43a"
+        }
+      ]
+    },
+    "release-0.6-shared-catalogue-wcag22": {
+      "batch": "release-0.6-shared-catalogue-wcag22",
+      "base_commit": "277c4899fd34dcb62a3d330cd5b98225b5e286fd",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-06.03.03",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.01"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/ladle-components.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+        },
+        {
+          "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
+          "sha256": "e426afca86cd4123d0e4a9ee77ad67f6496ecc60ba1e4df8e96c0c70bb2b6d15"
+        },
+        {
+          "path": "apps/web/e2e/critical-accessibility.ts",
+          "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
+        },
+        {
+          "path": "apps/web/e2e/customer-service-history-views.spec.ts",
+          "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
+        },
+        {
+          "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+          "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "231929ebc3795d67d8190975bb6e60e5b580a9b1520c75931b1d39b3f1a6bd75"
+        },
+        {
+          "path": "apps/web/e2e/ladle-components.spec.ts",
+          "sha256": "ceaad3a0caff34928125bd8a76da5b24096407f5f962b0bb692afccbdf79ad25"
+        },
+        {
+          "path": "apps/web/e2e/login-ui.spec.ts",
+          "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
+        },
+        {
+          "path": "apps/web/e2e/ui-identity-loading.spec.ts",
+          "sha256": "e6bbe856eb87f8ef0c98ccc346844b815b91a20b67f44208ab799855892f45d4"
+        },
+        {
+          "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+          "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "ee1028396c08b722b5b9b1862c626e445de1f10e296b9622117863109ed29f64"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "3b484e904f53a2d21d1b2dd54ae3c87ed68ca500b76565ba3fc762dc1ecc5cf5"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+        },
+        {
+          "path": "packages/ui/.ladle/components.tsx",
+          "sha256": "ebbcc957d1d419da0b92ffb090e9b6621b8681a98bba1dd9c321f5ad90b2bc0b"
+        },
+        {
+          "path": "packages/ui/.ladle/config.mjs",
+          "sha256": "2bdbd6a2a75a876ba3b7819dbee5f1432a672ab12003db66c371e7587acc630f"
+        },
+        {
+          "path": "packages/ui/.ladle/styles.css",
+          "sha256": "771b893432c1298c798de80e8e6fdb17fd6c0ff75565828a3ce6431b9a6c5a5b"
+        },
+        {
+          "path": "packages/ui/.ladle/vite.config.mjs",
+          "sha256": "4a7261118fa75f43027327c4299143492647349e3175cee07f30fa6e61bcff12"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "sha256": "983d68c353e36a19275c5a6184c63f65ec551bb6ccec8f32d419edeeea84a1af"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/animated.tsx",
+          "sha256": "fe50f8889067863df2a795503820b53368176f820ca61ad42deb1a904b3bca02"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/combo-box.tsx",
+          "sha256": "924dccb237bd2f3aaedd05bc9d7aead0798d4f0b5815d3d8cd96f4145648e115"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/data-table-cells.tsx",
+          "sha256": "2e265aa10126fc210a378ef37540844f3e57f2056f5e82fc9f555c09e84f465a"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/data-table.labels.ts",
+          "sha256": "23955ddb08e4046b697912f0588a28c27c7b40c3294374569cc53e32e517135e"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/data-table.tsx",
+          "sha256": "adfd706003f9852ea1dbeeb35db7212e72572b102ca8b29582ea20f5d70740b9"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+          "sha256": "0f72d835c022da52e4e422e5b48166993f0410d8d4133ad16663edac2e5bef89"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/date-time-picker.tsx",
+          "sha256": "76c263fd5ae8a01cef7c10efc10296f48aeddae720b0c8a1f228162c4cdb2a55"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/month-picker.tsx",
+          "sha256": "5f9e1c49b1876dfbb74aae7ce7026c2bc0c9ae2c2cd54197b1b608ed3e82d987"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/multi-select.tsx",
+          "sha256": "af3e54ff5c38a9bd99a23051a6720068718268bb4eace20de5b0f4e60378c837"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/number-field.labels.ts",
+          "sha256": "239cfa89ac000fe1113daee36b20477974377bfb43d94671969c1f57ad47af67"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/number-field.tsx",
+          "sha256": "b00f1a31b5e3ab26c3631e95788363bbdb1b1772ad6d2e3f2b70f1e1c9ac4c41"
+        },
+        {
+          "path": "packages/ui/src/components/ui/accordion.tsx",
+          "sha256": "33ba16eda70a4d74c069ed182a09905a0be820b5143c4ca716b0285a2a4622c1"
+        },
+        {
+          "path": "packages/ui/src/components/ui/alert.tsx",
+          "sha256": "406a5f943e5d95186e19a8cbea49e25dd92b3d4f1dbc2f002c53b79c69fdbad3"
+        },
+        {
+          "path": "packages/ui/src/components/ui/avatar.tsx",
+          "sha256": "93d5bee557c6f8e579a82d0442d4fa1c9d321cccd531b370e9b31e8874de02a8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/badge.tsx",
+          "sha256": "f51a0274e43054dad7fdf51ad884bc0e209e45045f2721354712639fb120e119"
+        },
+        {
+          "path": "packages/ui/src/components/ui/breadcrumb.tsx",
+          "sha256": "8693d748c28d58c692057733d58f87af43eaebd6d8ee783364a3a236ccf0be80"
+        },
+        {
+          "path": "packages/ui/src/components/ui/button.tsx",
+          "sha256": "3a6179e69452f940847f263789a85587ea594c14df539fef910091240b010a84"
+        },
+        {
+          "path": "packages/ui/src/components/ui/calendar.tsx",
+          "sha256": "1343ad0379632800e43d73837a4ab22939ac9f7db56fb6fc23afe1b8bd2ac88a"
+        },
+        {
+          "path": "packages/ui/src/components/ui/card.tsx",
+          "sha256": "9e75f68b7716b2e2e022fb42efc93ae81f55e5b86fca797b041963e02c48db8c"
+        },
+        {
+          "path": "packages/ui/src/components/ui/checkbox.tsx",
+          "sha256": "3d1fc35294dda85c2eed5f68f9aa0b4ae5943d64cc38b943f91f0c7a24bdbdc1"
+        },
+        {
+          "path": "packages/ui/src/components/ui/command.tsx",
+          "sha256": "c6f2e2356e4c6088bb2a91f62d28b01808e44f4c4bdea0ffdb77408e6df53d30"
+        },
+        {
+          "path": "packages/ui/src/components/ui/confirm-dialog.tsx",
+          "sha256": "7538bb3bfacfaced42c3990dc5efea65704f9a1a2cd3892a7d6deab1446f7724"
+        },
+        {
+          "path": "packages/ui/src/components/ui/confirmation-gate.tsx",
+          "sha256": "06aab9fda02d3b329a263c33c29be0b9250a82bc02b6a4e5abe4c9c9f6f4c5e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/date-range-filter.tsx",
+          "sha256": "2cac0cd195f78a57cbefd517b6650f992e5568576d8f607765196922ffe2d315"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dependent-select.tsx",
+          "sha256": "8b10f92cceed8e99e24c3700ebadde512fdf39f5142df2a2a8635eafbd3b35c8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dialog.tsx",
+          "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
+          "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dynamic-field-array.tsx",
+          "sha256": "c134eab78ebaca93866fe77ffb4d75508eace6629635dee4d2060f2e6bfc9fbe"
+        },
+        {
+          "path": "packages/ui/src/components/ui/empty.tsx",
+          "sha256": "86c06c1460cd178c25798fb4aee67a31060220040b0d166da21212fe90ed5a7b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/error-state.tsx",
+          "sha256": "6eb37c93527326baf4063cec22a1447ba7d38421d8a1047aff2f9fc98dd73502"
+        },
+        {
+          "path": "packages/ui/src/components/ui/field.tsx",
+          "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/filter-apply-context.tsx",
+          "sha256": "059196ac5122ec2b044c9c3b8e4390bd5fadea881c9b7c0758e6cba5dbb2c56a"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input-group.tsx",
+          "sha256": "cfa2fbd99ec046b83d8c4595c0461aa7e456a7f88b7b11cb9d19bc1f547fc3c8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input.tsx",
+          "sha256": "5f4483d46179659fbe5add07dc7288e657c5b9eb7cc400c36d3938d53e98c211"
+        },
+        {
+          "path": "packages/ui/src/components/ui/job-progress.tsx",
+          "sha256": "ff49c5a88e9904fc1e11d73d72a7e1a235c4e444bb2d84e4aeee23354cbb1d03"
+        },
+        {
+          "path": "packages/ui/src/components/ui/label.tsx",
+          "sha256": "28441c197bc0df9ea8da0b7992952ad22bce260baa81f6f50e405e6ad03b56e5"
+        },
+        {
+          "path": "packages/ui/src/components/ui/list-filter-panel.tsx",
+          "sha256": "52623fb01b6aab1d2857296398de71dc3a4dc7af5d3e5dcd2b7bfcbc52ebd9ce"
+        },
+        {
+          "path": "packages/ui/src/components/ui/list-page.tsx",
+          "sha256": "d3a2094c539a88ee6dd41407123815baf4ab423b1bf4efe6e47d095082ff45c0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/list-sort-dropdown.tsx",
+          "sha256": "0f5d0e42111b6a6e9b816e9d0f49cc46d30d253e25b9aa4ca616dd412fddc2a7"
+        },
+        {
+          "path": "packages/ui/src/components/ui/list-toolbar.tsx",
+          "sha256": "ac5282b860b3d84897ef60f55791c5c2b683567ce545fbba0c690c8a51d0ea5c"
+        },
+        {
+          "path": "packages/ui/src/components/ui/list-view-toggle.tsx",
+          "sha256": "716399ed5cb53a04533a681c3faefdc6da564f7816dbd4e51bde009e7cbe437d"
+        },
+        {
+          "path": "packages/ui/src/components/ui/multi-select-filter.tsx",
+          "sha256": "3e964e1f6b31b3c0a5da4646d4af95925a9d49e9ca1c028049064aa76a2af096"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "9f77b4a8cab34acff6a9b4169d39d6ce1b98ac7ed01ea1ae62aaa95523efbfd0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/number-filter.tsx",
+          "sha256": "a4a8ccefd983f27680492674ef124e75d0b8a6302c3ec27b1b813e23fc3d3467"
+        },
+        {
+          "path": "packages/ui/src/components/ui/page-states.tsx",
+          "sha256": "f8c394cb82b8ee8ba9c723187b072e4370853270a1fa3778bfb77e023d3e4440"
+        },
+        {
+          "path": "packages/ui/src/components/ui/pagination.tsx",
+          "sha256": "13a65e2f4c75537567c34f1dd7e386346b05fc0b489d1c6e047c59783638f0a2"
+        },
+        {
+          "path": "packages/ui/src/components/ui/popover.tsx",
+          "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/progress.tsx",
+          "sha256": "800d34439e000a174e1a37e01a9b11104da4f630b88f29bebb2f94396b68226b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/radio-group.tsx",
+          "sha256": "90c594481c3797b48b83e27ae8842743b4e21f64b371a17c1617064e274b1cc3"
+        },
+        {
+          "path": "packages/ui/src/components/ui/responsive-layout.tsx",
+          "sha256": "598555556f63803afc4c6f8dc944dc48d87bbedee451ab78939c17befaae5b4f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/scroll-area.tsx",
+          "sha256": "4e817834049fe7e6738f8b23f228f3b15f99316a2fc628e6f4048a81417fdc0d"
+        },
+        {
+          "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
+          "sha256": "190aab68e1033f216b8b96165d840033698308325e29afda7b4c5be562cded81"
+        },
+        {
+          "path": "packages/ui/src/components/ui/select-filter.tsx",
+          "sha256": "b2ff97c12971e98f78fbe47900f081965b5ae26ce263b139b1adfbfd11fe45a0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/select.tsx",
+          "sha256": "f4e5434b0e7c46c3a902545f07b9a0cb84f33378d945c3079683c584f14a129f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/separator.tsx",
+          "sha256": "4ad1667967f512cc945975f8a66247c8b0431e801954b3ce9425178abf72292b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/sheet.tsx",
+          "sha256": "c43c44934ef0e59efd663926c85bc4d1dfcea1b11059cbebf4c7417da6b66286"
+        },
+        {
+          "path": "packages/ui/src/components/ui/skeleton.tsx",
+          "sha256": "105a200e1e4f8dbc670467cbb7750e48ddc66b572f7b1f309b7de2bd18607c70"
+        },
+        {
+          "path": "packages/ui/src/components/ui/slider.tsx",
+          "sha256": "854e4b2651be65b4263c6227d32b52cb41794ac85306c3f6c88840a9eacd210b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/sonner.tsx",
+          "sha256": "35d2e8cc7030bd0c50842a9df59ae5aeab48d32d854267588e65788ec4573588"
+        },
+        {
+          "path": "packages/ui/src/components/ui/status-filter.tsx",
+          "sha256": "4ce50ec2a4423b455a45e3a8a8e4cc5019bd0d4e17fc4ec689b57dafa2da201f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/switch.tsx",
+          "sha256": "37f49fc617930a954b2d5c2a208cec5f5d95acc052c8192d1840914e1e9be73d"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tabs.tsx",
+          "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
+        },
+        {
+          "path": "packages/ui/src/components/ui/text-filter.tsx",
+          "sha256": "10561bc31c73e4cff97698a078e143852601c7bd3e9efd63a15dab3b16e68023"
+        },
+        {
+          "path": "packages/ui/src/components/ui/textarea.tsx",
+          "sha256": "4c49d74c884f22498aae7bd7df7f62e840963a15077bbb5dd4739edb51d9759a"
+        },
+        {
+          "path": "packages/ui/src/components/ui/toast.tsx",
+          "sha256": "3f81743af63793bb58daa299c4dc37695b3f85ac1def7dbaf4a8aae6f4a87219"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tooltip.tsx",
+          "sha256": "54e08779c6516999d0c5f6a7a37005ebabe2f2e48e241f927c3033b247eff7fc"
+        },
+        {
+          "path": "packages/ui/src/components/ui/use-confirm.tsx",
+          "sha256": "06ebb16ee7b1447f3f4b8dcf643ba8f67f38218683bc04d7b5b8bc1af04e6d80"
+        },
+        {
+          "path": "packages/ui/src/components/ui/workflow.tsx",
+          "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+        },
+        {
+          "path": "packages/ui/src/direction-provider.ts",
+          "sha256": "d85fb7cd269d6742ad572d8fde95328b21372580a4d1eb1e12b04354114aa768"
+        },
+        {
+          "path": "packages/ui/src/fonts/fonts.css",
+          "sha256": "a1f68a0120c9ba7279ee54b5c7c728d983b87455bf22cbbe1e9f21f420bb76cb"
+        },
+        {
+          "path": "packages/ui/src/fonts/vazirmatn-OFL.txt",
+          "sha256": "e6f4ce7b6c830d5a25a4f8ac777c267cd7d3c180bc2a7150ca57cbb9b280c4b7"
+        },
+        {
+          "path": "packages/ui/src/fonts/vazirmatn-arabic.woff2",
+          "sha256": "84a382e46c30fb4f73d0e3800c16d0af15888e2731e57fa5f93e2c29a2c6a957"
+        },
+        {
+          "path": "packages/ui/src/fonts/vazirmatn-latin.woff2",
+          "sha256": "d29c041cd4294af893cf3c01dfab6d47202c667ab55d702f68782599918c651d"
+        },
+        {
+          "path": "packages/ui/src/form/bound-field.tsx",
+          "sha256": "81235b023ba78d4a179cb5c934e21e3a42896b860b335ed17c9eb26a68e07e8a"
+        },
+        {
+          "path": "packages/ui/src/form/choice-fields.tsx",
+          "sha256": "0e0b52b77fac2607d64488c2e0837a9ef09c898911391cc3917b0091a472e069"
+        },
+        {
+          "path": "packages/ui/src/form/date-fields.tsx",
+          "sha256": "50564d0a19dc85407682a8bd712189006c13fe29ab5229c1c437d481fe1cee20"
+        },
+        {
+          "path": "packages/ui/src/form/form-step.tsx",
+          "sha256": "9dc98056fbe88c45aecaae17ca7428b8874911f2dc1f7f4dcf2ce0b0062f7eb7"
+        },
+        {
+          "path": "packages/ui/src/form/form.tsx",
+          "sha256": "b3ce9e97a52fda9043c2e5b18dc6b943aa32f58d704187446ed87e5fe3eafa6f"
+        },
+        {
+          "path": "packages/ui/src/form/index.ts",
+          "sha256": "4b34b3ae1a1bee136eb87c13af5134fb0b2c6cabe4d1188d015ce3021621a485"
+        },
+        {
+          "path": "packages/ui/src/form/server-errors.ts",
+          "sha256": "4226cd16c37e5728247b87825b95ff8e9a7302c9ecbaad909e3e96cdda75d90b"
+        },
+        {
+          "path": "packages/ui/src/form/text-fields.tsx",
+          "sha256": "9893a5be67f899144cfaa21730459fe7685ac6a3bb5a8c93ab97a9eb388d3673"
+        },
+        {
+          "path": "packages/ui/src/form/use-zod-form.ts",
+          "sha256": "8826578980a7417672d6052c9d181f52cbc501dabd1aa010595077600fee57b8"
+        },
+        {
+          "path": "packages/ui/src/hooks/use-reduced-motion.ts",
+          "sha256": "2982a6048b8d6ab6aeffa34fe88c633b628f43c8513335ba6671dc0c40b3ac8a"
+        },
+        {
+          "path": "packages/ui/src/index.ts",
+          "sha256": "0f01fd9407bd96e09d1485b1a3ad3473b324668019996cc7057cc3fbfc385f07"
+        },
+        {
+          "path": "packages/ui/src/lib/scroll-keyboard.ts",
+          "sha256": "4369a7e8103d8b5c88c5f572b3157633873aa7fb4077556ce495e5b9f6aa744d"
+        },
+        {
+          "path": "packages/ui/src/lib/utils.ts",
+          "sha256": "9304a861c8673bee09e0f12de31773abbde503b02e59dfd74763ddec2e37cf05"
+        },
+        {
+          "path": "packages/ui/src/sonner.ts",
+          "sha256": "6eaceef7902d210138fe3a3b06b1f437c0a3e5b41846c6af40d77b59746bf910"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "6934971e0de9d57aa8b85644cb45668e7618f96bc1d51716d0c04d740a2834d2"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "The exact production catalogue build passed 306 Chromium cases with retries disabled, including 280 mounted-story cells (70 stories, two locales and two themes) and 26 keyboard/overlay/interaction cases. All nine axe scan sites use the A/AA tags through WCAG 2.2, including the target-size rule, with the original violation assertions retained.",
+        "Reused matching source-bound cases for skip navigation, visible and forced-color focus, modal focus restoration, names and roles, measured contrast, localized live error announcements, and reduced-motion behavior.",
+        "Hosted job 130049214959 at a51b8b74 passed its 20 exact fast critical cases for login, dashboard, the four service histories, wallet receipt and active contract. These are scoped checks. Full final-candidate critical page and manual assistive-technology verification remain separate release evidence.",
+        "The catalogue build, structured browser results, compiled asset hash inventory, changed-file ESLint, Prettier and whitespace checks passed."
+      ],
+      "reused_acceptance": [
+        "07-ui-ux-design.md#T-07.05.01.01",
+        "07-ui-ux-design.md#T-07.05.01.02",
+        "07-ui-ux-design.md#T-07.05.01.03",
+        "07-ui-ux-design.md#T-07.05.01.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "07-ui-ux-design.md#T-07.05.01.09",
+        "07-ui-ux-design.md#T-07.08.01.06"
+      ],
+      "proof_logs": [
+        {
+          "file": "catalogue-build.log",
+          "sha256": "50a8fb662ad709328061a3e6e264852040d2ae4e9bb05e5f693008e59911e485"
+        },
+        {
+          "file": "wcag-catalogue.log",
+          "sha256": "1abf4047988f0e3a882bb29d14e3cbdd126b2863042a2fd83b05ce2927388073"
+        },
+        {
+          "file": "wcag-catalogue-results.json",
+          "sha256": "d5ee0905a3d68be8bf7398002aa236983c603cfad6233641cf7a3c0fa02e1eae"
+        },
+        {
+          "file": "catalogue-built-assets.sha256",
+          "sha256": "f353b292c4bb4c8d0143100fccd67a6269b08ee394e10cc827b94f3f8fa3639d"
+        },
+        {
+          "file": "catalogue-test-source.sha256",
+          "sha256": "aed3cea0a33bcce5bb13fb79662d9b6b400211f744ec03e7b39b72e5db36f6de"
+        },
+        {
+          "file": "critical-accessibility-hosted.log",
+          "sha256": "5f3f89368a023d599af8adba4491837f31eb81426abac38a9f512ffd49806f31"
         }
       ]
     }

@@ -7,6 +7,8 @@ import { fileURLToPath } from 'node:url';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 
+const wcagAaTags = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
+
 const directory = resolve(
   fileURLToPath(new URL('../../../packages/ui/story-build/', import.meta.url))
 );
@@ -204,7 +206,7 @@ for (const story of Object.keys(meta.stories)) {
             (
               await new AxeBuilder({ page })
                 .include('[data-story-surface]')
-                .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+                .withTags(wcagAaTags)
                 .analyze()
             ).violations
           ).toEqual([]);
@@ -369,7 +371,7 @@ for (const rtl of [false, true]) {
           (
             await new AxeBuilder({ page })
               .include('[data-slot=dialog-content]')
-              .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+              .withTags(wcagAaTags)
               .analyze()
           ).violations
         ).toEqual([]);
@@ -444,7 +446,7 @@ for (const rtl of [false, true]) {
             (
               await new AxeBuilder({ page })
                 .include('[data-slot=sheet-content]')
-                .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+                .withTags(wcagAaTags)
                 .analyze()
             ).violations
           ).toEqual([]);
@@ -538,7 +540,7 @@ for (const rtl of [false, true]) {
                   (
                     await new AxeBuilder({ page })
                       .include('[data-slot=popover-content]')
-                      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+                      .withTags(wcagAaTags)
                       .analyze()
                   ).violations
                 ).toEqual([]);
@@ -709,7 +711,7 @@ for (const rtl of [false, true]) {
         (
           await new AxeBuilder({ page })
             .include('[data-story-surface]')
-            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+            .withTags(wcagAaTags)
             .analyze()
         ).violations
       ).toEqual([]);
@@ -747,7 +749,7 @@ for (const rtl of [false, true]) {
           (
             await new AxeBuilder({ page })
               .include('[data-story-surface]')
-              .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+              .withTags(wcagAaTags)
               .analyze()
           ).violations
         ).toEqual([]);
@@ -779,7 +781,7 @@ for (const rtl of [false, true]) {
           (
             await new AxeBuilder({ page })
               .include('[data-slot=dialog-content]')
-              .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+              .withTags(wcagAaTags)
               .analyze()
           ).violations
         ).toEqual([]);
@@ -805,7 +807,7 @@ for (const rtl of [false, true]) {
             (
               await new AxeBuilder({ page })
                 .include('[data-slot=sheet-content]')
-                .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+                .withTags(wcagAaTags)
                 .analyze()
             ).violations
           ).toEqual([]);
@@ -841,7 +843,7 @@ for (const rtl of [false, true]) {
           (
             await new AxeBuilder({ page })
               .include('[data-slot=dropdown-menu-content]')
-              .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+              .withTags(wcagAaTags)
               .analyze()
           ).violations
         ).toEqual([]);
