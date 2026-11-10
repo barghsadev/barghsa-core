@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T11:45:11+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T11:49:21+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1167 | Accepted with unchanged source bindings. |
-| verify | 141 | Existing work may be complete; inspect evidence before building. |
+| done | 1170 | Accepted with unchanged source bindings. |
+| verify | 138 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1299,11 +1299,11 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.03.10` | done | Recorded batch work | Write E2E: solar construction request → document upload → staff review → postal → contract creation |
 | `06-security-testing-observability.md#T-06.10.03.11` | done | Recorded batch work | Write E2E: contract version acceptance/signature → adjustment invoice |
 | `06-security-testing-observability.md#T-06.10.03.12` | done | Recorded batch work | Write E2E: admin configuration change → effective version → rollback |
-| `06-security-testing-observability.md#T-06.10.03.13` | verify | Inventory needed | Write E2E: profile switching → data isolation verification |
+| `06-security-testing-observability.md#T-06.10.03.13` | done | Recorded batch work | Write E2E: profile switching → data isolation verification |
 | `06-security-testing-observability.md#T-06.10.03.14` | verify | Inventory needed | Configure CI E2E: PR → Chromium only; nightly → Chromium + Firefox + WebKit; release → + mobile viewports |
 | `06-security-testing-observability.md#T-06.10.03.15` | verify | Inventory needed | Ensure E2E never calls production payment, SMS, email, storage, bill-data, or AI providers |
-| `06-security-testing-observability.md#T-06.10.03.16` | verify | Inventory needed | Ensure every E2E test runs with Persian (fa) locale as default, verifying RTL layout and Jalali calendar |
-| `06-security-testing-observability.md#T-06.10.03.17` | verify | Inventory needed | Add dedicated English/LTR smoke tests and Gregorian calendar boundary tests |
+| `06-security-testing-observability.md#T-06.10.03.16` | done | Recorded batch work | Ensure every E2E test runs with Persian (fa) locale as default, verifying RTL layout and Jalali calendar |
+| `06-security-testing-observability.md#T-06.10.03.17` | done | Recorded batch work | Add dedicated English/LTR smoke tests and Gregorian calendar boundary tests |
 | `06-security-testing-observability.md#T-06.11.01.01` | verify | Recorded batch work | Integrate `@axe-core/playwright` into E2E pipeline; run on all critical pages |
 | `06-security-testing-observability.md#T-06.11.01.02` | verify | Inventory needed | Create accessibility test suite covering: keyboard navigation, focus visibility, contrast, labels, ARIA roles, error announcements, reduced motion |
 | `06-security-testing-observability.md#T-06.11.01.03` | done | Recorded batch work | Add CI gate: axe violations block PR; track severity |

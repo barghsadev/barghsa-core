@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T11:45:11+00:00",
-  "source_commit": "add94d10eb24b6db6a896efcde74b6829fa6a123",
+  "updated": "2026-11-10T11:49:21+00:00",
+  "source_commit": "f766a1f7dbd7ceb224f0c90b2b038b001a386129",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -499254,19 +499254,55 @@
         "story": "06-security-testing-observability.md#spec-a2575d616ae6"
       },
       "requirement": "| T-06.10.03.13 | Write E2E: profile switching → data isolation verification | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-profile-isolation-and-calendar-browser-evidence"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-existing-profile-and-localization-browser-coverage",
+          "reviewed_sha": "f766a1f7dbd7ceb224f0c90b2b038b001a386129",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/dashboard-fixture.ts",
+              "sha256": "cf25df3a16c70539fbc65b16626b05e6008156a58811e47bc2c813cae7447cbc"
+            },
+            {
+              "path": "apps/web/e2e/profile-switch.spec.ts",
+              "sha256": "515b6699def78381649b5d3d7b970b5b99a1e57a19d4652e0fce8de75ccce24e"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "apps/web/src/lib/profile-context.ts",
+              "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+            },
+            {
+              "path": "apps/web/src/lib/server-query-client.ts",
+              "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+            },
+            {
+              "path": "apps/web/src/pages/DashboardPage.tsx",
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Twelve existing production-browser cases passed across Firefox, Mobile Chrome and Mobile Safari. The only-profile switch clears previous data in both locales. A live switch updates another open tab without reloading either document, and delayed old-profile responses cannot overwrite the new wallet data or unread notification count."
+          ]
+        }
       }
     },
     {
@@ -499332,19 +499368,67 @@
         "story": "06-security-testing-observability.md#spec-a2575d616ae6"
       },
       "requirement": "| T-06.10.03.16 | Ensure every E2E test runs with Persian (fa) locale as default, verifying RTL layout and Jalali calendar | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-profile-isolation-and-calendar-browser-evidence"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-existing-profile-and-localization-browser-coverage",
+          "reviewed_sha": "f766a1f7dbd7ceb224f0c90b2b038b001a386129",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/date-picker-component.spec.ts",
+              "sha256": "e93250b9218233eed8767770268dd4df611505b33016a590dff2775458440a6f"
+            },
+            {
+              "path": "apps/web/e2e/fixtures/date-picker/index.html",
+              "sha256": "30ea7c1e3906b5b69357f04ae29ec939981c8ee4e30ca242dcdc482123149943"
+            },
+            {
+              "path": "apps/web/e2e/fixtures/date-picker/main.tsx",
+              "sha256": "19373ef19af24e4c1ffab6ffcda67a1a229a603068caed16ebe3d025c368f3cd"
+            },
+            {
+              "path": "apps/web/e2e/language-before-paint.spec.ts",
+              "sha256": "68118355820144ad65196a8451066ed7c45cbe36c8364091657e2b4549dfef40"
+            },
+            {
+              "path": "apps/web/index.html",
+              "sha256": "84fbbeaecb43a5f25335f488ee4c2a6b89b659c084b831012b7b1d441714ee1f"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "apps/web/server.js",
+              "sha256": "5b266f3ccec28e52f799283a4031b56da02bee1d0ae9872edb5b94cfd1c702cc"
+            },
+            {
+              "path": "packages/i18n/src/calendar.ts",
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+              "sha256": "0f72d835c022da52e4e422e5b48166993f0410d8d4133ad16663edac2e5bef89"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "The default browser locale is fa-IR. Persian and unsupported-language browser cases verify lang=fa and dir=rtl before React, and the default calendar verifies the Jalali year transition day, Tehran civil time and exact UTC storage. These cases passed in all three browser projects. English fixtures explicitly select the English path."
+          ]
+        }
       }
     },
     {
@@ -499358,19 +499442,67 @@
         "story": "06-security-testing-observability.md#spec-a2575d616ae6"
       },
       "requirement": "| T-06.10.03.17 | Add dedicated English/LTR smoke tests and Gregorian calendar boundary tests | S |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-profile-isolation-and-calendar-browser-evidence"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-existing-profile-and-localization-browser-coverage",
+          "reviewed_sha": "f766a1f7dbd7ceb224f0c90b2b038b001a386129",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/date-picker-component.spec.ts",
+              "sha256": "e93250b9218233eed8767770268dd4df611505b33016a590dff2775458440a6f"
+            },
+            {
+              "path": "apps/web/e2e/fixtures/date-picker/index.html",
+              "sha256": "30ea7c1e3906b5b69357f04ae29ec939981c8ee4e30ca242dcdc482123149943"
+            },
+            {
+              "path": "apps/web/e2e/fixtures/date-picker/main.tsx",
+              "sha256": "19373ef19af24e4c1ffab6ffcda67a1a229a603068caed16ebe3d025c368f3cd"
+            },
+            {
+              "path": "apps/web/e2e/language-before-paint.spec.ts",
+              "sha256": "68118355820144ad65196a8451066ed7c45cbe36c8364091657e2b4549dfef40"
+            },
+            {
+              "path": "apps/web/index.html",
+              "sha256": "84fbbeaecb43a5f25335f488ee4c2a6b89b659c084b831012b7b1d441714ee1f"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "apps/web/server.js",
+              "sha256": "5b266f3ccec28e52f799283a4031b56da02bee1d0ae9872edb5b94cfd1c702cc"
+            },
+            {
+              "path": "packages/i18n/src/calendar.ts",
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+              "sha256": "0f72d835c022da52e4e422e5b48166993f0410d8d4133ad16663edac2e5bef89"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "The English browser smoke verifies lang=en and dir=ltr before React. The Gregorian calendar keeps its stored date on locale change and checks exact half-open one-day and DST-spanning boundaries, including selected and excluded days. These cases passed in Firefox, Mobile Chrome and Mobile Safari."
+          ]
+        }
       }
     },
     {
@@ -771765,7 +771897,8 @@
           "release-0.6-effective-brand-rollback-browser-journey",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-legal-agent-invitation-and-permissions-browser-journey"
+          "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
+          "release-0.6-profile-isolation-and-calendar-browser-evidence"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -880162,6 +880295,87 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/legal-agent-invitation",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "6b3b1fab6acc6661f26fc5c801e54600288924e00d60e3126c67ab62cb0577b9"
+    },
+    "release-0.6-profile-isolation-and-calendar-browser-evidence": {
+      "batch": "release-0.6-profile-isolation-and-calendar-browser-evidence",
+      "base_commit": "f766a1f7dbd7ceb224f0c90b2b038b001a386129",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.03.13",
+        "06-security-testing-observability.md#T-06.10.03.16",
+        "06-security-testing-observability.md#T-06.10.03.17",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/dashboard-fixture.ts",
+          "sha256": "cf25df3a16c70539fbc65b16626b05e6008156a58811e47bc2c813cae7447cbc"
+        },
+        {
+          "path": "apps/web/e2e/date-picker-component.spec.ts",
+          "sha256": "e93250b9218233eed8767770268dd4df611505b33016a590dff2775458440a6f"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/date-picker/index.html",
+          "sha256": "30ea7c1e3906b5b69357f04ae29ec939981c8ee4e30ca242dcdc482123149943"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/date-picker/main.tsx",
+          "sha256": "19373ef19af24e4c1ffab6ffcda67a1a229a603068caed16ebe3d025c368f3cd"
+        },
+        {
+          "path": "apps/web/e2e/language-before-paint.spec.ts",
+          "sha256": "68118355820144ad65196a8451066ed7c45cbe36c8364091657e2b4549dfef40"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "515b6699def78381649b5d3d7b970b5b99a1e57a19d4652e0fce8de75ccce24e"
+        },
+        {
+          "path": "apps/web/index.html",
+          "sha256": "84fbbeaecb43a5f25335f488ee4c2a6b89b659c084b831012b7b1d441714ee1f"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "5b266f3ccec28e52f799283a4031b56da02bee1d0ae9872edb5b94cfd1c702cc"
+        },
+        {
+          "path": "apps/web/src/lib/profile-context.ts",
+          "sha256": "fb6524f0764564f78d2ee7d9e18631b8294702fffdac58228e31041aa12e9c4d"
+        },
+        {
+          "path": "apps/web/src/lib/server-query-client.ts",
+          "sha256": "f0c76f4c088f9527efa47a5158d0f1e0220e9ac0f086000811ec1a006befcbb7"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
+        },
+        {
+          "path": "packages/i18n/src/calendar.ts",
+          "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+          "sha256": "0f72d835c022da52e4e422e5b48166993f0410d8d4133ad16663edac2e5bef89"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Twelve existing production-browser cases passed across Firefox, Mobile Chrome and Mobile Safari. The only-profile switch clears previous data in both locales. A live switch updates another open tab without reloading either document, and delayed old-profile responses cannot overwrite the new wallet data or unread notification count.",
+        "The default browser locale is fa-IR. Persian and unsupported-language browser cases verify lang=fa and dir=rtl before React, and the default calendar verifies the Jalali year transition day, Tehran civil time and exact UTC storage. These cases passed in all three browser projects. English fixtures explicitly select the English path.",
+        "The English browser smoke verifies lang=en and dir=ltr before React. The Gregorian calendar keeps its stored date on locale change and checks exact half-open one-day and DST-spanning boundaries, including selected and excluded days. These cases passed in Firefox, Mobile Chrome and Mobile Safari."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/profile-isolation-and-locales",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "485053add2eb40243cf655e5aa20b1fae3a133013b4811b116b456667a6d3a2f"
     }
   },
   "historical_improvements": [
