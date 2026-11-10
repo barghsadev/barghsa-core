@@ -227,21 +227,6 @@ for (const locale of ['en', 'fa'] as const)
           .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
           .toBe(darkMode);
         await scanCriticalMain(page);
-        await checkRoutePresentation(page, test.info(), locale);
-        if (test.info().project.name === 'chromium') {
-          const initialReads = reads;
-          await page.setViewportSize({ width: 1280, height: 900 });
-          await expect(history.getByRole('table')).toBeVisible();
-          expect(
-            await page.evaluate(
-              (id) => localStorage.getItem(`barghsa.list-view:${id}:customer-wallet-transactions`),
-              profileId
-            )
-          ).toBeNull();
-          await page.setViewportSize({ width: 390, height: 844 });
-          await expect(history.getByRole('table')).toHaveCount(0);
-          expect(reads).toBe(initialReads);
-        }
         if (locale === 'fa' && darkMode)
           await history
             .locator('[data-slot="card"]')
@@ -266,6 +251,22 @@ for (const locale of ['en', 'fa'] as const)
         await summary.press('Enter');
         await expect(details).toHaveAttribute('open', '');
         await expect(history.getByRole('table')).toHaveCount(0);
+        // Resize after the keyboard interaction. Crossing the list breakpoint replaces its summary.
+        await checkRoutePresentation(page, test.info(), locale);
+        if (test.info().project.name === 'chromium') {
+          const initialReads = reads;
+          await page.setViewportSize({ width: 1280, height: 900 });
+          await expect(history.getByRole('table')).toBeVisible();
+          expect(
+            await page.evaluate(
+              (id) => localStorage.getItem(`barghsa.list-view:${id}:customer-wallet-transactions`),
+              profileId
+            )
+          ).toBeNull();
+          await page.setViewportSize({ width: 390, height: 844 });
+          await expect(history.getByRole('table')).toHaveCount(0);
+          expect(reads).toBe(initialReads);
+        }
         const beforeView = { reads, url: page.url() };
         await history
           .getByRole('button', { name: t('historyView.table', locale), exact: true })

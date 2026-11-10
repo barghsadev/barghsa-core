@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T15:28:36+00:00",
-  "source_commit": "9d028d19f3a188de4e63a46c55d7196c628245a7",
+  "updated": "2026-11-10T15:37:41+00:00",
+  "source_commit": "ab90f1be6bddead043ead5c71d1fc8cc82fae05b",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5647,7 +5647,8 @@
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": null
       }
@@ -5914,7 +5915,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": null
       }
@@ -14171,7 +14173,8 @@
           "release-0.6-mobile-request-and-owned-read-browser-replay",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-solar-request-touch-target",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": null
       }
@@ -487553,7 +487556,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -487585,7 +487589,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -487615,7 +487619,8 @@
             "The previous staging proxy checks and actual v0.5 response headers are retained. Live production-ingress TLS and HSTS and the report-only observation window remain open.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ]
         }
       }
@@ -502356,7 +502361,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -502366,7 +502372,8 @@
             "Critical Axe assertions remain byte-identical and fail on any violation in their tested scope. Advisory warnings and JSON now retain Axe impact, including unrated incomplete results. A current production-browser run passed four Chromium cases, producing six RTL/LTR advisory records with zero automated violations. Both staff notification triage views retain serious contrast items for manual measurement.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "source_evidence": [
             {
@@ -502403,7 +502410,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/e2e/workspace-media-routes.spec.ts",
@@ -531027,7 +531034,8 @@
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -531071,7 +531079,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/package.json",
@@ -531517,7 +531525,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-query-and-command-completion",
           "limitations": [
@@ -550384,7 +550393,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550452,7 +550462,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/package.json",
@@ -550640,7 +550650,8 @@
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-fallback-and-announcement",
           "limitations": [
@@ -550844,7 +550855,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550924,7 +550936,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/index.html",
@@ -551081,7 +551093,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-focus-and-contrast",
           "limitations": [
@@ -551310,7 +551323,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551390,7 +551404,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/index.html",
@@ -551547,7 +551561,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-focus-and-contrast",
           "limitations": [
@@ -551768,7 +551783,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551836,7 +551852,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/package.json",
@@ -552024,7 +552040,8 @@
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-fallback-and-announcement",
           "limitations": [
@@ -552266,7 +552283,8 @@
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -552794,7 +552812,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/package.json",
@@ -553740,7 +553758,8 @@
             "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch.",
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
           "scope_dispositions": [
@@ -554885,7 +554904,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554965,7 +554985,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/index.html",
@@ -555122,7 +555142,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-focus-and-contrast",
           "limitations": [
@@ -555933,7 +555954,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556181,7 +556203,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/package.json",
@@ -556447,7 +556469,8 @@
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -556820,7 +556843,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557068,7 +557092,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/package.json",
@@ -557334,7 +557358,8 @@
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -558245,7 +558270,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558493,7 +558519,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/package.json",
@@ -558759,7 +558785,8 @@
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -559065,7 +559092,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -559078,7 +559106,8 @@
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "source_evidence": [
             {
@@ -559107,7 +559136,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -607903,7 +607932,8 @@
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -608583,7 +608613,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/package.json",
@@ -610711,7 +610741,8 @@
             "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch.",
             "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch.",
             "Renewed the affected native browser fixture binding using the unchanged financial, keyboard and contrast assertions with the exact receipts in the associated batch.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -632218,7 +632249,8 @@
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -632262,7 +632294,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/package.json",
@@ -632708,7 +632740,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-query-and-command-completion",
           "limitations": [
@@ -753878,7 +753911,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.tsx",
@@ -753960,7 +753993,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope",
           "source_renewal": {
@@ -754136,7 +754170,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ]
       }
     },
@@ -774320,7 +774355,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "72f406d7833197f5346be43930fe21b48f88034cd06dd2436926595eb2108cf7"
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -776233,7 +776268,8 @@
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
             "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
             "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch.",
-            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch."
+            "Renewed affected auth and wallet fixtures using the source-bound MFA, selected-session revocation and native receipt keyboard results in this batch.",
+            "Renewed the receipt browser source binding with 20 no-retry native cases on Chromium, desktop WebKit and Mobile Safari. The original keyboard, target size, responsive and privacy assertions pass."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -776400,7 +776436,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ]
       }
     },
@@ -776660,7 +776697,8 @@
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-native-safari-saving-shell-staff-team",
-          "release-0.6-native-auth-and-wallet-interaction-readiness"
+          "release-0.6-native-auth-and-wallet-interaction-readiness",
+          "release-0.6-wallet-keyboard-before-responsive-probe"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -888646,6 +888684,49 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/native-auth-and-wallet-interaction-readiness",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "1d597c823f443e5cd66d0ebfdd21a75812d1f235ab08a579df904c1e8829c38d"
+    },
+    "release-0.6-wallet-keyboard-before-responsive-probe": {
+      "batch": "release-0.6-wallet-keyboard-before-responsive-probe",
+      "base_commit": "ab90f1be6bddead043ead5c71d1fc8cc82fae05b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "07-ui-ux-design.md#T-07.01.04.05",
+        "07-ui-ux-design.md#T-07.05.01.01",
+        "07-ui-ux-design.md#T-07.05.01.02",
+        "07-ui-ux-design.md#T-07.05.01.03",
+        "07-ui-ux-design.md#T-07.05.01.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.09",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.05",
+        "release-readiness#R-01.02",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/wallet-receipt-timeline.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+          "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
+        }
+      ],
+      "checks": [
+        "Hosted Mobile Safari 8/8 on c20816f0 (42834362257 job 129892516967) showed the receipt summary detach after restoring the original viewport, while the media-query driven list switches between card and table DOM. The keyboard interaction now finishes before the independent viewport census and Chromium resize check, retaining the same focus, open, viewport, target size and privacy assertions.",
+        "Sixteen desktop and mobile WebKit cases (both themes and locales, twice) and four Chromium cases passed without retries with both-theme census enabled. The exact original resize, no refetch, default view, local preference and receipt audit/privacy checks remained."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/wallet-native-before-resize-proof",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "d16562b43701664126a944e7115b2b9d3c226bd7c12f2e38936c762e98229bda"
     }
   },
   "historical_improvements": [
