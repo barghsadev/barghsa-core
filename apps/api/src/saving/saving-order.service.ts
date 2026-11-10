@@ -488,7 +488,9 @@ export class SavingOrderService {
       const cursor = before
         ? (
             await client.query<{ submitted_at: string; id: string }>(
-              `SELECT s.submitted_at::text AS submitted_at,s.id FROM saving_orders s JOIN products p ON p.id=s.saving_plan_id JOIN products h ON h.id=s.hardware_product_id
+              `SELECT s.submitted_at::text AS submitted_at,s.id FROM saving_orders s
+               JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id
+               JOIN products p ON p.id=s.saving_plan_id JOIN products h ON h.id=s.hardware_product_id
                WHERE s.id=$1 AND s.profile_id=$2
                  AND (NOT $3::boolean OR s.status IN ('submitted','awaiting_staff_review','approved','in_progress'))
                  AND (cardinality($4::text[])=0 OR s.status=ANY($4::text[]))
@@ -514,18 +516,20 @@ export class SavingOrderService {
                 p.title AS plan_title,h.title AS hardware_title,
                 i.id AS invoice_id,i.state AS invoice_state,i.total_amount::text AS total_amount,
                 c.id AS contract_id,c.state AS contract_state,
-                (SELECT u.adjustment_invoice_id FROM saving_hardware_upgrade_requests u
+                (SELECT charge.id FROM saving_hardware_upgrade_requests u
+                  JOIN invoices charge ON charge.id=u.adjustment_invoice_id AND charge.profile_id=s.profile_id
                   WHERE u.order_id=s.id AND u.status='awaiting_payment') AS pending_upgrade_invoice_id,
                 (SELECT charge.state FROM saving_hardware_upgrade_requests u
-                  JOIN invoices charge ON charge.id=u.adjustment_invoice_id
+                  JOIN invoices charge ON charge.id=u.adjustment_invoice_id AND charge.profile_id=s.profile_id
                   WHERE u.order_id=s.id AND u.status='awaiting_payment') AS pending_upgrade_invoice_state,
                 EXISTS(SELECT 1 FROM contract_cancellation_requests r
                   WHERE r.contract_id=c.id AND r.status='Pending') AS cancellation_pending
            FROM saving_orders s
+           JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id
            JOIN products p ON p.id=s.saving_plan_id
            JOIN products h ON h.id=s.hardware_product_id
-           LEFT JOIN invoices i ON i.order_id=s.order_id AND i.type='auto'
-           LEFT JOIN contracts c ON c.order_id=s.order_id AND c.service_type='savings'
+           LEFT JOIN invoices i ON i.order_id=o.id AND i.profile_id=s.profile_id AND i.type='auto'
+           LEFT JOIN contracts c ON c.order_id=o.id AND c.profile_id=s.profile_id AND c.service_type='savings'
             WHERE s.profile_id=$1
               AND ($2::timestamptz IS NULL OR (s.submitted_at,s.id) ${comparison}($2::timestamptz,$3::uuid))
               AND (NOT $4::boolean OR s.status IN ('submitted','awaiting_staff_review','approved','in_progress'))
@@ -604,11 +608,12 @@ export class SavingOrderService {
                   WHERE r.contract_id=c.id AND r.status='Pending') AS cancellation_pending,
                   COALESCE((${customerChangeEligibility}),false) AS can_edit
              FROM saving_orders s
+             JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id
              JOIN saving_plan_agreement_versions accepted_agreement
                ON accepted_agreement.id=s.agreement_version_id
              JOIN products h ON h.id=s.hardware_product_id
-           LEFT JOIN invoices i ON i.order_id=s.order_id AND i.type='auto'
-           LEFT JOIN contracts c ON c.order_id=s.order_id AND c.service_type='savings'
+           LEFT JOIN invoices i ON i.order_id=o.id AND i.profile_id=s.profile_id AND i.type='auto'
+           LEFT JOIN contracts c ON c.order_id=o.id AND c.profile_id=s.profile_id AND c.service_type='savings'
           WHERE s.id=$1`,
           [savingOrderId]
         )
@@ -666,10 +671,10 @@ export class SavingOrderService {
                 v.version_number,
                   (${customerChangeEligibility}) AS can_edit
            FROM saving_orders s
-           JOIN orders o ON o.id=s.order_id
-           JOIN invoices i ON i.order_id=o.id AND i.type='auto'
+           JOIN orders o ON o.id=s.order_id AND o.profile_id=s.profile_id
+           JOIN invoices i ON i.order_id=o.id AND i.profile_id=s.profile_id AND i.type='auto'
              AND i.replaces_invoice_id IS NULL AND i.adjustment_for_invoice_id IS NULL
-           JOIN contracts c ON c.order_id=o.id AND c.service_type='savings'
+           JOIN contracts c ON c.order_id=o.id AND c.profile_id=s.profile_id AND c.service_type='savings'
            JOIN contract_versions v ON v.id=c.current_version_id
           WHERE s.id=$1 ${lock ? 'FOR UPDATE OF s,i,c NOWAIT' : ''}`,
         [savingOrderId]
@@ -794,6 +799,7 @@ export class SavingOrderService {
         throw new NotFoundException('Saving order not found');
       await client.query(
         `SELECT i.id FROM saving_orders s JOIN invoices i ON i.order_id=s.order_id
+           AND i.profile_id=s.profile_id
            AND i.type='auto' AND i.replaces_invoice_id IS NULL
            AND i.adjustment_for_invoice_id IS NULL
          WHERE s.id=$1 FOR UPDATE OF i NOWAIT`,

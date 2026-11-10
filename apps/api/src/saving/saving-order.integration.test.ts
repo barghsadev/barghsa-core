@@ -5146,3 +5146,105 @@ it('holds the current private owner and rejects mismatched saving status notices
     client.release();
   }
 });
+
+it('excludes foreign financial links from saving reads and customer changes', async () => {
+  const foreignProfile = (
+    await http.pool.query<{ id: string }>(
+      "INSERT INTO profiles(user_id,profile_type,status) VALUES('saving-change-outsider','INDIVIDUAL','ACTIVE') RETURNING id"
+    )
+  ).rows[0]!.id;
+  const orderId = randomUUID();
+  const savingId = randomUUID();
+  const contractId = randomUUID();
+  const versionId = randomUUID();
+  const invoiceId = randomUUID();
+  const client = await http.pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query(
+      `INSERT INTO orders(id,user_id,profile_id,product_id,order_type,status,
+         snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code)
+       SELECT $1,'saving-order-buyer',$2,$3,'savings','PENDING',
+         province_id,city_id,full_address,postal_code FROM addresses WHERE id=$4`,
+      [orderId, input.profileId, input.savingPlanId, input.installationAddressId]
+    );
+    await client.query(
+      `INSERT INTO saving_orders(id,order_id,profile_id,saving_plan_id,hardware_product_id,bill_identifier,
+         installation_address_id,agreement_version_id,agreement_snapshot,address_snapshot,
+         pricing_snapshot,verification_result,status)
+       VALUES($1,$2,$3,$4,$5,'9876543210',$6,$7,'Accepted terms','{}','{}','{}','awaiting_staff_review')`,
+      [
+        savingId,
+        orderId,
+        input.profileId,
+        input.savingPlanId,
+        input.hardwareProductId,
+        input.installationAddressId,
+        input.agreementVersionId,
+      ]
+    );
+    await client.query(
+      `INSERT INTO contracts(id,profile_id,order_id,service_type,state,current_version_id)
+       VALUES($1,$2,$3,'savings','AwaitingStaffReview',$4)`,
+      [contractId, foreignProfile, orderId, versionId]
+    );
+    await client.query(
+      `INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by)
+       VALUES($1,$2,1,jsonb_build_object('text','Foreign fixture'),'Foreign fixture','saving-order-staff')`,
+      [versionId, contractId]
+    );
+    await client.query(
+      `INSERT INTO invoices(id,profile_id,order_id,type,state,total_amount,issued_at,payable_from)
+       VALUES($1,$2,$3,'auto','Unpaid',500,NOW(),NOW())`,
+      [invoiceId, foreignProfile, orderId]
+    );
+    await client.query('COMMIT');
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+
+  const base = `/api/saving/orders/${savingId}`;
+  const scoped = {
+    id: savingId,
+    invoice_id: null,
+    invoice_state: null,
+    contract_id: null,
+    contract_state: null,
+  };
+  const detail = await request(base, 'GET');
+  expect(detail.status, http.logs()).toBe(200);
+  expect(await detail.json()).toMatchObject({ ...scoped, can_edit: false });
+  const list = await request(`/api/saving/orders?profileId=${input.profileId}`, 'GET');
+  expect(list.status, http.logs()).toBe(200);
+  expect(await list.json()).toMatchObject({
+    orders: expect.arrayContaining([expect.objectContaining(scoped)]),
+  });
+  const change = {
+    hardwareProductId: input.hardwareProductId,
+    installationAddressId: input.installationAddressId,
+  };
+  expect((await request(base + '/change-quote', 'POST', change)).status).toBe(404);
+  expect(
+    (
+      await request(base + '/change', 'POST', {
+        ...change,
+        idempotencyKey: randomUUID(),
+        expectedQuoteDigest: '0'.repeat(64),
+      })
+    ).status
+  ).toBe(404);
+  expect(
+    (
+      await http.pool.query('SELECT state,total_amount::text AS total FROM invoices WHERE id=$1', [
+        invoiceId,
+      ])
+    ).rows
+  ).toEqual([{ state: 'Unpaid', total: '500' }]);
+  expect(
+    (await http.pool.query('SELECT current_version_id FROM contracts WHERE id=$1', [contractId]))
+      .rows
+  ).toEqual([{ current_version_id: versionId }]);
+});

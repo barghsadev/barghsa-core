@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T05:56:21+00:00",
-  "source_commit": "8afb9486077d083d1277396a2fe773e8496348ee",
+  "updated": "2026-11-10T06:00:29+00:00",
+  "source_commit": "efdf845d68291a79c1d1efae8cf718da1be81b76",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -29990,7 +29990,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -30518,7 +30519,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -35707,7 +35708,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35751,7 +35753,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -41650,7 +41652,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-active-profile-address-crud",
@@ -41706,7 +41709,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -42492,7 +42495,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -42516,7 +42520,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -43856,7 +43860,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -43896,7 +43901,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -45239,7 +45244,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -45279,7 +45285,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -46630,7 +46636,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -46670,7 +46677,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -49652,7 +49659,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -49904,7 +49912,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -50952,7 +50960,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -51148,7 +51157,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -52126,7 +52135,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -52334,7 +52344,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -53826,7 +53836,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -53902,7 +53913,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/saving/saving-status-notifications.integration.test.ts",
@@ -58730,7 +58741,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-additive-agent-permissions-across-current-business-consumers",
@@ -58894,7 +58906,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -65615,7 +65627,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -65887,7 +65900,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -73080,7 +73093,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -73352,7 +73366,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -74384,7 +74398,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -74664,11 +74679,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -76817,7 +76832,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -77073,7 +77089,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -78235,7 +78251,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -78523,7 +78540,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -96128,7 +96145,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -96520,7 +96538,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -97555,7 +97573,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -97947,7 +97966,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -102157,7 +102176,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -102425,11 +102445,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-amendments.ts",
-              "sha256": "ff0a317a21b5573a0740885906fb3645a5a639cdd3cdbaf35543aeab38ffb64c"
+              "sha256": "73eb5af59ac62919cb0de75f7526e298e1411d026048deaea129bb4f680dc4ed"
             },
             {
               "path": "apps/api/src/saving/saving-hardware-upgrades.ts",
-              "sha256": "38c5e3b524e274be8c53c8e52c7e183784db40f8b12e854957852b651c059ec2"
+              "sha256": "dc24a6f35a2aad36346d6de7437e38d6f794e90a4c07bb5bb59ae87eeebb418f"
             },
             {
               "path": "apps/api/src/saving/saving-order-revisions.ts",
@@ -102441,7 +102461,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/saving/saving-state.ts",
@@ -104953,7 +104973,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -105345,7 +105366,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -113426,7 +113447,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-promotion-policy-and-partial-financial-reconciliation",
@@ -113650,11 +113672,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-amendments.ts",
-              "sha256": "ff0a317a21b5573a0740885906fb3645a5a639cdd3cdbaf35543aeab38ffb64c"
+              "sha256": "73eb5af59ac62919cb0de75f7526e298e1411d026048deaea129bb4f680dc4ed"
             },
             {
               "path": "apps/api/src/saving/saving-hardware-upgrades.ts",
-              "sha256": "38c5e3b524e274be8c53c8e52c7e183784db40f8b12e854957852b651c059ec2"
+              "sha256": "dc24a6f35a2aad36346d6de7437e38d6f794e90a4c07bb5bb59ae87eeebb418f"
             },
             {
               "path": "apps/api/src/saving/saving-order-revisions.ts",
@@ -113666,7 +113688,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/saving/saving-state.ts",
@@ -120906,7 +120928,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -121010,11 +121033,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -122193,7 +122216,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -122297,11 +122321,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -124067,7 +124091,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -124171,11 +124196,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -125353,7 +125378,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -125457,11 +125483,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -126640,7 +126666,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -126744,11 +126771,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -127926,7 +127953,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -128030,11 +128058,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -129222,7 +129250,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -129334,11 +129363,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -130516,7 +130545,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -130620,11 +130650,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -152665,7 +152695,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-wallet-payment-reversal-and-finance-alert-verification",
@@ -152789,7 +152820,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/auth/session-notifications.ts",
@@ -159505,7 +159536,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -159577,7 +159609,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -160550,7 +160582,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -160622,7 +160655,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -162743,7 +162776,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -162815,7 +162849,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -163789,7 +163823,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -163861,7 +163896,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -164832,7 +164867,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -164904,7 +164940,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -165875,7 +165911,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -165947,7 +165984,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -167490,7 +167527,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -167562,7 +167600,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -168532,7 +168570,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -168604,7 +168643,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -169574,7 +169613,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -169646,7 +169686,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -203376,7 +203416,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -203440,11 +203481,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-amendments.ts",
-              "sha256": "ff0a317a21b5573a0740885906fb3645a5a639cdd3cdbaf35543aeab38ffb64c"
+              "sha256": "73eb5af59ac62919cb0de75f7526e298e1411d026048deaea129bb4f680dc4ed"
             },
             {
               "path": "apps/api/src/saving/saving-hardware-upgrades.ts",
-              "sha256": "38c5e3b524e274be8c53c8e52c7e183784db40f8b12e854957852b651c059ec2"
+              "sha256": "dc24a6f35a2aad36346d6de7437e38d6f794e90a4c07bb5bb59ae87eeebb418f"
             },
             {
               "path": "apps/api/src/saving/saving-order-revisions.ts",
@@ -203452,7 +203493,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/session/business-history-context-http.integration.test.ts",
@@ -205349,7 +205390,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -205413,11 +205455,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-amendments.ts",
-              "sha256": "ff0a317a21b5573a0740885906fb3645a5a639cdd3cdbaf35543aeab38ffb64c"
+              "sha256": "73eb5af59ac62919cb0de75f7526e298e1411d026048deaea129bb4f680dc4ed"
             },
             {
               "path": "apps/api/src/saving/saving-hardware-upgrades.ts",
-              "sha256": "38c5e3b524e274be8c53c8e52c7e183784db40f8b12e854957852b651c059ec2"
+              "sha256": "dc24a6f35a2aad36346d6de7437e38d6f794e90a4c07bb5bb59ae87eeebb418f"
             },
             {
               "path": "apps/api/src/saving/saving-order-revisions.ts",
@@ -205425,7 +205467,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/session/business-history-context-http.integration.test.ts",
@@ -208269,7 +208311,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -208313,11 +208356,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -209634,7 +209677,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -209678,11 +209722,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -210999,7 +211043,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -211043,11 +211088,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -212365,7 +212410,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -212409,11 +212455,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -213690,7 +213736,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -213734,11 +213781,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -215015,7 +215062,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -215059,11 +215107,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -216340,7 +216388,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -216384,11 +216433,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -217665,7 +217714,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -217709,11 +217759,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -218990,7 +219040,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -219034,11 +219085,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -220315,7 +220366,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -220359,11 +220411,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -221641,7 +221693,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -221685,11 +221738,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -222966,7 +223019,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -223010,11 +223064,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -224292,7 +224346,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -224336,11 +224391,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -225617,7 +225672,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -225661,11 +225717,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -226942,7 +226998,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -226986,11 +227043,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -228267,7 +228324,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -228311,11 +228369,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -229592,7 +229650,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -229636,11 +229695,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -230917,7 +230976,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -230961,11 +231021,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -232243,7 +232303,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -232287,11 +232348,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -233568,7 +233629,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -233612,11 +233674,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -234893,7 +234955,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -234937,11 +235000,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -236218,7 +236281,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -236262,11 +236326,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -237543,7 +237607,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -237587,11 +237652,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -238868,7 +238933,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -238912,11 +238978,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -240194,7 +240260,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -240238,11 +240305,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -241520,7 +241587,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -241564,11 +241632,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -242846,7 +242914,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -242890,11 +242959,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -244171,7 +244240,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -244215,11 +244285,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -245496,7 +245566,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -245540,11 +245611,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -246821,7 +246892,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -246865,11 +246937,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -250936,7 +251008,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -251000,11 +251073,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -251967,7 +252040,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -252031,11 +252105,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -252997,7 +253071,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -253061,11 +253136,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -254027,7 +254102,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -254091,11 +254167,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -255057,7 +255133,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -255121,11 +255198,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -256087,7 +256164,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -256151,11 +256229,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -257119,7 +257197,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -257191,11 +257270,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -258165,7 +258244,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -258237,11 +258317,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -259212,7 +259292,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -259284,11 +259365,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "kanban/epics/03-core-business.md",
@@ -337332,7 +337413,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-electricity-mandatory-refund-and-closure-acceptance",
@@ -337384,7 +337466,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/contract-refund-queue.spec.ts",
@@ -338406,7 +338488,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-electricity-mandatory-refund-and-closure-acceptance",
@@ -338458,7 +338541,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/contract-refund-queue.spec.ts",
@@ -339480,7 +339563,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-electricity-mandatory-refund-and-closure-acceptance",
@@ -339532,7 +339616,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/contract-refund-queue.spec.ts",
@@ -340554,7 +340638,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-electricity-mandatory-refund-and-closure-acceptance",
@@ -340606,7 +340691,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/contract-refund-queue.spec.ts",
@@ -341628,7 +341713,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-electricity-mandatory-refund-and-closure-acceptance",
@@ -341680,7 +341766,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/contract-refund-queue.spec.ts",
@@ -342702,7 +342788,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-electricity-mandatory-refund-and-closure-acceptance",
@@ -342754,7 +342841,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/contract-refund-queue.spec.ts",
@@ -343776,7 +343863,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-electricity-mandatory-refund-and-closure-acceptance",
@@ -343828,7 +343916,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/contract-refund-queue.spec.ts",
@@ -360443,7 +360531,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -360479,11 +360568,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -361443,7 +361532,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -361479,11 +361569,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -362445,7 +362535,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -362481,11 +362572,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -363445,7 +363536,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -363481,11 +363573,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -364445,7 +364537,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -364481,11 +364574,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -365445,7 +365538,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -365481,11 +365575,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -366446,7 +366540,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -366482,11 +366577,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -367446,7 +367541,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -367482,11 +367578,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -368446,7 +368542,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -368482,11 +368579,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -369446,7 +369543,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -369482,11 +369580,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -370449,7 +370547,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-installation-address-selection",
@@ -370517,7 +370616,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -371181,7 +371280,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -371217,11 +371317,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -372183,7 +372283,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-authoritative-final-review",
@@ -372252,7 +372353,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -372921,7 +373022,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -372957,11 +373059,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -373921,7 +374023,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -373957,11 +374060,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -374921,7 +375024,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -374957,11 +375061,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -375923,7 +376027,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -375959,11 +376064,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -376923,7 +377028,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -376959,11 +377065,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -377928,7 +378034,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -377964,11 +378071,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -378937,7 +379044,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -378973,11 +379081,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -379946,7 +380054,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -379982,11 +380091,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -380954,7 +381063,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -381130,7 +381240,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-amendments.ts",
-              "sha256": "ff0a317a21b5573a0740885906fb3645a5a639cdd3cdbaf35543aeab38ffb64c"
+              "sha256": "73eb5af59ac62919cb0de75f7526e298e1411d026048deaea129bb4f680dc4ed"
             },
             {
               "path": "apps/api/src/saving/saving-hardware-authority.test.ts",
@@ -381142,7 +381252,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-upgrades.ts",
-              "sha256": "38c5e3b524e274be8c53c8e52c7e183784db40f8b12e854957852b651c059ec2"
+              "sha256": "dc24a6f35a2aad36346d6de7437e38d6f794e90a4c07bb5bb59ae87eeebb418f"
             },
             {
               "path": "apps/api/src/saving/saving-operations-authority.test.ts",
@@ -381162,11 +381272,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/saving/saving-state.ts",
@@ -382254,7 +382364,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -382430,7 +382541,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-amendments.ts",
-              "sha256": "ff0a317a21b5573a0740885906fb3645a5a639cdd3cdbaf35543aeab38ffb64c"
+              "sha256": "73eb5af59ac62919cb0de75f7526e298e1411d026048deaea129bb4f680dc4ed"
             },
             {
               "path": "apps/api/src/saving/saving-hardware-authority.test.ts",
@@ -382442,7 +382553,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-upgrades.ts",
-              "sha256": "38c5e3b524e274be8c53c8e52c7e183784db40f8b12e854957852b651c059ec2"
+              "sha256": "dc24a6f35a2aad36346d6de7437e38d6f794e90a4c07bb5bb59ae87eeebb418f"
             },
             {
               "path": "apps/api/src/saving/saving-operations-authority.test.ts",
@@ -382462,11 +382573,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/saving/saving-state.ts",
@@ -383554,7 +383665,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -383730,7 +383842,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-amendments.ts",
-              "sha256": "ff0a317a21b5573a0740885906fb3645a5a639cdd3cdbaf35543aeab38ffb64c"
+              "sha256": "73eb5af59ac62919cb0de75f7526e298e1411d026048deaea129bb4f680dc4ed"
             },
             {
               "path": "apps/api/src/saving/saving-hardware-authority.test.ts",
@@ -383742,7 +383854,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-upgrades.ts",
-              "sha256": "38c5e3b524e274be8c53c8e52c7e183784db40f8b12e854957852b651c059ec2"
+              "sha256": "dc24a6f35a2aad36346d6de7437e38d6f794e90a4c07bb5bb59ae87eeebb418f"
             },
             {
               "path": "apps/api/src/saving/saving-operations-authority.test.ts",
@@ -383762,11 +383874,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/saving/saving-state.ts",
@@ -384854,7 +384966,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -385030,7 +385143,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-amendments.ts",
-              "sha256": "ff0a317a21b5573a0740885906fb3645a5a639cdd3cdbaf35543aeab38ffb64c"
+              "sha256": "73eb5af59ac62919cb0de75f7526e298e1411d026048deaea129bb4f680dc4ed"
             },
             {
               "path": "apps/api/src/saving/saving-hardware-authority.test.ts",
@@ -385042,7 +385155,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-upgrades.ts",
-              "sha256": "38c5e3b524e274be8c53c8e52c7e183784db40f8b12e854957852b651c059ec2"
+              "sha256": "dc24a6f35a2aad36346d6de7437e38d6f794e90a4c07bb5bb59ae87eeebb418f"
             },
             {
               "path": "apps/api/src/saving/saving-operations-authority.test.ts",
@@ -385062,11 +385175,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/saving/saving-state.ts",
@@ -386155,7 +386268,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -386331,7 +386445,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-amendments.ts",
-              "sha256": "ff0a317a21b5573a0740885906fb3645a5a639cdd3cdbaf35543aeab38ffb64c"
+              "sha256": "73eb5af59ac62919cb0de75f7526e298e1411d026048deaea129bb4f680dc4ed"
             },
             {
               "path": "apps/api/src/saving/saving-hardware-authority.test.ts",
@@ -386343,7 +386457,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-upgrades.ts",
-              "sha256": "38c5e3b524e274be8c53c8e52c7e183784db40f8b12e854957852b651c059ec2"
+              "sha256": "dc24a6f35a2aad36346d6de7437e38d6f794e90a4c07bb5bb59ae87eeebb418f"
             },
             {
               "path": "apps/api/src/saving/saving-operations-authority.test.ts",
@@ -386363,11 +386477,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/saving/saving-state.ts",
@@ -387444,7 +387558,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
@@ -387464,7 +387579,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -388309,7 +388424,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
@@ -388329,7 +388445,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -389170,7 +389286,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
@@ -389190,7 +389307,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -390031,7 +390148,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
@@ -390051,7 +390169,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -390891,7 +391009,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-fulfillment-and-terminal-history-acceptance",
@@ -390911,7 +391030,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/saving-fulfillment-history.spec.ts",
@@ -391758,7 +391877,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -391794,7 +391914,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/order-comment-form-fixture.ts",
@@ -392742,7 +392862,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -392778,7 +392899,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/order-comment-form-fixture.ts",
@@ -393725,7 +393846,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -393761,7 +393883,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/order-comment-form-fixture.ts",
@@ -394705,7 +394827,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-inventory-reservation-and-conservation-acceptance",
@@ -394733,7 +394856,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/saving-catalogue-forms.spec.ts",
@@ -395572,7 +395695,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-inventory-reservation-and-conservation-acceptance",
@@ -395600,7 +395724,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/saving-catalogue-forms.spec.ts",
@@ -396440,7 +396564,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "current-saving-inventory-reservation-and-conservation-acceptance",
@@ -396468,7 +396593,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/saving-catalogue-forms.spec.ts",
@@ -432260,7 +432385,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -432316,7 +432442,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -432981,7 +433107,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "accepted-all-applicable-order-review-wallet-disclosure",
@@ -433037,7 +433164,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -434439,7 +434566,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -434495,7 +434623,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -434803,7 +434931,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "packages/db/drizzle/production/0252_saving_inventory_upgrade_audit.sql",
@@ -436280,7 +436408,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -436336,7 +436465,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -436957,7 +437086,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -437013,7 +437143,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -437634,7 +437764,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -437690,7 +437821,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -438311,7 +438442,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -438367,7 +438499,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -438988,7 +439120,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -439044,7 +439177,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -439665,7 +439798,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -439721,7 +439855,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -440342,7 +440476,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -440398,7 +440533,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -441739,7 +441874,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -441795,7 +441931,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -442415,7 +442551,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -442471,7 +442608,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -443103,7 +443240,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -443159,7 +443297,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -444502,7 +444640,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -444558,7 +444697,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -445183,7 +445322,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -445239,7 +445379,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -445861,7 +446001,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -445917,7 +446058,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.service.ts",
@@ -484456,7 +484597,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-authority-for-queued-and-private-results",
           "release-0.6-consultation-financial-profile-scope",
-          "release-0.6-solar-financial-profile-scope"
+          "release-0.6-solar-financial-profile-scope",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -484464,7 +484606,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8b4022c892707c3dc5afcc675b115d5959e6c943ad29a9f879e0ecfd961eef28"
+              "sha256": "112c2fda14acffc8ed027a359e5d210f49a1f849de13d0b302eb8f4ce388d59e"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -484608,8 +484750,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the new consultation and solar HTTP regressions and existing financial projections on the exact hosted source and full production schema.",
-        "Finish tracing the explicit-ID saving related records and opaque cross-profile misses under the approved context design."
+        "Verify the saving, solar and consultation HTTP isolation regressions and the existing same-profile financial journeys on the exact hosted source and full production schema."
       ],
       "owner": null,
       "depends_on": [],
@@ -484619,7 +484760,8 @@
         "batches": [
           "release-0.6-authority-for-queued-and-private-results",
           "release-0.6-consultation-financial-profile-scope",
-          "release-0.6-solar-financial-profile-scope"
+          "release-0.6-solar-financial-profile-scope",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": null
       }
@@ -484647,7 +484789,8 @@
         "batches": [
           "release-0.6-authority-for-queued-and-private-results",
           "release-0.6-consultation-financial-profile-scope",
-          "release-0.6-solar-financial-profile-scope"
+          "release-0.6-solar-financial-profile-scope",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -484768,7 +484911,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8b4022c892707c3dc5afcc675b115d5959e6c943ad29a9f879e0ecfd961eef28"
+              "sha256": "112c2fda14acffc8ed027a359e5d210f49a1f849de13d0b302eb8f4ce388d59e"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -484811,7 +484954,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-authority-for-queued-and-private-results",
           "release-0.6-consultation-financial-profile-scope",
-          "release-0.6-solar-financial-profile-scope"
+          "release-0.6-solar-financial-profile-scope",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -484819,7 +484963,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8b4022c892707c3dc5afcc675b115d5959e6c943ad29a9f879e0ecfd961eef28"
+              "sha256": "112c2fda14acffc8ed027a359e5d210f49a1f849de13d0b302eb8f4ce388d59e"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -488148,7 +488292,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-consultation-financial-profile-scope",
-          "release-0.6-solar-financial-profile-scope"
+          "release-0.6-solar-financial-profile-scope",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-submission-quota-and-replay-authority",
@@ -488176,7 +488321,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -491131,7 +491276,8 @@
           "release-0.6-source-grounded-threat-model-and-review",
           "release-0.6-authority-for-queued-and-private-results",
           "release-0.6-consultation-financial-profile-scope",
-          "release-0.6-solar-financial-profile-scope"
+          "release-0.6-solar-financial-profile-scope",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -491143,7 +491289,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8b4022c892707c3dc5afcc675b115d5959e6c943ad29a9f879e0ecfd961eef28"
+              "sha256": "112c2fda14acffc8ed027a359e5d210f49a1f849de13d0b302eb8f4ce388d59e"
             },
             {
               "path": "docs/threat-model.md",
@@ -493492,7 +493638,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-consultation-financial-profile-scope"
+          "release-0.6-consultation-financial-profile-scope",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-source-bound-postgresql-and-http-invariants",
@@ -493540,7 +493687,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/solar/solar-progress.integration.test.ts",
@@ -738554,7 +738701,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
-          "release-0.6-solar-financial-profile-scope"
+          "release-0.6-solar-financial-profile-scope",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-verification-settings",
@@ -738670,7 +738818,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -740276,7 +740424,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -741478,7 +741626,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -742374,7 +742523,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -743564,7 +743713,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ]
       }
     },
@@ -743832,11 +743982,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -747786,7 +747936,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ]
       }
     },
@@ -748430,7 +748581,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/src/pages/InvoiceActivity.tsx",
@@ -749270,7 +749421,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -749446,7 +749597,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-amendments.ts",
-              "sha256": "ff0a317a21b5573a0740885906fb3645a5a639cdd3cdbaf35543aeab38ffb64c"
+              "sha256": "73eb5af59ac62919cb0de75f7526e298e1411d026048deaea129bb4f680dc4ed"
             },
             {
               "path": "apps/api/src/saving/saving-hardware-authority.test.ts",
@@ -749458,7 +749609,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-hardware-upgrades.ts",
-              "sha256": "38c5e3b524e274be8c53c8e52c7e183784db40f8b12e854957852b651c059ec2"
+              "sha256": "dc24a6f35a2aad36346d6de7437e38d6f794e90a4c07bb5bb59ae87eeebb418f"
             },
             {
               "path": "apps/api/src/saving/saving-operations-authority.test.ts",
@@ -752467,7 +752618,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ]
       }
     },
@@ -753327,11 +753479,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/saving/saving-status-notifications.integration.test.ts",
@@ -756463,7 +756615,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -757332,11 +757485,11 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
-              "sha256": "f7cf86e7202362acbf6e261a1e9fb940e85b5bd3f80ee9720149d0d8a8910e05"
+              "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/api/src/saving/saving-status-notifications.integration.test.ts",
@@ -760350,7 +760503,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-saving-financial-profile-scope"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -763714,7 +763868,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
-              "sha256": "71d5bb5eb07cdf91066d5a210d58fcb5dbb83b2dc55b11b3c5dcde406a8cd613"
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
             },
             {
               "path": "apps/web/src/hooks/useWizardDraftProtection.ts",
@@ -764223,7 +764377,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-test-fixtures-and-affected-dependents"
+          "release-0.6-test-fixtures-and-affected-dependents",
+          "release-0.6-saving-financial-profile-scope"
         ]
       }
     },
@@ -867998,6 +868153,71 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/preflight-callback-digest-corrections",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "7a2794dd41eb85536df47b15e55d0d552a1b765f1e89571b40d84428da0f6b2b"
+    },
+    "release-0.6-saving-financial-profile-scope": {
+      "batch": "release-0.6-saving-financial-profile-scope",
+      "base_commit": "efdf845d68291a79c1d1efae8cf718da1be81b76",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.01.04"
+      ],
+      "changed_paths": [
+        "apps/api/src/saving/saving-hardware-amendments.ts",
+        "apps/api/src/saving/saving-hardware-upgrades.ts",
+        "apps/api/src/saving/saving-order.integration.test.ts",
+        "apps/api/src/saving/saving-order.service.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/orders/orders.service.ts",
+          "sha256": "22c6aef1fc109cedb37c0df86da4b2df55b0f5d507448b674942f86c547b1427"
+        },
+        {
+          "path": "apps/api/src/saving/saving-hardware-amendments.ts",
+          "sha256": "73eb5af59ac62919cb0de75f7526e298e1411d026048deaea129bb4f680dc4ed"
+        },
+        {
+          "path": "apps/api/src/saving/saving-hardware-upgrades.ts",
+          "sha256": "dc24a6f35a2aad36346d6de7437e38d6f794e90a4c07bb5bb59ae87eeebb418f"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.controller.ts",
+          "sha256": "5a98d104cb95c3c8c0fc03654950cdc53815daa02b1335adf4919205210262a0"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.integration.test.ts",
+          "sha256": "6c57490fb862835b7c642eec3e480c392207dbc7a2594f795b8a04836057546a"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.service.ts",
+          "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "112c2fda14acffc8ed027a359e5d210f49a1f849de13d0b302eb8f4ce388d59e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0161_saving_orders.sql",
+          "sha256": "986e73dcae8c4a044ad8ae845f21574c11a07ee75e17f54025b913a14bd2a1cf"
+        },
+        {
+          "path": "packages/db/drizzle/production/0176_saving_hardware_amendments.sql",
+          "sha256": "077336784637a403e9ad32b188798bf8c8771e54e30ca71cc81088dceeabe937"
+        },
+        {
+          "path": "packages/db/drizzle/production/0178_saving_hardware_upgrades.sql",
+          "sha256": "69a6a16a5acd908cc48380345a08fd9e8bda17589ff82ebfc4ddcaa6cc73bace"
+        }
+      ],
+      "checks": [
+        "Saving and invoice origin foreign keys can represent mismatched historic associations. In a native fixture, prior list and detail reads showed another profile’s invoice, contract and upgrade pointer. The old change query also returned the other profile’s financial context as editable and the preflight lock targeted its invoice.",
+        "List, cursor, detail, change review and confirmation now scope the commercial order, invoice and contract to the saving profile. The invoice prelock uses the same scope and preserves the established lock order. Hardware history applies the scope to linked adjustment invoice IDs and financial values.",
+        "The exact previous and current list, detail, change and lock queries ran against disposable PostgreSQL 16.15. Foreign financial reads, change eligibility and locks were eliminated. Same-profile invoice, contract, upgrade and valid change results stayed visible. The disposable container was removed.",
+        "All 55 targeted saving authority, input and calculation cases passed. API typecheck, lint, formatting and diff checks passed. The full-schema HTTP regressions for saving, solar and consultation remain pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/saving-finance-scope",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "17c8b33d860b144c4286180c40ad06a7613b458847daeda490274f17038a0039"
     }
   },
   "historical_improvements": [

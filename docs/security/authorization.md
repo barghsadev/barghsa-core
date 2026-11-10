@@ -9,6 +9,7 @@ PostgreSQL supplies current account, session, ownership and role authority. The 
 - Read and mutate customer orders, invoices, contracts, wallet records, tickets and documents within the authorized profile or account. Apply both the record identifier and authorized scope before returning results or issuing a signed transfer. Keep exact amounts, terms and state transitions inside the domain's authoritative transaction. [Customer setup and delegation](../decisions/customer-setup-and-delegation.md).
 - Consultation list and detail reads require related invoices, adjustments and refunds to belong to the request's authorized profile. This check also covers older references that can point to an invoice from a different profile.
 - Solar list and detail reads scope the related contract, publication and initial invoice to the request's authorized profile.
+- Saving list, detail and change commands use the saving profile to scope the commercial order, invoice and contract. Change review and confirmation apply that scope before locking financial records. Hardware history uses the same profile for linked adjustment invoices.
 
 ## Staff capabilities
 
