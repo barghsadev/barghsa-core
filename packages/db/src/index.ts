@@ -430,9 +430,7 @@ export function createDbPool(config: DbPoolConfig = {}): Pool {
       config.connectionTimeoutMillis ?? (Number(process.env.DB_CONNECTION_TIMEOUT) || 5_000),
   } satisfies PoolConfig);
 
-  pool.on('error', (err) => {
-    structuredLog('error', 'pool_error', { message: err.message });
-  });
+  pool.on('error', () => structuredLog('error', 'pool_error', {}));
 
   attachClientQueryHooks(pool, timeoutPolicy, pgbouncerUrl !== undefined ? config : undefined);
   if (pgbouncerUrl !== undefined) {
@@ -512,9 +510,7 @@ export function createDirectDbPool(
       config.connectionTimeoutMillis ?? (Number(process.env.DB_CONNECTION_TIMEOUT) || 5_000),
   } satisfies PoolConfig);
 
-  created.on('error', (error) =>
-    structuredLog('error', 'direct_pool_error', { message: error.message })
-  );
+  created.on('error', () => structuredLog('error', 'direct_pool_error', {}));
   attachClientQueryHooks(created, timeoutPolicy);
   if (shared) directPool = created;
   return created;

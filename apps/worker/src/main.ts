@@ -278,9 +278,9 @@ async function main(): Promise<void> {
         logger.info('Graceful shutdown complete — exiting with code 0');
         process.exit(0);
       })
-      .catch((err: unknown) => {
+      .catch(() => {
         clearTimeout(forceExitTimer);
-        logger.error(`Shutdown error: ${String(err)}`);
+        logger.error('Shutdown error');
         process.exit(1);
       });
   }
@@ -289,13 +289,13 @@ async function main(): Promise<void> {
   process.on('SIGINT', () => shutdown('SIGINT'));
 
   // Prevent uncaught exceptions from silently killing the process.
-  process.on('uncaughtException', (err) => {
-    logger.error(`Uncaught exception: ${err.message}`);
+  process.on('uncaughtException', () => {
+    logger.error('Uncaught exception');
     process.exit(1);
   });
 
-  process.on('unhandledRejection', (reason) => {
-    logger.error(`Unhandled rejection: ${String(reason)}`);
+  process.on('unhandledRejection', () => {
+    logger.error('Unhandled rejection');
   });
 
   pollers.every(async () => {
@@ -1104,7 +1104,7 @@ async function main(): Promise<void> {
   );
 }
 
-void main().catch((err: unknown) => {
-  logger.error(`Fatal worker error: ${String(err)}`);
+void main().catch(() => {
+  logger.error('Fatal worker error');
   process.exit(1);
 });

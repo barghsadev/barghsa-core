@@ -109,6 +109,9 @@ record the job type while preserving retry and recovery behavior.
 Invoice overdue, reminder scheduling and top-up expiry scans log the operation,
 opaque record identifier when available and an allowlisted SQLSTATE category.
 Their retry records keep the same bounded diagnostics.
+Worker and inference process failures report the lifecycle stage. Production
+PostgreSQL pool errors report the event and level. These diagnostics omit
+exception text and connection details.
 
 ## Provider callback contracts
 

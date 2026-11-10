@@ -35,7 +35,7 @@ async function main(): Promise<void> {
   process.on('SIGINT', shutdown);
 }
 
-void main().catch((error: unknown) => {
-  process.stderr.write(`AI inference process failed: ${(error as Error).message}\n`);
+void main().catch(() => {
+  process.stderr.write('AI inference process failed\n');
   process.exitCode = 1;
 });

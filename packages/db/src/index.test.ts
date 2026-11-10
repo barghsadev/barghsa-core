@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { createDbPool, getDbPool, buildConnectionString, wrapClientQuery } from './index';
+import {
+  createDbPool,
+  createDirectDbPool,
+  getDbPool,
+  buildConnectionString,
+  wrapClientQuery,
+} from './index';
 
 /**
  * Build a minimal mock pg Client that mirrors the real client's internal
@@ -132,6 +138,27 @@ describe('@barghsa/db', () => {
       expect(p.listeners('error').length).toBe(1);
       p.end().catch(() => {});
     });
+  });
+
+  it('logs only the event and level when either production pool reports an error', async () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+    vi.stubEnv('NODE_ENV', 'production');
+    const shared = createDbPool();
+    const direct = createDirectDbPool({}, { shared: false });
+    try {
+      const error = new Error('fixture-only private PostgreSQL connection detail');
+      shared.emit('error', error);
+      direct.emit('error', error);
+
+      expect(log.mock.calls).toEqual([
+        [JSON.stringify({ level: 'error', event: 'pool_error' })],
+        [JSON.stringify({ level: 'error', event: 'direct_pool_error' })],
+      ]);
+    } finally {
+      await direct.end();
+      vi.unstubAllEnvs();
+      log.mockRestore();
+    }
   });
 
   describe('wrapClientQuery timeout behavior', () => {
