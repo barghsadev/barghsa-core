@@ -19,6 +19,7 @@ import { VerificationErrorCodes } from '@barghsa/shared/verification';
 import { VerificationProviderService } from './verification-provider.service.js';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 
 /**
  * Zod schema for the provider config update request body.
@@ -115,6 +116,8 @@ export class VerificationProviderController {
    */
   @Put('providers/:providerId/config')
   @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Update verification provider configuration' })
   @ApiParam({ name: 'providerId', description: 'Provider identifier' })
   @ApiBody({
@@ -198,6 +201,8 @@ export class VerificationProviderController {
    */
   @Post('providers/:providerId/reset-circuit-breaker')
   @HttpCode(200)
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
   @ApiOperation({ summary: 'Reset circuit breaker for a provider' })
   @ApiParam({ name: 'providerId', description: 'Provider identifier' })
   @ApiResponse({ status: 200, description: 'Circuit breaker reset.' })

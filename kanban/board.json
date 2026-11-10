@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T06:11:55+00:00",
-  "source_commit": "5c5b1376a1ac4c6593a1759bb4c8f7fc1272f908",
+  "updated": "2026-11-10T06:18:05+00:00",
+  "source_commit": "2e36b48fa373a257f4c1af8799898a6b6a64a5bc",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -484665,7 +484665,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-high-risk-staff-step-up"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -484673,7 +484674,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8d1552aa40152208d5beba3f8ee3d3e7d33073b88ebc8b768463daa0af31d4c5"
+              "sha256": "207cb96766c55628f5ff2918b2ba58ffb753632faac8f61a56bab4d406889265"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -484797,7 +484798,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-high-risk-staff-step-up"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -484842,7 +484844,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8d1552aa40152208d5beba3f8ee3d3e7d33073b88ebc8b768463daa0af31d4c5"
+              "sha256": "207cb96766c55628f5ff2918b2ba58ffb753632faac8f61a56bab4d406889265"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -484908,7 +484910,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-high-risk-staff-step-up"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -485029,7 +485032,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8d1552aa40152208d5beba3f8ee3d3e7d33073b88ebc8b768463daa0af31d4c5"
+              "sha256": "207cb96766c55628f5ff2918b2ba58ffb753632faac8f61a56bab4d406889265"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -485074,7 +485077,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-high-risk-staff-step-up"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -485082,7 +485086,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8d1552aa40152208d5beba3f8ee3d3e7d33073b88ebc8b768463daa0af31d4c5"
+              "sha256": "207cb96766c55628f5ff2918b2ba58ffb753632faac8f61a56bab4d406889265"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -485170,19 +485174,170 @@
         "story": "06-security-testing-observability.md#spec-2ce6d1b092d4"
       },
       "requirement": "| T-06.03.01.07 | Ensure all staff permissions are explicit capabilities; high-risk commands require dedicated capability + step-up auth | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-high-risk-staff-step-up"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "2e36b48fa373a257f4c1af8799898a6b6a64a5bc",
+          "checks": [
+            "A source-wide controller metadata scan confirms all 191 explicitly marked step-up handlers have a method or controller guard, with no unmarked method-local guard. Source review followed the separate locked session checks for sensitive solar, consultation and financial actions and read-only consequence previews.",
+            "The two newly added cases reproduced unguarded verification-provider configuration writes and breaker resets. Real Nest metadata and StepUpGuard regressions now verify missing and stale proof is denied, recent proof is accepted and the existing per-route staff grants are retained. The only registered verification adapter is the development stub.",
+            "Fifty-three targeted provider and session cases, API typecheck, ESLint, Prettier and diff checks passed. The broader capability and role review also passed 254 API and nine shared cases. The separate model-test native suite needs a database, so the attempted fixture-free invocation provided no results and is excluded.",
+            "Hosted PostgreSQL run 42757750063 job 129636126527 supplied 291 exact tests across current role, configuration, contract cancellation, refund, OTP and bank receipt boundaries. Native test and related module sources match; the administrative service and controller changes since that SHA only redact diagnostics. The new verification route metadata has its own current targeted test evidence."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
+              "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
+            },
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
+            },
+            {
+              "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+              "sha256": "0703727781bc2593526056b78d91758e5917a0b76e5e1c04dbbd0d76c1b1afdc"
+            },
+            {
+              "path": "apps/api/src/admin/config-write-http.integration.test.ts",
+              "sha256": "9a7466135fd889a59d24f0e206f27c4106ff7e9e218ab5a8a809a940103013ec"
+            },
+            {
+              "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+              "sha256": "78e49c7520959167171da17040aa4d36b15b9dc83d852a84906fc685d4a69f99"
+            },
+            {
+              "path": "apps/api/src/admin/staff-effective-permissions-http.integration.test.ts",
+              "sha256": "652e9c463f39ee0d129217a40bc635e2afe1f713b2ed39b0fefea17a05c548d2"
+            },
+            {
+              "path": "apps/api/src/admin/staff-mutation-permission.ts",
+              "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+            },
+            {
+              "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+              "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+            },
+            {
+              "path": "apps/api/src/consultation/consultation-workflow.controller.ts",
+              "sha256": "c3167cf318433f340d4b2c973d4b21d84cfad48899848277870c340bf15ef51d"
+            },
+            {
+              "path": "apps/api/src/consultation/consultation-workflow.service.ts",
+              "sha256": "b8f02aecb2b7284223420f7d4eb33ba88fb6ff596efc01600cf2c9b7938035da"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "35a15ed616c718c55797f7997ec566a03c27c5244f11194748e6b8ddd32c2821"
+            },
+            {
+              "path": "apps/api/src/contract/contract-transactions.ts",
+              "sha256": "91279ef9d7f4cd648cbdf736e73603f992db89b43f9be052fe29f22080e8f261"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
+              "sha256": "8272401a078d2fdbe00354a3b188d06b5324619f01aeb9bb007f12c5c9d6309b"
+            },
+            {
+              "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+              "sha256": "ffe060cf16411e15662c5be1ae38a7387a773782fe977dc241ac5895f8cfd22d"
+            },
+            {
+              "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
+              "sha256": "f2e3b8f67b87879ad6b329e367ec8cecd04f648ac73aee2fef64e47db840b46f"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "debe727fbe8223327b753f6d41f248d8e2081e8e033468429bdb9eb67ab90449"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund.controller.ts",
+              "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund.controller.ts",
+              "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+            },
+            {
+              "path": "apps/api/src/session/session-step-up.ts",
+              "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+            },
+            {
+              "path": "apps/api/src/session/step-up.guard.ts",
+              "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.controller.ts",
+              "sha256": "57a3fbc30f678be3a6a1bdd76de995428564d91967cbeeaf194af72d338e7ab9"
+            },
+            {
+              "path": "apps/api/src/solar/solar-final.service.ts",
+              "sha256": "df063d3ab8e9cd8cd844a5511ac27f57a3727db259f9b7968e12f10bf9adedd3"
+            },
+            {
+              "path": "apps/api/src/verification/provider-registration.test.ts",
+              "sha256": "d6e0412044a23c7ba4b82ac592057371c5e7337e830da4843b85418ac375a03b"
+            },
+            {
+              "path": "apps/api/src/verification/verification-provider.controller.test.ts",
+              "sha256": "de1df7e37c29339e3a6ffcaa35a6f95361699b67f7783fa1f32d177d9adb864c"
+            },
+            {
+              "path": "apps/api/src/verification/verification-provider.controller.ts",
+              "sha256": "1d40b0639f944a0b4cffc5885d984e448d0a0dce3af750be75ff8ddf9b00fd2b"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-topup-http.integration.test.ts",
+              "sha256": "41233d18477d0f6a96a786423315f10529e112edf168bb125df0fae31acb7a87"
+            },
+            {
+              "path": "docs/security/authorization.md",
+              "sha256": "207cb96766c55628f5ff2918b2ba58ffb753632faac8f61a56bab4d406889265"
+            },
+            {
+              "path": "packages/shared/src/admin/staff-permissions.ts",
+              "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+            },
+            {
+              "path": "packages/shared/src/agent-permissions/agent-permissions.test.ts",
+              "sha256": "6ca347adaa12a486d4e4c450dfb78f1a1ac2713dfda1b608fce05e318519336f"
+            }
+          ]
+        }
       }
     },
     {
@@ -491405,7 +491560,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-agent-guard-requires-capability"
+          "release-0.6-agent-guard-requires-capability",
+          "release-0.6-high-risk-staff-step-up"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -491417,7 +491573,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8d1552aa40152208d5beba3f8ee3d3e7d33073b88ebc8b768463daa0af31d4c5"
+              "sha256": "207cb96766c55628f5ff2918b2ba58ffb753632faac8f61a56bab4d406889265"
             },
             {
               "path": "docs/threat-model.md",
@@ -868524,6 +868680,169 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/worker-service-failure-logs",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "a2c22679ef27efc7462fcffb2c77304d09ce4cbade17b2e22cd833dbbab41a4d"
+    },
+    "release-0.6-high-risk-staff-step-up": {
+      "batch": "release-0.6-high-risk-staff-step-up",
+      "base_commit": "2e36b48fa373a257f4c1af8799898a6b6a64a5bc",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.01.07"
+      ],
+      "changed_paths": [
+        "apps/api/src/verification/verification-provider.controller.test.ts",
+        "apps/api/src/verification/verification-provider.controller.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
+          "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
+        },
+        {
+          "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+          "sha256": "0703727781bc2593526056b78d91758e5917a0b76e5e1c04dbbd0d76c1b1afdc"
+        },
+        {
+          "path": "apps/api/src/admin/config-write-http.integration.test.ts",
+          "sha256": "9a7466135fd889a59d24f0e206f27c4106ff7e9e218ab5a8a809a940103013ec"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+          "sha256": "78e49c7520959167171da17040aa4d36b15b9dc83d852a84906fc685d4a69f99"
+        },
+        {
+          "path": "apps/api/src/admin/staff-effective-permissions-http.integration.test.ts",
+          "sha256": "652e9c463f39ee0d129217a40bc635e2afe1f713b2ed39b0fefea17a05c548d2"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+        },
+        {
+          "path": "apps/api/src/auth/otp-step-up-http.integration.test.ts",
+          "sha256": "d3317bca524349d995b84ac1fa33155cf4d141d4a406b2896e8d5df2a23d6d1e"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-workflow.controller.ts",
+          "sha256": "c3167cf318433f340d4b2c973d4b21d84cfad48899848277870c340bf15ef51d"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-workflow.service.ts",
+          "sha256": "b8f02aecb2b7284223420f7d4eb33ba88fb6ff596efc01600cf2c9b7938035da"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+          "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation.service.ts",
+          "sha256": "35a15ed616c718c55797f7997ec566a03c27c5244f11194748e6b8ddd32c2821"
+        },
+        {
+          "path": "apps/api/src/contract/contract-transactions.ts",
+          "sha256": "91279ef9d7f4cd648cbdf736e73603f992db89b43f9be052fe29f22080e8f261"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+          "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
+          "sha256": "8272401a078d2fdbe00354a3b188d06b5324619f01aeb9bb007f12c5c9d6309b"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+          "sha256": "ffe060cf16411e15662c5be1ae38a7387a773782fe977dc241ac5895f8cfd22d"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
+          "sha256": "f2e3b8f67b87879ad6b329e367ec8cecd04f648ac73aee2fef64e47db840b46f"
+        },
+        {
+          "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+          "sha256": "debe727fbe8223327b753f6d41f248d8e2081e8e033468429bdb9eb67ab90449"
+        },
+        {
+          "path": "apps/api/src/refund/external-refund.controller.ts",
+          "sha256": "9b8cb0619bfc2a33629cc528dd7bd40cc1a2c2e48cfd8da7368f3faf990da151"
+        },
+        {
+          "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+          "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+        },
+        {
+          "path": "apps/api/src/refund/wallet-refund.controller.ts",
+          "sha256": "2fb0caf2ffd01d3739db87fc9e3b4c279b8137eec62fa2bacb19feabd1da07c3"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+        },
+        {
+          "path": "apps/api/src/session/staff-permissions.ts",
+          "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+        },
+        {
+          "path": "apps/api/src/session/step-up.guard.ts",
+          "sha256": "76029f6a03f054c4020efa7a56c26433b26f00e50fd9a7c315031003081b7309"
+        },
+        {
+          "path": "apps/api/src/solar/solar-final.controller.ts",
+          "sha256": "57a3fbc30f678be3a6a1bdd76de995428564d91967cbeeaf194af72d338e7ab9"
+        },
+        {
+          "path": "apps/api/src/solar/solar-final.service.ts",
+          "sha256": "df063d3ab8e9cd8cd844a5511ac27f57a3727db259f9b7968e12f10bf9adedd3"
+        },
+        {
+          "path": "apps/api/src/verification/provider-registration.test.ts",
+          "sha256": "d6e0412044a23c7ba4b82ac592057371c5e7337e830da4843b85418ac375a03b"
+        },
+        {
+          "path": "apps/api/src/verification/verification-provider.controller.test.ts",
+          "sha256": "de1df7e37c29339e3a6ffcaa35a6f95361699b67f7783fa1f32d177d9adb864c"
+        },
+        {
+          "path": "apps/api/src/verification/verification-provider.controller.ts",
+          "sha256": "1d40b0639f944a0b4cffc5885d984e448d0a0dce3af750be75ff8ddf9b00fd2b"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-topup-http.integration.test.ts",
+          "sha256": "41233d18477d0f6a96a786423315f10529e112edf168bb125df0fae31acb7a87"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "207cb96766c55628f5ff2918b2ba58ffb753632faac8f61a56bab4d406889265"
+        },
+        {
+          "path": "packages/shared/src/admin/staff-permissions.ts",
+          "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+        },
+        {
+          "path": "packages/shared/src/agent-permissions/agent-permissions.test.ts",
+          "sha256": "6ca347adaa12a486d4e4c450dfb78f1a1ac2713dfda1b608fce05e318519336f"
+        }
+      ],
+      "checks": [
+        "A source-wide controller metadata scan confirms all 191 explicitly marked step-up handlers have a method or controller guard, with no unmarked method-local guard. Source review followed the separate locked session checks for sensitive solar, consultation and financial actions and read-only consequence previews.",
+        "The two newly added cases reproduced unguarded verification-provider configuration writes and breaker resets. Real Nest metadata and StepUpGuard regressions now verify missing and stale proof is denied, recent proof is accepted and the existing per-route staff grants are retained. The only registered verification adapter is the development stub.",
+        "Fifty-three targeted provider and session cases, API typecheck, ESLint, Prettier and diff checks passed. The broader capability and role review also passed 254 API and nine shared cases. The separate model-test native suite needs a database, so the attempted fixture-free invocation provided no results and is excluded.",
+        "Hosted PostgreSQL run 42757750063 job 129636126527 supplied 291 exact tests across current role, configuration, contract cancellation, refund, OTP and bank receipt boundaries. Native test and related module sources match; the administrative service and controller changes since that SHA only redact diagnostics. The new verification route metadata has its own current targeted test evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/high-risk-step-up",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "fab000b31fbabea393ea93a33d4949465fd25ed188751e3d73457977fd878008"
     }
   },
   "historical_improvements": [

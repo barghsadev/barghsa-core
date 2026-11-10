@@ -1,6 +1,10 @@
+import type { ExecutionContext } from '@nestjs/common';
+import { GUARDS_METADATA } from '@nestjs/common/constants';
+import { Reflector } from '@nestjs/core';
 import { describe, expect, it, vi } from 'vitest';
 import { VerificationProviderController } from './verification-provider.controller.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
+import { StepUpGuard } from '../session/step-up.guard.js';
 
 const config = { providerId: 'test-adapter', enabled: false, settings: {} };
 function request(permissions: string[]): AuthenticatedRequest {
@@ -59,6 +63,31 @@ describe.each(operations)('$name permission boundary', ({ permission, run }) => 
     for (const call of Object.values(service)) expect(call).not.toHaveBeenCalled();
   });
 });
+it.each(['setProviderConfig', 'resetCircuitBreaker'] as const)(
+  'requires fresh step-up before %s',
+  (operation) => {
+    const handler = VerificationProviderController.prototype[operation];
+    const reflector = new Reflector();
+    const guard = new StepUpGuard(reflector);
+    const req = request(['admin:config:write']);
+    const context = {
+      getHandler: () => handler,
+      switchToHttp: () => ({ getRequest: () => req }),
+    } as unknown as ExecutionContext;
+
+    expect(reflector.get(GUARDS_METADATA, handler)).toContain(StepUpGuard);
+    for (const stale of [null, new Date('2000-01-01T00:00:00.000Z')]) {
+      req.session.stepUpVerifiedAt = stale;
+      expect(() => guard.canActivate(context)).toThrow(
+        expect.objectContaining({
+          response: expect.objectContaining({ error: 'AUTHZ:STEP_UP_REQUIRED' }),
+        })
+      );
+    }
+    req.session.stepUpVerifiedAt = new Date();
+    expect(guard.canActivate(context)).toBe(true);
+  }
+);
 it('defaults unconfigured adapters to disabled without creating configuration', async () => {
   const { controller, service } = fixture();
   service.getProviderConfig.mockResolvedValue(null as never);

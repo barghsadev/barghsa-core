@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T06:11:55+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T06:18:05+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1125 | Accepted with unchanged source bindings. |
-| verify | 185 | Existing work may be complete; inspect evidence before building. |
+| done | 1126 | Accepted with unchanged source bindings. |
+| verify | 184 | Existing work may be complete; inspect evidence before building. |
 | partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1148,7 +1148,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.03.01.04` | partial | Recorded batch work | Implement profile-scoped data access: load resources by both `id` and `activeProfileId`; reject cross-profile access |
 | `06-security-testing-observability.md#T-06.03.01.05` | done | Recorded batch work | Extend authorization to background workers, AI tool calls, file access URLs, exports, and admin actions |
 | `06-security-testing-observability.md#T-06.03.01.06` | done | Recorded batch work | Implement staff role permissions: deny-by-default, additive by role (CS, CRM, Finance, Legal, Ops, Admin) |
-| `06-security-testing-observability.md#T-06.03.01.07` | verify | Inventory needed | Ensure all staff permissions are explicit capabilities; high-risk commands require dedicated capability + step-up auth |
+| `06-security-testing-observability.md#T-06.03.01.07` | done | Recorded batch work | Ensure all staff permissions are explicit capabilities; high-risk commands require dedicated capability + step-up auth |
 | `06-security-testing-observability.md#T-06.03.01.08` | done | Recorded batch work | Write integration tests: each role's permitted/denied actions, profile isolation, cross-tenant BOLA attempts |
 | `06-security-testing-observability.md#T-06.03.01.09` | done | Recorded batch work | Ensure AuthorizationService logs every authorization denial as a structured audit event with actor, resource, action, reason, timestamp |
 | `06-security-testing-observability.md#T-06.03.01.10` | done | Recorded batch work | Write integration test: authorization denials are logged and appear on audit event dashboard |

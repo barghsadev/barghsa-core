@@ -18,6 +18,14 @@ PostgreSQL supplies current account, session, ownership and role authority. The 
 - Apply resource and assignment scope when the domain requires it. Explicit module-wide document read grants retain their approved scope. Distinguish read, write, approval and override capabilities, and require fresh step-up for designated high-risk actions. [Verification authority](../decisions/verification-policy.md).
 - Recheck current session, capability and scope inside the protected decision when concurrent role removal, ownership changes or expiry could invalidate it. Preserve required CSRF proof, audit and idempotency across retries. Keep protected audit records separate from general diagnostics.
 
+Staff role replacement requires the dedicated role capability and recent OTP
+proof on the live session. Financial confirmations, refunds, contract decisions
+and provider credential changes check their operation-specific capability and
+step-up proof. A review can return the authorized consequences before step-up.
+The command that changes state checks the proof before applying those effects.
+Verification provider configuration writes and circuit-breaker resets also
+require fresh step-up. The verification adapter remains a development stub.
+
 ## Background and external work
 
 - A worker acts on an authorized durable record with an operation-specific claim or lease. Before publishing a private result, recheck its current ownership or grant and enforce its result scope. Preserve transaction and provider idempotency boundaries when a retry is allowed. [Async jobs](../operations/async-jobs.md).
