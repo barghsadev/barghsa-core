@@ -1,4 +1,4 @@
-import { test, expect } from './coverage-fixture';
+import { test, expect, type Page } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { shellText } from '@barghsa/i18n/shell';
@@ -35,6 +35,19 @@ const solarRequest = {
   agreement_accepted_at: '2026-09-23T10:00:00.000Z',
   submitted_at: '2026-09-23T10:00:00.000Z',
 };
+
+async function switchToEnglish(page: Page) {
+  const switcher = page.getByRole('button', { name: shellText('language', 'fa'), exact: true });
+  const accountMenu = page.getByRole('button', {
+    name: shellText('accountMenu', 'fa'),
+    exact: true,
+  });
+  await expect(switcher.or(accountMenu).first()).toBeVisible();
+  const compact = !(await switcher.isVisible());
+  if (compact) await accountMenu.click();
+  await switcher.click();
+  if (compact) await page.keyboard.press('Escape');
+}
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
@@ -120,7 +133,7 @@ test('solar list opens intake and detail routes', async ({ page }) => {
     })
   );
   await page.goto('/solar/requests');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+  await switchToEnglish(page);
   await expect(page.getByRole('heading', { name: 'My solar requests' })).toBeVisible();
   await page.getByRole('button', { name: 'More requests' }).click();
   await expect(page.locator(`a[href="/solar/requests/${solarId}"]`)).toBeVisible();
@@ -165,7 +178,7 @@ test('solar list shows document and contract next actions, with the current docu
   await page.goto('/solar/requests');
   const persianRequest = page.getByRole('link', { name: /نیازمند اصلاح مدارک/ });
   await expect(persianRequest).toContainText('مدارک درخواستی را بارگذاری کنید');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+  await switchToEnglish(page);
   const documentRequest = page.getByRole('link', { name: /Changes requested/ });
   await expect(documentRequest).toContainText('Upload the requested documents');
   await expect(documentRequest).toContainText('Who acts next: You');
@@ -239,7 +252,7 @@ test('consultation list opens its request detail route', async ({ page }) => {
     })
   );
   await page.goto('/consultations');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+  await switchToEnglish(page);
   await expect(page.getByRole('heading', { name: 'Consultations' })).toBeVisible();
   await expect(page.locator(`a[href="/consultations/${consultationId}"] time`)).toHaveText(
     '09/24/2026'
@@ -319,7 +332,7 @@ test('consultation list and detail show assigned staff and the payment action', 
   const requestLink = page.getByRole('link', { name: /مشاوره مکان/ });
   await expect(requestLink).toContainText('کارشناس مسئول: reviewer@consultation.test');
   await expect(requestLink).toContainText('شما این پیشنهاد را پذیرفته‌اید');
-  await page.getByRole('button', { name: 'تغییر زبان به انگلیسی' }).click();
+  await switchToEnglish(page);
   const englishRequestLink = page.getByRole('link', { name: /Site advice/ });
   await expect(englishRequestLink).toContainText('You accepted this offer. Pay the invoice');
   await englishRequestLink.click();
@@ -411,12 +424,7 @@ test('accepting a consultation offer opens its invoice without reloading the app
     route.fulfill({ json: review })
   );
   await page.goto(`/consultations/${consultationId}`);
-  const switcher = page.getByRole('button', { name: shellText('language', 'fa'), exact: true });
-  const compact = !(await switcher.isVisible());
-  if (compact)
-    await page.getByRole('button', { name: shellText('accountMenu', 'fa'), exact: true }).click();
-  await switcher.click();
-  if (compact) await page.keyboard.press('Escape');
+  await switchToEnglish(page);
   await page.evaluate(() => {
     (window as Window & { __consultationNavigation?: string }).__consultationNavigation = 'kept';
   });

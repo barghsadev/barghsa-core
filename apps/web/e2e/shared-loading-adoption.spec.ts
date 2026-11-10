@@ -23,7 +23,15 @@ for (const locale of ['en', 'fa'] as const) {
     await page.setViewportSize({ width: locale === 'fa' ? 390 : 1280, height: 900 });
     const writes: string[] = [];
     await page.route('**/api/**', (route) => {
-      if (route.request().method() !== 'GET') writes.push(route.request().url());
+      const request = route.request();
+      // WebKit's screenshot helper injects a transient style and can emit native CSP telemetry.
+      if (
+        request.method() === 'POST' &&
+        new URL(request.url()).pathname === '/api/csp-report' &&
+        request.headers()['content-type'] === 'application/csp-report'
+      )
+        return route.fulfill({ status: 204 });
+      if (request.method() !== 'GET') writes.push(request.url());
       return route.fulfill({ status: 404, json: {} });
     });
     await page.route('**/api/auth/user', (route) =>
@@ -115,6 +123,7 @@ for (const locale of ['en', 'fa'] as const) {
   for (const surface of [
     {
       route: '/admin/solar-postal',
+      region: null,
       endpoint: '/api/admin/solar/postal-queue',
       loading: solar('loading'),
       failure: solar('staffQueueLoadError'),
@@ -124,6 +133,7 @@ for (const locale of ['en', 'fa'] as const) {
     },
     {
       route: '/admin/documents',
+      region: documents('listTitle'),
       endpoint: '/api/admin/documents',
       loading: documents('loading'),
       failure: documents('listError'),
@@ -133,6 +143,7 @@ for (const locale of ['en', 'fa'] as const) {
     },
     {
       route: '/admin/contracts',
+      region: contracts('staffTitle'),
       endpoint: '/api/admin/contracts',
       loading: contracts('loading'),
       failure: contracts('error'),
@@ -167,8 +178,11 @@ for (const locale of ['en', 'fa'] as const) {
       try {
         await page.goto(surface.route);
         const main = page.getByRole('main');
-        const loading = main.getByText(surface.loading, { exact: true });
-        const failure = main.getByRole('alert').filter({ hasText: surface.failure });
+        const queue = surface.region
+          ? main.getByRole('region', { name: surface.region, exact: true })
+          : main;
+        const loading = queue.getByText(surface.loading, { exact: true });
+        const failure = queue.getByRole('alert').filter({ hasText: surface.failure });
         await expect(loading).toBeVisible();
         await expect(loading.locator('..')).toHaveAttribute('role', 'status');
         await expect.poll(() => requests).toEqual(['GET']);
@@ -180,7 +194,7 @@ for (const locale of ['en', 'fa'] as const) {
         await expect(failure).toBeVisible();
         const retrySection = surface.route === '/admin/documents' ? failure : failure.locator('..');
         await retrySection.getByRole('button', { name: surface.retry, exact: true }).click();
-        await expect(main.getByText(surface.empty, { exact: true })).toBeVisible();
+        await expect(queue.getByText(surface.empty, { exact: true })).toBeVisible();
         await expect(failure).toHaveCount(0);
         expect(requests).toEqual(['GET', 'GET']);
       } finally {

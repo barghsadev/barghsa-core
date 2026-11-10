@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T10:42:48+00:00",
-  "source_commit": "510d784ddc0b5f303b83f4faa21f0bc7b6d135af",
+  "updated": "2026-11-10T10:51:05+00:00",
+  "source_commit": "c811321859ec871df3110d7127a43179758a0b40",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5553,7 +5553,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Actual scheduled run 42789410833 reported all 40 shards with 127 unexpected outcomes and 18 flakes. Targeted fixes and reruns cover several known cohorts. Resolve the remaining browser failures and repeat the complete matrix on the exact candidate.",
+        "Actual scheduled run 42789410833 reported all 40 shards with 127 unexpected outcomes and 18 flakes. The mobile request, Safari wallet and owned-read cohorts have final local passing evidence, and the unchanged Firefox document cohort passed. Resolve remaining failures and repeat the complete matrix on the exact candidate.",
         "Bind current critical registration, MFA, legal onboarding, electricity and wallet, saving, solar construction and admin browser journeys to the accepted release source. The saving payment and fulfillment journey has separate local acceptance."
       ],
       "owner": null,
@@ -5620,7 +5620,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
+          "release-0.6-mobile-request-and-owned-read-browser-replay"
         ],
         "current_acceptance": null
       }
@@ -5878,7 +5879,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
+          "release-0.6-mobile-request-and-owned-read-browser-replay"
         ],
         "current_acceptance": null
       }
@@ -14087,7 +14089,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
+          "release-0.6-mobile-request-and-owned-read-browser-replay"
         ],
         "current_acceptance": null
       }
@@ -521242,7 +521245,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-mobile-request-and-owned-read-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -521262,7 +521266,7 @@
             },
             {
               "path": "apps/web/e2e/shared-loading-adoption.spec.ts",
-              "sha256": "be89235da71197cdf76430d84ece810f3c7dea88666cedd35511b08196833747"
+              "sha256": "89afe876aff8c78c68cc5967a575c8fba3ea7a6faee19de26e20d16ec10aaf3e"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -551759,7 +551763,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-mobile-request-and-owned-read-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551951,7 +551956,7 @@
             },
             {
               "path": "apps/web/e2e/shared-loading-adoption.spec.ts",
-              "sha256": "be89235da71197cdf76430d84ece810f3c7dea88666cedd35511b08196833747"
+              "sha256": "89afe876aff8c78c68cc5967a575c8fba3ea7a6faee19de26e20d16ec10aaf3e"
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
@@ -552625,7 +552630,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-mobile-request-and-owned-read-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552817,7 +552823,7 @@
             },
             {
               "path": "apps/web/e2e/shared-loading-adoption.spec.ts",
-              "sha256": "be89235da71197cdf76430d84ece810f3c7dea88666cedd35511b08196833747"
+              "sha256": "89afe876aff8c78c68cc5967a575c8fba3ea7a6faee19de26e20d16ec10aaf3e"
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
@@ -554023,7 +554029,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-mobile-request-and-owned-read-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554215,7 +554222,7 @@
             },
             {
               "path": "apps/web/e2e/shared-loading-adoption.spec.ts",
-              "sha256": "be89235da71197cdf76430d84ece810f3c7dea88666cedd35511b08196833747"
+              "sha256": "89afe876aff8c78c68cc5967a575c8fba3ea7a6faee19de26e20d16ec10aaf3e"
             },
             {
               "path": "apps/web/e2e/shell-navigation.spec.ts",
@@ -603319,7 +603326,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
+          "release-0.6-mobile-request-and-owned-read-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -603511,7 +603519,7 @@
             },
             {
               "path": "apps/web/e2e/customer-request-routes.spec.ts",
-              "sha256": "4d65394833bd4867aba951fba0ad2ee574723966cd8ca4811d59e94b87d716d0"
+              "sha256": "78344f6625ebdb198af906043f148a9b520381fa6505d3faf0e972fad8eaa89a"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -770904,7 +770912,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
+          "release-0.6-mobile-request-and-owned-read-browser-replay"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -878595,6 +878604,63 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/solar-issued-journey",
       "source_scope_proof": "solar-issued-journey-source-scope-proof.json",
       "source_scope_proof_sha256": "08926fd7741fcd9c9c27c3709c3c3dcc0dad630b18d6be6249613457688f781e"
+    },
+    "release-0.6-mobile-request-and-owned-read-browser-replay": {
+      "batch": "release-0.6-mobile-request-and-owned-read-browser-replay",
+      "base_commit": "c811321859ec871df3110d7127a43179758a0b40",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/customer-request-routes.spec.ts",
+        "apps/web/e2e/shared-loading-adoption.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
+        },
+        {
+          "path": "apps/web/e2e/customer-request-routes.spec.ts",
+          "sha256": "78344f6625ebdb198af906043f148a9b520381fa6505d3faf0e972fad8eaa89a"
+        },
+        {
+          "path": "apps/web/e2e/shared-loading-adoption.spec.ts",
+          "sha256": "89afe876aff8c78c68cc5967a575c8fba3ea7a6faee19de26e20d16ec10aaf3e"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/ContractsWorkspace.tsx",
+          "sha256": "0554b5519ecf702aaa033020f252165d0f20294b72b4b07e147b6d50d85df810"
+        },
+        {
+          "path": "apps/web/src/components/DocumentsWorkspace.tsx",
+          "sha256": "ddfb4fcf3fb2e989bad9f6316fc7ef154bfdae8f2d55232a070908bd81cbbdf8"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Reproduced all eight Mobile Chrome and Mobile Safari customer request failures on the production build. The tests now use the existing compact account menu when the desktop locale switcher is absent. All original Persian and English route, stage, linked invoice and no-reload checks remain.",
+        "Reproduced four wallet false positives on Safari-family projects. WebKit emitted a native application/csp-report style-src-elem report when the screenshot helper applied its transient stylesheet. The wallet test distinguishes only that endpoint, method and media type from its write ledger. All other API mutations still fail the zero-write assertions.",
+        "Scoped the owned document and contract checks to their actual labeled queues. The intermediate Mobile Safari run exposed competing contract loading labels from independent refund and cancellation queues. The scoped tests still assert exact loading status, one GET before explicit retry, late-response isolation, the queue error and a second GET on retry.",
+        "All 39 final targeted cases passed without retries on Mobile Chrome, Mobile Safari and desktop WebKit. The unchanged Firefox document shard cohort passed 12 targeted cases without retries. Focused formatting, lint and diff checks passed. These are local production-build browser receipts and the clean exact hosted matrix remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/mobile-request-and-owned-read",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "b60a248f729592cfc7a126310f9e6a3338a50d8a61922801549e7f405705f37f"
     }
   },
   "historical_improvements": [
