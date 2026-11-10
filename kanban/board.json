@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T12:12:05+00:00",
-  "source_commit": "968ea00afa92d204cf8d9937408009a716d7f420",
+  "updated": "2026-11-10T12:14:52+00:00",
+  "source_commit": "770185ba13b12da7e3a7598d46e7a917eac1bc12",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -487769,7 +487769,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -487809,7 +487810,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -487915,7 +487916,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -487971,7 +487973,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -488813,7 +488815,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -488903,7 +488906,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             }
           ]
         }
@@ -488933,7 +488936,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -489023,7 +489027,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             }
           ]
         }
@@ -489053,7 +489057,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -489143,7 +489148,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             }
           ]
         }
@@ -489656,14 +489661,16 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Complete the raw SQL sink and fragment data-flow review across API, worker and database code. The local inventory covers 155 SQL-like WHERE and ORDER BY templates; it does not cover every driver or raw helper call."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-sql-field-allowlist-review"
+        ],
         "current_acceptance": null
       }
     },
@@ -489678,19 +489685,110 @@
         "story": "06-security-testing-observability.md#spec-2bcfd5883d56"
       },
       "requirement": "| T-06.04.02.02 | Implement allowlist-based field mapping for dynamic `ORDER BY` / `WHERE` fields | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/security/security-verification.md"
+        ],
+        "batches": [
+          "release-0.6-sql-field-allowlist-review"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-sql-field-allowlists",
+          "reviewed_sha": "770185ba13b12da7e3a7598d46e7a917eac1bc12",
+          "source_evidence": [
+            {
+              "path": ".semgrep/security.tsx",
+              "sha256": "9178cea1717f6cf4652b75b293bc6f291900cb1213fdb45246f8eb58a64df01b"
+            },
+            {
+              "path": ".semgrep/security.yml",
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.test.ts",
+              "sha256": "cc0ac1238492fbebe328834cb0d5344e67cd44a57c44e3774f5c85912600f213"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.controller.ts",
+              "sha256": "db4593b385c5fe48e10376450803c9aeab3bb6d1b79e18eded53b94c5537c5c9"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.test.ts",
+              "sha256": "54867cee5e8b292f39cc9f8dfbee1bddb5749f56433eedfa6d7b41c488810a30"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.ts",
+              "sha256": "f3996d0bee9aab2c635fbd965520459db1e1bf88bfe5ee8a8dd569acc258076c"
+            },
+            {
+              "path": "apps/api/src/consultation/consultation-request.service.ts",
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
+            },
+            {
+              "path": "apps/api/src/contract/contract-review.service.ts",
+              "sha256": "ab8124ab8eefc0ad39053e459ef9f5993a7d61ff5a1897202cb17c2e8fd3e34a"
+            },
+            {
+              "path": "apps/api/src/crm/crm.controller.ts",
+              "sha256": "8c5458ed839ec829e80ed6a12ede6e8fb7cb6e3b27267f65318c5006feaf1393"
+            },
+            {
+              "path": "apps/api/src/crm/crm.service.test.ts",
+              "sha256": "16810a4ca9afb429a2c19e2ae6f16d62ea6fb82d869c18bb72e87b543770869f"
+            },
+            {
+              "path": "apps/api/src/crm/crm.service.ts",
+              "sha256": "bc0c9e119db3fab6020d2830de1551c9bf9b7cb5ba157ad7ad9070cefc0f1680"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.service.ts",
+              "sha256": "81dca5f6ea8f105c530e85d31c517d662dc0194b7ff319c52b5d598afe74f94b"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "623aa108f967dc846294609c5baabb5fc25df0a0a27277dd60befc68cf6d2f3b"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.service.ts",
+              "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.service.ts",
+              "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.test.ts",
+              "sha256": "6c0041f903f28104035890f8775285bbb1eba16fa7b4152c0da62a136f526d8d"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.ts",
+              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.test.ts",
+              "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet-history.ts",
+              "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+            }
+          ],
+          "checks": [
+            "Catalogue and CRM map validated sort keys to fixed SQL expressions. Customer and staff ticket lists use a bounded allowlist with a fixed fallback. Listing direction and keyset comparisons select fixed SQL tokens. Wallet and related list filters bind data and compose only fixed predicates and placeholder indexes.",
+            "All 108 focused unit cases passed across catalogue controller and service, CRM, ticket and wallet history suites. The catalogue controller rejects an injected sort value before invoking the service. The existing application code and SAST gate are unchanged."
+          ]
+        }
       }
     },
     {
@@ -489708,14 +489806,16 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "The existing SAST rule checks request-derived SQL text. Add the separate lint guard for non-literal raw SQL interpolation, preserving reviewed bounded grammar fragments and parameter binding."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-sql-field-allowlist-review"
+        ],
         "current_acceptance": null
       }
     },
@@ -492355,7 +492455,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -492483,7 +492584,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -492815,7 +492916,8 @@
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -492875,7 +492977,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -492927,7 +493029,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -492976,7 +493079,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -493184,7 +493287,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -493264,7 +493368,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -494939,7 +495043,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -494947,7 +495052,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             },
             {
               "path": "docs/threat-model.md",
@@ -495098,7 +495203,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -495106,7 +495212,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -495223,7 +495329,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -495231,7 +495338,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -495296,7 +495403,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -495312,7 +495420,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             }
           ],
           "checks": [
@@ -495386,7 +495494,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -495446,7 +495555,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -500562,7 +500671,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -500578,7 +500688,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             }
           ],
           "checks": [
@@ -500642,7 +500752,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-ai-and-payment-transport-boundaries"
+          "release-0.6-ai-and-payment-transport-boundaries",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -500650,7 +500761,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "763820c5b4c44abd6dfa066f511573086feb01546da24e518a74c76118a1db58"
+              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -773092,7 +773203,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
-          "release-0.6-reusable-profile-and-staff-capability-scope"
+          "release-0.6-reusable-profile-and-staff-capability-scope",
+          "release-0.6-sql-field-allowlist-review"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -882241,6 +882353,109 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/authorization-profile-and-staff-scope",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "deab6d2d6b0ac20fc55ed7d1b2245fb44d8aacad6ce586da89e4b8cb28162f27"
+    },
+    "release-0.6-sql-field-allowlist-review": {
+      "batch": "release-0.6-sql-field-allowlist-review",
+      "base_commit": "770185ba13b12da7e3a7598d46e7a917eac1bc12",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.02.02",
+        "06-security-testing-observability.md#T-06.04.02.01",
+        "06-security-testing-observability.md#T-06.04.02.03",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".semgrep/security.tsx",
+          "sha256": "9178cea1717f6cf4652b75b293bc6f291900cb1213fdb45246f8eb58a64df01b"
+        },
+        {
+          "path": ".semgrep/security.yml",
+          "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.controller.test.ts",
+          "sha256": "cc0ac1238492fbebe328834cb0d5344e67cd44a57c44e3774f5c85912600f213"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.controller.ts",
+          "sha256": "db4593b385c5fe48e10376450803c9aeab3bb6d1b79e18eded53b94c5537c5c9"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.service.test.ts",
+          "sha256": "54867cee5e8b292f39cc9f8dfbee1bddb5749f56433eedfa6d7b41c488810a30"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.service.ts",
+          "sha256": "f3996d0bee9aab2c635fbd965520459db1e1bf88bfe5ee8a8dd569acc258076c"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-request.service.ts",
+          "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
+        },
+        {
+          "path": "apps/api/src/contract/contract-review.service.ts",
+          "sha256": "ab8124ab8eefc0ad39053e459ef9f5993a7d61ff5a1897202cb17c2e8fd3e34a"
+        },
+        {
+          "path": "apps/api/src/crm/crm.controller.ts",
+          "sha256": "8c5458ed839ec829e80ed6a12ede6e8fb7cb6e3b27267f65318c5006feaf1393"
+        },
+        {
+          "path": "apps/api/src/crm/crm.service.test.ts",
+          "sha256": "16810a4ca9afb429a2c19e2ae6f16d62ea6fb82d869c18bb72e87b543770869f"
+        },
+        {
+          "path": "apps/api/src/crm/crm.service.ts",
+          "sha256": "bc0c9e119db3fab6020d2830de1551c9bf9b7cb5ba157ad7ad9070cefc0f1680"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.service.ts",
+          "sha256": "81dca5f6ea8f105c530e85d31c517d662dc0194b7ff319c52b5d598afe74f94b"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "623aa108f967dc846294609c5baabb5fc25df0a0a27277dd60befc68cf6d2f3b"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.service.ts",
+          "sha256": "54063a1b391d92d4b4302f157d46e2fbe0fbd15d15865c4be594014e0888e9be"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.service.ts",
+          "sha256": "e5f7bd1488454b78626a4950282c9c95a9d5434268b7f4c5b4e693fba19c9506"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.test.ts",
+          "sha256": "6c0041f903f28104035890f8775285bbb1eba16fa7b4152c0da62a136f526d8d"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.ts",
+          "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-history.test.ts",
+          "sha256": "e5c34b4bb29da2303523ed3ac80c61bf7ba56e054eb46bfd5dd3f31bbd7e4e50"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet-history.ts",
+          "sha256": "743dffb6c1175fdbfdc7efcf2b02d26a514146681154ce8e5b017db6190b9a36"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+        }
+      ],
+      "checks": [
+        "Catalogue and CRM map validated sort keys to fixed SQL expressions. Customer and staff ticket lists use a bounded allowlist with a fixed fallback. Listing direction and keyset comparisons select fixed SQL tokens. Wallet and related list filters bind data and compose only fixed predicates and placeholder indexes.",
+        "All 108 focused unit cases passed across catalogue controller and service, CRM, ticket and wallet history suites. The catalogue controller rejects an injected sort value before invoking the service. The existing application code and SAST gate are unchanged.",
+        "The local syntax inventory parsed 878 runtime TypeScript files and identified 155 SQL-like templates with interpolated WHERE or ORDER BY clauses. This inventory helps locate review sites and is not a complete raw SQL data-flow audit. The request-data-in-sql Semgrep check is a separate control from the broader interpolation lint requirement."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/sql-field-allowlists",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "1ae7e2f071e6a2887a56be9a8da685741a0269c71198949f564efd37be65ca13"
     }
   },
   "historical_improvements": [

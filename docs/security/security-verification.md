@@ -26,6 +26,11 @@ The repository regression fixtures cover these cases across the API, shared
 validation, and the native PostgreSQL and object-storage boundaries. See the
 source-bound test receipts on the task board. [Task board](../../kanban/BOARD.md).
 
+For SQL checks, submit invalid sort and filter values at the API boundary.
+Catalogue, CRM and ticket listings select SQL column names from fixed maps
+or allowlists. Listing directions and cursor comparisons use fixed SQL
+tokens. Search values, filters and cursor data remain bound parameters.
+
 Provider commands reject unknown envelope fields before a write or connection
 test. New email draft patches also reject unknown transport settings. SMS
 commands validate the configuration and each template mapping against their
