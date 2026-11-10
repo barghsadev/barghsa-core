@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T10:54:36+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T11:01:43+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1160 | Accepted with unchanged source bindings. |
-| verify | 148 | Existing work may be complete; inspect evidence before building. |
+| done | 1161 | Accepted with unchanged source bindings. |
+| verify | 147 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1293,7 +1293,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.03.04` | verify | Inventory needed | Write E2E: login → OTP (new device) → MFA → session revocation |
 | `06-security-testing-observability.md#T-06.10.03.05` | verify | Inventory needed | Write E2E: legal-agent invitation → accept → role-permission verification |
 | `06-security-testing-observability.md#T-06.10.03.06` | done | Recorded batch work | Write E2E: simple electricity order → wallet top-up → invoice payment → contract review → approval |
-| `06-security-testing-observability.md#T-06.10.03.07` | verify | Inventory needed | Write E2E: advanced electricity order with mandatory green rule → bank receipt → staff confirm → refund on rejection |
+| `06-security-testing-observability.md#T-06.10.03.07` | done | Recorded batch work | Write E2E: advanced electricity order with mandatory green rule → bank receipt → staff confirm → refund on rejection |
 | `06-security-testing-observability.md#T-06.10.03.08` | done | Recorded batch work | Write E2E: saving-plan order → agreement → invoice → payment → fulfillment stages |
 | `06-security-testing-observability.md#T-06.10.03.09` | done | Recorded batch work | Write E2E: consultation pricing → fee offer → accept → pay |
 | `06-security-testing-observability.md#T-06.10.03.10` | done | Recorded batch work | Write E2E: solar construction request → document upload → staff review → postal → contract creation |

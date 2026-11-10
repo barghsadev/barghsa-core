@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T10:54:36+00:00",
-  "source_commit": "217098d60accace964d2e8b0476292fce93ef5d6",
+  "updated": "2026-11-10T11:01:43+00:00",
+  "source_commit": "ac0fcbf7f46cfeef3337b4fc33722e479ed9d862",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -29222,7 +29222,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -29290,7 +29291,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -33680,7 +33681,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -33748,7 +33750,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -41857,7 +41859,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-active-profile-address-crud",
@@ -41877,7 +41880,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -42705,7 +42708,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
-          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -42753,7 +42757,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -300887,7 +300891,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -300955,7 +300960,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -308588,7 +308593,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -308656,7 +308662,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -318897,7 +318903,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -318945,7 +318952,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -319562,7 +319569,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -319610,7 +319618,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -320227,7 +320235,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -320275,7 +320284,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -320892,7 +320901,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -320940,7 +320950,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -321557,7 +321567,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -321605,7 +321616,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -322223,7 +322234,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -322271,7 +322283,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -322889,7 +322901,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -322937,7 +322950,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -323554,7 +323567,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -323602,7 +323616,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -324219,7 +324233,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -324267,7 +324282,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -324884,7 +324899,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -324932,7 +324948,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -325550,7 +325566,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -325598,7 +325615,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -326215,7 +326232,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -326263,7 +326281,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -326880,7 +326898,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -326928,7 +326947,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -327545,7 +327564,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -327593,7 +327613,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -328215,7 +328235,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -328263,7 +328284,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -328880,7 +328901,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -328928,7 +328950,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -329576,7 +329598,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -329644,7 +329667,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -360821,7 +360844,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -360889,7 +360913,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -371885,7 +371909,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-installation-address-selection",
@@ -371917,7 +371942,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -373630,7 +373655,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-authoritative-final-review",
@@ -373663,7 +373689,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -498360,19 +498386,89 @@
         "story": "06-security-testing-observability.md#spec-a2575d616ae6"
       },
       "requirement": "| T-06.10.03.07 | Write E2E: advanced electricity order with mandatory green rule → bank receipt → staff confirm → refund on rejection | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/web/e2e/electricity-bank-refund-fixture.ts",
+          "apps/web/e2e/electricity-journey.spec.ts"
+        ],
+        "batches": [
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-advanced-electricity-bank-refund-browser-journey",
+          "reviewed_sha": "ac0fcbf7f46cfeef3337b4fc33722e479ed9d862",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "e5d340d3a83c2f0bf6c460eaaad05b803f70e90e93f65afa0401385f65a9e713"
+            },
+            {
+              "path": "apps/web/e2e/confirmation-fixture.ts",
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+            },
+            {
+              "path": "apps/web/e2e/electricity-bank-refund-fixture.ts",
+              "sha256": "2e595b7dfd09aa6f2f5241bdc05cdb2a6400902d44238d09252637d6ceae1bee"
+            },
+            {
+              "path": "apps/web/e2e/electricity-correction-form-fixture.ts",
+              "sha256": "b175303af85ee19939dffebea234c862e4a3ffe3aa2e59c224fb88db3852ab0d"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
+            },
+            {
+              "path": "apps/web/e2e/electricity-payment-fixture.ts",
+              "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
+              "sha256": "56d348c4b3b2ea8c2aeccd89421c4e149f1b28e4f57d94b65d1faf20e47b00c7"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+              "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+              "sha256": "52db5fa558c3d16e55014bb8bc98ed7b6ab9cc4f446aecb15924726bcfb470e1"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+              "sha256": "47262b576580541642b72e570a1d8718d13e6ac83893f3842f7142c467a3b5a7"
+            },
+            {
+              "path": "apps/web/src/test/bank-receipt-review-fixture.ts",
+              "sha256": "4309352844fd12bb5565032afc85d3646e481b144eb917355c834d0f9286cc7f"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "The Persian advanced-order browser case requires the same mandatory green quantity, reviewed tariff bundle, exact quoted submission, address, review digest and invoice as the existing wallet variants. It uploads a valid PDF once to the local loopback receiver and verifies exact bytes before recording and submitting the scoped bank receipt.",
+            "The customer confirmation retains exact IRR, payer reference, profile, CSRF and review hash. The order shows pending finance review before staff confirmation. Staff reviews the exact receipt and invoice allocation, gives the financial acknowledgment, and confirms with the scoped hash and CSRF. The customer then reads the same order ready for contract acceptance.",
+            "Staff reviews the required full wallet refund against the same approved quote and confirms rejection with financial acknowledgment, destructive phrase, CSRF, exact version and review hash, and an idempotency key. The receipt carries the linked refund ID. The browser sees refund pending and no closure until a separate simulated worker receipt, then displays the exact refunded amount and closure. No wallet debit command occurs in this bank path.",
+            "The first Mobile Safari run captured a valid upload and HTTP 200 review but rejected the fixture review because fileSizeBytes was numeric. The final typed fixture uses decimal-string bytes. Four cases passed on each of Firefox, Mobile Chrome and Mobile Safari without retries. The existing wallet and language cases remain. Formatting, lint and diff checks passed. The live banking and full release gates remain open."
+          ]
+        }
       }
     },
     {
@@ -548235,7 +548331,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -548403,7 +548500,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-pre-active-rejection.spec.ts",
@@ -603428,7 +603525,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -603668,7 +603766,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-orphan-financial.spec.ts",
@@ -746772,7 +746870,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -747955,7 +748053,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -748881,7 +748980,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-journey.spec.ts",
-              "sha256": "0f05a9d068dd3b11fb9e9cf34fa804a86384e84271c7dc757dc873edfc468955"
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -750052,7 +750151,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ]
       }
     },
@@ -771017,7 +771117,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-advanced-electricity-bank-refund-browser-journey"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -878834,6 +878935,85 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/simple-electricity-wallet-funding",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "f4a410ec8a5f3133e0ef2226b5998d0dc85fc05527625fbcd390ad7c5e8f80ad"
+    },
+    "release-0.6-advanced-electricity-bank-refund-browser-journey": {
+      "batch": "release-0.6-advanced-electricity-bank-refund-browser-journey",
+      "base_commit": "ac0fcbf7f46cfeef3337b4fc33722e479ed9d862",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.03.07",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/electricity-bank-refund-fixture.ts",
+        "apps/web/e2e/electricity-journey.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+          "sha256": "e5d340d3a83c2f0bf6c460eaaad05b803f70e90e93f65afa0401385f65a9e713"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+        },
+        {
+          "path": "apps/web/e2e/electricity-bank-refund-fixture.ts",
+          "sha256": "2e595b7dfd09aa6f2f5241bdc05cdb2a6400902d44238d09252637d6ceae1bee"
+        },
+        {
+          "path": "apps/web/e2e/electricity-correction-form-fixture.ts",
+          "sha256": "b175303af85ee19939dffebea234c862e4a3ffe3aa2e59c224fb88db3852ab0d"
+        },
+        {
+          "path": "apps/web/e2e/electricity-journey.spec.ts",
+          "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
+        },
+        {
+          "path": "apps/web/e2e/electricity-payment-fixture.ts",
+          "sha256": "1c3226cddeb07130b9cf729674e333a2e973c047b137f80028d7b91cd82b1029"
+        },
+        {
+          "path": "apps/web/e2e/upload-fixture.ts",
+          "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/InvoiceBankReceiptQueue.tsx",
+          "sha256": "56d348c4b3b2ea8c2aeccd89421c4e149f1b28e4f57d94b65d1faf20e47b00c7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityOrdersPage.tsx",
+          "sha256": "e277366540bae21a915348760e09d5d781f331e580d48c1a8a65c515cb641696"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityOrderDetailsPage.tsx",
+          "sha256": "52db5fa558c3d16e55014bb8bc98ed7b6ab9cc4f446aecb15924726bcfb470e1"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceBankReceiptUploadForm.tsx",
+          "sha256": "47262b576580541642b72e570a1d8718d13e6ac83893f3842f7142c467a3b5a7"
+        },
+        {
+          "path": "apps/web/src/test/bank-receipt-review-fixture.ts",
+          "sha256": "4309352844fd12bb5565032afc85d3646e481b144eb917355c834d0f9286cc7f"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "The Persian advanced-order browser case requires the same mandatory green quantity, reviewed tariff bundle, exact quoted submission, address, review digest and invoice as the existing wallet variants. It uploads a valid PDF once to the local loopback receiver and verifies exact bytes before recording and submitting the scoped bank receipt.",
+        "The customer confirmation retains exact IRR, payer reference, profile, CSRF and review hash. The order shows pending finance review before staff confirmation. Staff reviews the exact receipt and invoice allocation, gives the financial acknowledgment, and confirms with the scoped hash and CSRF. The customer then reads the same order ready for contract acceptance.",
+        "Staff reviews the required full wallet refund against the same approved quote and confirms rejection with financial acknowledgment, destructive phrase, CSRF, exact version and review hash, and an idempotency key. The receipt carries the linked refund ID. The browser sees refund pending and no closure until a separate simulated worker receipt, then displays the exact refunded amount and closure. No wallet debit command occurs in this bank path.",
+        "The first Mobile Safari run captured a valid upload and HTTP 200 review but rejected the fixture review because fileSizeBytes was numeric. The final typed fixture uses decimal-string bytes. Four cases passed on each of Firefox, Mobile Chrome and Mobile Safari without retries. The existing wallet and language cases remain. Formatting, lint and diff checks passed. The live banking and full release gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/advanced-electricity-bank-refund",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "34686cc9c22fb1138cbe18cd3fd15b35bc9355bc917b0b6d50b9506b00eef288"
     }
   },
   "historical_improvements": [

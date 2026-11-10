@@ -1,8 +1,16 @@
 import { randomUUID } from 'node:crypto';
-import { test, expect } from './coverage-fixture';
+import { test, expect } from './upload-fixture';
 import { t } from '@barghsa/i18n/app';
 import { electricityPaymentReview } from './electricity-payment-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { fullNavigation } from './navigation-fixture';
+import {
+  bankJourneyReceipt,
+  bankRefundReason,
+  runElectricityBankRefund,
+  type BankJourneyOrder,
+  type BankJourneyStage,
+} from './electricity-bank-refund-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const orderId = '66666666-6666-4666-8666-666666666666';
@@ -44,16 +52,34 @@ const products = (['thermal', 'green', 'free_market', 'energy_saving'] as const)
   })
 );
 
-for (const locale of ['en', 'fa'] as const) {
-  test(`advanced electricity journey follows a localized bundle through payment and contract tracking (${locale})`, async ({
-    page,
-  }) => {
+for (const [locale, funding] of [
+  ['en', 'wallet'],
+  ['fa', 'wallet'],
+  ['fa', 'bank'],
+] as const) {
+  const title =
+    funding === 'bank'
+      ? 'advanced electricity confirms a bank receipt and refunds the rejected order'
+      : 'advanced electricity journey follows a localized bundle through payment and contract tracking';
+  test(`${title} (${locale})`, async ({ page, uploadReceiver }) => {
+    if (funding === 'bank') test.setTimeout(60_000);
+    const bank = {
+      stage: 'unsubmitted' as BankJourneyStage,
+      context: 'customer' as 'customer' | 'staff',
+    };
     await page.clock.setFixedTime(new Date('2026-09-23T10:00:00.000Z'));
     await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
       route.fulfill({
-        json: { isStaff: false, userId: 'buyer', requiresTosAcceptance: false },
+        json: {
+          isStaff: bank.context === 'staff',
+          userId: bank.context === 'staff' ? 'finance-reviewer' : 'buyer',
+          requiresTosAcceptance: false,
+          ...(funding === 'bank'
+            ? { operatingContext: bank.context, navigation: fullNavigation(bank.context) }
+            : {}),
+        },
       })
     );
     await page.route('**/api/profiles', (route) =>
@@ -128,6 +154,15 @@ for (const locale of ['en', 'fa'] as const) {
     let draftRevision: string | null = null;
     let reviewComplete = false;
     let paid = false;
+    const bankSettled = () => ['confirmed', 'processing', 'completed'].includes(bank.stage);
+    const invoiceState = () =>
+      bank.stage === 'completed'
+        ? 'Refunded'
+        : bank.stage === 'submitted'
+          ? 'PaymentUnderReview'
+          : paid || bankSettled()
+            ? 'Paid'
+            : 'Unpaid';
     await page.route('**/api/electricity/drafts/advanced/guarded?*', (route) =>
       route.fulfill({
         json: {
@@ -146,6 +181,8 @@ for (const locale of ['en', 'fa'] as const) {
     });
     const previews: Array<Record<string, unknown>> = [];
     let reviewedTotal = '0';
+    let reviewedQuantity = '0';
+    let reviewedPricing: BankJourneyOrder['pricingSnapshot'] | undefined;
     const paymentReview = () =>
       electricityPaymentReview({
         profileId,
@@ -166,12 +203,14 @@ for (const locale of ['en', 'fa'] as const) {
       const green = Math.ceil(thermal / 24);
       const totalKwh =
         thermal + green + Number(quantities.free_market) + Number(quantities.energy_saving);
-      const lines = [
-        ['thermal', thermal, '100000'],
-        ['green', green, '200000'],
-        ['free_market', Number(quantities.free_market), '300000'],
-        ['energy_saving', Number(quantities.energy_saving), '400000'],
-      ]
+      const lines = (
+        [
+          ['thermal', thermal, '100000'],
+          ['green', green, '200000'],
+          ['free_market', Number(quantities.free_market), '300000'],
+          ['energy_saving', Number(quantities.energy_saving), '400000'],
+        ] as const
+      )
         .filter((line) => Number(line[1]) > 0)
         .map(([systemKey, quantityKwh, unitPriceIrR]) => ({
           systemKey,
@@ -184,6 +223,18 @@ for (const locale of ['en', 'fa'] as const) {
         }));
       const total = lines.reduce((sum, line) => sum + Number(line.subtotalIrR), 0);
       reviewedTotal = String(total);
+      reviewedQuantity = String(totalKwh);
+      reviewedPricing = {
+        subtotalIrR: reviewedTotal,
+        discountIrR: '0',
+        vatIrR: '0',
+        lines: lines.map((line) => ({
+          ...line,
+          productId: products.find((product) => product.systemKey === line.systemKey)!.id,
+          vatRateBasisPoints: 0,
+          netIrR: line.subtotalIrR,
+        })),
+      };
       return route.fulfill({
         json: {
           reviewDigest: 'a'.repeat(64),
@@ -216,32 +267,66 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
 
-    await page.route(`**/api/electricity/orders/${orderId}`, (route) =>
-      route.fulfill({
+    await page.route(`**/api/electricity/orders/${orderId}`, (route) => {
+      const rejected = bank.stage === 'processing' || bank.stage === 'completed';
+      return route.fulfill({
         json: {
           orderId,
           profileId,
-          commercialStatus: reviewComplete ? 'CONFIRMED' : 'PENDING',
-          electricityStatus: reviewComplete ? 'approved' : 'awaiting_staff_review',
-          financialStatus: paid ? 'paid' : 'unpaid',
-          nextAction: paid ? 'accept_contract' : reviewComplete ? 'pay_invoice' : 'await_review',
+          commercialStatus: rejected ? 'CANCELLED' : reviewComplete ? 'CONFIRMED' : 'PENDING',
+          electricityStatus: rejected
+            ? 'rejected'
+            : reviewComplete
+              ? 'approved'
+              : 'awaiting_staff_review',
+          financialStatus:
+            bank.stage === 'completed'
+              ? 'refunded'
+              : bank.stage === 'processing'
+                ? 'refund_pending'
+                : bank.stage === 'submitted'
+                  ? 'payment_under_review'
+                  : paid || bankSettled()
+                    ? 'paid'
+                    : 'unpaid',
+          nextAction:
+            bank.stage === 'completed'
+              ? 'none'
+              : bank.stage === 'processing'
+                ? 'await_refund'
+                : bank.stage === 'submitted'
+                  ? 'await_payment_review'
+                  : paid || bankSettled()
+                    ? 'accept_contract'
+                    : reviewComplete
+                      ? 'pay_invoice'
+                      : 'await_review',
           periodStart: previews.at(-1)?.startAt,
           periodEnd: previews.at(-1)?.endAt,
           totalKwh: '14',
           fullAddress: address.fullAddress,
           postalCode: address.postalCode,
           contractId,
-          contractState: paid
-            ? 'AwaitingCustomerAcceptance'
-            : reviewComplete
-              ? 'AwaitingPayment'
-              : 'AwaitingStaffReview',
+          contractState: rejected
+            ? 'Rejected'
+            : paid || bankSettled()
+              ? 'AwaitingCustomerAcceptance'
+              : reviewComplete
+                ? 'AwaitingPayment'
+                : 'AwaitingStaffReview',
           versionId,
           invoiceId,
-          invoiceState: paid ? 'Paid' : 'Unpaid',
+          invoiceState: invoiceState(),
           totalIrR: reviewedTotal,
-          paidIrR: paid ? reviewedTotal : '0',
-          refundedIrR: '0',
+          paidIrR: paid || bankSettled() ? reviewedTotal : '0',
+          refundedIrR: bank.stage === 'completed' ? reviewedTotal : '0',
+          ...(rejected
+            ? {
+                refundStatus: bank.stage,
+                refundReason: bankRefundReason,
+                financiallyClosed: bank.stage === 'completed',
+              }
+            : {}),
           lines: [
             {
               productId: products[0]!.id,
@@ -270,16 +355,16 @@ for (const locale of ['en', 'fa'] as const) {
           ],
           timeline: [],
         },
-      })
-    );
+      });
+    });
     await page.route(`**/api/invoices/${invoiceId}`, (route) => {
       const invoice = {
         invoiceId,
         role: 'original',
-        state: paid ? 'Paid' : 'Unpaid',
+        state: invoiceState(),
         totalAmount: reviewedTotal,
-        paidAmount: paid ? reviewedTotal : '0',
-        refundedAmount: '0',
+        paidAmount: paid || bankSettled() ? reviewedTotal : '0',
+        refundedAmount: bank.stage === 'completed' ? reviewedTotal : '0',
         accountingAmount: reviewedTotal,
         adjustmentKind: null,
         issuedAt: submittedAt,
@@ -302,7 +387,7 @@ for (const locale of ['en', 'fa'] as const) {
           invoice,
           chain: [invoice],
           payments: [],
-          bankReceipts: [],
+          bankReceipts: bankJourneyReceipt(bank.stage, reviewedTotal, submittedAt),
           refunds: [],
         },
       });
@@ -316,7 +401,7 @@ for (const locale of ['en', 'fa'] as const) {
             profileId,
             remainingAmount: reviewedTotal,
             availableBalance: '3000000',
-            canPay: !paid,
+            canPay: !paid && bank.stage === 'unsubmitted',
             review: paymentReview(),
           },
         });
@@ -528,6 +613,30 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('region', { name: t('workflow.summary', locale) })
       .getByRole('link', { name: t('electricity.order.nextAction.pay_invoice', locale) })
       .click();
+    if (funding === 'bank') {
+      expect(reviewedPricing).toBeDefined();
+      await runElectricityBankRefund(
+        page,
+        locale,
+        {
+          orderId,
+          profileId,
+          contractId,
+          versionId,
+          invoiceId,
+          amount: reviewedTotal,
+          totalKwh: reviewedQuantity,
+          pricingSnapshot: reviewedPricing!,
+          periodStart: previews.at(-1)!.startAt as string,
+          periodEnd: previews.at(-1)!.endAt as string,
+          submittedAt,
+        },
+        bank,
+        uploadReceiver
+      );
+      expect(payments).toHaveLength(0);
+      return;
+    }
     const wallet = page.locator('#wallet-invoice-payment');
     await wallet
       .getByRole('button', {
