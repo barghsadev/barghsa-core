@@ -721,11 +721,16 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.goto(`${path(mode)}?step=5`);
       const submit = button(page, 'electricity.order.submit', locale);
-      if (mode === 'advanced') {
-        const review = page.getByRole('region', {
-          name: t('electricity.order.review', locale),
-          exact: true,
-        });
+      const review = page.getByRole('region', {
+        name: t('electricity.order.review', locale),
+        exact: true,
+      });
+      // Acknowledgment belongs to the loaded quote and resets when its scope changes.
+      if (mode === 'simple') {
+        await expect(
+          review.getByRole('region', { name: t('electricity.order.total', locale), exact: true })
+        ).toBeVisible();
+      } else {
         await expect(review.getByText(address.fullAddress, { exact: true })).toBeVisible();
       }
       await expect(submit).toBeDisabled();

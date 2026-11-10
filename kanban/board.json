@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T11:01:43+00:00",
-  "source_commit": "ac0fcbf7f46cfeef3337b4fc33722e479ed9d862",
+  "updated": "2026-11-10T11:09:29+00:00",
+  "source_commit": "a3528b4cc1e74232d23d121023f7f9a55d365796",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5553,7 +5553,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Actual scheduled run 42789410833 reported all 40 shards with 127 unexpected outcomes and 18 flakes. The mobile request, Safari wallet and owned-read cohorts have final local passing evidence, and the unchanged Firefox document cohort passed. Resolve remaining failures and repeat the complete matrix on the exact candidate.",
+        "Actual scheduled run 42789410833 reported all 40 shards with 127 unexpected outcomes and 18 flakes. The customer request, owned-read and Firefox document replays passed. The Firefox electricity submission race and the Persian saving touch-target flake now have source-bound local passing evidence. Resolve remaining failures and repeat the complete matrix on the exact candidate.",
         "Bind current critical registration, MFA, legal onboarding, electricity and wallet, saving, solar construction and admin browser journeys to the accepted release source. The saving payment and fulfillment journey has separate local acceptance."
       ],
       "owner": null,
@@ -5621,7 +5621,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-mobile-request-and-owned-read-browser-replay"
+          "release-0.6-mobile-request-and-owned-read-browser-replay",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": null
       }
@@ -5880,7 +5881,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-mobile-request-and-owned-read-browser-replay"
+          "release-0.6-mobile-request-and-owned-read-browser-replay",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": null
       }
@@ -14090,7 +14092,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-mobile-request-and-owned-read-browser-replay"
+          "release-0.6-mobile-request-and-owned-read-browser-replay",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": null
       }
@@ -29223,7 +29226,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -29295,7 +29299,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -33682,7 +33686,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -33754,7 +33759,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -41860,7 +41865,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-active-profile-address-crud",
@@ -41884,7 +41890,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -42709,7 +42715,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -42761,7 +42768,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -298273,7 +298280,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -298345,7 +298353,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -299145,7 +299153,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -299217,7 +299226,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -300017,7 +300026,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -300089,7 +300099,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -300892,7 +300902,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -300964,7 +300975,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -301614,7 +301625,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -301686,7 +301698,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -302487,7 +302499,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -302559,7 +302572,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -303359,7 +303372,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -303431,7 +303445,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -304231,7 +304245,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -304303,7 +304318,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -305103,7 +305118,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -305175,7 +305191,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -305976,7 +305992,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -306048,7 +306065,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -306848,7 +306865,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -306920,7 +306938,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -307720,7 +307738,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -307792,7 +307811,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -308594,7 +308613,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -308666,7 +308686,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -309316,7 +309336,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -309388,7 +309409,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -310188,7 +310209,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -310260,7 +310282,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -311060,7 +311082,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -311132,7 +311155,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -311932,7 +311955,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -312004,7 +312028,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -312804,7 +312828,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -312876,7 +312901,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -313676,7 +313701,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -313748,7 +313774,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -314548,7 +314574,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -314620,7 +314647,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -315420,7 +315447,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -315492,7 +315520,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -316295,7 +316323,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -316367,7 +316396,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -317167,7 +317196,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -317239,7 +317269,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -318039,7 +318069,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -318111,7 +318142,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -318904,7 +318935,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -318960,7 +318992,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -319570,7 +319602,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -319626,7 +319659,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -320236,7 +320269,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -320292,7 +320326,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -320902,7 +320936,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -320958,7 +320993,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -321568,7 +321603,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -321624,7 +321660,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -322235,7 +322271,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -322291,7 +322328,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -322902,7 +322939,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -322958,7 +322996,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -323568,7 +323606,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -323624,7 +323663,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -324234,7 +324273,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -324290,7 +324330,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -324900,7 +324940,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -324956,7 +324997,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -325567,7 +325608,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -325623,7 +325665,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -326233,7 +326275,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -326289,7 +326332,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -326899,7 +326942,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -326955,7 +326999,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -327565,7 +327609,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -327621,7 +327666,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -328236,7 +328281,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -328292,7 +328338,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -328902,7 +328948,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -328958,7 +329005,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -329599,7 +329646,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -329671,7 +329719,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -360845,7 +360893,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -360917,7 +360966,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -361844,7 +361893,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -361896,7 +361946,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -362850,7 +362900,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -362902,7 +362953,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -363858,7 +363909,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -363910,7 +363962,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -364864,7 +364916,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -364916,7 +364969,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -365870,7 +365923,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -365922,7 +365976,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -366876,7 +366930,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -366928,7 +366983,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -367883,7 +367938,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -367935,7 +367991,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -368889,7 +368945,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -368941,7 +368998,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -369895,7 +369952,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -369947,7 +370005,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -370901,7 +370959,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -370953,7 +371012,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -371910,7 +371969,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-installation-address-selection",
@@ -371946,7 +372006,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -372648,7 +372708,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -372700,7 +372761,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -373656,7 +373717,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-authoritative-final-review",
@@ -373693,7 +373755,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -374400,7 +374462,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -374452,7 +374515,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -375406,7 +375469,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -375458,7 +375522,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -376412,7 +376476,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -376464,7 +376529,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -377420,7 +377485,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -377472,7 +377538,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -378426,7 +378492,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -378478,7 +378545,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -379437,7 +379504,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -379489,7 +379557,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -380452,7 +380520,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -380504,7 +380573,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -381467,7 +381536,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -381519,7 +381589,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -521425,7 +521495,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-mobile-request-and-owned-read-browser-replay"
+          "release-0.6-mobile-request-and-owned-read-browser-replay",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -521865,7 +521936,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -539658,7 +539729,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539690,7 +539762,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -540083,7 +540155,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540115,7 +540188,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -540506,7 +540579,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540538,7 +540612,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -540929,7 +541003,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540961,7 +541036,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -542657,7 +542732,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542969,7 +543045,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -548332,7 +548408,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-simple-electricity-wallet-funding-browser-journey",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -548536,7 +548613,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
@@ -550741,7 +550818,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-accessibility-impact-and-manual-review",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -550761,7 +550839,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -551949,7 +552027,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-mobile-request-and-owned-read-browser-replay"
+          "release-0.6-mobile-request-and-owned-read-browser-replay",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552293,7 +552372,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -552816,7 +552895,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-mobile-request-and-owned-read-browser-replay"
+          "release-0.6-mobile-request-and-owned-read-browser-replay",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553160,7 +553240,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -554215,7 +554295,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-mobile-request-and-owned-read-browser-replay"
+          "release-0.6-mobile-request-and-owned-read-browser-replay",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554559,7 +554640,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -573936,7 +574017,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -573968,7 +574050,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -574359,7 +574441,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -574391,7 +574474,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -574782,7 +574865,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -574814,7 +574898,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -575205,7 +575289,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -575237,7 +575322,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -575633,7 +575718,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -575665,7 +575751,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -576062,7 +576148,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -576094,7 +576181,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -576485,7 +576572,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -576517,7 +576605,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -576908,7 +576996,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -576940,7 +577029,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -577332,7 +577421,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577364,7 +577454,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -577757,7 +577847,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577789,7 +577880,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -578180,7 +578271,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -578212,7 +578304,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -578604,7 +578696,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -578636,7 +578729,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -579076,7 +579169,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -579104,7 +579198,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -580975,7 +581069,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -581003,7 +581098,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -582875,7 +582970,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582903,7 +582999,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -584744,7 +584840,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -584772,7 +584869,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -586639,7 +586736,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -586667,7 +586765,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -588543,7 +588641,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -588571,7 +588670,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -590420,7 +590519,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590448,7 +590548,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -592261,7 +592361,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592289,7 +592390,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -594102,7 +594203,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -594130,7 +594232,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -595944,7 +596046,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -595972,7 +596075,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -597785,7 +597888,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -597813,7 +597917,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -603526,7 +603630,8 @@
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
           "release-0.6-simple-electricity-wallet-funding-browser-journey",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -603806,7 +603911,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
@@ -632441,7 +632546,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
@@ -633116,7 +633222,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -633777,7 +633883,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -633805,7 +633912,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -635614,7 +635721,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -635642,7 +635750,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -637451,7 +637559,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -637479,7 +637588,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -639288,7 +639397,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -639316,7 +639426,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -641125,7 +641235,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -641153,7 +641264,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -642962,7 +643073,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -642990,7 +643102,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -644799,7 +644911,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -644827,7 +644940,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -673620,7 +673733,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -674044,7 +674158,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -674773,7 +674887,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -675197,7 +675312,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -675926,7 +676041,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -676350,7 +676466,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -677082,7 +677198,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -677506,7 +677623,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -678238,7 +678355,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -678662,7 +678780,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -679421,7 +679539,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -679845,7 +679964,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -680573,7 +680692,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -680997,7 +681117,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -681725,7 +681845,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -682149,7 +682270,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -682878,7 +682999,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -683302,7 +683424,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -684049,7 +684171,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -684473,7 +684596,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -685203,7 +685326,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -685627,7 +685751,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -707487,7 +707611,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -707571,7 +707696,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -708179,7 +708304,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -708263,7 +708389,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -708870,7 +708996,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -708954,7 +709081,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -709563,7 +709690,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -709647,7 +709775,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -710256,7 +710384,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -710340,7 +710469,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -710946,7 +711075,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -711030,7 +711160,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -711636,7 +711766,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -711720,7 +711851,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -712327,7 +712458,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -712411,7 +712543,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -713017,7 +713149,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -713101,7 +713234,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -713708,7 +713841,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -713792,7 +713926,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -717718,7 +717852,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -718142,7 +718277,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -718869,7 +719004,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -719293,7 +719429,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -720020,7 +720156,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -720444,7 +720581,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -721171,7 +721308,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -721595,7 +721733,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
@@ -746878,7 +747016,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -748054,7 +748192,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-simple-electricity-wallet-funding-browser-journey",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -748988,7 +749127,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+              "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -750152,7 +750291,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-simple-electricity-wallet-funding-browser-journey",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ]
       }
     },
@@ -755881,7 +756021,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -759081,7 +759221,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ]
       }
     },
@@ -767969,7 +768110,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -768740,7 +768881,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ]
       }
     },
@@ -769872,7 +770014,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingOrdersPage.tsx",
-              "sha256": "28e6c68199156a4815e3353c22e23ae0ea15e0ff984f5f89d6c6bb2e6add47c0"
+              "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -770892,7 +771034,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ]
       }
     },
@@ -770997,7 +771140,7 @@
       "launch_required": true,
       "remaining": [
         "Reconcile every epic-01 and epic-06 criterion with current source and operational evidence. Apply the approved direct-main workflow while preserving all production gates.",
-        "Finish the full exact candidate browser matrix, source coverage and receipt review. The saving, consultation and solar journeys passed in three local browsers. The actual scheduled matrix reported all shards and failed correctly. Residual fixes and exact candidate evidence remain open.",
+        "Finish the full exact candidate browser matrix, source coverage and receipt review. The simple and advanced electricity, saving, consultation and solar journeys have local browser receipts. The actual scheduled matrix reported all shards and failed correctly. Residual fixes and exact candidate evidence remain open.",
         "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
@@ -771118,7 +771261,8 @@
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
           "release-0.6-simple-electricity-wallet-funding-browser-journey",
-          "release-0.6-advanced-electricity-bank-refund-browser-journey"
+          "release-0.6-advanced-electricity-bank-refund-browser-journey",
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -879014,6 +879158,83 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/advanced-electricity-bank-refund",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "34686cc9c22fb1138cbe18cd3fd15b35bc9355bc917b0b6d50b9506b00eef288"
+    },
+    "release-0.6-saving-touch-and-electricity-quote-browser-replay": {
+      "batch": "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+      "base_commit": "a3528b4cc1e74232d23d121023f7f9a55d365796",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+        "apps/web/src/pages/SavingOrdersPage.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+        },
+        {
+          "path": "apps/web/e2e/customer-service-history-views.spec.ts",
+          "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+        },
+        {
+          "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+          "sha256": "ec9bf4388a2b4e59236076e09208531d0aa1faf75ca9488b689730736cfe1d74"
+        },
+        {
+          "path": "apps/web/e2e/primary-mobile-performance.ts",
+          "sha256": "179314a776dc2e08f7a3279492331695b94891b39bb271312a761efb73961cd2"
+        },
+        {
+          "path": "apps/web/e2e/route-presentation.ts",
+          "sha256": "3b8b1e8ea1c428bea8034336170811dd33171a51c028ece2fbabe6b2484f259b"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/SimpleElectricityReview.tsx",
+          "sha256": "efdfad97b2e27c10a6655fcbf24cebe9214431bed0d28ec627b2904234344a4a"
+        },
+        {
+          "path": "apps/web/src/hooks/useRiskConfirmation.ts",
+          "sha256": "4c80aac980bd368019b3fec8fd19d7feefd44f1c97dd6b109d73224452f0b1d7"
+        },
+        {
+          "path": "apps/web/src/pages/SavingOrdersPage.test.tsx",
+          "sha256": "d6500486fbc80233214be8fd4762ba1a57201ec6edc649d77e47b12935be59e0"
+        },
+        {
+          "path": "apps/web/src/pages/SavingOrdersPage.tsx",
+          "sha256": "a0105900181ec0525783619a0bc4a5db15caecbc3ee1c1649d9434a6633e6e7a"
+        },
+        {
+          "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
+          "sha256": "092529a37d2178621babb556d9677d4f0f7497f94ba6d81210b11a45ec61ee48"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "6934971e0de9d57aa8b85644cb45668e7618f96bc1d51716d0c04d740a2834d2"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Both original Firefox simple-order traces acknowledged the form before the first successful quote response. The quote correctly resets acknowledgment when its scope changes. The test waits for the visible exact payable review and retains the disabled-before-acknowledgment, captured draft, timeout, late reply, unchanged idempotent payload and exact receipt assertions. The advanced case retains its address review.",
+        "The first replacement locator matched the unformatted street only. The simple review renders province, city and street together. The final payable-region locator directly requires the loaded quote. All 15 final affected cases passed on Firefox, Mobile Chrome and Mobile Safari without retries.",
+        "The hosted 42799427108 artifact recorded one Persian saving-history touch-target flake at 320 px. A production-browser probe reproduced 43.99996948 px during entrance translation despite the computed 44 px minimum. The first local class was overridden by the shared logical sizing rule. The final link reuses the app’s existing 45 px touch override. All eight final probes computed 45 px and the smallest rendered value was 44.99996948 px.",
+        "All 12 primary mobile cases passed without retries. The highest populated render was 1858.7 ms, LCP 1480.0 ms, CLS 0.0473 and blocking 0.0 ms. The production build, 102 gzip budgets, focused unit, lint, format and diff checks passed. The full exact hosted browser matrix remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/saving-touch-and-electricity-quote",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "6c02469941d498e53edef68e82e9bb4f2547a4cc56e459e6218fa776e236c451"
     }
   },
   "historical_improvements": [
