@@ -104,6 +104,18 @@ operation message. Request logs retain their correlation ID. Database exception
 text can contain payment references or other private values, so use the
 correlation ID and authorized audit records when investigating a failure.
 
+## Provider callback contracts
+
+Payment and Resend callbacks verify the original body and a decimal Unix
+timestamp within five minutes. Each provider keeps its own signature format
+and receipt ledger. Verify duplicates at the ledger and check that concurrent
+retries preserve one payment or one email suppression outcome.
+
+SMS.ir v1 publishes an authenticated delivery report by message ID. Its public
+specification has no signed delivery callback declaration. A status report
+proves provider feedback for that message and must stay separate from the
+signed callback gate. [SMS.ir API specification](https://api.sms.ir/swagger/v1/swagger.json).
+
 ## Live candidate review
 
 - Exercise login, logout, account recovery, MFA step-up and context changes

@@ -1,4 +1,9 @@
-import { createHmac, timingSafeEqual } from 'node:crypto';
+import { createHmac } from 'node:crypto';
+import {
+  verifyWebhookHmac,
+  WEBHOOK_REPLAY_WINDOW_SECONDS,
+  type WebhookHmacResult,
+} from '../common/webhook-signature.js';
 
 /**
  * HMAC-SHA256 verifier for authenticated payment-provider callbacks
@@ -22,16 +27,10 @@ export interface PaymentCallbackHeaders {
 }
 
 /** Default maximum age, in seconds, of an acceptable signature timestamp. */
-export const PAYMENT_CALLBACK_TOLERANCE_SEC = 300;
+export const PAYMENT_CALLBACK_TOLERANCE_SEC = WEBHOOK_REPLAY_WINDOW_SECONDS;
 
 export type VerifyPaymentCallbackResult =
-  | { ok: true }
-  | { ok: false; reason: 'missing_secret' | 'missing_headers' | 'tampered' | 'replayed' };
-
-function safeEqual(a: Buffer, b: Buffer): boolean {
-  if (a.length !== b.length) return false;
-  return timingSafeEqual(a, b);
-}
+  WebhookHmacResult | { ok: false; reason: 'missing_secret' | 'missing_headers' };
 
 /**
  * Verify a payment-callback HMAC. Callers must feed the raw request
@@ -49,28 +48,16 @@ export function verifyPaymentCallbackSignature(
     return { ok: false, reason: 'missing_headers' };
   }
 
-  const ts = Number(headers.timestamp);
-  if (!Number.isFinite(ts) || !Number.isInteger(ts)) {
-    return { ok: false, reason: 'tampered' };
-  }
-  if (Math.abs(nowSeconds - ts) > toleranceSec) return { ok: false, reason: 'replayed' };
-
-  const signedContent = `${headers.eventId}.${headers.timestamp}.${rawPayload}`;
-  const expectedHmac = createHmac('sha256', secret).update(signedContent, 'utf8').digest();
-
   const parts = headers.signature.split(',');
   const candidates: string[] = [];
   for (let i = 0; i + 1 < parts.length; i++) {
     if (parts[i] === 'v1') candidates.push(parts[i + 1]!);
   }
-  if (candidates.length === 0) return { ok: false, reason: 'tampered' };
-
-  for (const candidate of candidates) {
-    const received = Buffer.from(candidate, 'base64');
-    if (received.length === 0) continue;
-    if (safeEqual(received, expectedHmac)) return { ok: true };
-  }
-  return { ok: false, reason: 'tampered' };
+  return verifyWebhookHmac(
+    { eventId: headers.eventId, timestamp: headers.timestamp, rawPayload, key: secret, candidates },
+    nowSeconds,
+    toleranceSec
+  );
 }
 
 /** Test / fixture helper: build a `v1,<base64>` signature for a payload. */

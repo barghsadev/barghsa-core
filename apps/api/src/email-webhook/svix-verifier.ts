@@ -1,4 +1,8 @@
-import { createHmac, timingSafeEqual } from 'node:crypto';
+import {
+  verifyWebhookHmac,
+  WEBHOOK_REPLAY_WINDOW_SECONDS,
+  type WebhookHmacResult,
+} from '../common/webhook-signature.js';
 
 /**
  * Svix webhook signature verifier (E-05, T-05.06.07).
@@ -31,11 +35,10 @@ export interface SvixWebhookHeaders {
 }
 
 /** Default maximum age, in seconds, of an acceptable signature timestamp. */
-export const DEFAULT_TOLERANCE_SEC = 300;
+export const DEFAULT_TOLERANCE_SEC = WEBHOOK_REPLAY_WINDOW_SECONDS;
 
 export type VerifySvixResult =
-  | { ok: true }
-  | { ok: false; reason: 'missing_secret' | 'missing_headers' | 'tampered' | 'replayed' };
+  WebhookHmacResult | { ok: false; reason: 'missing_secret' | 'missing_headers' };
 
 /** Treat the secret string as the Svix secret encoding. */
 function signingKey(secret: string): Buffer {
@@ -51,12 +54,6 @@ function signingKey(secret: string): Buffer {
   return Buffer.from(secret, 'utf8');
 }
 
-/** Timing-safe equality of two Buffers. */
-function safeEqual(a: Buffer, b: Buffer): boolean {
-  if (a.length !== b.length) return false;
-  return timingSafeEqual(a, b);
-}
-
 /**
  * Verify a Svix-signed webhook. Returns `{ ok: true }` on success, or a
  * `{ ok: false, reason }` result otherwise. Callers must feed the raw request
@@ -70,32 +67,26 @@ export function verifySvixSignature(
   toleranceSec = DEFAULT_TOLERANCE_SEC
 ): VerifySvixResult {
   if (!secret) return { ok: false, reason: 'missing_secret' };
+  const { id, timestamp, signature } = headers;
   if (
-    [headers.id, headers.timestamp, headers.signature].some(
-      (value) => typeof value !== 'string' || !value
-    )
+    typeof id !== 'string' ||
+    !id ||
+    typeof timestamp !== 'string' ||
+    !timestamp ||
+    typeof signature !== 'string' ||
+    !signature
   ) {
     return { ok: false, reason: 'tampered' };
   }
-
-  // Replay window: the timestamp reflects when the provider signed it; demand
-  // it be within `toleranceSec` of now (allow a small margin for clock skew).
-  const ts = Number(headers.timestamp);
-  if (!/^\d+$/.test(headers.timestamp!) || !Number.isSafeInteger(ts))
-    return { ok: false, reason: 'tampered' };
-  if (Math.abs(nowSeconds - ts) > toleranceSec) return { ok: false, reason: 'replayed' };
-
-  const signedContent = `${headers.id}.${headers.timestamp}.${rawPayload}`;
-  const expectedHmac = createHmac('sha256', signingKey(secret))
-    .update(signedContent, 'utf8')
-    .digest();
-
   // Svix rotation sends independent, space-separated version/signature pairs.
-  for (const candidate of headers.signature!.split(/\s+/)) {
+  const candidates: string[] = [];
+  for (const candidate of signature.split(/\s+/)) {
     const match = /^v1,([A-Za-z0-9+/]{43}=)$/.exec(candidate);
-    if (!match) continue;
-    const received = Buffer.from(match[1]!, 'base64');
-    if (safeEqual(received, expectedHmac)) return { ok: true };
+    if (match?.[1]) candidates.push(match[1]);
   }
-  return { ok: false, reason: 'tampered' };
+  return verifyWebhookHmac(
+    { eventId: id, timestamp, rawPayload, key: signingKey(secret), candidates },
+    nowSeconds,
+    toleranceSec
+  );
 }

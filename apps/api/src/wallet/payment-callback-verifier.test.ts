@@ -103,6 +103,23 @@ it.each(['NaN', 'Infinity', '1700000000.5'])(
     ).toEqual({ ok: false, reason: 'tampered' });
   }
 );
+it.each(['1.7e9', '+1700000000', ' 1700000000'])(
+  'rejects non-decimal Unix timestamp spelling %j even with a matching signature',
+  (timestamp) => {
+    expect(
+      verifyPaymentCallbackSignature(
+        PAYLOAD,
+        {
+          eventId: EVENT_ID,
+          timestamp,
+          signature: signPaymentCallback(PAYLOAD, EVENT_ID, timestamp, SECRET),
+        },
+        SECRET,
+        1700000000
+      )
+    ).toEqual({ ok: false, reason: 'tampered' });
+  }
+);
 it.each(['v2,AAAA', 'v1,', 'v1,***'])(
   'rejects unsupported or empty signature candidates %s',
   (signature) => {

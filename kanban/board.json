@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T04:43:41+00:00",
-  "source_commit": "37e37c7f0440d832a8f2951cd1749aa04896257d",
+  "updated": "2026-11-10T04:53:17+00:00",
+  "source_commit": "56ca06948b8cfaecc078da2d24bc8ff272f72124",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -87817,7 +87817,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -87857,7 +87858,7 @@
             },
             {
               "path": "apps/api/src/email-webhook/svix-verifier.ts",
-              "sha256": "c98830d1a4255e5f26c59b8130b9eeb1ad63106d11c0b5b79fdbba969623339e"
+              "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
@@ -88782,7 +88783,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -88822,7 +88824,7 @@
             },
             {
               "path": "apps/api/src/email-webhook/svix-verifier.ts",
-              "sha256": "c98830d1a4255e5f26c59b8130b9eeb1ad63106d11c0b5b79fdbba969623339e"
+              "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
@@ -89747,7 +89749,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -89787,7 +89790,7 @@
             },
             {
               "path": "apps/api/src/email-webhook/svix-verifier.ts",
-              "sha256": "c98830d1a4255e5f26c59b8130b9eeb1ad63106d11c0b5b79fdbba969623339e"
+              "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
@@ -90713,7 +90716,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -90753,7 +90757,7 @@
             },
             {
               "path": "apps/api/src/email-webhook/svix-verifier.ts",
-              "sha256": "c98830d1a4255e5f26c59b8130b9eeb1ad63106d11c0b5b79fdbba969623339e"
+              "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
@@ -91678,7 +91682,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -91718,7 +91723,7 @@
             },
             {
               "path": "apps/api/src/email-webhook/svix-verifier.ts",
-              "sha256": "c98830d1a4255e5f26c59b8130b9eeb1ad63106d11c0b5b79fdbba969623339e"
+              "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
@@ -92646,7 +92651,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "status": "done",
@@ -92682,7 +92688,7 @@
             },
             {
               "path": "apps/api/src/email-webhook/svix-verifier.ts",
-              "sha256": "c98830d1a4255e5f26c59b8130b9eeb1ad63106d11c0b5b79fdbba969623339e"
+              "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
@@ -93397,7 +93403,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "status": "done",
@@ -93445,7 +93452,7 @@
             },
             {
               "path": "apps/api/src/email-webhook/svix-verifier.ts",
-              "sha256": "c98830d1a4255e5f26c59b8130b9eeb1ad63106d11c0b5b79fdbba969623339e"
+              "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
@@ -94048,7 +94055,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -94088,7 +94096,7 @@
             },
             {
               "path": "apps/api/src/email-webhook/svix-verifier.ts",
-              "sha256": "c98830d1a4255e5f26c59b8130b9eeb1ad63106d11c0b5b79fdbba969623339e"
+              "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
             },
             {
               "path": "apps/api/src/notifications/notification-template-delivery.test.ts",
@@ -147299,7 +147307,8 @@
           "release-0.6-native-integration-acceptance",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-security-http-regressions-and-provider-tester-wiring"
+          "release-0.6-security-http-regressions-and-provider-tester-wiring",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-provider-callbacks",
@@ -147359,11 +147368,11 @@
             },
             {
               "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
-              "sha256": "405dfe53be4e1d1d149c320fa5991ebaa2da4dd5513868949ec39c9602dc5155"
+              "sha256": "874713c339f14fd3aeb1abc502f041095124288f74b5ecf6f75190b760424fca"
             },
             {
               "path": "apps/api/src/wallet/payment-callback-verifier.ts",
-              "sha256": "62ece3578d507ac231449b8058a44fa9e08facfe46347f5b7bdb1e1036ed9be6"
+              "sha256": "6cdddee3c957fc42103ce61bae48abd4f79c7852f6478649c7ecc0790c177315"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
@@ -152030,7 +152039,8 @@
           "release-0.6-native-integration-acceptance",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-signed-payment-callback-alert",
-          "release-0.6-security-http-regressions-and-provider-tester-wiring"
+          "release-0.6-security-http-regressions-and-provider-tester-wiring",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-provider-callbacks",
@@ -152090,11 +152100,11 @@
             },
             {
               "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
-              "sha256": "405dfe53be4e1d1d149c320fa5991ebaa2da4dd5513868949ec39c9602dc5155"
+              "sha256": "874713c339f14fd3aeb1abc502f041095124288f74b5ecf6f75190b760424fca"
             },
             {
               "path": "apps/api/src/wallet/payment-callback-verifier.ts",
-              "sha256": "62ece3578d507ac231449b8058a44fa9e08facfe46347f5b7bdb1e1036ed9be6"
+              "sha256": "6cdddee3c957fc42103ce61bae48abd4f79c7852f6478649c7ecc0790c177315"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
@@ -483436,7 +483446,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-invoice-error-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -483476,7 +483487,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
+              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -483564,7 +483575,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-invoice-error-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -483620,7 +483632,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
+              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -486646,7 +486658,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-invoice-error-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -486774,7 +486787,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
+              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -487076,7 +487089,8 @@
           "release-0.6-invoice-error-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -487136,7 +487150,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
+              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -487164,19 +487178,77 @@
         "story": "06-security-testing-observability.md#spec-24c716b06081"
       },
       "requirement": "| T-06.06.02.01 | Implement generic webhook verification service: signature/HMAC verification, replay window (e.g. ±5 min), event ID dedup | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-shared-webhook-signature-verification"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "56ca06948b8cfaecc078da2d24bc8ff272f72124",
+          "checks": [
+            "The payment and Resend adapters share a timing-safe HMAC-SHA256 check of the original payload and a five-minute decimal Unix timestamp window. They preserve separate signature parsers and signing key representations.",
+            "Three previously accepted non-decimal payment timestamp spellings reproduced before the fix. Fifty affected verification, payment controller and payment service tests passed, including correct HMAC, altered body, old/future timestamp, missing headers, signature rotation and merchant context. Typecheck, lint, formatting and diff checks passed.",
+            "Both provider-specific ledgers enforce unique event identity before effects, using transaction-bound receipt and result handling. Wallet retry and credit idempotency remain in the existing settlement service. The local unit check does not certify the PostgreSQL recovery suite or live providers."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/common/webhook-signature.ts",
+              "sha256": "f43879da2b0812b203aef3da87a55f9351caa7fa90034d4cf959dfc331eb0369"
+            },
+            {
+              "path": "apps/api/src/email-webhook/email-webhook.service.ts",
+              "sha256": "8888c2dad4c23ad4c40bc4edf02701f66a3db6a71bb56ae584c1f55ce0b949f5"
+            },
+            {
+              "path": "apps/api/src/email-webhook/svix-verifier.test.ts",
+              "sha256": "370134a511d301e701f5006c7f27db057ec658045f7a638d6ab9727e0ddf51d4"
+            },
+            {
+              "path": "apps/api/src/email-webhook/svix-verifier.ts",
+              "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.controller.test.ts",
+              "sha256": "ba912491867d307e113f9525614249daaac6531e22d500fccec10a735071bbfb"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
+              "sha256": "461d26d584bb628fb4d61abf67de432bebf58f1f1dac07288a2d193b795ff492"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+              "sha256": "7607f7044224fdc8410a1cd368131198f0cf42986e4ac94de1babbd78951aa30"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
+              "sha256": "874713c339f14fd3aeb1abc502f041095124288f74b5ecf6f75190b760424fca"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-callback-verifier.ts",
+              "sha256": "6cdddee3c957fc42103ce61bae48abd4f79c7852f6478649c7ecc0790c177315"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
+            },
+            {
+              "path": "packages/db/src/schema/email-webhook-events.ts",
+              "sha256": "52c3c1f665239c8f19c18c6c0fec75da4944cd844cfc944156a5909e650380e6"
+            },
+            {
+              "path": "packages/db/src/schema/wallet-topup-callback-events.ts",
+              "sha256": "eccbb0abf32364161e81e6e95dcc081903ac63fa3a0607607444cecac803c8a6"
+            }
+          ]
+        }
       }
     },
     {
@@ -487200,7 +487272,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-security-scenario-and-signed-fixture-reconciliation"
+          "release-0.6-security-scenario-and-signed-fixture-reconciliation",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "verified-payment-signature-merchant-and-server-settlement",
@@ -487208,11 +487281,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/wallet/payment-callback-verifier.ts",
-              "sha256": "62ece3578d507ac231449b8058a44fa9e08facfe46347f5b7bdb1e1036ed9be6"
+              "sha256": "6cdddee3c957fc42103ce61bae48abd4f79c7852f6478649c7ecc0790c177315"
             },
             {
               "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
-              "sha256": "405dfe53be4e1d1d149c320fa5991ebaa2da4dd5513868949ec39c9602dc5155"
+              "sha256": "874713c339f14fd3aeb1abc502f041095124288f74b5ecf6f75190b760424fca"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.controller.ts",
@@ -487262,20 +487335,23 @@
         "story": "06-security-testing-observability.md#spec-24c716b06081"
       },
       "requirement": "| T-06.06.02.03 | Build SMS provider callback adapter: verify authenticity, replay-safe delivery status | M |",
-      "status": "verify",
+      "status": "blocked",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Bind provider feedback to an accepted SMS send receipt and provider configuration. Preserve replay safety and keep actual recipient delivery evidence distinct from provider acceptance."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-shared-webhook-signature-verification"
+        ],
         "current_acceptance": null
-      }
+      },
+      "blocker": "SMS.ir v1 documents an authenticated report by message ID and declares no signed delivery callback. Acceptance needs a supported signed provider contract or explicit reconciliation to authenticated delivery report polling."
     },
     {
       "key": "06-security-testing-observability.md#T-06.06.02.04",
@@ -487288,18 +487364,20 @@
         "story": "06-security-testing-observability.md#spec-24c716b06081"
       },
       "requirement": "| T-06.06.02.04 | Build storage provider callback: verify signature, replay-safe, idempotent status update | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Existing storage paths verify owned reservations and object bytes before trusted use. Obtain the selected storage provider signing and event identity contract and verify an idempotent signed receiver, or reconcile acceptance to the existing authenticated readback design."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-shared-webhook-signature-verification"
+        ],
         "current_acceptance": null
       }
     },
@@ -488968,7 +489046,8 @@
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -488976,7 +489055,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
+              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
             },
             {
               "path": "docs/threat-model.md",
@@ -489112,7 +489191,8 @@
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -489120,7 +489200,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
+              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -489222,7 +489302,8 @@
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -489230,7 +489311,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
+              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -489280,7 +489361,8 @@
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -489296,7 +489378,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
+              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
             }
           ],
           "checks": [
@@ -489352,7 +489434,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-invoice-error-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -489412,7 +489495,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
+              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -490756,7 +490839,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-security-scenario-and-signed-fixture-reconciliation"
+          "release-0.6-security-scenario-and-signed-fixture-reconciliation",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "verified-deterministic-signed-webhook-fixtures",
@@ -490764,11 +490848,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/wallet/payment-callback-verifier.ts",
-              "sha256": "62ece3578d507ac231449b8058a44fa9e08facfe46347f5b7bdb1e1036ed9be6"
+              "sha256": "6cdddee3c957fc42103ce61bae48abd4f79c7852f6478649c7ecc0790c177315"
             },
             {
               "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
-              "sha256": "405dfe53be4e1d1d149c320fa5991ebaa2da4dd5513868949ec39c9602dc5155"
+              "sha256": "874713c339f14fd3aeb1abc502f041095124288f74b5ecf6f75190b760424fca"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
@@ -492252,7 +492336,8 @@
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -492268,7 +492353,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
+              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
             }
           ],
           "checks": [
@@ -492316,7 +492401,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -492324,7 +492410,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
+              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -492396,11 +492482,11 @@
             },
             {
               "path": "apps/api/src/wallet/payment-callback-verifier.ts",
-              "sha256": "62ece3578d507ac231449b8058a44fa9e08facfe46347f5b7bdb1e1036ed9be6"
+              "sha256": "6cdddee3c957fc42103ce61bae48abd4f79c7852f6478649c7ecc0790c177315"
             },
             {
               "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
-              "sha256": "405dfe53be4e1d1d149c320fa5991ebaa2da4dd5513868949ec39c9602dc5155"
+              "sha256": "874713c339f14fd3aeb1abc502f041095124288f74b5ecf6f75190b760424fca"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.controller.ts",
@@ -496197,7 +496283,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-ai-inference-metrics"
+          "release-0.6-ai-inference-metrics",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -496249,7 +496336,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-callback-verifier.ts",
-              "sha256": "62ece3578d507ac231449b8058a44fa9e08facfe46347f5b7bdb1e1036ed9be6"
+              "sha256": "6cdddee3c957fc42103ce61bae48abd4f79c7852f6478649c7ecc0790c177315"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.controller.ts",
@@ -750190,7 +750277,7 @@
             },
             {
               "path": "apps/api/src/email-webhook/svix-verifier.ts",
-              "sha256": "c98830d1a4255e5f26c59b8130b9eeb1ad63106d11c0b5b79fdbba969623339e"
+              "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
             },
             {
               "path": "apps/api/src/health/storage-health-http.integration.test.ts",
@@ -753610,7 +753697,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-upload-preflight-reservation-assertions"
+          "release-0.6-upload-preflight-reservation-assertions",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -754183,7 +754271,7 @@
             },
             {
               "path": "apps/api/src/email-webhook/svix-verifier.ts",
-              "sha256": "c98830d1a4255e5f26c59b8130b9eeb1ad63106d11c0b5b79fdbba969623339e"
+              "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
             },
             {
               "path": "apps/api/src/health/storage-health-http.integration.test.ts",
@@ -757485,7 +757573,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-upload-preflight-reservation-assertions"
+          "release-0.6-upload-preflight-reservation-assertions",
+          "release-0.6-shared-webhook-signature-verification"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -863680,6 +863769,86 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/preflight-42752579875",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "2c0cb1a018e25846e22e77d8c9b6f117966d18d7a6b644ff80210d1b3e812e1d"
+    },
+    "release-0.6-shared-webhook-signature-verification": {
+      "batch": "release-0.6-shared-webhook-signature-verification",
+      "base_commit": "56ca06948b8cfaecc078da2d24bc8ff272f72124",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.02.01",
+        "06-security-testing-observability.md#T-06.06.02.03",
+        "06-security-testing-observability.md#T-06.06.02.04"
+      ],
+      "changed_paths": [
+        "apps/api/src/common/webhook-signature.ts",
+        "apps/api/src/email-webhook/svix-verifier.ts",
+        "apps/api/src/wallet/payment-callback-verifier.test.ts",
+        "apps/api/src/wallet/payment-callback-verifier.ts",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/common/webhook-signature.ts",
+          "sha256": "f43879da2b0812b203aef3da87a55f9351caa7fa90034d4cf959dfc331eb0369"
+        },
+        {
+          "path": "apps/api/src/email-webhook/email-webhook.service.ts",
+          "sha256": "8888c2dad4c23ad4c40bc4edf02701f66a3db6a71bb56ae584c1f55ce0b949f5"
+        },
+        {
+          "path": "apps/api/src/email-webhook/svix-verifier.test.ts",
+          "sha256": "370134a511d301e701f5006c7f27db057ec658045f7a638d6ab9727e0ddf51d4"
+        },
+        {
+          "path": "apps/api/src/email-webhook/svix-verifier.ts",
+          "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
+        },
+        {
+          "path": "apps/api/src/storage/verified-attachments.service.ts",
+          "sha256": "d731ec560a48a64872b8beadbc4b86d27734780a3d47830f7118f99464e8e991"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.controller.test.ts",
+          "sha256": "ba912491867d307e113f9525614249daaac6531e22d500fccec10a735071bbfb"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
+          "sha256": "461d26d584bb628fb4d61abf67de432bebf58f1f1dac07288a2d193b795ff492"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "7607f7044224fdc8410a1cd368131198f0cf42986e4ac94de1babbd78951aa30"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
+          "sha256": "874713c339f14fd3aeb1abc502f041095124288f74b5ecf6f75190b760424fca"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-callback-verifier.ts",
+          "sha256": "6cdddee3c957fc42103ce61bae48abd4f79c7852f6478649c7ecc0790c177315"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
+        },
+        {
+          "path": "packages/db/src/schema/email-webhook-events.ts",
+          "sha256": "52c3c1f665239c8f19c18c6c0fec75da4944cd844cfc944156a5909e650380e6"
+        },
+        {
+          "path": "packages/db/src/schema/wallet-topup-callback-events.ts",
+          "sha256": "eccbb0abf32364161e81e6e95dcc081903ac63fa3a0607607444cecac803c8a6"
+        }
+      ],
+      "checks": [
+        "The payment and Resend adapters share a timing-safe HMAC-SHA256 check of the original payload and a five-minute decimal Unix timestamp window. They preserve separate signature parsers and signing key representations.",
+        "Three previously accepted non-decimal payment timestamp spellings reproduced before the fix. Fifty affected verification, payment controller and payment service tests passed, including correct HMAC, altered body, old/future timestamp, missing headers, signature rotation and merchant context. Typecheck, lint, formatting and diff checks passed.",
+        "Both provider-specific ledgers enforce unique event identity before effects, using transaction-bound receipt and result handling. Wallet retry and credit idempotency remain in the existing settlement service. The local unit check does not certify the PostgreSQL recovery suite or live providers.",
+        "Read the published SMS.ir v1 OpenAPI document. It lists an authenticated message delivery report by ID and declares neither webhooks nor operation callbacks. A provider delivery report does not establish a signed callback.",
+        "Storage currently validates and seals bytes through owned reservation and provider readback. The source review found no signed storage event receiver. SMS and storage adapter acceptance remains separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webhook-verification",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "160e8d721d8e834ca08f85f55234b582a580df30f22eedc4b33c96ecead5582e"
     }
   },
   "historical_improvements": [
