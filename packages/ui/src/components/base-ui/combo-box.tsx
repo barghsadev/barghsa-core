@@ -6,6 +6,25 @@ import { CheckIcon, ChevronDownIcon, XIcon } from 'lucide-react';
 
 import { cn } from '../../lib/utils';
 
+function focusInvalidCombobox(event: React.InvalidEvent<HTMLDivElement>) {
+  const field = event.target;
+  if (!(field instanceof HTMLInputElement) || field.getAttribute('aria-hidden') !== 'true') return;
+  const container = event.currentTarget;
+  if (field.closest('[data-slot="combobox"]') !== container) return;
+  const firstInvalid = Array.from(field.form?.elements ?? []).find((element) =>
+    element.matches('input:invalid,select:invalid,textarea:invalid')
+  );
+  if (firstInvalid !== field) return;
+  // Firefox can leave focus on the submit button when a hidden required value
+  // becomes invalid again after clearing. Keep native validation and focus the visible control.
+  queueMicrotask(() => {
+    if (!field.isConnected || field.validity.valid) return;
+    const input = container.querySelector<HTMLElement>('[data-slot="combobox-input"]');
+    const trigger = container.querySelector<HTMLElement>('[data-slot="combobox-trigger"]');
+    (input ?? trigger)?.focus();
+  });
+}
+
 function ComboBox<Value, Multiple extends boolean | undefined = false>({
   className,
   children,
@@ -14,7 +33,11 @@ function ComboBox<Value, Multiple extends boolean | undefined = false>({
   className?: string;
 }) {
   return (
-    <div data-slot="combobox" className={cn('relative', className)}>
+    <div
+      data-slot="combobox"
+      className={cn('relative', className)}
+      onInvalid={focusInvalidCombobox}
+    >
       <ComboboxPrimitive.Root {...props}>{children}</ComboboxPrimitive.Root>
     </div>
   );

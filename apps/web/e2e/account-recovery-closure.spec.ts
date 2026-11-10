@@ -1,4 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
+import { createServer, type IncomingHttpHeaders } from 'node:http';
 import { t } from '@barghsa/i18n/recovery';
 import { t as appText } from '@barghsa/i18n/app';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
@@ -402,29 +403,45 @@ for (const locale of ['en', 'fa'] as const) {
 test('native browser CSP reports carry the provenance required by the bounded telemetry guard', async ({
   page,
 }) => {
-  const reports: Array<Record<string, string>> = [];
-  await page.route('**/native-csp-closure', (route) =>
-    route.fulfill({
-      contentType: 'text/html',
-      headers: {
+  const reports: IncomingHttpHeaders[] = [];
+  // Browser-managed reports need a real HTTP receiver, including in Firefox.
+  const server = createServer((request, response) => {
+    if (request.url === '/native-csp-closure') {
+      response.writeHead(200, {
+        'Content-Type': 'text/html',
         'Content-Security-Policy-Report-Only': "default-src 'none'; report-uri /api/csp-report",
         'Referrer-Policy': 'no-referrer',
-      },
-      body: '<html><head><title>CSP test</title></head><body><img src="/csp-blocked.png" alt="Controlled CSP probe"></body></html>',
-    })
-  );
-  await page.route('**/api/csp-report', (route) => {
-    reports.push(route.request().headers());
-    return route.fulfill({ status: 204 });
+      });
+      response.end(
+        '<!doctype html><html><head><title>CSP test</title></head><body><img src="/csp-blocked.png" alt="Controlled CSP probe"></body></html>'
+      );
+      return;
+    }
+    if (request.method === 'POST' && request.url === '/api/csp-report') {
+      reports.push(request.headers);
+      request.resume();
+      response.writeHead(204).end();
+      return;
+    }
+    response.writeHead(404).end();
   });
-  await page.goto('/native-csp-closure');
-  await expect.poll(() => reports.length).toBeGreaterThan(0);
-  for (const report of reports) {
-    if (report.origin === 'null') {
-      expect(report['sec-fetch-site']).toBe('same-origin');
-      expect(report['sec-fetch-mode']).toBe('no-cors');
-    } else expect(report.origin).toBe(new URL(page.url()).origin);
-    expect(report['content-type']).toMatch(/^application\/csp-report/);
-    if (report['sec-fetch-site']) expect(report['sec-fetch-site']).toBe('same-origin');
+  try {
+    await new Promise<void>((resolve, reject) =>
+      server.once('error', reject).listen(0, '127.0.0.1', resolve)
+    );
+    const address = server.address();
+    if (!address || typeof address === 'string') throw new Error('Missing CSP fixture port');
+    await page.goto(`http://127.0.0.1:${address.port}/native-csp-closure`);
+    await expect.poll(() => reports.length).toBeGreaterThan(0);
+    for (const report of reports) {
+      if (report.origin === 'null') {
+        expect(report['sec-fetch-site']).toBe('same-origin');
+        expect(report['sec-fetch-mode']).toBe('no-cors');
+      } else expect(report.origin).toBe(new URL(page.url()).origin);
+      expect(report['content-type']).toMatch(/^application\/csp-report/);
+      if (report['sec-fetch-site']) expect(report['sec-fetch-site']).toBe('same-origin');
+    }
+  } finally {
+    await new Promise<void>((resolve) => server.close(() => resolve()));
   }
 });
