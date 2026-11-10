@@ -4,14 +4,17 @@ import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
+import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { test, expect } from './coverage-fixture';
 import {
   approvedIncrease,
+  contractId,
   increaseDecisionReview,
   increaseRequest,
   increaseRequestId,
   increaseStaffId,
   increaseSigningReview,
+  invoiceId,
   orderId,
   otherIncreaseRequestId,
   setupElectricityQuantityIncreaseForms,
@@ -172,11 +175,74 @@ for (const [locale, theme] of [
     await expect(sign).toHaveCount(0);
     expect(state.signWrites).toEqual([signCommand, signCommand, signCommand]);
     await expect(page.locator('body')).not.toContainText('PRIVATE_SERVER_VALIDATION_TEXT');
-    await expect(
-      page.locator(`a[href="/invoices/${state.request!.adjustmentInvoiceId}"]`)
-    ).toBeVisible();
     expect(state.request!.status).toBe('awaiting_effective_date');
     expect(state.request!.contractState).toBe('Active');
+    expect(state.request).toMatchObject({
+      versionId,
+      adjustmentAmount: review.data.adjustmentIrR,
+      signatureEvidence: {
+        amendmentSha256: signCommand.expectedAmendmentSha256,
+        adjustmentIrR: review.data.adjustmentIrR,
+      },
+      pricingSnapshot: { originalInvoiceId: invoiceId, financialReview: review },
+    });
+    const adjustmentId = state.request!.adjustmentInvoiceId!;
+    const invoiceLink = page.locator(`a[href="/invoices/${adjustmentId}"]`);
+    await expect(invoiceLink).toBeVisible();
+    const original = {
+      invoiceId,
+      role: 'original',
+      state: 'Paid',
+      totalAmount: '100000',
+      paidAmount: '100000',
+      refundedAmount: '0',
+      issuedAt: '2026-10-04T10:00:00.000Z',
+      dueAt: null,
+      cancelledAt: null,
+      replacesInvoiceId: null,
+      adjustmentForInvoiceId: null,
+      explanation: null,
+      lines: [],
+    };
+    const adjustment = {
+      ...original,
+      invoiceId: adjustmentId,
+      role: 'adjustment',
+      adjustmentKind: 'charge',
+      totalAmount: review.data.adjustmentIrR,
+      paidAmount: state.request!.adjustmentPaidAmount,
+      adjustmentForInvoiceId: invoiceId,
+    };
+    await page.route(`**/api/invoices/${adjustmentId}`, (route) => {
+      expect(route.request().method()).toBe('GET');
+      return route.fulfill({
+        json: {
+          viewedInvoiceId: adjustmentId,
+          originalInvoiceId: invoiceId,
+          contractId,
+          electricityOrderId: orderId,
+          invoice: adjustment,
+          chain: [original, adjustment],
+          payments: [],
+          bankReceipts: [],
+          refunds: [],
+        },
+      });
+    });
+    await invoiceLink.click();
+    await expect(page).toHaveURL(new RegExp(`/invoices/${adjustmentId}$`));
+    const chain = page.getByRole('region', { name: copy('invoices.details.chain') });
+    const charge = chain.getByTestId(`invoice-card-${adjustmentId}`);
+    await expect(charge).toHaveAttribute('aria-current', 'page');
+    await expect(
+      charge.getByText(copy('invoices.details.total'), { exact: true }).locator('..')
+    ).toContainText(formatCurrencyIrr(review.data.adjustmentIrR, locale));
+    await expect(
+      chain.getByTestId(`invoice-card-${invoiceId}`).locator(`a[href="/invoices/${invoiceId}"]`)
+    ).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: copy('invoices.details.openContract') })
+    ).toHaveAttribute('href', `/contracts?contractId=${contractId}`);
   });
 
   test(`staff electricity increase approval recovers from a stalled acknowledgement (${locale}, ${theme})`, async ({

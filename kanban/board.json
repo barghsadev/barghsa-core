@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T11:09:29+00:00",
-  "source_commit": "a3528b4cc1e74232d23d121023f7f9a55d365796",
+  "updated": "2026-11-10T11:18:20+00:00",
+  "source_commit": "9b627d1408233ad00e8787d9d562bd14d108d8c7",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -189905,7 +189905,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -189989,7 +189990,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -191090,7 +191091,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -191202,7 +191204,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -192630,7 +192632,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -192714,7 +192717,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -193780,7 +193783,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -193864,7 +193868,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -194930,7 +194934,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-quantity-increase-scoped-verification",
@@ -194994,7 +194999,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -195718,7 +195723,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -195802,7 +195808,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -349042,7 +349048,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -349126,7 +349133,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -350193,7 +350200,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-quantity-increase-scoped-verification",
@@ -350257,7 +350265,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -350981,7 +350989,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -351065,7 +351074,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -352132,7 +352141,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current-quantity-increase-scoped-verification",
@@ -352196,7 +352206,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -352921,7 +352931,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -353005,7 +353016,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -354071,7 +354082,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -354155,7 +354167,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -355223,7 +355235,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -355307,7 +355320,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -356374,7 +356387,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -356458,7 +356472,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -498814,19 +498828,66 @@
         "story": "06-security-testing-observability.md#spec-a2575d616ae6"
       },
       "requirement": "| T-06.10.03.11 | Write E2E: contract version acceptance/signature → adjustment invoice | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/web/e2e/electricity-quantity-increase-forms.spec.ts"
+        ],
+        "batches": [
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-contract-amendment-adjustment-invoice-browser-journey",
+          "reviewed_sha": "9b627d1408233ad00e8787d9d562bd14d108d8c7",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+              "sha256": "e5d340d3a83c2f0bf6c460eaaad05b803f70e90e93f65afa0401385f65a9e713"
+            },
+            {
+              "path": "apps/web/e2e/confirmation-fixture.ts",
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+            },
+            {
+              "path": "apps/web/e2e/electricity-quantity-increase-form-fixture.ts",
+              "sha256": "38661412fc8b9ff73e9d0f415bbc556d4a0758f25cd1c1ae92b1db24b6c7d81c"
+            },
+            {
+              "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "apps/web/src/lib/customer-invoices.ts",
+              "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
+            },
+            {
+              "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
+              "sha256": "925593e77d45e9a296f72180196eb04822ae9e597c1fba5a4585b6a4802dd1d4"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "98ac0194357d870547c1abc3a340f3ac1a49b90e22cac09ed5fb4ceee2ad543e"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "The existing browser case retains the current-version quantity amendment, held acknowledgment, wrong receipt, exact idempotent retries, customer consent, required security step-up, reviewed IRR and amendment hash. The signed response now binds its version, signature and pricing review to the original invoice before the browser follows its actual adjustment invoice link.",
+            "The customer browser reads the adjustment invoice by its signed-response ID and confirms the exact localized amount, linked original invoice and source contract. The existing backend integration source separately asserts that real signing creates an Unpaid adjustment invoice linked to the original and rejects conflicting retries. Six deterministic production-build cases passed across Firefox, Mobile Chrome and Mobile Safari without retries. Focused formatting, lint and diff checks passed."
+          ]
+        }
       }
     },
     {
@@ -527363,7 +527424,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -527387,7 +527449,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -548409,7 +548471,8 @@
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-simple-electricity-wallet-funding-browser-journey",
           "release-0.6-advanced-electricity-bank-refund-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -548601,7 +548664,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/e2e/electricity-raw-draft-terminal.spec.ts",
@@ -552028,7 +552091,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552140,7 +552204,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
@@ -552896,7 +552960,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553008,7 +553073,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
@@ -554296,7 +554361,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554408,7 +554474,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
@@ -603631,7 +603697,8 @@
           "release-0.6-mobile-request-and-owned-read-browser-replay",
           "release-0.6-simple-electricity-wallet-funding-browser-journey",
           "release-0.6-advanced-electricity-bank-refund-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -603899,7 +603966,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/e2e/electricity-raw-draft-terminal.spec.ts",
@@ -627798,7 +627865,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -627822,7 +627890,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -752416,7 +752484,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -754525,7 +754593,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ]
       }
     },
@@ -755737,7 +755806,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
-              "sha256": "d755449f09f505baf007221a3618ff1763abc9380d83fa167075f93948c451ea"
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
@@ -759222,7 +759291,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ]
       }
     },
@@ -771140,7 +771210,7 @@
       "launch_required": true,
       "remaining": [
         "Reconcile every epic-01 and epic-06 criterion with current source and operational evidence. Apply the approved direct-main workflow while preserving all production gates.",
-        "Finish the full exact candidate browser matrix, source coverage and receipt review. The simple and advanced electricity, saving, consultation and solar journeys have local browser receipts. The actual scheduled matrix reported all shards and failed correctly. Residual fixes and exact candidate evidence remain open.",
+        "Finish the full exact candidate browser matrix, source coverage and receipt review. The simple and advanced electricity, saving, consultation and solar journeys have local browser receipts. The actual scheduled matrix reported all shards and failed correctly. Residual fixes and exact candidate evidence remain open. Local Firefox wallet accessibility crashes at the native content process, and the notification editor had mixed local results. Verify both with the exact hosted Linux browser matrix.",
         "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
@@ -771262,7 +771332,8 @@
           "release-0.6-mobile-request-and-owned-read-browser-replay",
           "release-0.6-simple-electricity-wallet-funding-browser-journey",
           "release-0.6-advanced-electricity-bank-refund-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-contract-amendment-invoice-readback-browser-journey"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -879235,6 +879306,84 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/saving-touch-and-electricity-quote",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "6c02469941d498e53edef68e82e9bb4f2547a4cc56e459e6218fa776e236c451"
+    },
+    "release-0.6-contract-amendment-invoice-readback-browser-journey": {
+      "batch": "release-0.6-contract-amendment-invoice-readback-browser-journey",
+      "base_commit": "9b627d1408233ad00e8787d9d562bd14d108d8c7",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.03.11",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/electricity-quantity-increase-forms.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+          "sha256": "e5d340d3a83c2f0bf6c460eaaad05b803f70e90e93f65afa0401385f65a9e713"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+        },
+        {
+          "path": "apps/web/e2e/electricity-quantity-increase-form-fixture.ts",
+          "sha256": "38661412fc8b9ff73e9d0f415bbc556d4a0758f25cd1c1ae92b1db24b6c7d81c"
+        },
+        {
+          "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
+          "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
+        },
+        {
+          "path": "apps/web/e2e/electricity-staff-queue-tables.spec.ts",
+          "sha256": "a0c894c0fa0b2a563e9389f3269b291376667460a11e306ee30b97d9164089a2"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
+        },
+        {
+          "path": "apps/web/e2e/solar-construction-progress.spec.ts",
+          "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+        },
+        {
+          "path": "apps/web/e2e/staff-invoice-receipt-views.spec.ts",
+          "sha256": "0977f5616fdd903e2554f3d36c0e20361d8cde582896c6e4766c3a829792b23a"
+        },
+        {
+          "path": "apps/web/e2e/staff-wallet-receipt-views.spec.ts",
+          "sha256": "3ce84e6d9f8d5a240fd6f714dc8aade1c06cdbd52635a4d1df2357518838e927"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/lib/customer-invoices.ts",
+          "sha256": "480cd7f7719717febdfc7005cf5c0801b570a7ebf66a9f75c629bffc96d02e5a"
+        },
+        {
+          "path": "apps/web/src/pages/ElectricityIncreasePanel.tsx",
+          "sha256": "925593e77d45e9a296f72180196eb04822ae9e597c1fba5a4585b6a4802dd1d4"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "98ac0194357d870547c1abc3a340f3ac1a49b90e22cac09ed5fb4ceee2ad543e"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "The existing browser case retains the current-version quantity amendment, held acknowledgment, wrong receipt, exact idempotent retries, customer consent, required security step-up, reviewed IRR and amendment hash. The signed response now binds its version, signature and pricing review to the original invoice before the browser follows its actual adjustment invoice link.",
+        "The customer browser reads the adjustment invoice by its signed-response ID and confirms the exact localized amount, linked original invoice and source contract. The existing backend integration source separately asserts that real signing creates an Unpaid adjustment invoice linked to the original and rejects conflicting retries. Six deterministic production-build cases passed across Firefox, Mobile Chrome and Mobile Safari without retries. Focused formatting, lint and diff checks passed.",
+        "The earlier staff receipt cohorts passed 8 cases in WebKit, 8 in Mobile Safari and 4 invoice cases in Firefox. The 4 Firefox wallet scans reproduced a native XUL content-process EXC_BAD_ACCESS on this macOS host. The full default audit crashes through both Axe modes, in both half-rule diagnostics, after layout settles and with Ion disabled. Individual contrast and button-name probes passed. The complete audit and browser assertions remain required on the exact hosted candidate.",
+        "Five earlier Mobile Safari electricity queue and rich-text cases and the Chromium Persian solar queue retry passed unchanged. The Firefox notification editor had one English failure and a Persian pass. Four instrumented replays recorded successful pointer and editor events. The mixed result remains open for exact hosted verification."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/contract-amendment-invoice-readback",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "82288b7e87f2825c913909d599a0148f9e144d11f5bf6f64493673949d8e0456"
     }
   },
   "historical_improvements": [

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T11:09:29+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T11:18:20+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1161 | Accepted with unchanged source bindings. |
-| verify | 147 | Existing work may be complete; inspect evidence before building. |
+| done | 1162 | Accepted with unchanged source bindings. |
+| verify | 146 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1297,7 +1297,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.03.08` | done | Recorded batch work | Write E2E: saving-plan order → agreement → invoice → payment → fulfillment stages |
 | `06-security-testing-observability.md#T-06.10.03.09` | done | Recorded batch work | Write E2E: consultation pricing → fee offer → accept → pay |
 | `06-security-testing-observability.md#T-06.10.03.10` | done | Recorded batch work | Write E2E: solar construction request → document upload → staff review → postal → contract creation |
-| `06-security-testing-observability.md#T-06.10.03.11` | verify | Inventory needed | Write E2E: contract version acceptance/signature → adjustment invoice |
+| `06-security-testing-observability.md#T-06.10.03.11` | done | Recorded batch work | Write E2E: contract version acceptance/signature → adjustment invoice |
 | `06-security-testing-observability.md#T-06.10.03.12` | verify | Inventory needed | Write E2E: admin configuration change → effective version → rollback |
 | `06-security-testing-observability.md#T-06.10.03.13` | verify | Inventory needed | Write E2E: profile switching → data isolation verification |
 | `06-security-testing-observability.md#T-06.10.03.14` | verify | Inventory needed | Configure CI E2E: PR → Chromium only; nightly → Chromium + Firefox + WebKit; release → + mobile viewports |
