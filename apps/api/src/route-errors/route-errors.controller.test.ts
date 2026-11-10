@@ -132,3 +132,19 @@ it('uses a bounded deadline and never retries a stalled transport', async () => 
     vi.useRealTimers();
   }
 });
+
+it('cancels a streamed oversized Sentry receipt even when the event ID matches', async () => {
+  const cancel = vi.fn();
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) {
+      controller.enqueue(
+        new TextEncoder().encode(JSON.stringify({ id: eventId, extra: 'x'.repeat(4096) }))
+      );
+    },
+    cancel,
+  });
+  transport.mockResolvedValueOnce(new Response(stream));
+  await expect(controller.report(body, request())).rejects.toMatchObject({ status: 503 });
+  expect(cancel).toHaveBeenCalledOnce();
+  expect(transport).toHaveBeenCalledOnce();
+});

@@ -34,5 +34,6 @@ export { ImmutableStorageRecordService, ImmutableRecordDeleteError } from './imm
 export * from './runtime-config.js';
 export { scanUploadWithClamAv, scanWithClamAv } from './clamav.js';
 export type { ScannerEndpoint, ScanVerdict } from './clamav.js';
+export { readCappedBytes, readCappedJson } from './read-capped-bytes.js';
 
 export const STORAGE_UPLOAD_SCAN_JOB_TYPE = 'storage-upload-scan';

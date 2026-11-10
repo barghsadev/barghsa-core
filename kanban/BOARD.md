@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T16:17:28+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T16:28:21+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,11 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify the exact hosted v0.6 browser receipts and reconcile remaining outbound transport and operational criteria.
+Verify hosted browser receipts and reconcile the demonstrated outbound storage destination gap against the approved storage design.
 
 - `01-platform-infrastructure.md#T-01.04.04`: Configure Playwright for E2E testing
 - `01-platform-infrastructure.md#T-01.04.06`: Configure flaky-test quarantine process
 - `01-platform-infrastructure.md#T-05.05.01`: Create nightly CI schedule
+- `06-security-testing-observability.md#T-06.04.04.02`: Build allowlist-based URL validator: permit only configured HTTPS hosts, reject IP literals when hostname expected
+- `06-security-testing-observability.md#T-06.04.04.03`: Block private/link-local/metadata IP ranges (127.0.0.0/8, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16, ::1, fd00::/8)
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys

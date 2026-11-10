@@ -11,6 +11,9 @@ import {
   SmtpConfigSchema,
   SmtpNetworkGuard,
 } from '../auth-delivery/index.js';
+import { readCappedJson } from '../storage/read-capped-bytes.js';
+
+const MAX_RESEND_RESPONSE_BYTES = 64 * 1024;
 
 export interface DeliveryPool {
   query(sql: string, params?: unknown[]): Promise<{ rows: Array<Record<string, unknown>> }>;
@@ -110,7 +113,9 @@ export function createEmailSender(
             }),
           });
           if (!response.ok) {
-            const diagnostic = (await response.json().catch(() => null)) as {
+            const diagnostic = (await readCappedJson(response, MAX_RESEND_RESPONSE_BYTES).catch(
+              () => null
+            )) as {
               name?: unknown;
             } | null;
             throw Object.assign(new Error('Email provider rejected message'), {
@@ -118,8 +123,10 @@ export function createEmailSender(
               providerErrorName: diagnostic?.name,
             });
           }
-          const body = (await response.json()) as { id?: unknown };
-          if (typeof body.id !== 'string' || !body.id.trim())
+          const body = (await readCappedJson(response, MAX_RESEND_RESPONSE_BYTES)) as {
+            id?: unknown;
+          } | null;
+          if (typeof body?.id !== 'string' || !body.id.trim())
             throw new Error('Email provider returned no receipt');
           return body.id;
         };

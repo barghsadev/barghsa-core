@@ -37,6 +37,13 @@ commands validate the configuration and each template mapping against their
 supported fields. Stored provider configuration continues to use its existing
 read parser.
 
+The Resend connection test uses the fixed API origin and refuses redirects.
+Resend and SMS.ir receipts and error diagnostics are capped at 64 KiB before
+JSON parsing. The Resend domain list has a 2 MiB cap, and Sentry's matching
+event receipt has a 4 KiB cap. These limits apply to decoded bytes. An
+oversized or unreadable delivery receipt leaves the send outcome uncertain
+and subject to the existing reconciliation rules.
+
 Direct and multipart upload reservations share a PostgreSQL limit of 20 per
 authorized profile per minute. Account-only uploads use the same limit keyed
 to the signed-in account. The API checks scope, metadata and the current file

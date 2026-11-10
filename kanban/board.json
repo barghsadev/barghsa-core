@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T16:17:28+00:00",
-  "source_commit": "150bec1e55c94a4004ed96780ac14611c1304519",
+  "updated": "2026-11-10T16:28:21+00:00",
+  "source_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -17907,7 +17907,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-existing-config-store-and-secret-service"
+          "release-0.6-existing-config-store-and-secret-service",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "source-bound-platform-secret-service",
@@ -17926,7 +17927,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
@@ -17951,6 +17952,16 @@
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
               "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ]
         }
@@ -66450,7 +66461,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -66822,11 +66834,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
-              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
             },
             {
               "path": "apps/worker/src/notifications/sms-transport.test.ts",
@@ -67502,6 +67514,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-authentication-journeys/acceptance-proof.json"
               ],
               "scope": "Only changed bindings renewed: additive anonymous published-terms metadata/OpenAPI with all existing methods/tests exact; auth-entry-only current-session gate with all other root gates exact; local informational meter/predictable-password minimum preserved; ten UI-only copy values and two additive i18n exports; test fixture/required meter assertions updated without weakening critical assertions. Exact scope proofs,121 native,101 UI,118 i18n,78 distinct browser and all89 original budgets apply. Task/release status, unmet criteria, financial/business routes and independent live gates unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/auth-delivery/smsir-client.ts",
+                "packages/shared/src/auth-delivery/smsir-client.test.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -78938,7 +78959,8 @@
         ],
         "batches": [
           "release-0.4-delivery-identity-closure",
-          "release-0.6-outbox-worker-processing-metrics"
+          "release-0.6-outbox-worker-processing-metrics",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -78994,7 +79016,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/sms.ts",
@@ -79006,7 +79028,7 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/db/drizzle/production/0092_notification_delivery_identity.sql",
@@ -79055,7 +79077,18 @@
             "identity-format"
           ],
           "source_binding": "identity-proof.json",
-          "review": "identity-proof.json"
+          "review": "identity-proof.json",
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/notification-delivery/email.ts",
+                "packages/shared/src/auth-delivery/smsir-client.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
+          ]
         },
         "brand_theme_caller_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-brand-theme/acceptance-proof.json",
@@ -89017,7 +89050,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -89125,11 +89159,11 @@
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
-              "sha256": "6e1c394187db2dc7fcf0962b1a1efe3ef847828368facdc30796d457a8ea2298"
+              "sha256": "38adf907b00fb5479c9528ecfe18eb9a10713742d7ee513bdd5521794f355b0c"
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
-              "sha256": "249f6c2bc066a3eb9e018d0374f3de1395785e6d2f5a7ff632774e4adb27114d"
+              "sha256": "74edd6cf765dad559bf7cf25147c8aa754cdb2c32bac40d9afa91067d8aaf5bd"
             },
             {
               "path": "apps/api/src/provider-config/smtp-connection-tester.service.test.ts",
@@ -89313,11 +89347,11 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.test.ts",
-              "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+              "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/index.ts",
@@ -89583,6 +89617,17 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+                "apps/api/src/provider-config/resend-connection-tester.service.ts",
+                "packages/shared/src/notification-delivery/email.test.ts",
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -89994,7 +90039,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -90102,11 +90148,11 @@
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
-              "sha256": "6e1c394187db2dc7fcf0962b1a1efe3ef847828368facdc30796d457a8ea2298"
+              "sha256": "38adf907b00fb5479c9528ecfe18eb9a10713742d7ee513bdd5521794f355b0c"
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
-              "sha256": "249f6c2bc066a3eb9e018d0374f3de1395785e6d2f5a7ff632774e4adb27114d"
+              "sha256": "74edd6cf765dad559bf7cf25147c8aa754cdb2c32bac40d9afa91067d8aaf5bd"
             },
             {
               "path": "apps/api/src/provider-config/smtp-connection-tester.service.test.ts",
@@ -90290,11 +90336,11 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.test.ts",
-              "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+              "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/index.ts",
@@ -90560,6 +90606,17 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+                "apps/api/src/provider-config/resend-connection-tester.service.ts",
+                "packages/shared/src/notification-delivery/email.test.ts",
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -90971,7 +91028,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -91079,11 +91137,11 @@
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
-              "sha256": "6e1c394187db2dc7fcf0962b1a1efe3ef847828368facdc30796d457a8ea2298"
+              "sha256": "38adf907b00fb5479c9528ecfe18eb9a10713742d7ee513bdd5521794f355b0c"
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
-              "sha256": "249f6c2bc066a3eb9e018d0374f3de1395785e6d2f5a7ff632774e4adb27114d"
+              "sha256": "74edd6cf765dad559bf7cf25147c8aa754cdb2c32bac40d9afa91067d8aaf5bd"
             },
             {
               "path": "apps/api/src/provider-config/smtp-connection-tester.service.test.ts",
@@ -91267,11 +91325,11 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.test.ts",
-              "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+              "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/index.ts",
@@ -91537,6 +91595,17 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+                "apps/api/src/provider-config/resend-connection-tester.service.ts",
+                "packages/shared/src/notification-delivery/email.test.ts",
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -91949,7 +92018,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -92057,11 +92127,11 @@
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
-              "sha256": "6e1c394187db2dc7fcf0962b1a1efe3ef847828368facdc30796d457a8ea2298"
+              "sha256": "38adf907b00fb5479c9528ecfe18eb9a10713742d7ee513bdd5521794f355b0c"
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
-              "sha256": "249f6c2bc066a3eb9e018d0374f3de1395785e6d2f5a7ff632774e4adb27114d"
+              "sha256": "74edd6cf765dad559bf7cf25147c8aa754cdb2c32bac40d9afa91067d8aaf5bd"
             },
             {
               "path": "apps/api/src/provider-config/smtp-connection-tester.service.test.ts",
@@ -92245,11 +92315,11 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.test.ts",
-              "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+              "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/index.ts",
@@ -92515,6 +92585,17 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+                "apps/api/src/provider-config/resend-connection-tester.service.ts",
+                "packages/shared/src/notification-delivery/email.test.ts",
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -92926,7 +93007,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -93034,11 +93116,11 @@
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
-              "sha256": "6e1c394187db2dc7fcf0962b1a1efe3ef847828368facdc30796d457a8ea2298"
+              "sha256": "38adf907b00fb5479c9528ecfe18eb9a10713742d7ee513bdd5521794f355b0c"
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
-              "sha256": "249f6c2bc066a3eb9e018d0374f3de1395785e6d2f5a7ff632774e4adb27114d"
+              "sha256": "74edd6cf765dad559bf7cf25147c8aa754cdb2c32bac40d9afa91067d8aaf5bd"
             },
             {
               "path": "apps/api/src/provider-config/smtp-connection-tester.service.test.ts",
@@ -93222,11 +93304,11 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.test.ts",
-              "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+              "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/index.ts",
@@ -93492,6 +93574,17 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+                "apps/api/src/provider-config/resend-connection-tester.service.ts",
+                "packages/shared/src/notification-delivery/email.test.ts",
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -93906,7 +93999,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "done",
@@ -93982,11 +94076,11 @@
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
-              "sha256": "6e1c394187db2dc7fcf0962b1a1efe3ef847828368facdc30796d457a8ea2298"
+              "sha256": "38adf907b00fb5479c9528ecfe18eb9a10713742d7ee513bdd5521794f355b0c"
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
-              "sha256": "249f6c2bc066a3eb9e018d0374f3de1395785e6d2f5a7ff632774e4adb27114d"
+              "sha256": "74edd6cf765dad559bf7cf25147c8aa754cdb2c32bac40d9afa91067d8aaf5bd"
             },
             {
               "path": "apps/api/src/provider-config/smtp-connection-tester.service.test.ts",
@@ -94122,7 +94216,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/index.ts",
@@ -94260,6 +94354,16 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+                "apps/api/src/provider-config/resend-connection-tester.service.ts",
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -94669,7 +94773,8 @@
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "done",
@@ -94757,11 +94862,11 @@
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
-              "sha256": "6e1c394187db2dc7fcf0962b1a1efe3ef847828368facdc30796d457a8ea2298"
+              "sha256": "38adf907b00fb5479c9528ecfe18eb9a10713742d7ee513bdd5521794f355b0c"
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
-              "sha256": "249f6c2bc066a3eb9e018d0374f3de1395785e6d2f5a7ff632774e4adb27114d"
+              "sha256": "74edd6cf765dad559bf7cf25147c8aa754cdb2c32bac40d9afa91067d8aaf5bd"
             },
             {
               "path": "apps/api/src/provider-config/smtp-connection-tester.service.test.ts",
@@ -94909,7 +95014,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/index.ts",
@@ -95053,6 +95158,16 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+                "apps/api/src/provider-config/resend-connection-tester.service.ts",
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -95332,7 +95447,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -95440,11 +95556,11 @@
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
-              "sha256": "6e1c394187db2dc7fcf0962b1a1efe3ef847828368facdc30796d457a8ea2298"
+              "sha256": "38adf907b00fb5479c9528ecfe18eb9a10713742d7ee513bdd5521794f355b0c"
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
-              "sha256": "249f6c2bc066a3eb9e018d0374f3de1395785e6d2f5a7ff632774e4adb27114d"
+              "sha256": "74edd6cf765dad559bf7cf25147c8aa754cdb2c32bac40d9afa91067d8aaf5bd"
             },
             {
               "path": "apps/api/src/provider-config/smtp-connection-tester.service.test.ts",
@@ -95628,11 +95744,11 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.test.ts",
-              "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+              "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/index.ts",
@@ -95898,6 +96014,17 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+                "apps/api/src/provider-config/resend-connection-tester.service.ts",
+                "packages/shared/src/notification-delivery/email.test.ts",
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -96175,7 +96302,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -96327,11 +96455,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
-              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-config.schema.ts",
@@ -96541,6 +96669,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
               "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/auth-delivery/smsir-client.test.ts",
+                "packages/shared/src/auth-delivery/smsir-client.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -427925,7 +428062,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -428241,7 +428379,7 @@
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
-              "sha256": "32d3044d546e60e501e053fefd5c8ca14be0af73ec8cdef189dbd33f726dbf22"
+              "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
@@ -428642,6 +428780,10 @@
             {
               "path": "apps/web/src/lib/contract-detail-records.ts",
               "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
+            },
+            {
+              "path": "packages/shared/src/storage/read-capped-bytes.ts",
+              "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
             }
           ],
           "checks": [
@@ -429103,6 +429245,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/storage/read-capped-bytes.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -432001,7 +432151,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -432317,7 +432468,7 @@
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
-              "sha256": "32d3044d546e60e501e053fefd5c8ca14be0af73ec8cdef189dbd33f726dbf22"
+              "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
@@ -432718,6 +432869,10 @@
             {
               "path": "apps/web/src/lib/contract-detail-records.ts",
               "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
+            },
+            {
+              "path": "packages/shared/src/storage/read-capped-bytes.ts",
+              "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
             }
           ],
           "checks": [
@@ -433179,6 +433334,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/storage/read-capped-bytes.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -433332,7 +433495,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -433648,7 +433812,7 @@
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
-              "sha256": "32d3044d546e60e501e053fefd5c8ca14be0af73ec8cdef189dbd33f726dbf22"
+              "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
@@ -434049,6 +434213,10 @@
             {
               "path": "apps/web/src/lib/contract-detail-records.ts",
               "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
+            },
+            {
+              "path": "packages/shared/src/storage/read-capped-bytes.ts",
+              "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
             }
           ],
           "checks": [
@@ -434510,6 +434678,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/storage/read-capped-bytes.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -434663,7 +434839,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -434979,7 +435156,7 @@
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
-              "sha256": "32d3044d546e60e501e053fefd5c8ca14be0af73ec8cdef189dbd33f726dbf22"
+              "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
@@ -435380,6 +435557,10 @@
             {
               "path": "apps/web/src/lib/contract-detail-records.ts",
               "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
+            },
+            {
+              "path": "packages/shared/src/storage/read-capped-bytes.ts",
+              "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
             }
           ],
           "checks": [
@@ -435841,6 +436022,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/storage/read-capped-bytes.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -450389,7 +450578,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -450541,11 +450731,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
-              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-config.schema.ts",
@@ -450753,6 +450943,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
               "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/auth-delivery/smsir-client.test.ts",
+                "packages/shared/src/auth-delivery/smsir-client.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -450860,7 +451059,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -451012,11 +451212,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
-              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-config.schema.ts",
@@ -451224,6 +451424,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
               "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/auth-delivery/smsir-client.test.ts",
+                "packages/shared/src/auth-delivery/smsir-client.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -451330,7 +451539,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -451482,11 +451692,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
-              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-config.schema.ts",
@@ -451696,6 +451906,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
               "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/auth-delivery/smsir-client.test.ts",
+                "packages/shared/src/auth-delivery/smsir-client.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -451803,7 +452022,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451955,11 +452175,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
-              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-config.schema.ts",
@@ -452231,6 +452451,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
               "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/auth-delivery/smsir-client.test.ts",
+                "packages/shared/src/auth-delivery/smsir-client.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -452363,7 +452592,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -452543,11 +452773,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
-              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-config.schema.ts",
@@ -452818,6 +453048,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-worker-shutdown/release-0.6-api-worker-shutdown-and-fixture-reuse.json",
               "scope": "Fixture-only renewal. All sixteen compiled worker process cases passed with identical test bodies and independent databases cloned from the same production migration chain. Existing runtime, live provider and release receipt evidence retains its original scope."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/auth-delivery/smsir-client.test.ts",
+                "packages/shared/src/auth-delivery/smsir-client.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -452934,7 +453173,8 @@
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453098,11 +453338,11 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.test.ts",
-              "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+              "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/provider-errors.test.ts",
@@ -453229,6 +453469,15 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/notification-delivery/email.test.ts",
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -453359,7 +453608,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453527,11 +453777,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
-              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/shared/src/notification-delivery/email-breaker.ts",
@@ -453543,11 +453793,11 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.test.ts",
-              "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+              "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/provider-errors.test.ts",
@@ -453790,6 +454040,17 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/auth-delivery/smsir-client.test.ts",
+                "packages/shared/src/auth-delivery/smsir-client.ts",
+                "packages/shared/src/notification-delivery/email.test.ts",
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -453924,7 +454185,8 @@
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "done",
@@ -454068,7 +454330,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/provider-errors.test.ts",
@@ -454215,6 +454477,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -454315,7 +454585,8 @@
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "done",
@@ -454459,7 +454730,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/provider-errors.test.ts",
@@ -454606,6 +454877,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -454706,7 +454985,8 @@
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "done",
@@ -454850,7 +455130,7 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/provider-errors.test.ts",
@@ -454997,6 +455277,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -455079,7 +455367,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455091,7 +455380,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "2b93b51c7c5bef331c755faadb16da7a4b31eb11021e6fd4f478b340a60d836c"
+              "sha256": "f3dfc86b327a7bac17f2b976cf902cc94b9f16fca9a8e7708053a28f07b36948"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
@@ -455225,6 +455514,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/storage/index.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -455282,7 +455579,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455294,7 +455592,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "2b93b51c7c5bef331c755faadb16da7a4b31eb11021e6fd4f478b340a60d836c"
+              "sha256": "f3dfc86b327a7bac17f2b976cf902cc94b9f16fca9a8e7708053a28f07b36948"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
@@ -455428,6 +455726,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/storage/index.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -455494,7 +455800,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455578,7 +455885,7 @@
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
-              "sha256": "32d3044d546e60e501e053fefd5c8ca14be0af73ec8cdef189dbd33f726dbf22"
+              "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -455607,6 +455914,10 @@
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
               "sha256": "0d9f6223219f3fb1bb8311d0ca3294bc09dcd77886822cb6f980f3cee53984ee"
+            },
+            {
+              "path": "packages/shared/src/storage/read-capped-bytes.ts",
+              "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
             }
           ],
           "checks": [
@@ -455708,6 +456019,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/storage/read-capped-bytes.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -455788,7 +456107,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455872,7 +456192,7 @@
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
-              "sha256": "32d3044d546e60e501e053fefd5c8ca14be0af73ec8cdef189dbd33f726dbf22"
+              "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
             },
             {
               "path": "apps/web/src/pages/AdminStorageConfig.tsx",
@@ -455897,6 +456217,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            },
+            {
+              "path": "packages/shared/src/storage/read-capped-bytes.ts",
+              "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
             }
           ],
           "checks": [
@@ -455973,6 +456297,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/storage/read-capped-bytes.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -486495,7 +486827,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-staging-pilot-proxy-log-redaction",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-api-and-private-cutover-proof",
@@ -486539,11 +486872,11 @@
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
-              "sha256": "e59f2ac8db69247aaca5bbbe9f8a6c31dcdab91a0d60adf2a658d9adf49b492b"
+              "sha256": "a7b760489c96751317d07ee493eb5dfbb8adfde2efa2c6d0f096c99a667cf868"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
-              "sha256": "0e16a8a12e48adc346e7be9829475247b4e87aa14c0ad99676edbe0c07a66093"
+              "sha256": "51c8b4a0ad538b1913bcedb8ffdd67138224445809c86a0b030123eed4d69a31"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -486703,6 +487036,17 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed the affected registration source bindings using the isolated exact production schema, public privacy and immutable proof cases, unchanged normal registration and account/session rollback assertions, and native bilingual UI results."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/route-errors/route-errors.controller.test.ts",
+                "apps/api/src/route-errors/route-errors.controller.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       }
@@ -489891,7 +490235,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -489931,7 +490276,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -489967,6 +490312,16 @@
             "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
             "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       },
@@ -490041,7 +490396,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -490097,7 +490453,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -490120,6 +490476,16 @@
             "Renewed lazy audit copy and shared admin navigation bindings. The original labels and permission checks passed. All 102 route budgets passed and wallet receipts measured 498178 of the original 500000 bytes.",
             "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       },
@@ -490947,7 +491313,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -491037,7 +491404,17 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ]
         }
@@ -491070,7 +491447,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -491160,7 +491538,17 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ]
         }
@@ -491193,7 +491581,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -491283,7 +491672,17 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ]
         }
@@ -491834,7 +492233,8 @@
         "batches": [
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "source-bound-sql-field-allowlists",
@@ -491918,12 +492318,22 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             }
           ],
           "checks": [
             "Catalogue and CRM map validated sort keys to fixed SQL expressions. Customer and staff ticket lists use a bounded allowlist with a fixed fallback. Listing direction and keyset comparisons select fixed SQL tokens. Wallet and related list filters bind data and compose only fixed predicates and placeholder indexes.",
             "All 108 focused unit cases passed across catalogue controller and service, CRM, ticket and wallet history suites. The catalogue controller rejects an injected sort value before invoking the service. The existing application code and SAST gate are unchanged."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       }
@@ -492775,19 +493185,93 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The private AI worker, external AI, web-source, bill and payment gateway transports refuse all redirects. Verify equivalent behavior for the remaining external providers."
+        "The private AI worker, external AI, web-source, bill, payment, Telegram, SMS.ir, Resend and Sentry HTTP paths refuse redirects. The pinned S3 SDK defaults to refusing region redirect retries. Verify deployed provider and proxy behavior, including the separate OTLP and S3 transports."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+          "apps/api/src/provider-config/resend-connection-tester.service.ts",
+          "apps/api/src/route-errors/route-errors.controller.test.ts",
+          "apps/api/src/route-errors/route-errors.controller.ts",
+          "apps/api/src/storage/read-capped-bytes.ts",
+          "docs/security/security-verification.md",
+          "packages/shared/src/auth-delivery/smsir-client.test.ts",
+          "packages/shared/src/auth-delivery/smsir-client.ts",
+          "packages/shared/src/notification-delivery/email.test.ts",
+          "packages/shared/src/notification-delivery/email.ts",
+          "packages/shared/src/storage/index.ts",
+          "packages/shared/src/storage/read-capped-bytes.ts"
+        ],
         "batches": [
           "release-0.6-provider-egress-regressions",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-ai-and-payment-transport-boundaries"
+          "release-0.6-ai-and-payment-transport-boundaries",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-scoped-provider-response-boundaries",
+          "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+          "source_evidence": [
+            {
+              "path": "packages/shared/src/storage/read-capped-bytes.ts",
+              "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
+            },
+            {
+              "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+              "sha256": "38adf907b00fb5479c9528ecfe18eb9a10713742d7ee513bdd5521794f355b0c"
+            },
+            {
+              "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
+              "sha256": "74edd6cf765dad559bf7cf25147c8aa754cdb2c32bac40d9afa91067d8aaf5bd"
+            },
+            {
+              "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
+              "sha256": "a7b760489c96751317d07ee493eb5dfbb8adfde2efa2c6d0f096c99a667cf868"
+            },
+            {
+              "path": "apps/api/src/route-errors/route-errors.controller.ts",
+              "sha256": "51c8b4a0ad538b1913bcedb8ffdd67138224445809c86a0b030123eed4d69a31"
+            },
+            {
+              "path": "apps/api/src/storage/read-capped-bytes.ts",
+              "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smsir-client.ts",
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/email.test.ts",
+              "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/email.ts",
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
+            },
+            {
+              "path": "packages/shared/src/storage/index.ts",
+              "sha256": "f3dfc86b327a7bac17f2b976cf902cc94b9f16fca9a8e7708053a28f07b36948"
+            }
+          ],
+          "checks": [
+            "235 targeted API unit cases passed on the final sources, including bounded Resend and Sentry diagnostics, unchanged payment and bill boundary assertions, AI response limits, previews, receipt sealing and electricity templates. 285 shared auth-delivery, notification-delivery, storage and AI cases and 53 affected worker unit cases passed.",
+            "Strict API and worker types, shared ESM/CJS and 33 distribution checks, API and worker builds, changed-file lint and formatting, and git diff --check passed.",
+            "Compiled API on disposable Linux and PostgreSQL with all 207 production migrations passed 42 of 43 selected HTTP cases including protected provider writes, Sentry origin/CSRF/rate checks, storage access and signed content probes and electricity template rollback. One second-API restart exceeded the 5 s outer fixture limit in the concurrent run. The exact restart passed in 7.946 s with its prerequisite encrypted save in an isolated serial invocation with a 25 s outer allowance and the original 20 s startup, signed credential, HTTP and teardown assertions. The initial suite is recorded as failed.",
+            "The storage byte reader is byte-identical after relocation. The original API import path re-exports it and is exercised by payment, bill, AI, storage and contract tests. Malformed and oversized external receipts cannot create acceptance or retry-safe rejection. Provider status classes, SMTP connection authority, delivery identity and send intent remain preserved."
+          ],
+          "limitations": "Exact deployed provider and egress verification remains open."
+        }
       }
     },
     {
@@ -492805,19 +493289,93 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The private AI worker, external AI, web-source, bill and payment gateway transports have bounded deadlines and response sizes. Verify the remaining providers and deploy-time constraints."
+        "The private AI worker, external AI, web-source, bill, payment, Telegram, SMS.ir, Resend and Sentry paths have per-call deadlines and bounded decoded responses. Verify SDK responses, upload/object-specific limits and operational constraints in the deployed configuration."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+          "apps/api/src/provider-config/resend-connection-tester.service.ts",
+          "apps/api/src/route-errors/route-errors.controller.test.ts",
+          "apps/api/src/route-errors/route-errors.controller.ts",
+          "apps/api/src/storage/read-capped-bytes.ts",
+          "docs/security/security-verification.md",
+          "packages/shared/src/auth-delivery/smsir-client.test.ts",
+          "packages/shared/src/auth-delivery/smsir-client.ts",
+          "packages/shared/src/notification-delivery/email.test.ts",
+          "packages/shared/src/notification-delivery/email.ts",
+          "packages/shared/src/storage/index.ts",
+          "packages/shared/src/storage/read-capped-bytes.ts"
+        ],
         "batches": [
           "release-0.6-provider-egress-regressions",
           "release-0.6-bill-provider-network-boundaries",
-          "release-0.6-ai-and-payment-transport-boundaries"
+          "release-0.6-ai-and-payment-transport-boundaries",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-scoped-provider-response-boundaries",
+          "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+          "source_evidence": [
+            {
+              "path": "packages/shared/src/storage/read-capped-bytes.ts",
+              "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
+            },
+            {
+              "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+              "sha256": "38adf907b00fb5479c9528ecfe18eb9a10713742d7ee513bdd5521794f355b0c"
+            },
+            {
+              "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
+              "sha256": "74edd6cf765dad559bf7cf25147c8aa754cdb2c32bac40d9afa91067d8aaf5bd"
+            },
+            {
+              "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
+              "sha256": "a7b760489c96751317d07ee493eb5dfbb8adfde2efa2c6d0f096c99a667cf868"
+            },
+            {
+              "path": "apps/api/src/route-errors/route-errors.controller.ts",
+              "sha256": "51c8b4a0ad538b1913bcedb8ffdd67138224445809c86a0b030123eed4d69a31"
+            },
+            {
+              "path": "apps/api/src/storage/read-capped-bytes.ts",
+              "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smsir-client.ts",
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/email.test.ts",
+              "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/email.ts",
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
+            },
+            {
+              "path": "packages/shared/src/storage/index.ts",
+              "sha256": "f3dfc86b327a7bac17f2b976cf902cc94b9f16fca9a8e7708053a28f07b36948"
+            }
+          ],
+          "checks": [
+            "235 targeted API unit cases passed on the final sources, including bounded Resend and Sentry diagnostics, unchanged payment and bill boundary assertions, AI response limits, previews, receipt sealing and electricity templates. 285 shared auth-delivery, notification-delivery, storage and AI cases and 53 affected worker unit cases passed.",
+            "Strict API and worker types, shared ESM/CJS and 33 distribution checks, API and worker builds, changed-file lint and formatting, and git diff --check passed.",
+            "Compiled API on disposable Linux and PostgreSQL with all 207 production migrations passed 42 of 43 selected HTTP cases including protected provider writes, Sentry origin/CSRF/rate checks, storage access and signed content probes and electricity template rollback. One second-API restart exceeded the 5 s outer fixture limit in the concurrent run. The exact restart passed in 7.946 s with its prerequisite encrypted save in an isolated serial invocation with a 25 s outer allowance and the original 20 s startup, signed credential, HTTP and teardown assertions. The initial suite is recorded as failed.",
+            "The storage byte reader is byte-identical after relocation. The original API import path re-exports it and is exercised by payment, bill, AI, storage and contract tests. Malformed and oversized external receipts cannot create acceptance or retry-safe rejection. Provider status classes, SMTP connection authority, delivery identity and send intent remain preserved."
+          ],
+          "limitations": "Exact deployed provider and egress verification remains open."
+        }
       }
     },
     {
@@ -492842,7 +493400,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-provider-egress-regressions",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -492909,7 +493468,17 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ]
         }
@@ -494975,7 +495544,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -495103,7 +495673,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -495128,6 +495698,16 @@
             "Eight compiled HTTP and real PostgreSQL/MinIO cases passed for bytes, attachment headers, denial, access history, quarantine, scanner pending and raster receipt preview. The MinIO harness used a PNG receipt because it lacked Poppler; the local unit tests separately rendered a PDF through the same bounded receipt stream helper.",
             "Three compiled HTTP caller cases passed for private CRM evidence and customer/staff avatar URLs. Shared storage tests (44), package exports (33), API unit tests (66), web unit tests (97), browser journeys (16) and all 102 production route budgets passed. Type checks, lint, formatting and the generated OpenAPI contract passed.",
             "The initial isolated document run lacked a compiled scanner worker. A later run exposed a missing wallet parent in the new staff test fixture. The final HTTP proof builds the worker and seeds the required parent and asserts the complete global private, no-cache, no-store, must-revalidate response without changing business assertions."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       },
@@ -495368,7 +495948,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -495428,7 +496009,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -495441,6 +496022,16 @@
             "Reviewed the pinned Office detection dependency and its byte and entry limits, the two-worker inspection cap and deadline, and DOCX template and knowledge extraction entry/expanded-byte limits. General raw ZIP uploads remain opaque objects. A new low-compressed-size DOCX case exceeds 2 MiB when expanded and is rejected before extraction.",
             "Forty-nine targeted API unit cases and two knowledge extraction cases passed. The 14 resolver cases passed after formatting. Lint and whitespace checks passed. This review leaves the separate live scanner and broad-purpose malware pipeline criteria open.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       },
@@ -495484,7 +496075,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -495533,7 +496125,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -495542,6 +496134,16 @@
             {
               "path": "packages/db/src/schema/wallet-topup-callback-events.ts",
               "sha256": "bfbbe945edfe2e9063fcd6082bce9998ef182395c4720afa3f29e05a35f0ecea"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ]
         }
@@ -495745,7 +496347,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-private-clamav-signature-mirror"
+          "release-0.6-private-clamav-signature-mirror",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -495826,7 +496429,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -495835,6 +496438,16 @@
             {
               "path": "packages/db/src/schema/wallet-topup-callback-events.ts",
               "sha256": "bfbbe945edfe2e9063fcd6082bce9998ef182395c4720afa3f29e05a35f0ecea"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ]
         }
@@ -495994,7 +496607,8 @@
         ],
         "batches": [
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-native-credential-and-migration-acceptance"
+          "release-0.6-native-credential-and-migration-acceptance",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "source-bound-encryption-overlap-native",
@@ -496034,7 +496648,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
@@ -496059,6 +496673,16 @@
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
               "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ]
         }
@@ -497600,7 +498224,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -497608,7 +498233,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             },
             {
               "path": "docs/threat-model.md",
@@ -497621,6 +498246,16 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
             "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       },
@@ -497762,7 +498397,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -497770,7 +498406,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -497783,6 +498419,16 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
             "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       },
@@ -497890,7 +498536,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -497898,7 +498545,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -497911,6 +498558,16 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
             "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       },
@@ -497966,7 +498623,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -497982,7 +498640,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             }
           ],
           "checks": [
@@ -497992,6 +498650,16 @@
             "ZAP found seven Low instances each of rules 10035 and 10037. A separate direct TLS response verified the staging edge omits HSTS and forwards X-Powered-By: Express. The probe reported no Medium or High finding. Final candidate retest, HSTS topology review and independent penetration testing remain separate.",
             "Cleanup archived the synthetic profile, disabled the dedicated account, revoked its only session and verified that the revoked cookie returns 401. The report excludes credentials, identifiers and response bodies.",
             "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       },
@@ -498059,7 +498727,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -498119,7 +498788,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -498136,6 +498805,16 @@
             "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
             "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       },
@@ -499286,7 +499965,8 @@
           "release-0.6-domain-unit-acceptance",
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "source-bound-domain-unit-tests",
@@ -499306,7 +499986,7 @@
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
-              "sha256": "249f6c2bc066a3eb9e018d0374f3de1395785e6d2f5a7ff632774e4adb27114d"
+              "sha256": "74edd6cf765dad559bf7cf25147c8aa754cdb2c32bac40d9afa91067d8aaf5bd"
             },
             {
               "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
@@ -499358,11 +500038,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
-              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/shared/src/notification-delivery/provider-errors.test.ts",
@@ -499375,6 +500055,18 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/provider-config/resend-connection-tester.service.ts",
+                "packages/shared/src/auth-delivery/smsir-client.test.ts",
+                "packages/shared/src/auth-delivery/smsir-client.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ]
         }
@@ -500510,7 +501202,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -500546,19 +501239,19 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
-              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/shared/src/notification-delivery/email.test.ts",
-              "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+              "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/provider-errors.test.ts",
@@ -500590,6 +501283,19 @@
             "The existing SMS.ir and document storage fixtures use loopback HTTP. All 24 hosted storage-record cases passed with matching source and the in-memory S3 fixture. The six native payment sandbox cases passed using a disposable ledger and actual HTTP payment adapter.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/auth-delivery/smsir-client.test.ts",
+                "packages/shared/src/auth-delivery/smsir-client.ts",
+                "packages/shared/src/notification-delivery/email.test.ts",
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       },
@@ -501493,7 +502199,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -501529,19 +502236,19 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
-              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/shared/src/notification-delivery/email.test.ts",
-              "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+              "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/provider-errors.test.ts",
@@ -501574,6 +502281,19 @@
             "The six local HTTP sandbox tests and 134 source-matching hosted gateway adapter tests cover protected settlement, failed and unverified responses, unsafe redirects, timeouts and recovery, idempotency collisions and authenticated callback binding. Live merchant and external delivery evidence are separate gates.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/auth-delivery/smsir-client.test.ts",
+                "packages/shared/src/auth-delivery/smsir-client.ts",
+                "packages/shared/src/notification-delivery/email.test.ts",
+                "packages/shared/src/notification-delivery/email.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       },
@@ -503354,7 +504074,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -503370,7 +504091,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             }
           ],
           "checks": [
@@ -503380,6 +504101,16 @@
             "ZAP found seven Low instances each of rules 10035 and 10037. A separate direct TLS response verified the staging edge omits HSTS and forwards X-Powered-By: Express. The probe reported no Medium or High finding. Final candidate retest, HSTS topology review and independent penetration testing remain separate.",
             "Cleanup archived the synthetic profile, disabled the dedicated account, revoked its only session and verified that the revoked cookie returns 401. The report excludes credentials, identifiers and response bodies.",
             "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       },
@@ -503438,7 +504169,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -503446,7 +504178,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+              "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -503561,6 +504293,16 @@
             "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged.",
             "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       },
@@ -504126,7 +504868,8 @@
         "batches": [
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "source-matched-provider-and-redis-failure-injection",
@@ -504197,7 +504940,7 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/shared/src/config-cache/config-cache.test.ts",
@@ -504230,6 +504973,16 @@
             {
               "path": "packages/shared/src/rate-limit/composite-rate-limiter.ts",
               "sha256": "6225c6e6dd362da56ee57536c65c150841385795667bf4b0701c4c7888f28e27"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "packages/shared/src/auth-delivery/smsir-client.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ]
         }
@@ -639305,7 +640058,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_acceptance": {
           "kind": "current_route_error_boundary_and_live_sentry",
@@ -639313,11 +640067,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
-              "sha256": "0e16a8a12e48adc346e7be9829475247b4e87aa14c0ad99676edbe0c07a66093"
+              "sha256": "51c8b4a0ad538b1913bcedb8ffdd67138224445809c86a0b030123eed4d69a31"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
-              "sha256": "e59f2ac8db69247aaca5bbbe9f8a6c31dcdab91a0d60adf2a658d9adf49b492b"
+              "sha256": "a7b760489c96751317d07ee493eb5dfbb8adfde2efa2c6d0f096c99a667cf868"
             },
             {
               "path": "apps/api/src/route-errors/route-errors-http.integration.test.ts",
@@ -639348,6 +640102,17 @@
             "Retained source-bound browser coverage for route render fallback, retry, and support references; controller and HTTP integration cover validated redacted payloads and provider delivery failures.",
             "One controlled compiled candidate request returned HTTP 204 after Sentry acknowledged the exact event on the staging host network.",
             "Authenticated staging Sentry project readback matched event cebc05c1abbf4811aa118e0812018764, support reference cebc05c1-abbf-4811-aa11-8e0812018764 and issue https://barghsa.sentry.io/issues/159740379/?project=4512401311596624."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/route-errors/route-errors.controller.ts",
+                "apps/api/src/route-errors/route-errors.controller.test.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
           ]
         }
       }
@@ -763349,7 +764114,7 @@
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
-              "sha256": "32d3044d546e60e501e053fefd5c8ca14be0af73ec8cdef189dbd33f726dbf22"
+              "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
@@ -764058,6 +764823,10 @@
             {
               "path": "apps/web/src/lib/contract-detail-records.ts",
               "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
+            },
+            {
+              "path": "packages/shared/src/storage/read-capped-bytes.ts",
+              "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
             }
           ],
           "checks": [
@@ -765380,6 +766149,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/storage/read-capped-bytes.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -765806,7 +766583,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-native-safari-saving-shell-staff-team",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-provider-redirects-and-response-caps"
         ]
       }
     },
@@ -766598,11 +767376,11 @@
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
-              "sha256": "6e1c394187db2dc7fcf0962b1a1efe3ef847828368facdc30796d457a8ea2298"
+              "sha256": "38adf907b00fb5479c9528ecfe18eb9a10713742d7ee513bdd5521794f355b0c"
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
-              "sha256": "249f6c2bc066a3eb9e018d0374f3de1395785e6d2f5a7ff632774e4adb27114d"
+              "sha256": "74edd6cf765dad559bf7cf25147c8aa754cdb2c32bac40d9afa91067d8aaf5bd"
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
@@ -766750,7 +767528,7 @@
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
-              "sha256": "32d3044d546e60e501e053fefd5c8ca14be0af73ec8cdef189dbd33f726dbf22"
+              "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
@@ -768566,11 +769344,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
-              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-config.schema.ts",
@@ -768606,11 +769384,11 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.test.ts",
-              "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+              "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/index.ts",
@@ -768702,7 +769480,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "2b93b51c7c5bef331c755faadb16da7a4b31eb11021e6fd4f478b340a60d836c"
+              "sha256": "f3dfc86b327a7bac17f2b976cf902cc94b9f16fca9a8e7708053a28f07b36948"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -768859,6 +769637,10 @@
             {
               "path": "apps/web/src/lib/document-records.ts",
               "sha256": "2a9648375ec5d1dfa67c02c1970c57f35345b657072f3c074a2a1ef67f8222eb"
+            },
+            {
+              "path": "packages/shared/src/storage/read-capped-bytes.ts",
+              "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
             }
           ],
           "checks": [
@@ -769475,6 +770257,21 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
               "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+                "apps/api/src/provider-config/resend-connection-tester.service.ts",
+                "apps/api/src/storage/read-capped-bytes.ts",
+                "packages/shared/src/auth-delivery/smsir-client.test.ts",
+                "packages/shared/src/auth-delivery/smsir-client.ts",
+                "packages/shared/src/notification-delivery/email.test.ts",
+                "packages/shared/src/notification-delivery/email.ts",
+                "packages/shared/src/storage/index.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "presentation_renewals": [
@@ -769839,7 +770636,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -770640,11 +771438,11 @@
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
-              "sha256": "6e1c394187db2dc7fcf0962b1a1efe3ef847828368facdc30796d457a8ea2298"
+              "sha256": "38adf907b00fb5479c9528ecfe18eb9a10713742d7ee513bdd5521794f355b0c"
             },
             {
               "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
-              "sha256": "249f6c2bc066a3eb9e018d0374f3de1395785e6d2f5a7ff632774e4adb27114d"
+              "sha256": "74edd6cf765dad559bf7cf25147c8aa754cdb2c32bac40d9afa91067d8aaf5bd"
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
@@ -770788,7 +771586,7 @@
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
-              "sha256": "32d3044d546e60e501e053fefd5c8ca14be0af73ec8cdef189dbd33f726dbf22"
+              "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
@@ -772584,11 +773382,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
-              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.ts",
-              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-config.schema.ts",
@@ -772620,11 +773418,11 @@
             },
             {
               "path": "packages/shared/src/notification-delivery/email.test.ts",
-              "sha256": "587f21855069d8ca192e5f6b9b5973bb0ea3429083ebfcd775514048df226a3f"
+              "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
             },
             {
               "path": "packages/shared/src/notification-delivery/email.ts",
-              "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
             },
             {
               "path": "packages/shared/src/notification-delivery/index.ts",
@@ -772716,7 +773514,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "2b93b51c7c5bef331c755faadb16da7a4b31eb11021e6fd4f478b340a60d836c"
+              "sha256": "f3dfc86b327a7bac17f2b976cf902cc94b9f16fca9a8e7708053a28f07b36948"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -772901,6 +773699,10 @@
             {
               "path": "apps/web/e2e/release-version.spec.ts",
               "sha256": "22408f5b2a29e0f9e216cc3b8c7e2fc5336be3bba62c65542d02e3bb81f99cf7"
+            },
+            {
+              "path": "packages/shared/src/storage/read-capped-bytes.ts",
+              "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
             }
           ],
           "checks": [
@@ -773382,6 +774184,21 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
               "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
+            },
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+                "apps/api/src/provider-config/resend-connection-tester.service.ts",
+                "apps/api/src/storage/read-capped-bytes.ts",
+                "packages/shared/src/auth-delivery/smsir-client.test.ts",
+                "packages/shared/src/auth-delivery/smsir-client.ts",
+                "packages/shared/src/notification-delivery/email.test.ts",
+                "packages/shared/src/notification-delivery/email.ts",
+                "packages/shared/src/storage/index.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -773763,7 +774580,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-provider-redirects-and-response-caps"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -777170,7 +777988,7 @@
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
-              "sha256": "0e16a8a12e48adc346e7be9829475247b4e87aa14c0ad99676edbe0c07a66093"
+              "sha256": "51c8b4a0ad538b1913bcedb8ffdd67138224445809c86a0b030123eed4d69a31"
             },
             {
               "path": "apps/web/src/hooks/useRouteErrorReport.ts",
@@ -777556,7 +778374,17 @@
               "apps/api/src/app.factory.ts"
             ],
             "base_commit": "133576f31ba18e34a02b1892866a3210e3cad037"
-          }
+          },
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-redirects-and-response-caps",
+              "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+              "paths": [
+                "apps/api/src/route-errors/route-errors.controller.ts"
+              ],
+              "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            }
+          ]
         },
         "batches": [
           "release-0.5-critical-accessibility-renewal",
@@ -777696,7 +778524,8 @@
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-provider-redirects-and-response-caps"
         ]
       }
     },
@@ -890679,6 +891508,146 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/registration-private-start-source-proof",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "cf5ed181d48c73ee924908ea2a4c0a730817f99bf2a265a5bb041cbaf02310e0"
+    },
+    "release-0.6-provider-redirects-and-response-caps": {
+      "batch": "release-0.6-provider-redirects-and-response-caps",
+      "base_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.04.04",
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "01-platform-infrastructure.md#T-07.02.04",
+        "02-auth-users-admin.md#T-07.01.03",
+        "05-notifications-documents-ai.md#T-05.01.04",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.06.01",
+        "02-auth-users-admin.md#T-09.06.02",
+        "03-core-business.md#T-03.13.01.02",
+        "03-core-business.md#T-03.13.02.01",
+        "03-core-business.md#T-03.13.02.02",
+        "03-core-business.md#T-03.13.02.03",
+        "05-notifications-documents-ai.md#T-05.07.01",
+        "05-notifications-documents-ai.md#T-05.07.02",
+        "05-notifications-documents-ai.md#T-05.07.03",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.07.05",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "05-notifications-documents-ai.md#T-05.09.01",
+        "05-notifications-documents-ai.md#T-05.09.02",
+        "05-notifications-documents-ai.md#T-05.09.03",
+        "05-notifications-documents-ai.md#T-05.09.04",
+        "06-security-testing-observability.md#T-06.01.04.08",
+        "06-security-testing-observability.md#T-06.03.01.09",
+        "06-security-testing-observability.md#T-06.03.01.10",
+        "06-security-testing-observability.md#T-06.03.03.02",
+        "06-security-testing-observability.md#T-06.03.03.03",
+        "06-security-testing-observability.md#T-06.03.03.04",
+        "06-security-testing-observability.md#T-06.04.02.02",
+        "06-security-testing-observability.md#T-06.04.04.06",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.06.01.08",
+        "06-security-testing-observability.md#T-06.06.02.01",
+        "06-security-testing-observability.md#T-06.06.02.06",
+        "06-security-testing-observability.md#T-06.07.01.04",
+        "06-security-testing-observability.md#T-06.08.01.04",
+        "06-security-testing-observability.md#T-06.08.02.01",
+        "06-security-testing-observability.md#T-06.08.02.03",
+        "06-security-testing-observability.md#T-06.08.02.04",
+        "06-security-testing-observability.md#T-06.08.02.05",
+        "06-security-testing-observability.md#T-06.09.02.06",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.11.02.01",
+        "06-security-testing-observability.md#T-06.11.02.02",
+        "06-security-testing-observability.md#T-06.11.04.01",
+        "07-ui-ux-design.md#T-07.12.01.09",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        "packages/shared/src/storage/read-capped-bytes.ts",
+        "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+        "apps/api/src/provider-config/resend-connection-tester.service.ts",
+        "apps/api/src/route-errors/route-errors.controller.test.ts",
+        "apps/api/src/route-errors/route-errors.controller.ts",
+        "apps/api/src/storage/read-capped-bytes.ts",
+        "docs/security/security-verification.md",
+        "packages/shared/src/auth-delivery/smsir-client.test.ts",
+        "packages/shared/src/auth-delivery/smsir-client.ts",
+        "packages/shared/src/notification-delivery/email.test.ts",
+        "packages/shared/src/notification-delivery/email.ts",
+        "packages/shared/src/storage/index.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/shared/src/storage/read-capped-bytes.ts",
+          "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
+        },
+        {
+          "path": "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
+          "sha256": "38adf907b00fb5479c9528ecfe18eb9a10713742d7ee513bdd5521794f355b0c"
+        },
+        {
+          "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
+          "sha256": "74edd6cf765dad559bf7cf25147c8aa754cdb2c32bac40d9afa91067d8aaf5bd"
+        },
+        {
+          "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
+          "sha256": "a7b760489c96751317d07ee493eb5dfbb8adfde2efa2c6d0f096c99a667cf868"
+        },
+        {
+          "path": "apps/api/src/route-errors/route-errors.controller.ts",
+          "sha256": "51c8b4a0ad538b1913bcedb8ffdd67138224445809c86a0b030123eed4d69a31"
+        },
+        {
+          "path": "apps/api/src/storage/read-capped-bytes.ts",
+          "sha256": "85836d48da0ecbdd7964112af93a38c5e3662d24f6fa7403d5dee3fab8fae164"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "d052e847196be5aa51471b21909879640985990c139a8b8c9ea2f629dfd73f42"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
+          "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smsir-client.ts",
+          "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email.test.ts",
+          "sha256": "378a6967530c1fd262a142619f10d7bfc03ed39c945cea773ee407fbdd4ab1c6"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email.ts",
+          "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
+        },
+        {
+          "path": "packages/shared/src/storage/index.ts",
+          "sha256": "f3dfc86b327a7bac17f2b976cf902cc94b9f16fca9a8e7708053a28f07b36948"
+        }
+      ],
+      "checks": [
+        "235 targeted API unit cases passed on the final sources, including bounded Resend and Sentry diagnostics, unchanged payment and bill boundary assertions, AI response limits, previews, receipt sealing and electricity templates. 285 shared auth-delivery, notification-delivery, storage and AI cases and 53 affected worker unit cases passed.",
+        "Strict API and worker types, shared ESM/CJS and 33 distribution checks, API and worker builds, changed-file lint and formatting, and git diff --check passed.",
+        "Compiled API on disposable Linux and PostgreSQL with all 207 production migrations passed 42 of 43 selected HTTP cases including protected provider writes, Sentry origin/CSRF/rate checks, storage access and signed content probes and electricity template rollback. One second-API restart exceeded the 5 s outer fixture limit in the concurrent run. The exact restart passed in 7.946 s with its prerequisite encrypted save in an isolated serial invocation with a 25 s outer allowance and the original 20 s startup, signed credential, HTTP and teardown assertions. The initial suite is recorded as failed.",
+        "The storage byte reader is byte-identical after relocation. The original API import path re-exports it and is exercised by payment, bill, AI, storage and contract tests. Malformed and oversized external receipts cannot create acceptance or retry-safe rejection. Provider status classes, SMTP connection authority, delivery identity and send intent remain preserved."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "source_scope_proof": "provider-response-source-proof.json",
+      "source_scope_proof_sha256": "cafecb77640c7159425cc9dec29803852c5de6c6539d58f0edd3e31a8f9eb093"
     }
   },
   "historical_improvements": [
@@ -890718,15 +891687,17 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-scheduled-and-operational-acceptance",
+    "id": "release-0.6-scheduled-browser-and-outbound-destination-review",
     "release": "0.6.0",
     "task_keys": [
       "01-platform-infrastructure.md#T-01.04.04",
       "01-platform-infrastructure.md#T-01.04.06",
       "01-platform-infrastructure.md#T-05.05.01",
+      "06-security-testing-observability.md#T-06.04.04.02",
+      "06-security-testing-observability.md#T-06.04.04.03",
       "release-readiness#R-05.02"
     ],
-    "goal": "Verify the exact hosted v0.6 browser receipts and reconcile remaining outbound transport and operational criteria."
+    "goal": "Verify hosted browser receipts and reconcile the demonstrated outbound storage destination gap against the approved storage design."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

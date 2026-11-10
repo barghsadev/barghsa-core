@@ -13,9 +13,11 @@ import type { Request } from 'express';
 import { ApiBody, ApiNoContentResponse, ApiServiceUnavailableResponse } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { readCappedJson } from '@barghsa/shared/storage';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 
 const routeErrorCodes = ['CHUNK_LOAD_FAILED', 'ROUTE_RENDER_FAILED'] as const;
+const MAX_SENTRY_RECEIPT_BYTES = 4096;
 const routeError = z.strictObject({
   code: z.enum(routeErrorCodes),
   reference: z.uuidv4(),
@@ -102,7 +104,9 @@ export class RouteErrorsController {
         signal: AbortSignal.timeout(3000),
       });
       if (response.ok) {
-        const receipt = (await response.json()) as { id?: unknown } | null;
+        const receipt = (await readCappedJson(response, MAX_SENTRY_RECEIPT_BYTES)) as {
+          id?: unknown;
+        } | null;
         if (receipt?.id === eventId) return;
       } else {
         await response.body?.cancel();

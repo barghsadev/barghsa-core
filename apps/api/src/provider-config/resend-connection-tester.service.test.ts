@@ -11,6 +11,8 @@ describe('ResendConnectionTesterService (T-05.06.03)', () => {
     vi.restoreAllMocks();
   });
 
+  const verifiedDomains = { data: [{ id: 'd1', name: 'example.com', status: 'verified' }] };
+
   const baseConfig: ResendConfig = {
     api_key: 're_secret-key-123',
     from_name: 'Barghsa',
@@ -21,6 +23,74 @@ describe('ResendConnectionTesterService (T-05.06.03)', () => {
     listDomains: async () => [{ id: 'd1', name: 'example.com', status: 'verified' }],
     sendEmail: async () => ({ id: 'email_123' }),
     ...overrides,
+  });
+
+  it('checks and sends only at the fixed Resend endpoints with deadlines and no redirects', async () => {
+    const request = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(Response.json(verifiedDomains))
+      .mockResolvedValueOnce(Response.json({ id: 'email_1' }));
+    vi.stubGlobal('fetch', request);
+    try {
+      const service = new ResendConnectionTesterService();
+      expect(await service.test(baseConfig, 'staff@example.com')).toEqual({ ok: true });
+      expect(request).toHaveBeenCalledTimes(2);
+      const options = { redirect: 'error', signal: expect.any(AbortSignal) };
+      expect(request).toHaveBeenNthCalledWith(
+        1,
+        'https://api.resend.com/domains',
+        expect.objectContaining(options)
+      );
+      expect(request).toHaveBeenNthCalledWith(
+        2,
+        'https://api.resend.com/emails',
+        expect.objectContaining({ ...options, method: 'POST' })
+      );
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it.each([
+    [false, { ...verifiedDomains, padding: 'x'.repeat(2 * 1024 * 1024) }, 200, 'size limit'],
+    [false, { data: [null] }, 200, 'invalid domain list'],
+    [true, { id: 'valid-looking', padding: 'x'.repeat(64 * 1024) }, 200, 'size limit'],
+    [true, { message: 'private-diagnostic'.repeat(8192) }, 503, 'HTTP 503'],
+  ] as const)(
+    'rejects untrusted Resend response %# without another send',
+    async (send, body, status, error) => {
+      const request = vi.fn<typeof fetch>();
+      if (send) request.mockResolvedValueOnce(Response.json(verifiedDomains));
+      request.mockResolvedValueOnce(Response.json(body, { status }));
+      vi.stubGlobal('fetch', request);
+      try {
+        const service = new ResendConnectionTesterService();
+        const result = await service.test(baseConfig, 'staff@example.com');
+        expect(result).toMatchObject({ ok: false, error: expect.stringContaining(error) });
+        expect(result.error).not.toContain('private-diagnostic');
+        expect(request).toHaveBeenCalledTimes(send ? 2 : 1);
+      } finally {
+        vi.unstubAllGlobals();
+      }
+    }
+  );
+
+  it('keeps malformed provider bytes out of the connection diagnostic', async () => {
+    const request = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(new Response('private-malformed-body'));
+    vi.stubGlobal('fetch', request);
+    try {
+      const result = await new ResendConnectionTesterService().test(
+        baseConfig,
+        'staff@example.com'
+      );
+      expect(result).toMatchObject({ ok: false, error: expect.stringContaining('valid JSON') });
+      expect(result.error).not.toContain('private-malformed-body');
+      expect(request).toHaveBeenCalledOnce();
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 
   it('returns ok when the domain is verified and the test-send succeeds', async () => {

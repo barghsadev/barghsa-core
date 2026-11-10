@@ -112,3 +112,27 @@ it('rejects invalid direct text or sender before a provider request and preserve
   expect(error).not.toBeInstanceOf(DeliveryRejected);
   expect(request).toHaveBeenCalledTimes(1);
 });
+
+it.each([200, 400])('keeps an oversized SMS.ir HTTP %i outcome uncertain', async (status) => {
+  const request = vi
+    .fn<typeof fetch>()
+    .mockResolvedValueOnce(
+      Response.json(
+        { status: 1, data: { messageId: 123 }, padding: 'x'.repeat(64 * 1024) },
+        { status }
+      )
+    );
+  const error = await sendSmsirVerification(
+    'key',
+    'https://api.sms.ir',
+    '09121234567',
+    '12345',
+    [],
+    request
+  ).catch((error: unknown) => error);
+  expect(error).toBeInstanceOf(Error);
+  expect(error).not.toBeInstanceOf(DeliveryRejected);
+  if (status === 400) expect(error).toMatchObject({ httpStatus: 400, smsirStatus: undefined });
+  else expect(error).toMatchObject({ message: expect.stringContaining('size limit') });
+  expect(request).toHaveBeenCalledOnce();
+});

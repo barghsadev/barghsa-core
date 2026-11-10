@@ -1,4 +1,5 @@
 import { isTransientEmailError } from '@barghsa/shared/notification-delivery';
+import { readCappedJson } from '@barghsa/shared/storage';
 import { Injectable, Inject, Logger, Optional } from '@nestjs/common';
 import type { ResendConfig } from './resend-config.schema';
 
@@ -50,11 +51,14 @@ export interface ResendApiClientLike {
 export const RESEND_API_CLIENT = Symbol('RESEND_API_CLIENT');
 
 const RESEND_API_BASE = 'https://api.resend.com';
+const MAX_DOMAIN_LIST_BYTES = 2 * 1024 * 1024;
+const MAX_RECEIPT_BYTES = 64 * 1024;
 
 const defaultApiClient: ResendApiClientLike = {
   async listDomains(apiKey) {
     const res = await fetch(`${RESEND_API_BASE}/domains`, {
       headers: { Authorization: `Bearer ${apiKey}` },
+      redirect: 'error',
       signal: AbortSignal.timeout(15_000),
     });
     if (!res.ok) {
@@ -62,8 +66,17 @@ const defaultApiClient: ResendApiClientLike = {
         httpStatus: res.status,
       });
     }
-    const body = (await res.json()) as { data?: ResendDomainRecord[] };
-    return body.data ?? [];
+    const body = (await readCappedJson(res, MAX_DOMAIN_LIST_BYTES)) as {
+      data?: ResendDomainRecord[];
+    } | null;
+    const domains = body?.data ?? [];
+    if (
+      !Array.isArray(domains) ||
+      domains.some((item) => typeof item?.name !== 'string' || typeof item?.status !== 'string')
+    ) {
+      throw new Error('Resend returned an invalid domain list');
+    }
+    return domains;
   },
   async sendEmail(apiKey, payload) {
     const res = await fetch(`${RESEND_API_BASE}/emails`, {
@@ -73,11 +86,12 @@ const defaultApiClient: ResendApiClientLike = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
+      redirect: 'error',
       signal: AbortSignal.timeout(15_000),
     });
     if (res.status === 200 || res.status === 201) {
-      const body = (await res.json()) as { id?: string };
-      return body.id ? { id: body.id } : {};
+      const body = (await readCappedJson(res, MAX_RECEIPT_BYTES)) as { id?: unknown } | null;
+      return typeof body?.id === 'string' && body.id.trim() ? { id: body.id } : {};
     }
     return await safeApiError(res, 'sending test email').then((msg) => ({
       message: msg,
@@ -90,8 +104,8 @@ const defaultApiClient: ResendApiClientLike = {
 async function safeApiError(res: Response, action?: string): Promise<string> {
   let detail = '';
   try {
-    const body = (await res.json()) as { message?: string };
-    detail = body.message ?? '';
+    const body = (await readCappedJson(res, MAX_RECEIPT_BYTES)) as { message?: unknown } | null;
+    detail = typeof body?.message === 'string' ? body.message : '';
   } catch {
     /* non-JSON error body */
   }

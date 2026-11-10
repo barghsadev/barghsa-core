@@ -1,5 +1,9 @@
 /** SMS.ir v1 envelope and field names, shared by activation tests and delivery. */
 import { DeliveryRejected } from '../notification-delivery/execution.js';
+import { readCappedJson } from '../storage/read-capped-bytes.js';
+
+const MAX_SMSIR_RESPONSE_BYTES = 64 * 1024;
+
 async function smsirRequest(
   path: string,
   apiKey: string,
@@ -24,7 +28,9 @@ async function smsirRequest(
   });
   if (!response.ok) {
     // Typed diagnostics affect health only. HTTP failures still carry no retry-safe rejection proof.
-    const diagnostic = (await response.json().catch(() => null)) as {
+    const diagnostic = (await readCappedJson(response, MAX_SMSIR_RESPONSE_BYTES).catch(
+      () => null
+    )) as {
       status?: unknown;
       Status?: unknown;
     } | null;
@@ -33,7 +39,7 @@ async function smsirRequest(
       smsirStatus: diagnostic?.status ?? diagnostic?.Status,
     });
   }
-  const result = (await response.json()) as {
+  const result = (await readCappedJson(response, MAX_SMSIR_RESPONSE_BYTES)) as {
     status?: number;
     Status?: number;
     data?: unknown;

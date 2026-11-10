@@ -145,6 +145,19 @@ it('rejects provider failures and successful responses with no receipt', async (
   body = {};
   await expect(send(message)).rejects.toThrow('no receipt');
 });
+
+it.each([200, 403])('keeps an oversized Resend HTTP %i outcome uncertain', async (status) => {
+  code = status;
+  body = { id: 'valid-looking', name: 'suspended_api_key', padding: 'x'.repeat(64 * 1024) };
+  const { send, request } = setup();
+  const error = await send(message).catch((error: unknown) => error);
+  expect(error).toBeInstanceOf(Error);
+  expect(error).not.toBeInstanceOf(DeliveryRejected);
+  if (status === 403)
+    expect(error).toMatchObject({ httpStatus: 403, providerErrorName: undefined });
+  else expect(error).toMatchObject({ message: expect.stringContaining('size limit') });
+  expect(request).toHaveBeenCalledOnce();
+});
 it('does not contact a provider for suppressed addresses, unavailable configuration, invalid headers or cancellation', async () => {
   for (const [suppressed, provider] of [
     [true, true],
