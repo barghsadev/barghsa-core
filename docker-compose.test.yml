@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_DB: barghsa_test
+      POSTGRES_USER: barghsa
+      POSTGRES_PASSWORD: ${BARGHSA_TEST_POSTGRES_PASSWORD:?Set an isolated test password}
+    ports:
+      - target: 5432
+        host_ip: 127.0.0.1
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: [CMD, pg_isready, -h, 127.0.0.1, -U, barghsa, -d, barghsa_test]
+      interval: 1s
+      timeout: 3s
+      retries: 30

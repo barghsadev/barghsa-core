@@ -34,14 +34,14 @@
       "outputs": [],
       "outputLogs": "new-only",
       "inputs": ["$TURBO_DEFAULT$", "test/**/*.ts"],
-      "env": ["BARGHSA_TEST_PREBUILT"]
+      "env": ["BARGHSA_TEST_PREBUILT", "BARGHSA_TEST_POSTGRES_COMPOSE"]
     },
     "test:coverage": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"],
       "outputLogs": "new-only",
       "inputs": ["$TURBO_DEFAULT$", "test/**/*.ts"],
-      "env": ["BARGHSA_TEST_PREBUILT"]
+      "env": ["BARGHSA_TEST_PREBUILT", "BARGHSA_TEST_POSTGRES_COMPOSE"]
     },
     "format:check": {
       "dependsOn": [],

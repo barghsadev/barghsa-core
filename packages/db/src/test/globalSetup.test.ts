@@ -1,6 +1,13 @@
-import { beforeEach, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import type { TestProject } from 'vitest/node';
-const state = vi.hoisted(() => ({ start: vi.fn(), query: vi.fn(), end: vi.fn() }));
+const state = vi.hoisted(() => ({
+  start: vi.fn(),
+  up: vi.fn(),
+  projectName: vi.fn(),
+  environment: vi.fn(),
+  query: vi.fn(),
+  end: vi.fn(),
+}));
 vi.mock('@testcontainers/postgresql', () => ({
   PostgreSqlContainer: class {
     withDatabase() {
@@ -13,6 +20,19 @@ vi.mock('@testcontainers/postgresql', () => ({
       return this;
     }
     start = state.start;
+  },
+}));
+vi.mock('testcontainers', () => ({
+  DockerComposeEnvironment: class {
+    withProjectName(name: string) {
+      state.projectName(name);
+      return this;
+    }
+    withEnvironment(environment: Record<string, string>) {
+      state.environment(environment);
+      return this;
+    }
+    up = state.up;
   },
 }));
 vi.mock('pg', () => ({
@@ -30,9 +50,11 @@ function container(url: string) {
 }
 beforeEach(() => {
   vi.resetAllMocks();
+  vi.stubEnv('BARGHSA_TEST_POSTGRES_COMPOSE', '0');
   state.query.mockResolvedValue({ rows: [] });
   state.end.mockResolvedValue(undefined);
 });
+afterEach(() => vi.unstubAllEnvs());
 it('keeps project environments and teardown ownership separate', async () => {
   const first = container('postgres://fixture-one'),
     second = container('postgres://fixture-two');
@@ -77,4 +99,53 @@ it('gives standalone callers an explicit URL and owned cleanup without global en
   expect(started.stop).not.toHaveBeenCalled();
   await database.close();
   expect(started.stop).toHaveBeenCalledOnce();
+});
+
+it('uses separate Compose projects, loopback ports and passwords for concurrent test runs', async () => {
+  vi.stubEnv('BARGHSA_TEST_POSTGRES_COMPOSE', '1');
+  const first = {
+    getContainer: vi.fn().mockReturnValue({ getMappedPort: vi.fn().mockReturnValue(45231) }),
+    down: vi.fn().mockResolvedValue(undefined),
+  };
+  const second = {
+    getContainer: vi.fn().mockReturnValue({ getMappedPort: vi.fn().mockReturnValue(45232) }),
+    down: vi.fn().mockResolvedValue(undefined),
+  };
+  state.up.mockResolvedValueOnce(first).mockResolvedValueOnce(second);
+  const [databaseA, databaseB] = await Promise.all([startTestPostgres(), startTestPostgres()]);
+  const a = new URL(databaseA.connectionString);
+  const b = new URL(databaseB.connectionString);
+  expect(a).toMatchObject({ hostname: '127.0.0.1', port: '45231', pathname: '/barghsa_test' });
+  expect(b).toMatchObject({ hostname: '127.0.0.1', port: '45232', pathname: '/barghsa_test' });
+  expect(a.password).toMatch(/^[a-f0-9]{48}$/);
+  expect(b.password).toMatch(/^[a-f0-9]{48}$/);
+  expect(a.password).not.toBe(b.password);
+  expect(
+    state.environment.mock.calls.map(([entry]) => entry.BARGHSA_TEST_POSTGRES_PASSWORD)
+  ).toEqual([a.password, b.password]);
+  expect(new Set(state.projectName.mock.calls.map(([name]) => name)).size).toBe(2);
+  expect(first.getContainer).toHaveBeenCalledWith('postgres-1');
+  expect(second.getContainer).toHaveBeenCalledWith('postgres-1');
+  expect(state.start).not.toHaveBeenCalled();
+  await databaseA.close();
+  expect(first.down).toHaveBeenCalledWith({ timeout: 30_000, removeVolumes: true });
+  expect(second.down).not.toHaveBeenCalled();
+  await databaseB.close();
+  expect(second.down).toHaveBeenCalledWith({ timeout: 30_000, removeVolumes: true });
+});
+
+it('removes only the owned Compose project when mapped port discovery fails', async () => {
+  vi.stubEnv('BARGHSA_TEST_POSTGRES_COMPOSE', '1');
+  const down = vi.fn().mockResolvedValue(undefined);
+  state.up.mockResolvedValue({
+    down,
+    getContainer: vi.fn().mockImplementation(() => {
+      throw new Error('Container unavailable');
+    }),
+  });
+  const target = project();
+  await expect(setup(target)).rejects.toThrow('Container unavailable');
+  expect(down).toHaveBeenCalledOnce();
+  expect(state.query).not.toHaveBeenCalled();
+  expect(target.config.env).toBeUndefined();
 });

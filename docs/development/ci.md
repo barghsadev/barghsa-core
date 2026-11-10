@@ -14,7 +14,14 @@ The same Vitest configurations drive CI and local runs. Every tested workspace
 extends the shared runner and coverage reporters. The full workflow also checks
 changed-source coverage and modified critical files from the previous release.
 
-The API test setup starts disposable PostgreSQL with Testcontainers and
+The CI test job starts the dedicated PostgreSQL service in
+`docker-compose.test.yml` through Testcontainers. Locally, set
+`BARGHSA_TEST_POSTGRES_COMPOSE=1` when running the same tests to use Compose.
+The runner gives each project a new loopback port, a random test password
+and temporary storage. It removes that project's containers after the run.
+Without the flag, local tests use the standalone Testcontainers setup.
+
+The API test setup starts disposable PostgreSQL and
 applies the production migrations to a fresh baseline. The setup disables
 connections to that baseline after migration. Each HTTP suite gets its own
 database cloned from it, starts the compiled NestJS app, and drops its

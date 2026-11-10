@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T04:00:40+00:00",
-  "source_commit": "ec39c7714497a9d85ad21948d141495e8a2e14c3",
+  "updated": "2026-11-10T04:06:21+00:00",
+  "source_commit": "f622696a69f823a5431f4d430b514a14cf7dc793",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -3814,7 +3814,8 @@
           "turbo.json"
         ],
         "batches": [
-          "release-0.6-monorepo-build-and-typecheck"
+          "release-0.6-monorepo-build-and-typecheck",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -3822,7 +3823,7 @@
           "source_evidence": [
             {
               "path": "turbo.json",
-              "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+              "sha256": "9ccc230bf843adbb00f82183e5294607402abc9bffa324e30ffa21f65c6cd97c"
             },
             {
               "path": "package.json",
@@ -4041,7 +4042,8 @@
         ],
         "batches": [
           "release-0.6-monorepo-build-and-typecheck",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4049,7 +4051,7 @@
           "source_evidence": [
             {
               "path": "turbo.json",
-              "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+              "sha256": "9ccc230bf843adbb00f82183e5294607402abc9bffa324e30ffa21f65c6cd97c"
             },
             {
               "path": ".npmrc",
@@ -4069,7 +4071,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             }
           ],
           "checks": [
@@ -4428,7 +4430,8 @@
         ],
         "batches": [
           "release-0.6-monorepo-build-and-typecheck",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4436,7 +4439,7 @@
           "source_evidence": [
             {
               "path": "turbo.json",
-              "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+              "sha256": "9ccc230bf843adbb00f82183e5294607402abc9bffa324e30ffa21f65c6cd97c"
             },
             {
               "path": "package.json",
@@ -4444,7 +4447,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4630,7 +4633,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -4654,7 +4658,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             }
           ],
           "checks": [
@@ -4936,7 +4940,8 @@
           "2026-09-29-admin-terms-interaction-budget",
           "2026-09-29-auth-route-budget",
           "2026-09-29-main-route-budget",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -4944,7 +4949,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": ".size-limit.json",
@@ -5152,7 +5157,8 @@
         ],
         "batches": [
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5176,7 +5182,7 @@
             },
             {
               "path": "turbo.json",
-              "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+              "sha256": "9ccc230bf843adbb00f82183e5294607402abc9bffa324e30ffa21f65c6cd97c"
             },
             {
               "path": "package.json",
@@ -5192,7 +5198,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5264,7 +5270,8 @@
         ],
         "batches": [
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5288,7 +5295,7 @@
             },
             {
               "path": "turbo.json",
-              "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+              "sha256": "9ccc230bf843adbb00f82183e5294607402abc9bffa324e30ffa21f65c6cd97c"
             },
             {
               "path": "package.json",
@@ -5304,7 +5311,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5393,7 +5400,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "native-postgresql-fixture-and-mandatory-financial-concurrency",
@@ -5441,7 +5449,7 @@
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
-              "sha256": "c31c22bd1337ca4ebfd914cfa1d5a3441aa2eca1b312f6f7488ab764ad0900a5"
+              "sha256": "04795ac3b8cbe3f2336619db65e0e78e128c3625b910c6ca645913f13708a79a"
             },
             {
               "path": "packages/db/src/test/testDb.ts",
@@ -5662,7 +5670,8 @@
         ],
         "batches": [
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5686,7 +5695,7 @@
             },
             {
               "path": "turbo.json",
-              "sha256": "d81d554260edd9a3e22854a220fd0e6dd95b2c7db7035de015e37a58c8279741"
+              "sha256": "9ccc230bf843adbb00f82183e5294607402abc9bffa324e30ffa21f65c6cd97c"
             },
             {
               "path": "package.json",
@@ -5702,7 +5711,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -8443,7 +8452,8 @@
           "packages/db/src/migrate.ts"
         ],
         "batches": [
-          "release-0.6-database-migration-baseline-and-upgrade"
+          "release-0.6-database-migration-baseline-and-upgrade",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "current-migration-source-and-native-postgresql-receipts",
@@ -8463,7 +8473,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             }
           ],
           "checks": [
@@ -13204,7 +13214,8 @@
           "2026-09-24-ci-main-concurrency",
           "release-0.6-current-ci-definition-contract-and-coverage-controls",
           "release-0.6-backend-test-fixture-reconciliation",
-          "release-0.6-loopback-provider-protocol-fixtures"
+          "release-0.6-loopback-provider-protocol-fixtures",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13212,11 +13223,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "AGENTS.md",
@@ -13286,7 +13297,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13294,7 +13306,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -13380,7 +13392,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13388,7 +13401,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "package.json",
@@ -13591,7 +13604,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-current-ci-definition-contract-and-coverage-controls"
+          "release-0.6-current-ci-definition-contract-and-coverage-controls",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13599,7 +13613,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -446231,7 +446245,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "status": "done",
@@ -446239,7 +446254,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -446641,7 +446656,8 @@
           "release-0.6-external-provider-metrics-reconciliation",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "status": "done",
@@ -446649,7 +446665,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -447196,7 +447212,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-ai-inference-metrics",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "status": "done",
@@ -447204,7 +447221,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -447578,7 +447595,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-ai-inference-metrics",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "status": "done",
@@ -447586,7 +447604,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -447960,7 +447978,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-ai-inference-metrics",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "status": "done",
@@ -447968,7 +447987,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -480235,7 +480254,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-container-runtime-hardening",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-browser-dynamic-evaluation-boundary"
+          "release-0.6-browser-dynamic-evaluation-boundary",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -480243,7 +480263,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "Dockerfile.web",
@@ -480442,7 +480462,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staging-pilot-proxy-log-redaction"
+          "release-0.6-staging-pilot-proxy-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -480486,7 +480507,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -480541,7 +480562,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-container-runtime-hardening",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-browser-dynamic-evaluation-boundary"
+          "release-0.6-browser-dynamic-evaluation-boundary",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -480549,7 +480571,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "Dockerfile.web",
@@ -480846,7 +480868,8 @@
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-browser-and-edge-privacy",
-          "release-0.6-staging-pilot-proxy-log-redaction"
+          "release-0.6-staging-pilot-proxy-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -480874,7 +480897,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             }
           ],
           "checks": [
@@ -482940,7 +482963,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -482948,7 +482972,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -485719,7 +485743,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-verified-auth-specification-digest",
-          "release-0.6-diagnostic-history-public-digest"
+          "release-0.6-diagnostic-history-public-digest",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -485731,7 +485756,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": ".gitignore",
@@ -485805,7 +485830,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-verified-auth-specification-digest",
-          "release-0.6-diagnostic-history-public-digest"
+          "release-0.6-diagnostic-history-public-digest",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -485817,7 +485843,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": ".gitignore",
@@ -485943,7 +485969,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-nightly-advisory-and-schema-gate"
+          "release-0.6-nightly-advisory-and-schema-gate",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -485951,7 +485978,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -486054,7 +486081,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -486062,7 +486090,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -486124,7 +486152,8 @@
           "release-0.6-packaged-production-seed",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -486132,7 +486161,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "Dockerfile.base",
@@ -486203,7 +486232,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-verified-auth-specification-digest",
-          "release-0.6-diagnostic-history-public-digest"
+          "release-0.6-diagnostic-history-public-digest",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -486215,7 +486245,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": ".gitignore",
@@ -486327,7 +486357,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -486339,7 +486370,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -486879,7 +486910,8 @@
           "release-0.6-packaged-production-seed",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -486903,7 +486935,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -487889,7 +487921,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-backend-test-fixture-reconciliation",
-          "release-0.6-loopback-provider-protocol-fixtures"
+          "release-0.6-loopback-provider-protocol-fixtures",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -487897,7 +487930,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "vitest.config.ts",
@@ -487949,7 +487982,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -488594,7 +488627,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the dedicated Docker Compose test service required by the criterion or record an approved equivalence for the isolated Testcontainers harness."
+        "The dedicated PostgreSQL Compose fixture is configured for CI and available for local tests. Verify the exact hosted test job uses the configured PostgreSQL 17 image and passes migrated API, worker and DB suites. Local adapter checks and the native cached PostgreSQL 16 topology rehearsal passed."
       ],
       "owner": null,
       "depends_on": [],
@@ -488603,7 +488636,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-backend-test-fixture-reconciliation",
-          "release-0.6-loopback-provider-protocol-fixtures"
+          "release-0.6-loopback-provider-protocol-fixtures",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-disposable-postgresql-pending-compose-criterion",
@@ -488676,7 +488710,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-backend-test-fixture-reconciliation",
-          "release-0.6-loopback-provider-protocol-fixtures"
+          "release-0.6-loopback-provider-protocol-fixtures",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-real-nestjs-and-migrated-test-fixture",
@@ -488684,7 +488719,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -488704,7 +488739,7 @@
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
-              "sha256": "c31c22bd1337ca4ebfd914cfa1d5a3441aa2eca1b312f6f7488ab764ad0900a5"
+              "sha256": "04795ac3b8cbe3f2336619db65e0e78e128c3625b910c6ca645913f13708a79a"
             },
             {
               "path": "packages/db/src/test/testDb.ts",
@@ -488746,7 +488781,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-backend-test-fixture-reconciliation",
-          "release-0.6-loopback-provider-protocol-fixtures"
+          "release-0.6-loopback-provider-protocol-fixtures",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-parallel-postgres-isolation",
@@ -488754,7 +488790,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -488774,7 +488810,7 @@
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
-              "sha256": "c31c22bd1337ca4ebfd914cfa1d5a3441aa2eca1b312f6f7488ab764ad0900a5"
+              "sha256": "04795ac3b8cbe3f2336619db65e0e78e128c3625b910c6ca645913f13708a79a"
             },
             {
               "path": "packages/db/src/test/testDb.ts",
@@ -488819,7 +488855,8 @@
           "docs/development/ci.md"
         ],
         "batches": [
-          "release-0.6-loopback-provider-protocol-fixtures"
+          "release-0.6-loopback-provider-protocol-fixtures",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -488851,7 +488888,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -489735,7 +489772,8 @@
           "docs/development/ci.md"
         ],
         "batches": [
-          "release-0.6-loopback-provider-protocol-fixtures"
+          "release-0.6-loopback-provider-protocol-fixtures",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -489767,7 +489805,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -490615,7 +490653,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -490623,7 +490662,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -490679,7 +490718,8 @@
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -490687,7 +490727,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -541623,7 +541663,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -541631,7 +541672,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": ".size-limit.json",
@@ -542477,7 +542518,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542485,7 +542527,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": ".size-limit.json",
@@ -543853,7 +543895,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543861,7 +543904,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": ".size-limit.json",
@@ -544660,7 +544703,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -544676,7 +544720,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -723682,7 +723726,8 @@
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -724046,7 +724091,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -724330,7 +724375,8 @@
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -724694,7 +724740,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -724978,7 +725024,8 @@
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -725342,7 +725389,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -725627,7 +725674,8 @@
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -725991,7 +726039,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -726275,7 +726323,8 @@
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -726639,7 +726688,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -726923,7 +726972,8 @@
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -727287,7 +727337,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -727571,7 +727621,8 @@
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -727935,7 +727986,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -728220,7 +728271,8 @@
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -728584,7 +728636,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -728868,7 +728920,8 @@
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -729232,7 +729285,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -729516,7 +729569,8 @@
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -729880,7 +729934,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "06df126c9e8ad6f2eb3615ef95ae4994f90a4670f03705ecd55bedd01a1cd90a"
+              "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -747208,7 +747262,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "apps/api/openapi.json",
@@ -751159,7 +751213,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-wallet-reconciliation-log-redaction",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -751212,7 +751267,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": "apps/api/openapi.json",
@@ -755029,7 +755084,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-wallet-reconciliation-log-redaction",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -756787,7 +756843,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
             },
             {
               "path": ".size-limit.json",
@@ -758894,7 +758950,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-isolated-compose-test-postgres"
         ]
       }
     },
@@ -860541,6 +860598,79 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/primary-proxy-log-redaction",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "9283a75b02401422cc885cb2a3adf352190d346e709abd33b0d31a5c7190673b"
+    },
+    "release-0.6-isolated-compose-test-postgres": {
+      "batch": "release-0.6-isolated-compose-test-postgres",
+      "base_commit": "f622696a69f823a5431f4d430b514a14cf7dc793",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.01.01"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml",
+        "docker-compose.test.yml",
+        "docs/development/ci.md",
+        "packages/db/src/test/globalSetup.test.ts",
+        "packages/db/src/test/globalSetup.ts",
+        "turbo.json"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture-template.integration.test.ts",
+          "sha256": "78d48a7eead96fae0eb2d8f6558bd1700f8d62e4538582573690b2b967b4e4f9"
+        },
+        {
+          "path": "apps/api/src/test/postgres-setup.ts",
+          "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "apps/worker/vitest.config.ts",
+          "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+        },
+        {
+          "path": "docker-compose.test.yml",
+          "sha256": "a671342cac26b375ea254c6577abac19a05fa25655dc6c30488a37a493ce3d76"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "a8131ff421c20c49a51062cb92238a69549354300717765005bec74756b6a482"
+        },
+        {
+          "path": "packages/db/src/test/globalSetup.test.ts",
+          "sha256": "146cfcc3c084cdb660ddbd74a105ecb8918ddb696a6fb9ec073dd114fd8ae2fd"
+        },
+        {
+          "path": "packages/db/src/test/globalSetup.ts",
+          "sha256": "04795ac3b8cbe3f2336619db65e0e78e128c3625b910c6ca645913f13708a79a"
+        },
+        {
+          "path": "packages/db/vitest.config.ts",
+          "sha256": "58b0adf9cde19568d2a87c9298b2936f24622cd1d2a192d4d298e8b92d8d77f0"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        },
+        {
+          "path": "turbo.json",
+          "sha256": "9ccc230bf843adbb00f82183e5294607402abc9bffa324e30ffa21f65c6cd97c"
+        }
+      ],
+      "checks": [
+        "The fixture starts a random Compose project per test run with a random password, ephemeral loopback port and temporary storage. It uses the existing extension bootstrap and independent fixture databases. The local standalone Testcontainers option remains available.",
+        "All six setup unit tests passed, including independent cleanup and project environments, separate credentials and mapped ports, and cleanup on initialization errors. The Turbo dry run verified the selection flag in both ordinary and coverage test tasks. Database TypeScript, affected lint, formatting and diff checks passed.",
+        "The first native Docker Hub pull of the configured image returned HTTP 403 before startup. The isolated Docker Compose 2.40.3 rehearsal used the previously validated cached PostgreSQL 16 image in place of the configured PostgreSQL 17 image. It verified actual distinct loopback bindings, authentication, both extensions, row isolation and one project remaining available when the other was removed. Exact hosted PostgreSQL 17 proof remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/postgres-compose-fixture",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "7e6d4471931682edd19dfcff4baf6090429b7112af352495de41ac5758fa4637"
     }
   },
   "historical_improvements": [

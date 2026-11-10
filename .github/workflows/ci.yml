@@ -294,6 +294,7 @@ jobs:
         id: coverage
         env:
           BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
         run: |
           if [ "$FULL_CI" != "true" ]; then
             if [ "${{ github.event_name }}" = "push" ]; then
