@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T13:04:23+00:00",
-  "source_commit": "82854b0b68dfced19cfd87abdab9b56a27356e6d",
+  "updated": "2026-11-10T13:11:20+00:00",
+  "source_commit": "4eb6c1dae3916d8dab6fbe3755ed3c3fcf4b1b05",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -186035,7 +186035,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -186139,11 +186140,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -186870,7 +186871,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -186974,11 +186976,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -187702,7 +187704,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -187806,11 +187809,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -188533,7 +188536,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -188637,11 +188641,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -189366,7 +189370,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -189470,11 +189475,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -393741,7 +393746,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -393797,11 +393803,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -394731,7 +394737,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -394787,11 +394794,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -395720,7 +395727,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -395776,11 +395784,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -455827,7 +455835,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -455931,11 +455940,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -456658,7 +456667,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456726,7 +456736,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document-storage.service.ts",
@@ -456810,7 +456820,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -456834,7 +456844,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -457173,7 +457183,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457241,7 +457252,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document-storage.service.ts",
@@ -457325,7 +457336,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -457349,7 +457360,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -457985,7 +457996,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458053,7 +458065,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document-storage.service.ts",
@@ -458137,7 +458149,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -458161,7 +458173,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -458496,7 +458508,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -458528,7 +458541,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -458620,11 +458633,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -459353,7 +459366,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459421,7 +459435,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document-storage.service.ts",
@@ -459505,7 +459519,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -459529,7 +459543,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -459862,7 +459876,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -459930,7 +459945,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document-storage.service.ts",
@@ -460014,7 +460029,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -460038,7 +460053,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -460395,7 +460410,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460463,7 +460479,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document-storage.service.ts",
@@ -460547,7 +460563,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -460571,7 +460587,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -460928,7 +460944,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460996,7 +461013,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document-storage.service.ts",
@@ -461080,7 +461097,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -461104,7 +461121,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -461461,7 +461478,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -461529,7 +461547,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document-storage.service.ts",
@@ -461613,7 +461631,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -461637,7 +461655,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -461993,7 +462011,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462061,7 +462080,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document-storage.service.ts",
@@ -462145,7 +462164,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/FilePreview.tsx",
@@ -462169,7 +462188,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -492314,7 +492333,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The code gates cover immutable business documents, owner-scoped direct uploads and multipart template versions. New and retained template bytes are screened before extraction and publishing. The isolated native checks use controlled socket responses. The sealed worker now covers the full 100 MiB ceiling with a locally verified byte-integrity boundary.",
+        "The code gates cover immutable business documents, owner-scoped direct uploads and multipart template versions. New and retained template bytes are screened before extraction and publishing. The isolated native checks use controlled socket responses. The sealed worker now covers the full 100 MiB ceiling with a locally verified byte-integrity boundary. The video request and picker now also honor the full existing policy.",
         "Verify the protected live scanner configuration and clean/EICAR, unavailable and retry receipts on the exact candidate. Live ClamAV signature refresh remains under vendor cooldown."
       ],
       "owner": null,
@@ -492323,6 +492342,11 @@
         "historical_acceptance": null,
         "changed_paths": [
           "apps/api/src/documents/document-http.integration.test.ts",
+          "apps/api/src/documents/document-validation.ts",
+          "apps/api/src/upload/upload-admission.test.ts",
+          "apps/api/src/upload/upload.types.ts",
+          "apps/web/src/components/DocumentUpload.test.tsx",
+          "apps/web/src/components/DocumentUpload.tsx",
           "apps/worker/src/documents/clamav.test.ts",
           "apps/worker/src/documents/scan-runner.ts",
           "docs/operations/document-scanning.md"
@@ -492332,7 +492356,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
           "release-0.6-upload-preflight-reservation-assertions",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": null
       }
@@ -492356,7 +492381,14 @@
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "apps/api/src/documents/document-validation.ts",
+          "apps/api/src/upload/upload-admission.test.ts",
+          "apps/api/src/upload/upload.types.ts",
+          "apps/web/src/components/DocumentUpload.test.tsx",
+          "apps/web/src/components/DocumentUpload.tsx",
+          "docs/operations/document-scanning.md"
+        ],
         "batches": [
           "release-0.6-verify-private-upload-boundaries",
           "release-0.6-original-attachment-disposition",
@@ -492370,7 +492402,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -492463,7 +492496,8 @@
           ],
           "checks": [
             "The existing versioned document, image and video upload policies bind extension and MIME allowlists and byte limits to the current effective category. Protected admin writes retain step-up, audit, history and fail-closed policy reads.",
-            "Reused 18 compiled admin policy cases, 14 resolver cases and the file-policy cases. The cases cover validation, actual URL issuance, authority loss and rollback."
+            "Reused 18 compiled admin policy cases, 14 resolver cases and the file-policy cases. The cases cover validation, actual URL issuance, authority loss and rollback.",
+            "All 35 API and 24 web cases passed, including 100 MiB reservation and record validation, direct and multipart paths, browser picker submission, rejection above the global cap and refusal above a smaller document policy before provider access. All 24 unchanged production browser upload cases passed across Firefox and Mobile Chrome in both locales. Build, all 102 gzip budgets, types, lint, formatting and diff checks passed."
           ]
         }
       },
@@ -501323,7 +501357,8 @@
         "batches": [
           "release-0.6-database-protection-export-leases",
           "release-0.6-postgresql-dashboard",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "source-matched-database-protection-and-export-lease-cap",
@@ -501357,7 +501392,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -526538,7 +526573,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526654,11 +526690,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -527453,7 +527489,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -527569,11 +527606,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -528309,7 +528346,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -528425,11 +528463,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -581167,7 +581205,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -581319,7 +581358,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -583070,7 +583109,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583222,7 +583262,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -584974,7 +585014,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585126,7 +585167,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -586847,7 +586888,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -586999,7 +587041,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -588746,7 +588788,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -588898,7 +588941,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -590654,7 +590697,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590806,7 +590850,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -592535,7 +592579,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592687,7 +592732,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -594380,7 +594425,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -594532,7 +594578,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -596225,7 +596271,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -596377,7 +596424,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -598071,7 +598118,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -598223,7 +598271,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -599916,7 +599964,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -600068,7 +600117,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -601756,7 +601805,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -601900,7 +601950,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -603694,7 +603744,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -603838,7 +603889,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -605671,7 +605722,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -606539,11 +606591,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -608586,7 +608638,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -608742,7 +608795,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -610537,7 +610590,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -610681,7 +610735,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -612475,7 +612529,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -612619,7 +612674,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -614413,7 +614468,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -614557,7 +614613,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -616351,7 +616407,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -616495,7 +616552,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -618289,7 +618346,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -618433,7 +618491,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -620227,7 +620285,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -620371,7 +620430,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -622165,7 +622224,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -622309,7 +622369,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -624103,7 +624163,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -624247,7 +624308,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -626041,7 +626102,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -626185,7 +626247,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -627979,7 +628041,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -628123,7 +628186,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -630676,7 +630739,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -630820,7 +630884,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -632614,7 +632678,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -632758,7 +632823,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -635984,7 +636049,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -636136,7 +636202,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -637825,7 +637891,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -637977,7 +638044,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -639666,7 +639733,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -639818,7 +639886,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -641507,7 +641575,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -641659,7 +641728,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -643348,7 +643417,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -643500,7 +643570,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -645189,7 +645259,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -645341,7 +645412,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -647030,7 +647101,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -647182,7 +647254,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -724725,7 +724797,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -724789,7 +724862,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -724885,11 +724958,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -725325,7 +725398,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -725389,7 +725463,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -725485,11 +725559,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -725924,7 +725998,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -725988,7 +726063,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -726084,11 +726159,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -726525,7 +726600,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -726589,7 +726665,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -726685,11 +726761,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -727124,7 +727200,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -727188,7 +727265,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -727284,11 +727361,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -727723,7 +727800,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -727787,7 +727865,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -727883,11 +727961,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -754673,11 +754751,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -756929,7 +757007,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ]
       }
     },
@@ -762131,7 +762210,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -763047,11 +763126,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -765652,7 +765731,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-delivery-window-feedback-overlay",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -766161,7 +766241,7 @@
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
-              "sha256": "be2117139f237e0116023009c8247671df290a3ca8c34aef43149c06e5166ac0"
+              "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -767065,11 +767145,11 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.test.tsx",
-              "sha256": "62861349b806497ad904aa4ce173c6dbcb7e5d471f11bdb977e5c2a4e08110f1"
+              "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.test.tsx",
@@ -769564,7 +769644,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-delivery-window-feedback-overlay",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -771574,7 +771655,7 @@
             },
             {
               "path": "apps/web/src/components/DocumentUpload.tsx",
-              "sha256": "402c16f3a30a2c34f44ea3ca41a4424a6d78b2a49452ea40814690c27eeebb63"
+              "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
@@ -773464,7 +773545,8 @@
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-delivery-window-feedback-overlay",
-          "release-0.6-primary-mobile-paint-observation"
+          "release-0.6-primary-mobile-paint-observation",
+          "release-0.6-video-upload-policy-ceiling"
         ]
       }
     },
@@ -773714,7 +773796,8 @@
           "release-0.6-first-launch-promotion-check",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-quarantine-coverage-and-reporting"
+          "release-0.6-quarantine-coverage-and-reporting",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -773757,7 +773840,8 @@
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
         "Provide an authorized ClamAV signature feed and verify that the chosen staging scanner loads current vendor data, including clean and infected scan receipts. The direct stage feed returned HTTP 403 and a cooldown.",
         "Staging CSP report-only review found five cross-origin image reports and the live public branding response references the same barghsa.com favicon origin. Publish the preserved PNG as a sealed staging asset with authorized staff step-up, verify the byte-identical response and complete the full week of reviewed reports before enforcing CSP.",
-        "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics."
+        "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics.",
+        "The live scanner reported 50M INSTREAM and September 28 signatures. The isolated source-matching image verifies the 100M scanner setting. Still prove fresh signed data and the approved scanner rollout, preserving the previous volume for rollback."
       ],
       "owner": null,
       "depends_on": [],
@@ -773778,7 +773862,8 @@
           "release-0.6-staged-operations-alert-readback",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-mandatory-refund-overdue-alert",
-          "release-0.6-business-safety-metrics-and-critical-wallet-drift"
+          "release-0.6-business-safety-metrics-and-critical-wallet-drift",
+          "release-0.6-video-upload-policy-ceiling"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -883667,6 +883752,86 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/quarantine-coverage-and-reporting",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "1ce8a413ff7f93da644c110f58fd20751c78e71a8e750719afef2d10854f6557"
+    },
+    "release-0.6-video-upload-policy-ceiling": {
+      "batch": "release-0.6-video-upload-policy-ceiling",
+      "base_commit": "4eb6c1dae3916d8dab6fbe3755ed3c3fcf4b1b05",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.01.01",
+        "06-security-testing-observability.md#T-06.06.01.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "apps/api/src/documents/document-validation.ts",
+        "apps/api/src/upload/upload-admission.test.ts",
+        "apps/api/src/upload/upload.types.ts",
+        "apps/web/src/components/DocumentUpload.test.tsx",
+        "apps/web/src/components/DocumentUpload.tsx",
+        "docs/operations/document-scanning.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/documents/document-validation.ts",
+          "sha256": "9a5988b2f3faa3ce2589201916b0e388bffd57749da71c8f10bc189a08e1078b"
+        },
+        {
+          "path": "apps/api/src/upload/upload-admission.test.ts",
+          "sha256": "7451a9256e8dfc5d57aaad622e33df2648fd296ac8abd9d94703d8ebf2e20db3"
+        },
+        {
+          "path": "apps/api/src/upload/upload-policy.resolver.ts",
+          "sha256": "caa6cfb8661b7a9203408463426bbe5a81a9e64314412b49e67029c5ad0156b6"
+        },
+        {
+          "path": "apps/api/src/upload/upload.config.ts",
+          "sha256": "88e1879961cc3c817b790019c702be25921da9a88b0170357620d97bf2dde2c2"
+        },
+        {
+          "path": "apps/api/src/upload/upload.types.ts",
+          "sha256": "c2cea5154f4ff21f34749a7ee08b0765191d400eafa92264e613a74943b8c2d8"
+        },
+        {
+          "path": "apps/web/e2e/document-upload-controls.spec.ts",
+          "sha256": "f68badcf28656ba3204fc5e3d8260e28a596fb5af0b2f4c899dbf5cac1f250d8"
+        },
+        {
+          "path": "apps/web/src/components/DocumentUpload.test.tsx",
+          "sha256": "d66430539cec163323d5558e150991e4e18434d5ba47fa1510f796d149d310cb"
+        },
+        {
+          "path": "apps/web/src/components/DocumentUpload.tsx",
+          "sha256": "97110d4236ac9bb9477e948300c165c95fe0c7930f24c50fde1d9b8b3d380007"
+        },
+        {
+          "path": "apps/web/src/lib/file-upload.ts",
+          "sha256": "f7c3a5681103494a0863496de72efd72f08a2da9f34d22a456c47be467e57cd2"
+        },
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "5accedbaa9b8dbd596fcc4324150399379017e5b395704ffdc368cd0743b2da2"
+        },
+        {
+          "path": "deploy/clamav/healthcheck.sh",
+          "sha256": "23bf1005115c965d5584ce4cd4aee7b7e645e0e71f334141109c5c8a00760229"
+        },
+        {
+          "path": "docs/operations/document-scanning.md",
+          "sha256": "e08ad767219759b2288e3e9b383c29c9913601bfc46991d48b45ebaa6d435f85"
+        },
+        {
+          "path": "packages/shared/src/admin/upload-policies.ts",
+          "sha256": "036070914bfa70bb75fef25db50c9ebd980ce628e986927f90f2d7cc9d58a02c"
+        }
+      ],
+      "checks": [
+        "The accepted upload policy uses a 100 MiB global ceiling and only the video deployment category reaches it. Removed the separate 50 MiB clamps in the request, record, document creation and file picker paths. Current narrower category and administrator limits, profile authority, type checks and all storage reservation and scan verification remain in force.",
+        "All 35 API and 24 web cases passed, including 100 MiB reservation and record validation, direct and multipart paths, browser picker submission, rejection above the global cap and refusal above a smaller document policy before provider access. All 24 unchanged production browser upload cases passed across Firefox and Mobile Chrome in both locales. Build, all 102 gzip budgets, types, lint, formatting and diff checks passed.",
+        "Built the source-matching isolated Debian scanner image sha256:9b03670406718952efd5f5451e327594ad4b30877091ea214e20a2029245ea0c and verified 100M INSTREAM and AlertExceedsMax settings. Active staging still reports a 50M configuration and September 28 signatures. The image configuration check neither fetched vendor signatures nor altered the active scanner."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/video-upload-policy-ceiling",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "d2a86ef3f58344de7c1aa2b2e7553932e7384c698a2e8c3a80b94c5b3dd45526"
     }
   },
   "historical_improvements": [

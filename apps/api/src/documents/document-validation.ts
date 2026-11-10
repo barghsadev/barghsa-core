@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES } from '@barghsa/shared/admin';
 
 export const BusinessTypeSchema = z.enum([
   'contract',
@@ -18,11 +19,7 @@ export const DocumentCreateSchema = z
     category: z.enum(['document', 'image', 'video', 'contract']).default('document'),
     fileName: z.string().trim().min(1).max(255),
     contentType: z.string().min(1).max(128),
-    fileSize: z
-      .number()
-      .int()
-      .positive()
-      .max(50 * 1024 * 1024),
+    fileSize: z.number().int().positive().max(GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES),
     supersedesDocumentId: z.string().uuid().optional(),
     idempotencyKey: z.string().uuid(),
   })

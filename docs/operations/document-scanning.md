@@ -9,6 +9,10 @@ sealed record before committing a verdict. A clean verdict makes the document
 `Available` and atomically supersedes an older version. A malware verdict makes
 it `Quarantined`, blocks customer access, and alerts active admins.
 
+The 100 MiB ceiling applies to video uploads. The other categories keep their
+smaller deployment limits. The browser, reservation and record endpoints all
+use the effective policy, including lower active admin limits.
+
 Set `DOCUMENT_CLAMAV_HOST` on **both** API and worker to the same restricted,
 reachable clamd service. `DOCUMENT_CLAMAV_PORT` defaults to `3310` on the worker.
 Apply migration `0205_document_scanning` before enabling the setting. Do not

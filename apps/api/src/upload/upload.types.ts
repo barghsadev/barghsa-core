@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES } from '@barghsa/shared/admin';
 import { UPLOAD_CATEGORIES } from './upload.config.js';
 
 export const UploadContextSchema = z
@@ -26,11 +27,7 @@ export const PresignedUrlRequestSchema = z
     /**
      * File size in bytes.
      */
-    fileSize: z
-      .number()
-      .int()
-      .positive()
-      .max(50 * 1024 * 1024),
+    fileSize: z.number().int().positive().max(GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES),
     /**
      * Upload category — determines allowed types and max size.
      */
@@ -53,12 +50,7 @@ export const RecordUploadRequestSchema = z
   .object({
     fileName: z.string().min(1).max(255).optional(),
     contentType: z.string().min(1).max(128).optional(),
-    fileSize: z
-      .number()
-      .int()
-      .positive()
-      .max(50 * 1024 * 1024)
-      .optional(),
+    fileSize: z.number().int().positive().max(GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES).optional(),
     category: z.enum(UPLOAD_CATEGORIES as [string, ...string[]]).optional(),
     purpose: z.string().trim().min(1).max(64).optional(),
     profileId: z.string().uuid().optional(),

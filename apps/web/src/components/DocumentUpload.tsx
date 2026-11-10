@@ -149,7 +149,6 @@ function UploadForm({
         if (!parsed) throw new DocumentRequestError(502, null);
         const value = {
           ...parsed,
-          maxSizeBytes: Math.min(parsed.maxSizeBytes, 50 * 1024 * 1024),
           formats: imageOnly
             ? parsed.formats.filter((format) =>
                 format.mimeTypes.every((mime) => mime.startsWith('image/'))

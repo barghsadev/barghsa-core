@@ -105,6 +105,25 @@ it('fails closed on policy loading errors and recovers before selecting a file',
   await click('Try again');
   expect(host.querySelector<HTMLInputElement>('input[type=file]')?.disabled).toBe(false);
 });
+it('uses the advertised video ceiling when requesting a document reservation', async () => {
+  await render();
+  const category = host.querySelector<HTMLSelectElement>('#document-category')!;
+  category.value = 'video';
+  await act(async () => category.dispatchEvent(new Event('change', { bubbles: true })));
+  const input = host.querySelector<HTMLInputElement>('input[type=file]')!;
+  const video = new File(['fixture'], 'proof.mp4', { type: 'video/mp4' });
+  const maxSizeBytes = documentUploadPolicy('video').maxSizeBytes;
+  Object.defineProperty(video, 'size', { value: maxSizeBytes });
+  Object.defineProperty(input, 'files', { value: [video] });
+  await act(async () => input.dispatchEvent(new Event('change', { bubbles: true })));
+  await click('Upload document');
+  expect(harness.action?.body).toMatchObject({
+    category: 'video',
+    fileName: 'proof.mp4',
+    fileSize: maxSizeBytes,
+    contentType: 'video/mp4',
+  });
+});
 it('shows actual progress and resumes the same direct reservation after pausing', async () => {
   await start();
   const first = UploadXHR.instances[0]!;
