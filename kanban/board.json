@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T12:54:36+00:00",
-  "source_commit": "0e11f456b26eb3330a9eb59e7836e06c3ad9ae49",
+  "updated": "2026-11-10T13:00:32+00:00",
+  "source_commit": "7b531f8a2cb12ad6a3c345917b535590dc244181",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -11779,7 +11779,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -11787,7 +11788,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-storage.service.ts",
@@ -59191,7 +59192,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "verified-additive-agent-permissions-across-current-business-consumers",
@@ -59323,7 +59325,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
@@ -74937,7 +74939,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -75421,7 +75424,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -75429,7 +75432,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -186027,7 +186030,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -186051,7 +186055,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -186183,7 +186187,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -186191,7 +186195,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -186861,7 +186865,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -186885,7 +186890,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -187017,7 +187022,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -187025,7 +187030,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -187692,7 +187697,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -187716,7 +187722,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -187848,7 +187854,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -187856,7 +187862,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -188522,7 +188528,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -188546,7 +188553,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -188678,7 +188685,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -188686,7 +188693,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -189354,7 +189361,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -189378,7 +189386,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -189510,7 +189518,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -189518,7 +189526,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -393728,7 +393736,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -393740,7 +393749,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -393824,7 +393833,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -394717,7 +394726,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -394729,7 +394739,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -394813,7 +394823,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -395705,7 +395715,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -395717,7 +395728,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -395801,7 +395812,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -436555,7 +436566,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -436819,7 +436831,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -453804,7 +453816,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453812,7 +453825,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-preview.test.ts",
@@ -454095,7 +454108,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "done",
@@ -454103,7 +454117,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-preview.test.ts",
@@ -455808,7 +455822,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -455832,7 +455847,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -455964,7 +455979,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -455972,7 +455987,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -456638,7 +456653,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456646,7 +456662,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -456738,7 +456754,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -456746,7 +456762,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -457152,7 +457168,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457160,7 +457177,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -457252,7 +457269,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -457260,7 +457277,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -457646,7 +457663,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457710,7 +457728,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -457962,7 +457980,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457970,7 +457989,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -458062,7 +458081,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -458070,7 +458089,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -458472,7 +458491,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -458484,7 +458504,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-preview.ts",
@@ -458620,7 +458640,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -458640,7 +458660,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -459013,7 +459033,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459077,7 +459098,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -459327,7 +459348,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459335,7 +459357,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -459427,7 +459449,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -459435,7 +459457,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -459835,7 +459857,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -459843,7 +459866,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -459935,7 +459958,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -459943,7 +459966,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -460367,7 +460390,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460375,7 +460399,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -460467,7 +460491,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -460475,7 +460499,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -460899,7 +460923,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460907,7 +460932,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -460999,7 +461024,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -461007,7 +461032,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -461431,7 +461456,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -461439,7 +461465,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -461531,7 +461557,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -461539,7 +461565,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -461962,7 +461988,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461970,7 +461997,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -462062,7 +462089,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -462070,7 +462097,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -462456,7 +462483,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -462520,7 +462548,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -462788,7 +462816,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462828,7 +462857,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -463148,7 +463177,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463188,7 +463218,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -463510,7 +463540,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -463550,7 +463581,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -463897,7 +463928,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463937,7 +463969,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -464257,7 +464289,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464297,7 +464330,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -487351,7 +487384,8 @@
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-reusable-profile-and-staff-capability-scope"
+          "release-0.6-reusable-profile-and-staff-capability-scope",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -487396,7 +487430,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
@@ -487821,7 +487855,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -487841,7 +487876,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
@@ -488667,7 +488702,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -488679,7 +488715,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
@@ -492274,19 +492310,25 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The code gates cover immutable business documents, owner-scoped direct uploads and multipart template versions. New and retained template bytes are screened before extraction and publishing. The isolated native checks use controlled socket responses.",
+        "The code gates cover immutable business documents, owner-scoped direct uploads and multipart template versions. New and retained template bytes are screened before extraction and publishing. The isolated native checks use controlled socket responses. The sealed worker now covers the full 100 MiB ceiling with a locally verified byte-integrity boundary.",
         "Verify the protected live scanner configuration and clean/EICAR, unavailable and retry receipts on the exact candidate. Live ClamAV signature refresh remains under vendor cooldown."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "apps/api/src/documents/document-http.integration.test.ts",
+          "apps/worker/src/documents/clamav.test.ts",
+          "apps/worker/src/documents/scan-runner.ts",
+          "docs/operations/document-scanning.md"
+        ],
         "batches": [
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-upload-preflight-reservation-assertions"
+          "release-0.6-upload-preflight-reservation-assertions",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": null
       }
@@ -492323,7 +492365,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -492343,7 +492386,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-preview.test.ts",
@@ -492501,15 +492544,22 @@
         "story": "06-security-testing-observability.md#spec-ff557ea04904"
       },
       "requirement": "| T-06.06.01.04 | Implement malware scanning integration (ClamAV socket or cloud API) with Quarantine state on detection | M |",
-      "status": "done",
+      "status": "verify",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [],
+      "remaining": [
+        "Review the exact compiled native document HTTP cases for streamed scanner verdicts, replacement and quarantine alert rollback. Seven local protocol and worker cases passed, including the repaired upload ceiling. The previous native receipt applies to the former buffered source."
+      ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "apps/api/src/documents/document-http.integration.test.ts",
+          "apps/worker/src/documents/clamav.test.ts",
+          "apps/worker/src/documents/scan-runner.ts",
+          "docs/operations/document-scanning.md"
+        ],
         "batches": [
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-direct-upload-scan-gate",
@@ -492524,66 +492574,10 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
-        "current_acceptance": {
-          "kind": "verified-upload-key-and-scanner-tests",
-          "base_commit": "1057dc5dd1c909951858e5406958371b3a4739f2",
-          "source_evidence": [
-            {
-              "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
-            },
-            {
-              "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
-            },
-            {
-              "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
-            },
-            {
-              "path": "packages/shared/src/storage/clamav.ts",
-              "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
-            },
-            {
-              "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
-            },
-            {
-              "path": "apps/worker/src/main.ts",
-              "sha256": "3e7b7217caa80778fd6d097c01fc8f4598f3160f3976b3d63882d9e9eda3cd3f"
-            },
-            {
-              "path": "apps/worker/src/notifications/in-app-transport.ts",
-              "sha256": "875100b7ac24faa17d2c82f25e4b2380b3d820fc4806d9d1d18732ef7af95282"
-            },
-            {
-              "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
-            },
-            {
-              "path": "deploy/clamav/Dockerfile",
-              "sha256": "5accedbaa9b8dbd596fcc4324150399379017e5b395704ffdc368cd0743b2da2"
-            },
-            {
-              "path": "deploy/production/compose.yml",
-              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
-            },
-            {
-              "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
-            },
-            {
-              "path": "pnpm-lock.yaml",
-              "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
-            }
-          ],
-          "checks": [
-            "Configured document scans use a durable worker job and the bounded default ClamAV INSTREAM socket implementation. The clean verdict releases the document; an infected verdict quarantines it and records the existing private administrator alert atomically. Socket errors leave it pending for bounded retry.",
-            "Three local socket protocol tests and the existing compiled document state, rollback and private notification cases passed. The live staging signature and clean/EICAR run remain a separate release gate."
-          ]
-        }
+        "current_acceptance": null
       },
       "blocker": null
     },
@@ -492637,7 +492631,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -492665,7 +492660,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-preview.test.ts",
@@ -492761,7 +492756,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -492827,7 +492822,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -492847,7 +492843,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-preview.test.ts",
@@ -492937,15 +492933,22 @@
         "story": "06-security-testing-observability.md#spec-ff557ea04904"
       },
       "requirement": "| T-06.06.01.07 | Write tests: valid upload, invalid extension, mismatched MIME, oversized, malware detected, quarantine alert | M |",
-      "status": "done",
+      "status": "verify",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [],
+      "remaining": [
+        "Review the exact compiled native document HTTP cases for streamed scanner verdicts, replacement and quarantine alert rollback. Seven local protocol and worker cases passed, including the repaired upload ceiling. The previous native receipt applies to the former buffered source."
+      ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "apps/api/src/documents/document-http.integration.test.ts",
+          "apps/worker/src/documents/clamav.test.ts",
+          "apps/worker/src/documents/scan-runner.ts",
+          "docs/operations/document-scanning.md"
+        ],
         "batches": [
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
@@ -492962,94 +492965,10 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sealed-document-stream-scan"
         ],
-        "current_acceptance": {
-          "kind": "verified-upload-key-and-scanner-tests",
-          "base_commit": "1057dc5dd1c909951858e5406958371b3a4739f2",
-          "source_evidence": [
-            {
-              "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
-              "sha256": "ca88c470cb4a74dfdd6cf07085024c2c50136b04849f7f68258d00507fa51f99"
-            },
-            {
-              "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
-            },
-            {
-              "path": "apps/api/src/documents/document-storage.service.ts",
-              "sha256": "13705337dea6b78ab1f7382d551e689444b33b3c6499fb84f00423aff90d2566"
-            },
-            {
-              "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
-            },
-            {
-              "path": "apps/api/src/upload/content-type-sniffer.test.ts",
-              "sha256": "1c26b87c137553904efbbc06ec7209466d94d3ac722b65d18e0134c89c33a394"
-            },
-            {
-              "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
-              "sha256": "f12be7919bbd422b71871592ea9659a4ad9db9acd00d05390ec326074be57221"
-            },
-            {
-              "path": "apps/api/src/upload/upload-reservations.ts",
-              "sha256": "258da4b64f3a10d90fc8e1bcfb24bcc52f6e192487ad88be72e28a9b94cc012b"
-            },
-            {
-              "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
-            },
-            {
-              "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
-            },
-            {
-              "path": "packages/shared/src/storage/clamav.ts",
-              "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
-            },
-            {
-              "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
-            },
-            {
-              "path": "apps/worker/src/main.ts",
-              "sha256": "3e7b7217caa80778fd6d097c01fc8f4598f3160f3976b3d63882d9e9eda3cd3f"
-            },
-            {
-              "path": "apps/worker/src/notifications/in-app-transport.ts",
-              "sha256": "875100b7ac24faa17d2c82f25e4b2380b3d820fc4806d9d1d18732ef7af95282"
-            },
-            {
-              "path": "apps/worker/src/notifications/outbox-runner.ts",
-              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
-            },
-            {
-              "path": "deploy/clamav/Dockerfile",
-              "sha256": "5accedbaa9b8dbd596fcc4324150399379017e5b395704ffdc368cd0743b2da2"
-            },
-            {
-              "path": "deploy/production/compose.yml",
-              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
-            },
-            {
-              "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
-            },
-            {
-              "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
-            },
-            {
-              "path": "pnpm-lock.yaml",
-              "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
-            }
-          ],
-          "checks": [
-            "Existing tests exercise a real valid upload and checksum, allowed and invalid extensions, declared and stored MIME mismatches, oversize policy enforcement, ClamAV clean/infected/timeout handling, and quarantine denial and administrator alert rollback/delivery.",
-            "The 43-case compiled document and 18-case policy suites passed on the earlier hosted SHA. The overall run failed a separate profile assertion. The relevant upload and scanner checks were carried through the reviewed read-only attachment delta and the scoped random-key regression. Forty-eight local format/policy/extraction cases and three socket protocol cases passed."
-          ]
-        }
+        "current_acceptance": null
       },
       "blocker": null
     },
@@ -498615,7 +498534,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "verified-source-bound-postgresql-and-http-invariants",
@@ -498635,7 +498555,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -501000,7 +500920,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -501048,7 +500969,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/upload/file-policy.test.ts",
@@ -501396,7 +501317,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-database-protection-export-leases",
-          "release-0.6-postgresql-dashboard"
+          "release-0.6-postgresql-dashboard",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "source-matched-database-protection-and-export-lease-cap",
@@ -501426,7 +501348,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
@@ -724686,7 +724608,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -724702,7 +724625,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -725285,7 +725208,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -725301,7 +725225,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -725883,7 +725807,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -725899,7 +725824,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -726483,7 +726408,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -726499,7 +726425,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -727081,7 +727007,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -727097,7 +727024,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -727679,7 +727606,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -727695,7 +727623,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -754565,7 +754493,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -754673,7 +754601,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -754681,7 +754609,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -756884,7 +756812,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-sealed-document-stream-scan"
         ]
       }
     },
@@ -757496,7 +757425,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
@@ -761585,7 +761514,8 @@
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-sealed-document-stream-scan"
         ]
       }
     },
@@ -762037,7 +761967,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -763513,7 +763443,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -763533,7 +763463,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "apps/worker/src/invoices/reminder-delivery-policy.ts",
@@ -765605,7 +765535,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -766066,7 +765997,7 @@
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
-              "sha256": "457504181596e330491d452cfc8ee113501ba2024472d77534ce5e0979002452"
+              "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -767518,7 +767449,7 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+              "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
             },
             {
               "path": "packages/shared/src/storage/clamav.ts",
@@ -767538,7 +767469,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+              "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
             },
             {
               "path": "apps/worker/src/invoices/reminder-delivery-policy.ts",
@@ -769516,7 +769447,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -773664,7 +773596,8 @@
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-existing-config-store-and-secret-service",
           "release-0.6-first-launch-promotion-check",
-          "release-0.6-primary-mobile-paint-observation"
+          "release-0.6-primary-mobile-paint-observation",
+          "release-0.6-sealed-document-stream-scan"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -883488,6 +883421,68 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/primary-mobile-paint-measurement",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "5b44f2f9b7342cd63f924acd343f9c5755610bea7688131e4686dbf0a410b07f"
+    },
+    "release-0.6-sealed-document-stream-scan": {
+      "batch": "release-0.6-sealed-document-stream-scan",
+      "base_commit": "7b531f8a2cb12ad6a3c345917b535590dc244181",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.01.01",
+        "06-security-testing-observability.md#T-06.06.01.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/documents/document-http.integration.test.ts",
+        "apps/worker/src/documents/clamav.test.ts",
+        "apps/worker/src/documents/scan-runner.ts",
+        "docs/operations/document-scanning.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "805cf6eb3c8cd24f3171cb0754ee17b41b7db041aeeca5e38c6417082380c986"
+        },
+        {
+          "path": "apps/api/src/documents/document.service.ts",
+          "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
+        },
+        {
+          "path": "apps/api/src/upload/upload.service.ts",
+          "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
+        },
+        {
+          "path": "apps/worker/src/documents/clamav.test.ts",
+          "sha256": "f97dffd112b3282711f19c9e04050cf9f3389787e63cee013086877a2434c457"
+        },
+        {
+          "path": "apps/worker/src/documents/scan-runner.ts",
+          "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
+        },
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "5accedbaa9b8dbd596fcc4324150399379017e5b395704ffdc368cd0743b2da2"
+        },
+        {
+          "path": "docs/operations/document-scanning.md",
+          "sha256": "b7321bd81fa62b8c4c15dd91c2952dec3e544c5d0bbd8b2652fe2ecec86145a7"
+        },
+        {
+          "path": "packages/shared/src/admin/upload-policies.ts",
+          "sha256": "036070914bfa70bb75fef25db50c9ebd980ce628e986927f90f2d7cc9d58a02c"
+        },
+        {
+          "path": "packages/shared/src/storage/clamav.ts",
+          "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
+        }
+      ],
+      "checks": [
+        "The old business-document worker rejected the 100 MiB sealed object despite the supported upload policy, so the targeted regression retried instead of releasing it. The worker now streams through the existing bounded INSTREAM helper and verifies the returned digest against the immutable sealed record before resolving the job.",
+        "All seven socket and worker cases passed, including full 100 MiB wire framing, a short stream, substituted bytes with a clean scanner response and scanner timeout. The worker build, API and worker type checks, lint, formatting and diff checks passed.",
+        "Adapted the existing native document state, generated PDFs, concurrency and quarantine rollback fixtures to consume and hash streamed bytes. Their business assertions remain. The exact hosted native HTTP suite and live signature/EICAR/unavailable-retry receipts remain separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/sealed-document-stream-scan",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "5a3de527dc5ec38f1abae59e0e76e3b29c8427ec4d8d12c93f75de60a1fe3b4c"
     }
   },
   "historical_improvements": [

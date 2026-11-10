@@ -20,6 +20,7 @@ import { afterAll, beforeAll, expect, it } from 'vitest';
 import {
   S3StorageProvider,
   STORAGE_UPLOAD_SCAN_JOB_TYPE,
+  type ScanVerdict,
   type StorageProvider,
 } from '@barghsa/shared/storage';
 import PDFDocument from 'pdfkit';
@@ -563,15 +564,19 @@ it('uploads real bytes, reviews a document, preserves replacement history and re
   await expectDocumentAuditHistory(http.pool, current.id);
 });
 
-it('holds a configured-scanner upload in PendingScan with a durable worker job', async () => {
-  const { runDocumentScans } = requireWorker('./dist/documents/scan-runner.js') as {
-    runDocumentScans: (
-      pool: typeof http.pool,
-      storage: StorageProvider,
-      endpoint: { host: string; port: number },
-      scan: () => Promise<'clean' | 'infected'>
-    ) => Promise<{ clean: number; infected: number; retrying: number }>;
+function fixtureDocumentScan(verdict: ScanVerdict, inspect?: (bytes: Buffer) => void) {
+  return async (body: ReadableStream<Uint8Array>, size: number) => {
+    const bytes = Buffer.from(await new Response(body).arrayBuffer());
+    expect(bytes.length).toBe(size);
+    inspect?.(bytes);
+    return { verdict, sha256: createHash('sha256').update(bytes).digest('hex') };
   };
+}
+
+it('holds a configured-scanner upload in PendingScan with a durable worker job', async () => {
+  const { runDocumentScans } = requireWorker(
+    './dist/documents/scan-runner.js'
+  ) as typeof import('../../../worker/dist/documents/scan-runner.js');
   const original = http;
   process.env['DOCUMENT_CLAMAV_HOST'] = '127.0.0.1';
   const configured = await startHttpFixture(process.env.TEST_DATABASE_URL!, storageEndpoint);
@@ -606,11 +611,8 @@ it('holds a configured-scanner upload in PendingScan with a durable worker job',
       }),
     } as unknown as StorageProvider;
     const endpoint = { host: '127.0.0.1', port: 3310 };
-    expect(await runDocumentScans(http.pool, storage, endpoint, async () => 'clean')).toMatchObject(
-      {
-        clean: 1,
-      }
-    );
+    const clean = fixtureDocumentScan('clean', (bytes) => expect(bytes).toEqual(pdf));
+    expect(await runDocumentScans(http.pool, storage, endpoint, clean)).toMatchObject({ clean: 1 });
     const available = (await (
       await send(`documents/${pending.id}`, f.user)
     ).json()) as DocumentDetail;
@@ -628,11 +630,7 @@ it('holds a configured-scanner upload in PendingScan with a durable worker job',
       await create(f.user, { supersedesDocumentId: pending.id }),
       f.user
     );
-    expect(await runDocumentScans(http.pool, storage, endpoint, async () => 'clean')).toMatchObject(
-      {
-        clean: 1,
-      }
-    );
+    expect(await runDocumentScans(http.pool, storage, endpoint, clean)).toMatchObject({ clean: 1 });
     expect(
       ((await (await send(`documents/${pending.id}`, f.user)).json()) as DocumentDetail).state
     ).toBe('Superseded');
@@ -641,7 +639,7 @@ it('holds a configured-scanner upload in PendingScan with a durable worker job',
     ).toBe('Available');
     const infected = await confirm(await create(f.user), f.user);
     expect(
-      await runDocumentScans(http.pool, storage, endpoint, async () => 'infected')
+      await runDocumentScans(http.pool, storage, endpoint, fixtureDocumentScan('infected'))
     ).toMatchObject({
       infected: 1,
     });
@@ -755,14 +753,9 @@ const generatedPdfStorage = {
     return { body: object.Body.transformToWebStream(), contentLength: object.ContentLength };
   },
 } as unknown as StorageProvider;
-const generatedPdfScanner = requireWorker('./dist/documents/scan-runner.js') as {
-  runDocumentScans: (
-    pool: typeof http.pool,
-    storage: StorageProvider,
-    endpoint: { host: string; port: number },
-    scan: (bytes: Buffer) => Promise<'clean' | 'infected'>
-  ) => Promise<{ clean: number; infected: number; retrying: number }>;
-};
+const generatedPdfScanner = requireWorker(
+  './dist/documents/scan-runner.js'
+) as typeof import('../../../worker/dist/documents/scan-runner.js');
 const generatedScanEndpoint = { host: '127.0.0.1', port: 3310 };
 
 it('holds the initial generated electricity PDF behind the configured scanner before review', async () => {
@@ -914,11 +907,10 @@ it('holds the initial generated electricity PDF behind the configured scanner be
           http.pool,
           generatedPdfStorage,
           generatedScanEndpoint,
-          async (bytes) => {
+          fixtureDocumentScan('clean', (bytes) => {
             expect(bytes.subarray(0, 5).toString()).toBe('%PDF-');
             expect(createHash('sha256').update(bytes).digest('hex')).toBe(document.checksum);
-            return 'clean';
-          }
+          })
         )
       )
     );
@@ -992,10 +984,9 @@ it.each(['clean', 'infected'] as const)(
           http.pool,
           generatedPdfStorage,
           generatedScanEndpoint,
-          async (bytes) => {
+          fixtureDocumentScan(verdict, (bytes) => {
             expect(bytes.subarray(0, 5).toString()).toBe('%PDF-');
-            return verdict;
-          }
+          })
         )
       ).toMatchObject({
         clean: verdict === 'clean' ? 1 : 0,
@@ -2959,7 +2950,7 @@ async function verifyScannerQueueFailures() {
               pool,
               storage,
               { host: '127.0.0.1', port: 3310 },
-              async () => 'infected'
+              fixtureDocumentScan('infected')
             )
           ).toEqual({ clean: 0, infected: 0, retrying: 1 });
           const after = await snapshot(),
@@ -2992,7 +2983,7 @@ async function verifyScannerQueueFailures() {
             pool,
             storage,
             { host: '127.0.0.1', port: 3310 },
-            async () => 'infected'
+            fixtureDocumentScan('infected')
           )
         ).toEqual({ clean: 0, infected: 1, retrying: 0 });
         const outbox = (

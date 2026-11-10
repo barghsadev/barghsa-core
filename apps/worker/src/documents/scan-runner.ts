@@ -1,7 +1,7 @@
-import { createHash } from 'node:crypto';
 import type { Pool, PoolClient } from 'pg';
+import { GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES } from '@barghsa/shared/admin';
 import {
-  scanWithClamAv,
+  scanUploadWithClamAv,
   type ScannerEndpoint,
   type ScanVerdict,
   type StorageProvider,
@@ -19,34 +19,29 @@ type ScanRow = {
   original_name: string;
 };
 
-const MAX_SCAN_BYTES = 50 * 1024 * 1024;
 export const DOCUMENT_SCAN_INTERVAL_MS = 10_000;
 export const DOCUMENT_SCAN_JOB_TYPE = 'document_scan';
 
-async function readBytes(storage: StorageProvider, row: ScanRow) {
-  const object = await storage.getObject(row.storage_key);
-  if (object.contentLength && object.contentLength > MAX_SCAN_BYTES)
+async function scanSealedObject(
+  storage: StorageProvider,
+  row: ScanRow,
+  endpoint: ScannerEndpoint,
+  scan: typeof scanUploadWithClamAv
+) {
+  const size = Number(row.size_bytes);
+  if (!Number.isSafeInteger(size) || size < 1 || size > GLOBAL_MAX_UPLOAD_POLICY_SIZE_BYTES)
     throw new Error('document_scan_size_mismatch');
-  const reader = object.body.getReader();
-  const chunks: Buffer[] = [];
-  const hash = createHash('sha256');
-  let size = 0;
+  const object = await storage.getObject(row.storage_key);
   try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      size += value.byteLength;
-      if (size > MAX_SCAN_BYTES) throw new Error('document_scan_size_mismatch');
-      const chunk = Buffer.from(value);
-      hash.update(chunk);
-      chunks.push(chunk);
-    }
+    if (object.contentLength !== undefined && object.contentLength !== size)
+      throw new Error('document_scan_size_mismatch');
+    const { verdict, sha256 } = await scan(object.body, size, endpoint);
+    if (sha256 !== row.checksum) throw new Error('document_scan_checksum_mismatch');
+    return verdict;
   } finally {
-    await reader.cancel();
+    // A started scan owns its reader. Release unopened bodies on validation failure.
+    if (!object.body.locked) await object.body.cancel().catch(() => undefined);
   }
-  if (size !== Number(row.size_bytes) || hash.digest('hex') !== row.checksum)
-    throw new Error('document_scan_checksum_mismatch');
-  return Buffer.concat(chunks);
 }
 
 async function event(
@@ -185,7 +180,7 @@ export async function runDocumentScans(
   pool: Pool,
   storage: StorageProvider,
   endpoint: ScannerEndpoint,
-  scan: typeof scanWithClamAv = scanWithClamAv
+  scan: typeof scanUploadWithClamAv = scanUploadWithClamAv
 ) {
   const candidates = await pool.query<{ document_id: string }>(
     `SELECT j.document_id FROM document_scan_jobs j JOIN documents d ON d.id=j.document_id
@@ -213,8 +208,7 @@ export async function runDocumentScans(
         await client.query('ROLLBACK');
         continue;
       }
-      const bytes = await readBytes(storage, row);
-      const verdict = await scan(bytes, endpoint);
+      const verdict = await scanSealedObject(storage, row, endpoint, scan);
       await resolve(client, row, verdict);
       await client.query('COMMIT');
       result[verdict === 'clean' ? 'clean' : 'infected']++;
