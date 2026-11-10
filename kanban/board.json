@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T03:49:02+00:00",
-  "source_commit": "bf48f69f42e83998689f681968b4f6b33037c4ca",
+  "updated": "2026-11-10T03:51:04+00:00",
+  "source_commit": "35dafc49806c3577dc5f1664208f7d0d76c1d2ae",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -9989,7 +9989,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-suppress-api-framework-header",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-api-and-worker-process-verification",
@@ -10021,7 +10022,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/jobs/poller-group.ts",
@@ -56219,7 +56220,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -56303,7 +56305,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/profiles/invitation-expiry.integration.test.ts",
@@ -72270,7 +72272,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -72286,7 +72289,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -73561,7 +73564,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -74293,7 +74297,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/drizzle/production/meta/0269_snapshot.json",
@@ -94140,7 +94144,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -94240,7 +94245,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -101192,7 +101197,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -101680,7 +101686,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
@@ -101728,11 +101734,11 @@
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.test.ts",
-              "sha256": "2b34d3aa7602cf784c62f0665760c8736e76f0bac2504c93acc6b5b503244506"
+              "sha256": "41f63dc8a25e7ec4a12cb299d852ad9dca10de4200a91ab87e5626f5baa573eb"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
-              "sha256": "3fb4984a0001524c340d5622adfa7e776799f038f3ca95f4fb1ce44cf8f63b4b"
+              "sha256": "133e2089d7552b5ab49a1ae8de694e49022f782e4f6120607867428765b8e1fb"
             },
             {
               "path": "docs/decisions/fulfillment-and-financial-closure.md",
@@ -107163,7 +107169,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -107279,7 +107286,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -107803,7 +107810,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-verify-upload-key-and-scanner-tests",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -107963,7 +107971,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -112405,7 +112413,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-promotion-policy-and-partial-financial-reconciliation",
@@ -112797,11 +112806,11 @@
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.test.ts",
-              "sha256": "2b34d3aa7602cf784c62f0665760c8736e76f0bac2504c93acc6b5b503244506"
+              "sha256": "41f63dc8a25e7ec4a12cb299d852ad9dca10de4200a91ab87e5626f5baa573eb"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
-              "sha256": "3fb4984a0001524c340d5622adfa7e776799f038f3ca95f4fb1ce44cf8f63b4b"
+              "sha256": "133e2089d7552b5ab49a1ae8de694e49022f782e4f6120607867428765b8e1fb"
             },
             {
               "path": "packages/i18n/src/admin-ui.ts",
@@ -130693,7 +130702,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -130905,7 +130915,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -131708,7 +131718,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -131920,7 +131931,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -132723,7 +132734,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -132935,7 +132947,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -133738,7 +133750,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -133950,7 +133963,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -134753,7 +134766,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -134965,7 +134979,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -135768,7 +135782,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -135980,7 +135995,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -136869,7 +136884,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -137105,7 +137121,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -138014,7 +138030,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -138226,7 +138243,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -139115,7 +139132,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -139351,7 +139369,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -140260,7 +140278,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -140472,7 +140491,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -141270,7 +141289,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -141442,7 +141462,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -142053,7 +142073,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -142241,7 +142262,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -142855,7 +142876,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -143011,7 +143033,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -145629,7 +145651,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -145665,7 +145688,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.integration.test.ts",
@@ -145673,11 +145696,11 @@
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.test.ts",
-              "sha256": "2b34d3aa7602cf784c62f0665760c8736e76f0bac2504c93acc6b5b503244506"
+              "sha256": "41f63dc8a25e7ec4a12cb299d852ad9dca10de4200a91ab87e5626f5baa573eb"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
-              "sha256": "3fb4984a0001524c340d5622adfa7e776799f038f3ca95f4fb1ce44cf8f63b4b"
+              "sha256": "133e2089d7552b5ab49a1ae8de694e49022f782e4f6120607867428765b8e1fb"
             },
             {
               "path": "packages/db/src/schema/wallets.ts",
@@ -148399,7 +148422,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -148447,7 +148471,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -327776,7 +327800,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -327828,7 +327853,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -328684,7 +328709,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -328736,7 +328762,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -329595,7 +329621,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -329647,7 +329674,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -330503,7 +330530,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -330555,7 +330583,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -331412,7 +331440,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -331464,7 +331493,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -332320,7 +332349,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -332372,7 +332402,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -333230,7 +333260,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -333282,7 +333313,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -334144,7 +334175,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -334196,7 +334228,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -342540,7 +342572,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -342592,7 +342625,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -343456,7 +343489,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -343508,7 +343542,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -344373,7 +344407,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -344425,7 +344460,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -443604,7 +443639,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -443704,7 +443740,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -444062,7 +444098,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -444162,7 +444199,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -444519,7 +444556,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -444619,7 +444657,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -444977,7 +445015,8 @@
           "release-0.6-external-provider-metrics-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -445077,7 +445116,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -445524,7 +445563,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -445652,7 +445692,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -457400,7 +457440,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457416,7 +457457,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -457749,7 +457790,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457765,7 +457807,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -458100,7 +458142,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -458116,7 +458159,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -458476,7 +458519,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458492,7 +458536,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -458825,7 +458869,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458841,7 +458886,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -459178,7 +459223,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459294,7 +459340,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -459669,7 +459715,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459785,7 +459832,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -460162,7 +460209,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460278,7 +460326,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -460653,7 +460701,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-ai-inference-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460769,7 +460818,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -461143,7 +461192,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-verify-upload-key-and-scanner-tests",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461303,7 +461353,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -461600,7 +461650,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-verify-upload-key-and-scanner-tests",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461760,7 +461811,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -462059,7 +462110,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-verify-upload-key-and-scanner-tests",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462219,7 +462271,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -462517,7 +462569,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-verify-upload-key-and-scanner-tests",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462677,7 +462730,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -474674,7 +474727,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -474774,7 +474828,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -475032,7 +475086,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -475132,7 +475187,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -475414,7 +475469,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -475514,7 +475570,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -475773,7 +475829,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -475873,7 +475930,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -476701,7 +476758,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -476733,7 +476791,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -476862,7 +476920,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -476906,7 +476965,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "docs/security/otp.md",
@@ -477094,7 +477153,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -477138,7 +477198,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/src/schema/auth-delivery-outbox.ts",
@@ -477228,7 +477288,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -477284,7 +477345,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "docs/security/otp.md",
@@ -484584,7 +484645,8 @@
         "batches": [
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-upload-key-and-scanner-tests",
@@ -484612,7 +484674,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -484980,7 +485042,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-upload-key-and-scanner-tests",
@@ -485032,7 +485095,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -491870,7 +491933,8 @@
       "launch_required": true,
       "remaining": [
         "Complete review of the remaining application, worker, database and ingress error sinks. Rehearse representative token, identity and payment inputs against configured production-equivalent sinks and verify their receipts.",
-        "Automatic, manual, adjustment and replacement invoice failure logs now use fixed operation text. The regression reproduces a leaked synthetic payment reference on the previous code, then verifies the exact safe message, rollback, no commit and the unchanged thrown error. Review of remaining sinks and production-equivalent receipt checks remains open."
+        "Automatic, manual, adjustment and replacement invoice failure logs now use fixed operation text. The regression reproduces a leaked synthetic payment reference on the previous code, then verifies the exact safe message, rollback, no commit and the unchanged thrown error. Review of remaining sinks and production-equivalent receipt checks remains open.",
+        "Wallet reconciliation scan failures now emit fixed operation messages, with the opaque wallet ID for per-wallet errors. Raw exception text is excluded from the scan log and background job error. The prior leak was reproduced with a synthetic reference. Remaining sink review and production-equivalent receipts are open."
       ],
       "owner": null,
       "depends_on": [],
@@ -491919,7 +491983,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
@@ -492122,7 +492187,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-ai-inference-metrics",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -492138,7 +492204,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -492320,7 +492386,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -492356,7 +492423,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-lease.ts",
@@ -492533,7 +492600,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -492545,7 +492613,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
@@ -492577,7 +492645,7 @@
             },
             {
               "path": "docs/operations/reconciliation-monitoring.md",
-              "sha256": "e26203014d2c0395015101ba50433a2f0219dce5c1139ff8ac00435e145cf846"
+              "sha256": "7db6a7acea9505db2ff511b6378b22e516b386a0af21fc3580ac457bcd8fa0f3"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -492585,7 +492653,7 @@
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
-              "sha256": "3fb4984a0001524c340d5622adfa7e776799f038f3ca95f4fb1ce44cf8f63b4b"
+              "sha256": "133e2089d7552b5ab49a1ae8de694e49022f782e4f6120607867428765b8e1fb"
             },
             {
               "path": "packages/shared/src/finance/wallet-reconciliation.ts",
@@ -492639,7 +492707,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -492675,7 +492744,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-lease.ts",
@@ -493667,7 +493736,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-refund-overdue-alert-and-native-worker",
@@ -493679,7 +493749,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
@@ -493780,7 +493850,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -493792,7 +493863,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
@@ -493824,7 +493895,7 @@
             },
             {
               "path": "docs/operations/reconciliation-monitoring.md",
-              "sha256": "e26203014d2c0395015101ba50433a2f0219dce5c1139ff8ac00435e145cf846"
+              "sha256": "7db6a7acea9505db2ff511b6378b22e516b386a0af21fc3580ac457bcd8fa0f3"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -493832,7 +493903,7 @@
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
-              "sha256": "3fb4984a0001524c340d5622adfa7e776799f038f3ca95f4fb1ce44cf8f63b4b"
+              "sha256": "133e2089d7552b5ab49a1ae8de694e49022f782e4f6120607867428765b8e1fb"
             },
             {
               "path": "packages/shared/src/finance/wallet-reconciliation.ts",
@@ -733588,7 +733659,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -733724,7 +733796,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -734311,7 +734383,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -734447,7 +734520,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -738592,7 +738665,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -738904,11 +738977,11 @@
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.test.ts",
-              "sha256": "2b34d3aa7602cf784c62f0665760c8736e76f0bac2504c93acc6b5b503244506"
+              "sha256": "41f63dc8a25e7ec4a12cb299d852ad9dca10de4200a91ab87e5626f5baa573eb"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
-              "sha256": "3fb4984a0001524c340d5622adfa7e776799f038f3ca95f4fb1ce44cf8f63b4b"
+              "sha256": "133e2089d7552b5ab49a1ae8de694e49022f782e4f6120607867428765b8e1fb"
             },
             {
               "path": "packages/shared/src/finance/wallet-reconciliation.ts",
@@ -742260,7 +742333,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ]
       }
     },
@@ -743428,7 +743502,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -746928,7 +747002,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-customer-draft-and-contract-history-browser",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ]
       }
     },
@@ -748916,7 +748991,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.test.ts",
@@ -750905,7 +750980,8 @@
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-customer-draft-and-contract-history-browser",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -752878,7 +752954,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "9026071591f4a7f8fa1f1174651e5b76dd9955259cf24532d7a74eac7f20d711"
+              "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.test.ts",
@@ -754773,7 +754849,8 @@
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-customer-draft-and-contract-history-browser",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-wallet-reconciliation-log-redaction"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -860039,6 +860116,61 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/invoice-log-redaction",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "0cf8539320732f6633e35afe990b184c32ed5021cef5c4eaf01f1e8de1dc9deb"
+    },
+    "release-0.6-wallet-reconciliation-log-redaction": {
+      "batch": "release-0.6-wallet-reconciliation-log-redaction",
+      "base_commit": "35dafc49806c3577dc5f1664208f7d0d76c1d2ae",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.02.06"
+      ],
+      "changed_paths": [
+        "apps/worker/src/main.ts",
+        "apps/worker/src/wallet/reconciliation-scanner.test.ts",
+        "apps/worker/src/wallet/reconciliation-scanner.ts",
+        "docs/operations/reconciliation-monitoring.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/jobs/job-recorder.test.ts",
+          "sha256": "f3c89d994b4ac49210779a45f62b6638c46dc2e8e913d703238d00d676f5d7b5"
+        },
+        {
+          "path": "apps/worker/src/jobs/job-recorder.ts",
+          "sha256": "e2275cd8bc3a114ca79484519e4ef087561eea7d21719d2a44e1f044df42d859"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "2b91da3b79366777b76c37a7a83c243c519636160f742f438febe6b8161ed2b3"
+        },
+        {
+          "path": "apps/worker/src/wallet/reconciliation-scanner.test.ts",
+          "sha256": "41f63dc8a25e7ec4a12cb299d852ad9dca10de4200a91ab87e5626f5baa573eb"
+        },
+        {
+          "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
+          "sha256": "133e2089d7552b5ab49a1ae8de694e49022f782e4f6120607867428765b8e1fb"
+        },
+        {
+          "path": "apps/worker/vitest.config.ts",
+          "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+        },
+        {
+          "path": "docs/operations/reconciliation-monitoring.md",
+          "sha256": "7db6a7acea9505db2ff511b6378b22e516b386a0af21fc3580ac457bcd8fa0f3"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "The injected wallet lock error showed private reference text in the previous per-wallet failure result, which feeds both the warning and persisted job error. The updated test binds the exact safe result and warning, one rollback, one commit, and successful reporting for the other wallet.",
+        "The whole-scan catch uses the same fixed message in logs and job persistence. The startup warning keeps the fallback interval and excludes arbitrary configured values. Existing reconciliation selection, amounts, retry category, counts and state transitions remain.",
+        "All 17 scanner and job-recorder mock cases passed. Local test setup omits worker compilation and PostgreSQL initialization for the two isolated mock suites. Worker TypeScript, affected lint, formatting and diff checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/wallet-log-redaction",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "71eab3e07ef1489009d44b6bedb53413465509606c78524787636b9feda9a8d0"
     }
   },
   "historical_improvements": [

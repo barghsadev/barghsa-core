@@ -63,7 +63,7 @@ export interface WalletReconciliationResult {
   skipped: number;
   /** True when the candidate query hit the batch cap. */
   truncated: boolean;
-  /** Per-wallet (or unexpected) failure messages. */
+  /** Per-wallet failure messages safe for the job queue and logs. */
   errors: string[];
 }
 
@@ -196,11 +196,11 @@ export async function reconcileWalletBalances(
         await client.query('ROLLBACK');
         result.skipped += 1;
       }
-    } catch (error) {
+    } catch {
       await client.query('ROLLBACK').catch(() => {});
-      const message = `${candidate.profile_id}: ${(error as Error)?.message ?? String(error)}`;
+      const message = `Wallet reconciliation failed for ${candidate.profile_id}`;
       result.errors.push(message);
-      logger.warn(`Wallet reconciliation failed: ${message}`);
+      logger.warn(message);
     } finally {
       client.release();
     }

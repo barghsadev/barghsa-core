@@ -831,7 +831,7 @@ async function main(): Promise<void> {
       : DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS;
   if (WALLET_RECONCILIATION_SCAN_MS !== walletReconcileRaw) {
     logger.warn(
-      `Invalid WALLET_RECONCILIATION_SCAN_MS '${process.env['WALLET_RECONCILIATION_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS}ms`
+      `Invalid WALLET_RECONCILIATION_SCAN_MS — falling back to ${DEFAULT_WALLET_RECONCILIATION_INTERVAL_MS}ms`
     );
   }
   let walletReconcileInFlight = false;
@@ -848,18 +848,19 @@ async function main(): Promise<void> {
       if (result.errors.length > 0) {
         await recordJobFailure({
           jobType: WALLET_RECONCILIATION_JOB_TYPE,
-          error: result.errors.map((e) => String(e)).join('; '),
+          error: result.errors.join('; '),
           errorCategory: 'transient',
           payload: { errors: result.errors.length, reported: result.reported },
         });
       } else {
         await recordJobSuccess(WALLET_RECONCILIATION_JOB_TYPE);
       }
-    } catch (err) {
-      logger.error(`Wallet reconciliation failed: ${(err as Error)?.message ?? String(err)}`);
+    } catch {
+      const message = 'Wallet reconciliation scan failed';
+      logger.error(message);
       await recordJobFailure({
         jobType: WALLET_RECONCILIATION_JOB_TYPE,
-        error: (err as Error)?.message ?? String(err),
+        error: message,
         errorCategory: 'transient',
       });
     } finally {

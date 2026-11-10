@@ -224,7 +224,7 @@ describe('reconcileWalletBalances (T-04.2.01.08)', () => {
       if (sql.includes('FOR UPDATE SKIP LOCKED')) {
         const walletParam = db.calls[db.calls.length - 1]?.params[0];
         if (walletParam === WALLET_A) {
-          throw new Error('lock boom');
+          throw new Error('Wallet lock failed for private-payment-reference');
         }
         return {
           rows: [{ profile_id: WALLET_B, posted_balance: '80', reserved_balance: '0' }],
@@ -242,13 +242,15 @@ describe('reconcileWalletBalances (T-04.2.01.08)', () => {
       return { rows: [] };
     });
 
-    const result = await reconcileWalletBalances(scanOptions(db));
+    const options = scanOptions(db);
+    const result = await reconcileWalletBalances(options);
 
     expect(result.scanned).toBe(2);
     expect(result.reported).toBe(1);
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]).toContain(WALLET_A);
-    expect(result.errors[0]).toContain('lock boom');
+    expect(result.errors).toEqual([`Wallet reconciliation failed for ${WALLET_A}`]);
+    expect(options.logger.warn.mock.calls).toEqual([[result.errors[0]]]);
+    expect(db.calls.filter((call) => call.sql === 'ROLLBACK')).toHaveLength(1);
+    expect(db.calls.filter((call) => call.sql === 'COMMIT')).toHaveLength(1);
     expect(db.calls.some((c) => c.sql.includes('INSERT INTO reconciliation_exceptions'))).toBe(
       true
     );
