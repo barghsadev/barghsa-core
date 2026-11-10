@@ -439,7 +439,25 @@ it.each(['roles', 'remove'] as const)(
     expect((await mutate(c, operation, [...roles].reverse())).status).toBe(
       operation === 'roles' ? 200 : 404
     );
-    expect(await allRoleNoticeState()).toEqual(before);
+    const after = await allRoleNoticeState();
+    if (operation === 'remove') {
+      const oldDenials = before['authorization_denials'] as { id: string }[];
+      const denials = after['authorization_denials'] as { id: string }[];
+      const oldIds = new Set(oldDenials.map(({ id }) => id));
+      expect(denials.filter(({ id }) => !oldIds.has(id))).toEqual([
+        {
+          id: expect.any(String),
+          actor_id: c.actor,
+          action: 'DELETE',
+          resource: '/api/profiles/:profileId/agents/:userId',
+          reason: 'NOT_FOUND:RESOURCE',
+          correlation_id: c.correlationId,
+          created_at: expect.any(String),
+        },
+      ]);
+      after['authorization_denials'] = denials.filter(({ id }) => oldIds.has(id));
+    }
+    expect(after).toEqual(before);
     expect(await snapshot(c)).toEqual(domain);
   }
 );

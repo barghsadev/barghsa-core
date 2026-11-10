@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T01:30:28+00:00",
-  "source_commit": "62b91fd971c478d4cd93653dedcbcf12b29f67cc",
+  "updated": "2026-11-10T01:36:34+00:00",
+  "source_commit": "4a254aa92f05e494391fcceff246139beaceca89",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -73282,7 +73282,8 @@
           "release-0.6-external-provider-metrics-reconciliation",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-verify-denial-audit-on-agent-remove-replay"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -73826,7 +73827,7 @@
             },
             {
               "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
-              "sha256": "bebce227346e76d62757bdccebdc7fe65d5f6645e1e03009591ad060a2bdc53c"
+              "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
             },
             {
               "path": "packages/i18n/package.json",
@@ -74461,7 +74462,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Renewed the affected browser source binding against the exact workspace fixture results in release-0.6-nightly-workspace-browser-fixtures.",
             "The added Operations-role, foreign order UUID and hostile payment-return assertions passed against the compiled app. Existing role, order and read-only return assertions were preserved.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/database-native-active-inbox-templates",
@@ -720052,7 +720054,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-verify-denial-audit-on-agent-remove-replay"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -720072,7 +720075,7 @@
             },
             {
               "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
-              "sha256": "bebce227346e76d62757bdccebdc7fe65d5f6645e1e03009591ad060a2bdc53c"
+              "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
@@ -720470,7 +720473,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials."
           ],
           "criterion_result": "Full-page individual/legal/both checkbox chooser, canonical selection order, owner-bound durable request key, resume and lost-receipt recovery verified.",
           "limitations": [
@@ -720695,7 +720699,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-verify-denial-audit-on-agent-remove-replay"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -720715,7 +720720,7 @@
             },
             {
               "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
-              "sha256": "bebce227346e76d62757bdccebdc7fe65d5f6645e1e03009591ad060a2bdc53c"
+              "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
@@ -721113,7 +721118,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials."
           ],
           "criterion_result": "Required personal identity and checksum, optional title, dependent province/city, address/postal validation, save-before-step server drafts, review and exact submission receipt verified.",
           "limitations": [
@@ -721338,7 +721344,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-verify-denial-audit-on-agent-remove-replay"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -721358,7 +721365,7 @@
             },
             {
               "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
-              "sha256": "bebce227346e76d62757bdccebdc7fe65d5f6645e1e03009591ad060a2bdc53c"
+              "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
@@ -721756,7 +721763,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials."
           ],
           "criterion_result": "Representative and company identity, required/unique national identifier, company type, optional localized registration date/contact/economic fields, required dependent address, optional verified document workflow, review and persisted verification status verified.",
           "limitations": [
@@ -721982,7 +721990,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-verify-denial-audit-on-agent-remove-replay"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -722002,7 +722011,7 @@
             },
             {
               "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
-              "sha256": "bebce227346e76d62757bdccebdc7fe65d5f6645e1e03009591ad060a2bdc53c"
+              "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
@@ -722400,7 +722409,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials."
           ],
           "criterion_result": "Aggregate persisted profile summaries, first initial dashboard choice, explicit alternate selection, saved context, exact final receipt and current /app dashboard entry verified.",
           "limitations": [
@@ -722625,7 +722635,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-verify-denial-audit-on-agent-remove-replay"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -722645,7 +722656,7 @@
             },
             {
               "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
-              "sha256": "bebce227346e76d62757bdccebdc7fe65d5f6645e1e03009591ad060a2bdc53c"
+              "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
@@ -723043,7 +723054,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials."
           ],
           "criterion_result": "Customer /app and nested availability guard redirects empty accounts to onboarding; unavailable reads fail rather than inventing an empty account; staff context remains independent.",
           "limitations": [
@@ -723268,7 +723280,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-verify-denial-audit-on-agent-remove-replay"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -723288,7 +723301,7 @@
             },
             {
               "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
-              "sha256": "bebce227346e76d62757bdccebdc7fe65d5f6645e1e03009591ad060a2bdc53c"
+              "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
@@ -723686,7 +723699,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials."
           ],
           "criterion_result": "Active legal-profile directory verifies initials avatars, masked contacts, role/status badges, actual/unknown invitation/join/sign-in dates, owner crown and transfer entry.",
           "limitations": [
@@ -723911,7 +723925,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-verify-denial-audit-on-agent-remove-replay"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -723931,7 +723946,7 @@
             },
             {
               "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
-              "sha256": "bebce227346e76d62757bdccebdc7fe65d5f6645e1e03009591ad060a2bdc53c"
+              "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
@@ -724329,7 +724344,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials."
           ],
           "criterion_result": "Invitation username/role and optional bounded plain-text message, local validation, self/existing-member safeguards, current authority, retained failure draft and safe note display verified.",
           "limitations": [
@@ -724555,7 +724571,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-verify-denial-audit-on-agent-remove-replay"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -724575,7 +724592,7 @@
             },
             {
               "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
-              "sha256": "bebce227346e76d62757bdccebdc7fe65d5f6645e1e03009591ad060a2bdc53c"
+              "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
@@ -724973,7 +724990,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials."
           ],
           "criterion_result": "Member/invitation detail dialogs verify scoped identity and public activity, role editing, guarded removal, withdrawal, current ownership and captured step-up/receipt recovery.",
           "limitations": [
@@ -725198,7 +725216,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-verify-denial-audit-on-agent-remove-replay"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -725218,7 +725237,7 @@
             },
             {
               "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
-              "sha256": "bebce227346e76d62757bdccebdc7fe65d5f6645e1e03009591ad060a2bdc53c"
+              "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
@@ -725616,7 +725635,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials."
           ],
           "criterion_result": "Account-bound pending invitations identify company/inviter and remain until accept/decline. Onboarding acceptance requires no new profile, binds company/role and opens the accepted context explicitly.",
           "limitations": [
@@ -725841,7 +725861,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-verify-denial-audit-on-agent-remove-replay"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -725861,7 +725882,7 @@
             },
             {
               "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
-              "sha256": "bebce227346e76d62757bdccebdc7fe65d5f6645e1e03009591ad060a2bdc53c"
+              "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
             },
             {
               "path": "apps/api/src/profiles/agent-role.guard.test.ts",
@@ -726259,7 +726280,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "CI guidance was reconciled against current ci.yml, the protected main rule and direct-main preflight receipts. The source-bound local-build reuse section is byte-identical.",
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials."
           ],
           "criterion_result": "Owner rows cannot be removed or edited through ordinary member actions. Bound ownership transfer, current authority, step-up, stale/expiry/retry and last-owner safeguards verified.",
           "limitations": [
@@ -744149,7 +744171,7 @@
             },
             {
               "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
-              "sha256": "bebce227346e76d62757bdccebdc7fe65d5f6645e1e03009591ad060a2bdc53c"
+              "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -746583,7 +746605,8 @@
             "Current provider tester injection was verified in the compiled app. All 11 HTTP and 60 native provider self-test cases passed. The step-up, contact, guard, activation, receipt and secret handling assertions remain enforced.",
             "The added Operations-role, foreign order UUID and hostile payment-return assertions passed against the compiled app. Existing role, order and read-only return assertions were preserved.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials."
           ],
           "limitations": [],
           "operational_limits": [
@@ -747399,7 +747422,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-verify-denial-audit-on-agent-remove-replay"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -748116,7 +748140,7 @@
             },
             {
               "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
-              "sha256": "bebce227346e76d62757bdccebdc7fe65d5f6645e1e03009591ad060a2bdc53c"
+              "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -750543,7 +750567,8 @@
             "Current provider tester injection was verified in the compiled app. All 11 HTTP and 60 native provider self-test cases passed. The step-up, contact, guard, activation, receipt and secret handling assertions remain enforced.",
             "The added Operations-role, foreign order UUID and hostile payment-return assertions passed against the compiled app. Existing role, order and read-only return assertions were preserved.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -751248,7 +751273,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-verify-denial-audit-on-agent-remove-replay"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -854271,6 +854297,54 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/i18n-dictionaries",
       "source_scope_proof": "i18n-source-proof.json",
       "source_scope_proof_sha256": "b499e97a71f958f044e0dce0b3e36ade2fd47ca36225dbbb5d51cfbd8da221bf"
+    },
+    "release-0.6-verify-denial-audit-on-agent-remove-replay": {
+      "batch": "release-0.6-verify-denial-audit-on-agent-remove-replay",
+      "base_commit": "4a254aa92f05e494391fcceff246139beaceca89",
+      "task_keys": [
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/profiles/agent-mutation-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "f0521f83368414076f6128aa3fbced34415a4757a8573bdeebb269ca8656e2d1"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-mutation-http.integration.test.ts",
+          "sha256": "9536e015b8c348daca72639ebfadc3aea4b954e4cea2fcc50e29e0b1c48cca0b"
+        },
+        {
+          "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
+          "sha256": "a00e19ce6adea4b02adeb18b6eab0e04ae9cf74fe2885ad1801d6f9ab533a413"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Hosted preflight 42733660072 job 129557555669 passed 7,819 API cases and failed one. The failure was an extra, expected authorization_denials row for an authenticated DELETE replay returning opaque 404. Build and required integrity passed, while the affected test and combined coverage gates failed.",
+        "The exact replay test now requires one new denial with the actor, DELETE, templated resource, stable opaque reason, correlation and timestamp. It compares every pre-existing denial and every other table to the same full snapshot. The successful roles replay, actual membership/session/refresh/audit state and mandatory notification rollback assertions remain intact.",
+        "The four selected compiled PostgreSQL cases passed at the original assertions and limits, covering both canonical replays and both notification failure matrices. Changed-file lint, formatting and API type checks passed. Exact hosted affected CI is required again before main advances."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/agent-denial-replay",
+      "source_scope_proof": "agent-denial-replay-source-proof.json",
+      "source_scope_proof_sha256": "6cbacbd6b831270540f71fe1bbe1479c5e0e67c7e1eb40fe85d2d93a2927bd4b"
     }
   },
   "historical_improvements": [
