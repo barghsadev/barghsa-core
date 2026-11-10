@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T00:37:13+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T00:42:57+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1081 | Accepted with unchanged source bindings. |
-| verify | 244 | Existing work may be complete; inspect evidence before building. |
+| done | 1083 | Accepted with unchanged source bindings. |
+| verify | 242 | Existing work may be complete; inspect evidence before building. |
 | partial | 36 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1243,7 +1243,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.08.02.01` | done | Recorded batch work | Define pen test scope: auth, session, MFA, CSRF, CSP, BOLA/IDOR, rate limits, SSRF, file upload, webhooks, wallet/payment, AI tools |
 | `06-security-testing-observability.md#T-06.08.02.02` | blocked | Recorded batch work | Schedule pre-launch independent penetration test; budget and vendor selection |
 | `06-security-testing-observability.md#T-06.08.02.03` | done | Recorded batch work | Define criteria: critical/high with credible production path → fix before release; accepted risk requires owner+expiry |
-| `06-security-testing-observability.md#T-06.08.02.04` | verify | Inventory needed | Implement automated authenticated DAST in staging (e.g. OWASP ZAP API scan) |
+| `06-security-testing-observability.md#T-06.08.02.04` | done | Recorded batch work | Implement automated authenticated DAST in staging (e.g. OWASP ZAP API scan) |
 | `06-security-testing-observability.md#T-06.08.02.05` | done | Recorded batch work | Write custom security E2E suite for targeted API test cases CSRF, CORS, session rotation, rate limits, BOLA, SSRF, open redirect |
 | `06-security-testing-observability.md#T-06.08.03.01` | done | Recorded batch work | Create incident response runbook (`docs/runbooks/security-incident.md`): detection, containment, eradication, recovery, post-mortem |
 | `06-security-testing-observability.md#T-06.08.03.02` | done | Recorded batch work | Create key/token revocation procedure: API keys, provider secrets, session mass-revocation, certificate rotation |
@@ -1308,7 +1308,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.11.01.02` | verify | Inventory needed | Create accessibility test suite covering: keyboard navigation, focus visibility, contrast, labels, ARIA roles, error announcements, reduced motion |
 | `06-security-testing-observability.md#T-06.11.01.03` | verify | Inventory needed | Add CI gate: axe violations block PR; track severity |
 | `06-security-testing-observability.md#T-06.11.01.04` | verify | Inventory needed | Document manual testing checklist for screen readers (NVDA/JAWS, VoiceOver) and keyboard-only |
-| `06-security-testing-observability.md#T-06.11.02.01` | verify | Inventory needed | Integrate OWASP ZAP for authenticated API scanning in staging environment |
+| `06-security-testing-observability.md#T-06.11.02.01` | done | Recorded batch work | Integrate OWASP ZAP for authenticated API scanning in staging environment |
 | `06-security-testing-observability.md#T-06.11.02.02` | done | Recorded batch work | Write targeted security test scenarios: CSRF, CORS misconfiguration, BOLA/IDOR, rate limit bypass, upload abuse, open redirect, SSRF, webhook replay, session rotation corner cases |
 | `06-security-testing-observability.md#T-06.11.02.03` | done | Recorded batch work | Configure Semgrep/CodeQL with security-focused rules for NestJS/Drizzle patterns |
 | `06-security-testing-observability.md#T-06.11.02.04` | done | Recorded batch work | Add CI gate: critical/high SAST findings block merge; medium triaged within sprint |

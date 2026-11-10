@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T00:37:13+00:00",
-  "source_commit": "db9947f7dbecb37273968c9142411ee615779829",
+  "updated": "2026-11-10T00:42:57+00:00",
+  "source_commit": "6d6993d5321c1ab6aae334ab3729eeee386296bf",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -479418,7 +479418,8 @@
         ],
         "batches": [
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-authenticated-staging-zap-integration"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -479458,7 +479459,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "ec88e185fb6320ae5295eb99c88f733c269c90280233fed6428b1e887ddfbb6a"
+              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -479490,7 +479491,8 @@
             "The migrated worker suite passed 14 cases. A queued AI model test after revocation records the authorization denial, preserves its failed receipt and never calls the provider.",
             "The append-only table rejects UPDATE, DELETE and TRUNCATE. The dashboard request applies the current wildcard/admin and session boundary, and denied commands preserve the business audit table. An unavailable audit table preserves the public denial and emits a sanitized diagnostic.",
             "The existing order-role case timed out at the unchanged 5-second fixture limit. The controlled diagnostic ran every existing assertion and measured 7115 ms with the audit hook and 7903 ms without it on the same isolated host and schema. Treat both diagnostic runs as behavior and timing evidence only. The normal-limit hosted affected-suite check remains required for this exact batch.",
-            "The Drizzle snapshot adds only the authorization_denials table and index, with ordered expand-only migration 0284. The generated OpenAPI delta is confined to the audit scope."
+            "The Drizzle snapshot adds only the authorization_denials table and index, with ordered expand-only migration 0284. The generated OpenAPI delta is confined to the audit scope.",
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
           ]
         }
       },
@@ -479532,7 +479534,8 @@
           "docs/security/security-verification.md"
         ],
         "batches": [
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-authenticated-staging-zap-integration"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -479588,7 +479591,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "ec88e185fb6320ae5295eb99c88f733c269c90280233fed6428b1e887ddfbb6a"
+              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -479606,7 +479609,8 @@
           "checks": [
             "The compiled API regression verifies that the actual persisted denial can be read through the dashboard endpoint, that customer and scoped staff cannot read it, and that only the authorized administrator gets the navigation item.",
             "All 23 targeted web cases passed across the viewer, admin settings navigation, layout and account context. The initial local disk error interrupted discovery. A serial run passed 20 cases and the interrupted layout suite passed its two cases separately after disposing of generated API output. The revised viewer suite passed ten cases, including the account and navigation authority reset.",
-            "The viewer exercises the same bounded response contract, displays the stored decision fields and clears details on a 403. API, worker and web type checks, shared package exports, contract drift, changed-file lint, navigation and formatting passed."
+            "The viewer exercises the same bounded response contract, displays the stored decision fields and clears details on a 403. API, worker and web type checks, shared package exports, contract drift, changed-file lint, navigation and formatting passed.",
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
           ]
         }
       },
@@ -483474,7 +483478,8 @@
         "batches": [
           "release-0.6-source-grounded-threat-model-and-review",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-authenticated-staging-zap-integration"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -483482,7 +483487,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "ec88e185fb6320ae5295eb99c88f733c269c90280233fed6428b1e887ddfbb6a"
+              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
             },
             {
               "path": "docs/threat-model.md",
@@ -483492,7 +483497,8 @@
           "checks": [
             "The exception register requires threat and candidate identity, accountable owner, justification, compensating controls, expiry, explicit approval and retest. The initial register has zero approved entries. Existing open release gates stay open.",
             "The existing security scope guide gained the repeatable compiled HTTP regression invocation.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
           ]
         }
       },
@@ -483608,7 +483614,8 @@
         "batches": [
           "release-0.6-security-scenario-and-signed-fixture-reconciliation",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-authenticated-staging-zap-integration"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -483616,7 +483623,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "ec88e185fb6320ae5295eb99c88f733c269c90280233fed6428b1e887ddfbb6a"
+              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -483626,7 +483633,8 @@
           "checks": [
             "The checked scope enumerates auth, sessions, MFA, CSRF, CSP, BOLA/IDOR, rate limits, SSRF, uploads, webhooks, wallet/payment and the owner-approved read-only AI boundary. It specifies test accounts, isolated providers, evidence, cleanup and repeat triggers. Live scanning and independent execution remain separate.",
             "The existing security scope guide gained the repeatable compiled HTTP regression invocation.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
           ]
         }
       },
@@ -483657,7 +483665,8 @@
         "batches": [
           "release-0.6-security-incident-and-review-prerequisites",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-authenticated-staging-zap-integration"
         ],
         "current_acceptance": {
           "kind": "verified-partial-security-operations-prerequisites",
@@ -483665,7 +483674,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "ec88e185fb6320ae5295eb99c88f733c269c90280233fed6428b1e887ddfbb6a"
+              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
             },
             {
               "path": "docs/threat-model.md",
@@ -483675,7 +483684,8 @@
           "checks": [
             "The reviewed penetration-test scope and source-grounded threat model are available for reviewer selection and scheduling. A search of the repository found no independent reviewer assignment, approved budget, or scheduled review window.",
             "The existing security scope guide gained the repeatable compiled HTTP regression invocation.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
           ]
         }
       },
@@ -483704,7 +483714,8 @@
         "batches": [
           "release-0.6-security-scenario-and-signed-fixture-reconciliation",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-authenticated-staging-zap-integration"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -483712,7 +483723,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "ec88e185fb6320ae5295eb99c88f733c269c90280233fed6428b1e887ddfbb6a"
+              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -483722,7 +483733,8 @@
           "checks": [
             "Critical and high findings with a credible production path block release. A permitted risk disposition must identify its owner, evidence, compensating control, expiry and retest. The policy is source-bound. Live review and individual dispositions require separate evidence.",
             "The existing security scope guide gained the repeatable compiled HTTP regression invocation.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
           ]
         }
       },
@@ -483739,20 +483751,49 @@
         "story": "06-security-testing-observability.md#spec-821e9747085a"
       },
       "requirement": "| T-06.08.02.04 | Implement automated authenticated DAST in staging (e.g. OWASP ZAP API scan) | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "deploy/staging/authenticated-dast.py",
+          "deploy/staging/test_authenticated_dast.py",
+          "docs/security/security-verification.md"
+        ],
+        "batches": [
+          "release-0.6-authenticated-staging-zap-integration"
+        ],
+        "current_acceptance": {
+          "kind": "verified-native-authenticated-staging-zap",
+          "base_commit": "6d6993d5321c1ab6aae334ab3729eeee386296bf",
+          "source_evidence": [
+            {
+              "path": "deploy/staging/authenticated-dast.py",
+              "sha256": "b92ff21ff751526fa87e1ac9b4244b729ba0fa6a42d17f9b5cfdfc22c51bb641"
+            },
+            {
+              "path": "deploy/staging/test_authenticated_dast.py",
+              "sha256": "eed779690fd0c02bbf7ddf0202e0802d09ca60d24cdb223b0a5be3e48e1faf2d"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
+            }
+          ],
+          "checks": [
+            "Six runner tests, Python compilation, documentation formatting and diff checks passed. The runner validates the private synthetic identity, denies staff or extra profiles, forbids redirects and only persists scanner rule identifiers, risks, counts and expected probe statuses.",
+            "The native pinned ZAP 2.17.0 daemon reported 62 enabled rules. The first protocol smoke used an incorrect Docker-mapped authority, and the second needed the documented named sendRequest result. The final source uses ZAP’s virtual API host and named receipt, uses silent mode and verified removal of its temporary container.",
+            "The same runner bytes exercised eight actual API probes against TLS-verified staging v0.5.0 at dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c. The anonymous session returned 401, the exact synthetic session and five service/profile reads returned 200, and a guessed order returned the opaque 404.",
+            "ZAP found seven Low instances each of rules 10035 and 10037. A separate direct TLS response verified the staging edge omits HSTS and forwards X-Powered-By: Express. The probe reported no Medium or High finding. Final candidate retest, HSTS topology review and independent penetration testing remain separate.",
+            "Cleanup archived the synthetic profile, disabled the dedicated account, revoked its only session and verified that the revoked cookie returns 401. The report excludes credentials, identifiers and response bodies."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.08.02.05",
@@ -483784,7 +483825,8 @@
         ],
         "batches": [
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-authenticated-staging-zap-integration"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -483844,7 +483886,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "ec88e185fb6320ae5295eb99c88f733c269c90280233fed6428b1e887ddfbb6a"
+              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -483857,7 +483899,8 @@
             "The earlier compiled SMTP endpoint failed because the optional connection tester had type-only constructor metadata. The diagnostic reproduced the internal unavailable-tester error. Explicit Nest tokens now resolve SMTP, Resend and SMS.ir without changing the tester logic.",
             "The rebuilt application passed all 11 provider HTTP and 60 provider self-test cases. The real SMTP connection-test route records the blocked private destination and the isolated listener observes zero connections. The live external provider evidence remains a separate gate.",
             "The current security verification guide lists the reproducible HTTP subset. API typecheck, lint, formatting and diff checks passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
           ]
         }
       },
@@ -486597,20 +486640,49 @@
         "story": "06-security-testing-observability.md#spec-09a11474dca9"
       },
       "requirement": "| T-06.11.02.01 | Integrate OWASP ZAP for authenticated API scanning in staging environment | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "deploy/staging/authenticated-dast.py",
+          "deploy/staging/test_authenticated_dast.py",
+          "docs/security/security-verification.md"
+        ],
+        "batches": [
+          "release-0.6-authenticated-staging-zap-integration"
+        ],
+        "current_acceptance": {
+          "kind": "verified-native-authenticated-staging-zap",
+          "base_commit": "6d6993d5321c1ab6aae334ab3729eeee386296bf",
+          "source_evidence": [
+            {
+              "path": "deploy/staging/authenticated-dast.py",
+              "sha256": "b92ff21ff751526fa87e1ac9b4244b729ba0fa6a42d17f9b5cfdfc22c51bb641"
+            },
+            {
+              "path": "deploy/staging/test_authenticated_dast.py",
+              "sha256": "eed779690fd0c02bbf7ddf0202e0802d09ca60d24cdb223b0a5be3e48e1faf2d"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
+            }
+          ],
+          "checks": [
+            "Six runner tests, Python compilation, documentation formatting and diff checks passed. The runner validates the private synthetic identity, denies staff or extra profiles, forbids redirects and only persists scanner rule identifiers, risks, counts and expected probe statuses.",
+            "The native pinned ZAP 2.17.0 daemon reported 62 enabled rules. The first protocol smoke used an incorrect Docker-mapped authority, and the second needed the documented named sendRequest result. The final source uses ZAP’s virtual API host and named receipt, uses silent mode and verified removal of its temporary container.",
+            "The same runner bytes exercised eight actual API probes against TLS-verified staging v0.5.0 at dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c. The anonymous session returned 401, the exact synthetic session and five service/profile reads returned 200, and a guessed order returned the opaque 404.",
+            "ZAP found seven Low instances each of rules 10035 and 10037. A separate direct TLS response verified the staging edge omits HSTS and forwards X-Powered-By: Express. The probe reported no Medium or High finding. Final candidate retest, HSTS topology review and independent penetration testing remain separate.",
+            "Cleanup archived the synthetic profile, disabled the dedicated account, revoked its only session and verified that the revoked cookie returns 401. The report excludes credentials, identifiers and response bodies."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.11.02.02",
@@ -486635,7 +486707,8 @@
         "batches": [
           "release-0.6-security-scenario-and-signed-fixture-reconciliation",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-authenticated-staging-zap-integration"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -486643,7 +486716,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "ec88e185fb6320ae5295eb99c88f733c269c90280233fed6428b1e887ddfbb6a"
+              "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -486754,7 +486827,8 @@
             "81 API and 39 shared focused cases passed across CSRF/CORS, unsafe navigation, provider SSRF, and signed callback verification. Current source-bound native evidence covers financial BOLA across four HTTP surfaces, trusted-proxy and forged-IP rate-limit behavior, reserved-file and actual-byte upload attacks, and session credential rotation/revocation.",
             "The source-matching 50 native payment cases include stale, invalid and repeated callback inputs, durable retries and duplicate settlement protection. The matrix separates authored regression cases from authenticated staging DAST and the independent review.",
             "The existing security scope guide gained the repeatable compiled HTTP regression invocation.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "Renewed the verification guide binding for the additive documented ZAP integration. The original procedures and claims are unchanged."
           ]
         }
       },
@@ -752973,7 +753047,8 @@
       "launch_required": true,
       "remaining": [
         "Reconcile every epic-01 and epic-06 criterion with the existing code and current operational evidence.",
-        "Retire obsolete PR-only requirements under the approved direct-main workflow, without weakening production checks."
+        "Retire obsolete PR-only requirements under the approved direct-main workflow, without weakening production checks.",
+        "Run authenticated ZAP probes against the exact accepted v0.6.0 staging candidate and disposition any findings. The v0.5.0 receipt verifies the deployed staging integration only."
       ],
       "owner": null,
       "depends_on": [],
@@ -850665,6 +850740,51 @@
         "The exact preflight 42729031544 application build passed and repository formatting rejected the generated journal for its missing final newline. The corrected journal adds exactly one LF and parses to the same data. The migration SQL and snapshot are unchanged. The generated metadata passes Prettier."
       ],
       "check_url": "https://github.com/barghsadev/barghsa-core/actions/runs/42729031544/job/129542013377"
+    },
+    "release-0.6-authenticated-staging-zap-integration": {
+      "batch": "release-0.6-authenticated-staging-zap-integration",
+      "base_commit": "6d6993d5321c1ab6aae334ab3729eeee386296bf",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.01.09",
+        "06-security-testing-observability.md#T-06.03.01.10",
+        "06-security-testing-observability.md#T-06.08.01.04",
+        "06-security-testing-observability.md#T-06.08.02.01",
+        "06-security-testing-observability.md#T-06.08.02.02",
+        "06-security-testing-observability.md#T-06.08.02.03",
+        "06-security-testing-observability.md#T-06.08.02.04",
+        "06-security-testing-observability.md#T-06.08.02.05",
+        "06-security-testing-observability.md#T-06.11.02.01",
+        "06-security-testing-observability.md#T-06.11.02.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/authenticated-dast.py",
+        "deploy/staging/test_authenticated_dast.py",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/authenticated-dast.py",
+          "sha256": "b92ff21ff751526fa87e1ac9b4244b729ba0fa6a42d17f9b5cfdfc22c51bb641"
+        },
+        {
+          "path": "deploy/staging/test_authenticated_dast.py",
+          "sha256": "eed779690fd0c02bbf7ddf0202e0802d09ca60d24cdb223b0a5be3e48e1faf2d"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "59e1be7348afb3bf0ec2b727a09cfad515d5f6c2952a01a9e3de4a5df04c2cb5"
+        }
+      ],
+      "checks": [
+        "Six runner tests, Python compilation, documentation formatting and diff checks passed. The runner validates the private synthetic identity, denies staff or extra profiles, forbids redirects and only persists scanner rule identifiers, risks, counts and expected probe statuses.",
+        "The native pinned ZAP 2.17.0 daemon reported 62 enabled rules. The first protocol smoke used an incorrect Docker-mapped authority, and the second needed the documented named sendRequest result. The final source uses ZAP’s virtual API host and named receipt, uses silent mode and verified removal of its temporary container.",
+        "The same runner bytes exercised eight actual API probes against TLS-verified staging v0.5.0 at dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c. The anonymous session returned 401, the exact synthetic session and five service/profile reads returned 200, and a guessed order returned the opaque 404.",
+        "ZAP found seven Low instances each of rules 10035 and 10037. A separate direct TLS response verified the staging edge omits HSTS and forwards X-Powered-By: Express. The probe reported no Medium or High finding. Final candidate retest, HSTS topology review and independent penetration testing remain separate.",
+        "Cleanup archived the synthetic profile, disabled the dedicated account, revoked its only session and verified that the revoked cookie returns 401. The report excludes credentials, identifiers and response bodies."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/authenticated-dast",
+      "source_scope_proof": "staging-zap-0.5.0.json",
+      "source_scope_proof_sha256": "d1d15c632eec4f2d87a4b52e88b8efc9a0a7aba43511db811c4fcc12d31ab885"
     }
   },
   "historical_improvements": [

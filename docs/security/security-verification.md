@@ -83,3 +83,39 @@ Treat critical and high findings with a credible production path as release
 blockers. Keep any permitted risk disposition tied to its owner, evidence,
 expiry and retest. Preserve the separate staging DAST and independent review
 receipts on the release board. [Supply-chain triage](supply-chain.md).
+
+## Authenticated staging scan
+
+Run the pinned OWASP ZAP image against the exact staging release using a
+dedicated synthetic customer and an empty individual profile. Use a short-lived
+session with no staff grant, linked contacts or refresh token. Save the fixture
+as a runner-owned `0600` JSON file containing `session`, `user_id`, `username`
+and `profile_id`. Use a `barghsa-dast-…@example.test` username. Keep the fixture
+in protected temporary storage and revoke the session and disable the synthetic
+account in cleanup.
+
+```sh
+rtk proxy python3 deploy/staging/authenticated-dast.py \
+  --commit "$STAGING_RELEASE_SHA" \
+  --fixture "$PROTECTED_DAST_FIXTURE" \
+  --report "$PROTECTED_DAST_REPORT"
+```
+
+The runner checks staging metadata over verified TLS before and after the
+scan. It validates the anonymous denial, exact customer identity and dedicated
+profile through ZAP. The remaining GET probes cover electricity, saving, solar,
+consultation and an opaque order miss. Redirect following is disabled. The
+scanner runs in silent mode with a temporary loopback control port and removes
+its container on exit. The report includes the pinned image, live SHA, probe
+statuses and alert IDs, risks and counts. Keep active fuzzing in a disposable
+rehearsal environment with synthetic data. [ZAP API](https://www.zaproxy.org/docs/api/), [ZAP command line](https://www.zaproxy.org/docs/desktop/cmdline/).
+
+Exit `1` records a high-risk alert requiring review and blocks this check. Exit
+`2` means the fixture, scan, deployment identity or report failed verification.
+Review medium findings and record their disposition with the exact candidate
+receipt. Run this check again after the final candidate is available.
+
+The first staging rehearsal found two low-risk rules across the API reads.
+The live edge omitted HSTS and forwarded `X-Powered-By: Express`. Keep HSTS
+activation tied to the TLS and subdomain review and check the framework header
+again on the release candidate. [HSTS rule](https://www.zaproxy.org/docs/alerts/10035/), [Framework header rule](https://www.zaproxy.org/docs/alerts/10037/).
