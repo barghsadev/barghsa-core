@@ -63,7 +63,15 @@ class CoverageTests(unittest.TestCase):
             module.metrics(document, {1}, False)
 
     def test_source_scope_and_critical_domains(self):
-        for path in ("apps/api/src/auth/login.ts", "apps/web/src/routes/_auth/login.tsx", "packages/db/src/schema/wallet-payments.ts", "apps/api/src/invoice/invoice-state-machine.ts", "apps/api/src/admin/admin.service.ts"):
+        for path in (
+            "apps/api/src/auth/login.ts",
+            "apps/web/src/routes/_auth/login.tsx",
+            "packages/db/src/schema/wallet-payments.ts",
+            "apps/api/src/invoice/invoice-state-machine.ts",
+            "apps/api/src/admin/admin.service.ts",
+            "apps/api/src/electricity/electricity-calculation.ts",
+            "apps/api/src/electricity/electricity-calculation.service.ts",
+        ):
             with self.subTest(path=path):
                 self.assertTrue(module.eligible(path))
                 self.assertTrue(module.is_critical(path))
@@ -129,6 +137,27 @@ class CoverageTests(unittest.TestCase):
             self.assertEqual(module.evaluate(root, changed)["status"], "failed")
             put(critical, coverage([1] * 9 + [0], [1] * 16 + [0] * 4))
             self.assertEqual(module.evaluate(root, changed)["status"], "failed")
+
+    def test_critical_file_cannot_be_hidden_by_another_file_in_the_same_package(self):
+        weak = "apps/api/src/wallet/settlement.ts"
+        strong = "apps/api/src/wallet/format.ts"
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            report = root / "apps/api/coverage/coverage-final.json"
+            report.parent.mkdir(parents=True)
+            for line_hits, branch_hits in ((8, 17), (9, 16)):
+                with self.subTest(line_hits=line_hits, branch_hits=branch_hits):
+                    report.write_text(json.dumps({
+                        weak: coverage([1] * line_hits + [0] * (10 - line_hits),
+                                       [1] * branch_hits + [0] * (20 - branch_hits)),
+                        strong: coverage([1] * 100, [1] * 100),
+                    }))
+                    result = module.evaluate(root, {weak: {1}, strong: {1}})
+                    self.assertEqual(result["status"], "failed")
+                    group = result["groups"][0]
+                    self.assertGreaterEqual(group["covered_lines"] * 100, group["lines"] * 90)
+                    self.assertGreaterEqual(group["covered_branches"] * 100, group["branches"] * 85)
+                    self.assertEqual([error["file"] for error in result["errors"]], [weak])
 
     def test_real_git_diff_additions_deletions_and_worktree_isolation(self):
         with tempfile.TemporaryDirectory() as temporary:

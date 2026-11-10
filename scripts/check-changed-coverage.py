@@ -8,14 +8,20 @@ import re
 import subprocess
 
 CRITICAL = re.compile(r"(?:^|[/_.-])(auth(?:entication|enticated|orization)?|authz|admin|staff|role[s]?|verification|rate-limit|finance|financial|order[s]?|session|csrf|otp|permission[s]?|payment[s]?|wallet|refund[s]?|pricing|price[s]?|contract[s]?|state-machine|invoice[s]?|dual-approval)(?:[/_.-]|$)")
+CRITICAL_PATHS = {
+    "apps/api/src/electricity/electricity-calculation.ts",
+    "apps/api/src/electricity/electricity-calculation.service.ts",
+}
 SOURCE = re.compile(r"^(apps|packages)/[^/]+/src/.+\.(?:[cm]?[jt]s|[jt]sx)$")
+GENERAL_THRESHOLDS = {"lines": 80, "branches": 75}
+CRITICAL_THRESHOLDS = {"lines": 90, "branches": 85}
 
 
 def is_critical(path):
     # Match domain words regardless of file naming convention, including acronym prefixes.
     words = re.sub(r"([A-Z]+)([A-Z][a-z])", r"\1-\2", path)
     words = re.sub(r"([a-z0-9])([A-Z])", r"\1-\2", words)
-    return bool(CRITICAL.search(words.lower()))
+    return path in CRITICAL_PATHS or bool(CRITICAL.search(words.lower()))
 
 
 def eligible(path):
@@ -95,6 +101,11 @@ def metrics(coverage, changed, critical):
             "branches": len(branches), "covered_branches": sum(hit > 0 for hit in branches)}
 
 
+def meets_thresholds(totals, thresholds):
+    return all(totals[f"covered_{kind}"] * 100 >= totals[kind] * threshold
+               for kind, threshold in thresholds.items())
+
+
 def evaluate(root, changed):
     groups = {}
     errors = []
@@ -114,14 +125,19 @@ def evaluate(root, changed):
             coverage = document.get(str((root / path).resolve())) or document.get(path)
             if not isinstance(coverage, dict):
                 raise ValueError("source missing from package coverage report")
-            for key, value in metrics(coverage, changed_lines, critical).items():
+            file_metrics = metrics(coverage, changed_lines, critical)
+            for key, value in file_metrics.items():
                 group[key] += value
+            if critical and not meets_thresholds(file_metrics, CRITICAL_THRESHOLDS):
+                errors.append({"file": path, "reason": "critical file below coverage thresholds",
+                               "coverage": file_metrics})
         except (OSError, ValueError, TypeError, AttributeError) as error:
             errors.append({"file": path, "reason": str(error)})
     for group in groups.values():
-        group["required_lines"] = 90 if group["critical"] else 80
-        group["required_branches"] = 85 if group["critical"] else 75
-        group["passed"] = not any(error["file"] in group["files"] for error in errors) and all(group[f"covered_{kind}"] * 100 >= group[kind] * group[f"required_{kind}"] for kind in ("lines", "branches"))
+        thresholds = CRITICAL_THRESHOLDS if group["critical"] else GENERAL_THRESHOLDS
+        group["required_lines"] = thresholds["lines"]
+        group["required_branches"] = thresholds["branches"]
+        group["passed"] = not any(error["file"] in group["files"] for error in errors) and meets_thresholds(group, thresholds)
     return {"schema_version": 1, "status": "failed" if errors or any(not g["passed"] for g in groups.values()) else "passed", "groups": list(groups.values()), "errors": errors}
 
 

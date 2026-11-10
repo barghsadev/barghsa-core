@@ -10,15 +10,17 @@ affected-test runs report their scope separately.
 Changed application and package source is grouped by package and criticality.
 General changed executable lines require 80% line and 75% branch coverage. Modified
 critical files require 90% line and 85% branch coverage across the whole file.
-Results cannot be averaged across packages or between critical and general groups.
+Each modified critical file must pass independently. The report also preserves
+package totals. General coverage is assessed within its package.
 Exact integer comparisons enforce thresholds without rounding a failure into a pass.
 
 Critical path segments include authentication, authorization, sessions, CSRF, OTP,
 permissions, staff/roles, administration, verification, rate limits, finance,
 orders, payments, wallet, refunds, pricing, contracts, invoices and state machines.
-The explicit classifier lives in the checker and has regression fixtures. A newly
-named domain must be reviewed against that classifier. There is no exception file
-or automatic threshold reduction.
+The classifier also lists the electricity calculation modules that implement
+pricing without `price` in their names. Review a newly named domain against the
+classifier and its regression fixtures. There is no exception file or automatic
+threshold reduction.
 
 The checker consumes package-local Istanbul `coverage-final.json` reports from
 Vitest, including the API's HTTP-process coverage provider. Missing source entries,
@@ -63,6 +65,20 @@ Coverage reports must come from the same checkout, after coverage execution. CI'
 Turbo cache includes shared configuration and source inputs and restores package artifacts.
 Existing package-wide Vitest floors remain in force. Passing a fixture test of this
 checker is not evidence that the application meets its thresholds.
+
+## Coverage exception request
+
+Copy these fields into the affected task's acceptance evidence.
+
+- Candidate SHA
+- Source files and unmeasured lines or branches
+- Technical justification and reproduction steps
+- Executed alternate checks and their receipts
+- Coverage measurement repair, owner and due date
+- Domain owner approval, decision date and expiry
+
+Use approval to track the measurement repair. The automated gate continues to
+enforce all release thresholds.
 
 Run locally after package coverage, replacing the base with the reviewed commit:
 

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T04:53:17+00:00",
-  "source_commit": "56ca06948b8cfaecc078da2d24bc8ff272f72124",
+  "updated": "2026-11-10T04:57:28+00:00",
+  "source_commit": "a4c9903c92a8c4fd898df416ac2122c23259b873",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5174,7 +5174,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-critical-file-coverage-and-openapi"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5206,11 +5207,11 @@
             },
             {
               "path": "scripts/check-changed-coverage.py",
-              "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+              "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
             },
             {
               "path": "scripts/test_check_changed_coverage.py",
-              "sha256": "642e118a0a4846d29cb8c80e00634740b2d61daf9d5eca0ce328d911eb3b9e18"
+              "sha256": "50fcd995713ed175d1389e519aa4ae8954cdbe8a0b51058a496df0c328201d4c"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -5289,7 +5290,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-critical-file-coverage-and-openapi"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5321,11 +5323,11 @@
             },
             {
               "path": "scripts/check-changed-coverage.py",
-              "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+              "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
             },
             {
               "path": "scripts/test_check_changed_coverage.py",
-              "sha256": "642e118a0a4846d29cb8c80e00634740b2d61daf9d5eca0ce328d911eb3b9e18"
+              "sha256": "50fcd995713ed175d1389e519aa4ae8954cdbe8a0b51058a496df0c328201d4c"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -5691,7 +5693,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-critical-file-coverage-and-openapi"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5723,11 +5726,11 @@
             },
             {
               "path": "scripts/check-changed-coverage.py",
-              "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+              "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
             },
             {
               "path": "scripts/test_check_changed_coverage.py",
-              "sha256": "642e118a0a4846d29cb8c80e00634740b2d61daf9d5eca0ce328d911eb3b9e18"
+              "sha256": "50fcd995713ed175d1389e519aa4ae8954cdbe8a0b51058a496df0c328201d4c"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -13662,7 +13665,8 @@
         ],
         "batches": [
           "release-0.6-current-ci-definition-contract-and-coverage-controls",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-critical-file-coverage-and-openapi"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13674,15 +13678,15 @@
             },
             {
               "path": "docs/changed-coverage.md",
-              "sha256": "f8efa0049662d6235a017e5a44d191441a062161cbca6b871d0441746a250376"
+              "sha256": "458c4823aa6fca855097afca9f854579c099e2d2dc72d7ad72a1a3a8cdce7284"
             },
             {
               "path": "scripts/check-changed-coverage.py",
-              "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+              "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
             },
             {
               "path": "scripts/test_check_changed_coverage.py",
-              "sha256": "642e118a0a4846d29cb8c80e00634740b2d61daf9d5eca0ce328d911eb3b9e18"
+              "sha256": "50fcd995713ed175d1389e519aa4ae8954cdbe8a0b51058a496df0c328201d4c"
             },
             {
               "path": "scripts/browser-coverage.test.mjs",
@@ -489788,7 +489792,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-critical-file-coverage-and-openapi"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -489844,7 +489849,7 @@
             },
             {
               "path": "scripts/check-changed-coverage.py",
-              "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+              "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -492989,19 +492994,81 @@
         "story": "06-security-testing-observability.md#spec-3e17c73aff93"
       },
       "requirement": "| T-06.12.01.01 | Configure Vitest coverage thresholds per package with different target levels for critical vs non-critical | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-critical-file-coverage-and-openapi"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "a4c9903c92a8c4fd898df416ac2122c23259b873",
+          "checks": [
+            "Package-local Vitest reports retain their configured package-wide floors. The strict CI gate merges same-revision browser and process results before applying 80/75 general coverage per package and 90/85 across each modified critical file.",
+            "Two distinct regressions reproduced an undercovered critical file incorrectly passing by averaging another file in the same package. The gate now fails the individual file with its exact line and branch counts while preserving package totals.",
+            "Twelve changed-coverage fixtures and thirteen browser source-coverage fixtures passed. Existing report identity, missing source, damaged counters and source attribution assertions remain in force. These tests verify the checker behavior, with full candidate coverage still separate."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/worker/vitest.config.ts",
+              "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+            },
+            {
+              "path": "docs/changed-coverage.md",
+              "sha256": "458c4823aa6fca855097afca9f854579c099e2d2dc72d7ad72a1a3a8cdce7284"
+            },
+            {
+              "path": "packages/db/vitest.config.ts",
+              "sha256": "58b0adf9cde19568d2a87c9298b2936f24622cd1d2a192d4d298e8b92d8d77f0"
+            },
+            {
+              "path": "packages/tsconfig/vitest.base.config.ts",
+              "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+            },
+            {
+              "path": "scripts/browser-coverage.test.mjs",
+              "sha256": "950f3539e9db6d5cacb0a8e412de4112af35d06a4c47b0beca4605b3560f0f27"
+            },
+            {
+              "path": "scripts/check-changed-coverage.py",
+              "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+            },
+            {
+              "path": "scripts/collect-browser-coverage.mjs",
+              "sha256": "f3446ae4ad567716f8b618a4a3c93f9a62cb148bc6dd7405be955f80d8f5bfaa"
+            },
+            {
+              "path": "scripts/merge-browser-coverage.mjs",
+              "sha256": "19fcc8cef996c4e0ddedb872cfe643c2cb755e5a23df3086ddc01d72c87caa75"
+            },
+            {
+              "path": "scripts/test_check_changed_coverage.py",
+              "sha256": "50fcd995713ed175d1389e519aa4ae8954cdbe8a0b51058a496df0c328201d4c"
+            }
+          ]
+        }
       }
     },
     {
@@ -493015,19 +493082,80 @@
         "story": "06-security-testing-observability.md#spec-3e17c73aff93"
       },
       "requirement": "| T-06.12.01.02 | Define critical domain packages: auth, authorization, payments, wallet, refunds, pricing, contracts, state-machine | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-critical-file-coverage-and-openapi"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "a4c9903c92a8c4fd898df416ac2122c23259b873",
+          "checks": [
+            "The classifier covers required authentication, authorization, payment, wallet, refund, pricing, contract and state-machine paths. The two actual electricity calculation modules now receive the pricing floors even without price in their filenames.",
+            "Twelve changed-coverage fixtures and thirteen browser source-coverage fixtures passed. Existing report identity, missing source, damaged counters and source attribution assertions remain in force. These tests verify the checker behavior, with full candidate coverage still separate."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/worker/vitest.config.ts",
+              "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+            },
+            {
+              "path": "docs/changed-coverage.md",
+              "sha256": "458c4823aa6fca855097afca9f854579c099e2d2dc72d7ad72a1a3a8cdce7284"
+            },
+            {
+              "path": "packages/db/vitest.config.ts",
+              "sha256": "58b0adf9cde19568d2a87c9298b2936f24622cd1d2a192d4d298e8b92d8d77f0"
+            },
+            {
+              "path": "packages/tsconfig/vitest.base.config.ts",
+              "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+            },
+            {
+              "path": "scripts/browser-coverage.test.mjs",
+              "sha256": "950f3539e9db6d5cacb0a8e412de4112af35d06a4c47b0beca4605b3560f0f27"
+            },
+            {
+              "path": "scripts/check-changed-coverage.py",
+              "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+            },
+            {
+              "path": "scripts/collect-browser-coverage.mjs",
+              "sha256": "f3446ae4ad567716f8b618a4a3c93f9a62cb148bc6dd7405be955f80d8f5bfaa"
+            },
+            {
+              "path": "scripts/merge-browser-coverage.mjs",
+              "sha256": "19fcc8cef996c4e0ddedb872cfe643c2cb755e5a23df3086ddc01d72c87caa75"
+            },
+            {
+              "path": "scripts/test_check_changed_coverage.py",
+              "sha256": "50fcd995713ed175d1389e519aa4ae8954cdbe8a0b51058a496df0c328201d4c"
+            }
+          ]
+        }
       }
     },
     {
@@ -493041,19 +493169,82 @@
         "story": "06-security-testing-observability.md#spec-3e17c73aff93"
       },
       "requirement": "| T-06.12.01.03 | Implement CI coverage check: changed-file coverage gateway with exception mechanism | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-critical-file-coverage-and-openapi"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "a4c9903c92a8c4fd898df416ac2122c23259b873",
+          "checks": [
+            "Package-local Vitest reports retain their configured package-wide floors. The strict CI gate merges same-revision browser and process results before applying 80/75 general coverage per package and 90/85 across each modified critical file.",
+            "Two distinct regressions reproduced an undercovered critical file incorrectly passing by averaging another file in the same package. The gate now fails the individual file with its exact line and branch counts while preserving package totals.",
+            "Twelve changed-coverage fixtures and thirteen browser source-coverage fixtures passed. Existing report identity, missing source, damaged counters and source attribution assertions remain in force. These tests verify the checker behavior, with full candidate coverage still separate.",
+            "The review template records technical rationale, alternate test receipts, domain owner approval and expiry in the canonical board. Per the owner instruction to preserve coverage floors, approval tracks measurement repair and cannot reduce the automated gate."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/worker/vitest.config.ts",
+              "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+            },
+            {
+              "path": "docs/changed-coverage.md",
+              "sha256": "458c4823aa6fca855097afca9f854579c099e2d2dc72d7ad72a1a3a8cdce7284"
+            },
+            {
+              "path": "packages/db/vitest.config.ts",
+              "sha256": "58b0adf9cde19568d2a87c9298b2936f24622cd1d2a192d4d298e8b92d8d77f0"
+            },
+            {
+              "path": "packages/tsconfig/vitest.base.config.ts",
+              "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+            },
+            {
+              "path": "scripts/browser-coverage.test.mjs",
+              "sha256": "950f3539e9db6d5cacb0a8e412de4112af35d06a4c47b0beca4605b3560f0f27"
+            },
+            {
+              "path": "scripts/check-changed-coverage.py",
+              "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+            },
+            {
+              "path": "scripts/collect-browser-coverage.mjs",
+              "sha256": "f3446ae4ad567716f8b618a4a3c93f9a62cb148bc6dd7405be955f80d8f5bfaa"
+            },
+            {
+              "path": "scripts/merge-browser-coverage.mjs",
+              "sha256": "19fcc8cef996c4e0ddedb872cfe643c2cb755e5a23df3086ddc01d72c87caa75"
+            },
+            {
+              "path": "scripts/test_check_changed_coverage.py",
+              "sha256": "50fcd995713ed175d1389e519aa4ae8954cdbe8a0b51058a496df0c328201d4c"
+            }
+          ]
+        }
       }
     },
     {
@@ -493067,19 +493258,79 @@
         "story": "06-security-testing-observability.md#spec-3e17c73aff93"
       },
       "requirement": "| T-06.12.01.04 | Write coverage exception template: requires technical justification + domain owner approval | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-critical-file-coverage-and-openapi"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "a4c9903c92a8c4fd898df416ac2122c23259b873",
+          "checks": [
+            "The review template records technical rationale, alternate test receipts, domain owner approval and expiry in the canonical board. Per the owner instruction to preserve coverage floors, approval tracks measurement repair and cannot reduce the automated gate."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/worker/vitest.config.ts",
+              "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+            },
+            {
+              "path": "docs/changed-coverage.md",
+              "sha256": "458c4823aa6fca855097afca9f854579c099e2d2dc72d7ad72a1a3a8cdce7284"
+            },
+            {
+              "path": "packages/db/vitest.config.ts",
+              "sha256": "58b0adf9cde19568d2a87c9298b2936f24622cd1d2a192d4d298e8b92d8d77f0"
+            },
+            {
+              "path": "packages/tsconfig/vitest.base.config.ts",
+              "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+            },
+            {
+              "path": "scripts/browser-coverage.test.mjs",
+              "sha256": "950f3539e9db6d5cacb0a8e412de4112af35d06a4c47b0beca4605b3560f0f27"
+            },
+            {
+              "path": "scripts/check-changed-coverage.py",
+              "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+            },
+            {
+              "path": "scripts/collect-browser-coverage.mjs",
+              "sha256": "f3446ae4ad567716f8b618a4a3c93f9a62cb148bc6dd7405be955f80d8f5bfaa"
+            },
+            {
+              "path": "scripts/merge-browser-coverage.mjs",
+              "sha256": "19fcc8cef996c4e0ddedb872cfe643c2cb755e5a23df3086ddc01d72c87caa75"
+            },
+            {
+              "path": "scripts/test_check_changed_coverage.py",
+              "sha256": "50fcd995713ed175d1389e519aa4ae8954cdbe8a0b51058a496df0c328201d4c"
+            }
+          ]
+        }
       }
     },
     {
@@ -493171,19 +493422,59 @@
         "story": "06-security-testing-observability.md#spec-ab5e488f2a6f"
       },
       "requirement": "| T-06.12.02.04 | Implement OpenAPI drift detection: generated schema vs committed spec | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-critical-file-coverage-and-openapi"
+        ],
+        "current_acceptance": {
+          "kind": "reconciled-existing",
+          "reviewed_sha": "a4c9903c92a8c4fd898df416ac2122c23259b873",
+          "checks": [
+            "The existing strict CI step executes pnpm check:contract. The accepted generation and drift-rejection evidence is unchanged across the exact command, workflow, canonical API snapshot, generated client package and source files."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+            },
+            {
+              "path": "apps/api/openapi.json",
+              "sha256": "32e3b6d339547d32337ea0fdbfb9334019aeaedd65f4fbfe08c37b2a5530b70b"
+            },
+            {
+              "path": "apps/api/src/generate-openapi.ts",
+              "sha256": "ef2cac39d5126ed04b155bbf79e9fa85667804df3322f7c0aaad39edb35aba35"
+            },
+            {
+              "path": "package.json",
+              "sha256": "520f7e66b45453c029fd754855856e5814186ae04f372876d0dd4d51335a9c06"
+            },
+            {
+              "path": "packages/api-client/package.json",
+              "sha256": "30e09e7e1457ab6206b278f204cfdca9b480081a4c91e9f3d9ebcf687b320b7c"
+            },
+            {
+              "path": "packages/api-client/src/openapi.generated.ts",
+              "sha256": "96dcb13dfd8ba9ed765ae441b55865ae61cd52203592249d4d14580a43a6475f"
+            },
+            {
+              "path": "scripts/check-openapi.mjs",
+              "sha256": "b369d8811eb0f0bf82d221530c3b1f90189bc866a87c1df8c51517f7dee4a49d"
+            },
+            {
+              "path": "scripts/check-openapi.test.mjs",
+              "sha256": "21f92757cf8a5dc23455e928f61d5b01aca2ea4d6380c62143580d1be14aa1fb"
+            }
+          ]
+        }
       }
     },
     {
@@ -594956,7 +595247,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-critical-file-coverage-and-openapi"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -597724,7 +598016,7 @@
             },
             {
               "path": "scripts/check-changed-coverage.py",
-              "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+              "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
             },
             {
               "path": "scripts/check-route-budgets.mjs",
@@ -760778,7 +761070,7 @@
             },
             {
               "path": "scripts/check-changed-coverage.py",
-              "sha256": "721aa5763bb62336c0e4c454b8e36e2f15ff1e14bf4b0136c7c7946424bbd736"
+              "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
             },
             {
               "path": "scripts/collect-browser-coverage.mjs",
@@ -761444,7 +761736,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-critical-file-coverage-and-openapi"
         ]
       }
     },
@@ -863849,6 +864142,115 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webhook-verification",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "160e8d721d8e834ca08f85f55234b582a580df30f22eedc4b33c96ecead5582e"
+    },
+    "release-0.6-critical-file-coverage-and-openapi": {
+      "batch": "release-0.6-critical-file-coverage-and-openapi",
+      "base_commit": "a4c9903c92a8c4fd898df416ac2122c23259b873",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.04"
+      ],
+      "changed_paths": [
+        "docs/changed-coverage.md",
+        "scripts/check-changed-coverage.py",
+        "scripts/test_check_changed_coverage.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+        },
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "32e3b6d339547d32337ea0fdbfb9334019aeaedd65f4fbfe08c37b2a5530b70b"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+          "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-calculation.ts",
+          "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+        },
+        {
+          "path": "apps/api/src/generate-openapi.ts",
+          "sha256": "ef2cac39d5126ed04b155bbf79e9fa85667804df3322f7c0aaad39edb35aba35"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "apps/worker/vitest.config.ts",
+          "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+        },
+        {
+          "path": "docs/changed-coverage.md",
+          "sha256": "458c4823aa6fca855097afca9f854579c099e2d2dc72d7ad72a1a3a8cdce7284"
+        },
+        {
+          "path": "package.json",
+          "sha256": "520f7e66b45453c029fd754855856e5814186ae04f372876d0dd4d51335a9c06"
+        },
+        {
+          "path": "packages/api-client/package.json",
+          "sha256": "30e09e7e1457ab6206b278f204cfdca9b480081a4c91e9f3d9ebcf687b320b7c"
+        },
+        {
+          "path": "packages/api-client/src/openapi.generated.ts",
+          "sha256": "96dcb13dfd8ba9ed765ae441b55865ae61cd52203592249d4d14580a43a6475f"
+        },
+        {
+          "path": "packages/db/vitest.config.ts",
+          "sha256": "58b0adf9cde19568d2a87c9298b2936f24622cd1d2a192d4d298e8b92d8d77f0"
+        },
+        {
+          "path": "packages/tsconfig/vitest.base.config.ts",
+          "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+        },
+        {
+          "path": "scripts/browser-coverage.test.mjs",
+          "sha256": "950f3539e9db6d5cacb0a8e412de4112af35d06a4c47b0beca4605b3560f0f27"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        },
+        {
+          "path": "scripts/check-openapi.mjs",
+          "sha256": "b369d8811eb0f0bf82d221530c3b1f90189bc866a87c1df8c51517f7dee4a49d"
+        },
+        {
+          "path": "scripts/check-openapi.test.mjs",
+          "sha256": "21f92757cf8a5dc23455e928f61d5b01aca2ea4d6380c62143580d1be14aa1fb"
+        },
+        {
+          "path": "scripts/collect-browser-coverage.mjs",
+          "sha256": "f3446ae4ad567716f8b618a4a3c93f9a62cb148bc6dd7405be955f80d8f5bfaa"
+        },
+        {
+          "path": "scripts/merge-browser-coverage.mjs",
+          "sha256": "19fcc8cef996c4e0ddedb872cfe643c2cb755e5a23df3086ddc01d72c87caa75"
+        },
+        {
+          "path": "scripts/test_check_changed_coverage.py",
+          "sha256": "50fcd995713ed175d1389e519aa4ae8954cdbe8a0b51058a496df0c328201d4c"
+        }
+      ],
+      "checks": [
+        "Package-local Vitest reports retain their configured package-wide floors. The strict CI gate merges same-revision browser and process results before applying 80/75 general coverage per package and 90/85 across each modified critical file.",
+        "Two distinct regressions reproduced an undercovered critical file incorrectly passing by averaging another file in the same package. The gate now fails the individual file with its exact line and branch counts while preserving package totals.",
+        "The classifier covers required authentication, authorization, payment, wallet, refund, pricing, contract and state-machine paths. The two actual electricity calculation modules now receive the pricing floors even without price in their filenames.",
+        "Twelve changed-coverage fixtures and thirteen browser source-coverage fixtures passed. Existing report identity, missing source, damaged counters and source attribution assertions remain in force. These tests verify the checker behavior, with full candidate coverage still separate.",
+        "The review template records technical rationale, alternate test receipts, domain owner approval and expiry in the canonical board. Per the owner instruction to preserve coverage floors, approval tracks measurement repair and cannot reduce the automated gate.",
+        "The existing strict CI step executes pnpm check:contract. The accepted generation and drift-rejection evidence is unchanged across the exact command, workflow, canonical API snapshot, generated client package and source files."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/critical-coverage-gate",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "3e1da373a440ab2e1e97c955ea761b3ffd44e808a8b09c52f8e010981234b443"
     }
   },
   "historical_improvements": [

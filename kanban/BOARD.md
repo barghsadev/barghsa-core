@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T04:53:17+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T04:57:28+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1113 | Accepted with unchanged source bindings. |
-| verify | 202 | Existing work may be complete; inspect evidence before building. |
+| done | 1118 | Accepted with unchanged source bindings. |
+| verify | 197 | Existing work may be complete; inspect evidence before building. |
 | partial | 45 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1324,14 +1324,14 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.11.04.04` | verify | Inventory needed | Schedule quarterly PostgreSQL restore test: measure RPO/RTO, document in runbook |
 | `06-security-testing-observability.md#T-06.11.04.05` | verify | Inventory needed | Schedule quarterly object storage recovery test: version retrieval, policy enforcement, orphan detection |
 | `06-security-testing-observability.md#T-06.11.04.06` | verify | Inventory needed | Write reconciliation tests: deliberately inconsistent fixtures → mismatch alert → finance exception |
-| `06-security-testing-observability.md#T-06.12.01.01` | verify | Inventory needed | Configure Vitest coverage thresholds per package with different target levels for critical vs non-critical |
-| `06-security-testing-observability.md#T-06.12.01.02` | verify | Inventory needed | Define critical domain packages: auth, authorization, payments, wallet, refunds, pricing, contracts, state-machine |
-| `06-security-testing-observability.md#T-06.12.01.03` | verify | Inventory needed | Implement CI coverage check: changed-file coverage gateway with exception mechanism |
-| `06-security-testing-observability.md#T-06.12.01.04` | verify | Inventory needed | Write coverage exception template: requires technical justification + domain owner approval |
+| `06-security-testing-observability.md#T-06.12.01.01` | done | Recorded batch work | Configure Vitest coverage thresholds per package with different target levels for critical vs non-critical |
+| `06-security-testing-observability.md#T-06.12.01.02` | done | Recorded batch work | Define critical domain packages: auth, authorization, payments, wallet, refunds, pricing, contracts, state-machine |
+| `06-security-testing-observability.md#T-06.12.01.03` | done | Recorded batch work | Implement CI coverage check: changed-file coverage gateway with exception mechanism |
+| `06-security-testing-observability.md#T-06.12.01.04` | done | Recorded batch work | Write coverage exception template: requires technical justification + domain owner approval |
 | `06-security-testing-observability.md#T-06.12.02.01` | verify | Inventory needed | Implement CI workflow with all 12 PR gate checks in parallel where possible |
 | `06-security-testing-observability.md#T-06.12.02.02` | verify | Inventory needed | Configure step dependencies: lint → typecheck → unit → integration → migration → OpenAPI → build → coverage → security scans → review |
 | `06-security-testing-observability.md#T-06.12.02.03` | verify | Inventory needed | Implement migration validation: apply on clean DB + upgrade from previous schema |
-| `06-security-testing-observability.md#T-06.12.02.04` | verify | Inventory needed | Implement OpenAPI drift detection: generated schema vs committed spec |
+| `06-security-testing-observability.md#T-06.12.02.04` | done | Recorded batch work | Implement OpenAPI drift detection: generated schema vs committed spec |
 | `06-security-testing-observability.md#T-06.12.02.05` | verify | Inventory needed | Configure required reviewers: domain owner; Finance/Security/Legal when protected rules change |
 | `06-security-testing-observability.md#T-06.12.02.06` | verify | Inventory needed | Add status check reporting: pass/fail per check, summary comment on PR |
 | `06-security-testing-observability.md#T-06.12.03.01` | partial | Recorded batch work | Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM |
