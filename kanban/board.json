@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T05:02:51+00:00",
-  "source_commit": "6e0e67f93e31962aa978ee187a77eb21eca15f3f",
+  "updated": "2026-11-10T05:07:33+00:00",
+  "source_commit": "37e85e87587ef952893d35b988d8ceb7d3116ab8",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -10040,7 +10040,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-api-and-worker-process-verification",
@@ -10052,11 +10053,11 @@
             },
             {
               "path": "apps/api/src/common/shutdown.service.ts",
-              "sha256": "6af804062fc2fa6b2b8533c06802488cdca37eda02cbdeb91329a306a1475492"
+              "sha256": "b5b39108463fb171c8c957ffe1e04fe375020967358970300bee9df9151005aa"
             },
             {
               "path": "apps/api/src/common/shutdown.service.spec.ts",
-              "sha256": "80cdf1ff3e7051ffc7d59b92b7229fde8e2eb22fbd549b20bab4bb55617438b7"
+              "sha256": "5f4d9adc92886f2ee3476a1a852c9d1f4ca9806e5e885b3f410938ed33fc4d59"
             },
             {
               "path": "apps/api/src/common/shutdown-http.integration.test.ts",
@@ -18738,7 +18739,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-private-session-cutover-and-health-probes"
+          "release-0.6-private-session-cutover-and-health-probes",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -18758,7 +18760,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.controller.ts",
-              "sha256": "c2b33dda5b151adea21984a1d82e5269ec058d553073319ff0fc18d02e9f934d"
+              "sha256": "80a3492af49a2ce9fb7c56b6ad95859c58dc8d6fef777ac17b5378ea25ff753d"
             },
             {
               "path": "apps/api/src/metrics/telemetry-http.integration.test.ts",
@@ -101962,7 +101964,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-administrative-mutation-log-redaction",
-          "release-0.6-bill-provider-network-boundaries"
+          "release-0.6-bill-provider-network-boundaries",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -102442,7 +102445,7 @@
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.ts",
-              "sha256": "e2275cd8bc3a114ca79484519e4ef087561eea7d21719d2a44e1f044df42d859"
+              "sha256": "d00ebd4dabee92e77eab36df6e9abbbd8e8e97fa2ac4418c8c25e2c45c6b7204"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -103950,7 +103953,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-reusable-pagination-and-request-validation-tests",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -104062,11 +104066,11 @@
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.test.ts",
-              "sha256": "f3c89d994b4ac49210779a45f62b6638c46dc2e8e913d703238d00d676f5d7b5"
+              "sha256": "6f030f3ecfd82591b1f663855a6f804d2a72d9f4fcd300dfea59529f47523e1e"
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.ts",
-              "sha256": "e2275cd8bc3a114ca79484519e4ef087561eea7d21719d2a44e1f044df42d859"
+              "sha256": "d00ebd4dabee92e77eab36df6e9abbbd8e8e97fa2ac4418c8c25e2c45c6b7204"
             },
             {
               "path": "apps/worker/src/jobs/poller-group.test.ts",
@@ -104353,7 +104357,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-reusable-pagination-and-request-validation-tests",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -104465,11 +104470,11 @@
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.test.ts",
-              "sha256": "f3c89d994b4ac49210779a45f62b6638c46dc2e8e913d703238d00d676f5d7b5"
+              "sha256": "6f030f3ecfd82591b1f663855a6f804d2a72d9f4fcd300dfea59529f47523e1e"
             },
             {
               "path": "apps/worker/src/jobs/job-recorder.ts",
-              "sha256": "e2275cd8bc3a114ca79484519e4ef087561eea7d21719d2a44e1f044df42d859"
+              "sha256": "d00ebd4dabee92e77eab36df6e9abbbd8e8e97fa2ac4418c8c25e2c45c6b7204"
             },
             {
               "path": "apps/worker/src/jobs/poller-group.test.ts",
@@ -107944,7 +107949,8 @@
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -108028,7 +108034,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
@@ -460902,7 +460908,8 @@
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460986,7 +460993,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
@@ -461397,7 +461404,8 @@
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461481,7 +461489,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
@@ -461894,7 +461902,8 @@
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461978,7 +461987,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
@@ -462389,7 +462398,8 @@
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462473,7 +462483,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
@@ -483456,7 +483466,8 @@
           "release-0.6-invoice-error-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -483496,7 +483507,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
+              "sha256": "6653c9457d561432953c2929caecbae4ce8ca0424671e17554e9fad6d0e59769"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -483585,7 +483596,8 @@
           "release-0.6-invoice-error-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -483641,7 +483653,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
+              "sha256": "6653c9457d561432953c2929caecbae4ce8ca0424671e17554e9fad6d0e59769"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -486669,7 +486681,8 @@
           "release-0.6-invoice-error-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -486797,7 +486810,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
+              "sha256": "6653c9457d561432953c2929caecbae4ce8ca0424671e17554e9fad6d0e59769"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -487100,7 +487113,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -487160,7 +487174,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
+              "sha256": "6653c9457d561432953c2929caecbae4ce8ca0424671e17554e9fad6d0e59769"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -487198,7 +487212,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -487247,7 +487262,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
+              "sha256": "6653c9457d561432953c2929caecbae4ce8ca0424671e17554e9fad6d0e59769"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -489057,7 +489072,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -489065,7 +489081,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
+              "sha256": "6653c9457d561432953c2929caecbae4ce8ca0424671e17554e9fad6d0e59769"
             },
             {
               "path": "docs/threat-model.md",
@@ -489202,7 +489218,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -489210,7 +489227,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
+              "sha256": "6653c9457d561432953c2929caecbae4ce8ca0424671e17554e9fad6d0e59769"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -489313,7 +489330,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -489321,7 +489339,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
+              "sha256": "6653c9457d561432953c2929caecbae4ce8ca0424671e17554e9fad6d0e59769"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -489372,7 +489390,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -489388,7 +489407,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
+              "sha256": "6653c9457d561432953c2929caecbae4ce8ca0424671e17554e9fad6d0e59769"
             }
           ],
           "checks": [
@@ -489445,7 +489464,8 @@
           "release-0.6-invoice-error-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -489505,7 +489525,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
+              "sha256": "6653c9457d561432953c2929caecbae4ce8ca0424671e17554e9fad6d0e59769"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -492348,7 +492368,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -492364,7 +492385,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
+              "sha256": "6653c9457d561432953c2929caecbae4ce8ca0424671e17554e9fad6d0e59769"
             }
           ],
           "checks": [
@@ -492413,7 +492434,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-invoice-error-log-redaction",
           "release-0.6-provider-egress-regressions",
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -492421,7 +492443,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "376a48a6626885b67ab9ced1d57cf3b5db6d21367b8c39ec1318e94b5bc6749e"
+              "sha256": "6653c9457d561432953c2929caecbae4ce8ca0424671e17554e9fad6d0e59769"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -494300,12 +494322,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Complete review of the remaining application, worker, database and ingress error sinks. Rehearse representative token, identity and payment inputs against configured production-equivalent sinks and verify their receipts.",
-        "Automatic, manual, adjustment and replacement invoice failure logs now use fixed operation text. The regression reproduces a leaked synthetic payment reference on the previous code, then verifies the exact safe message, rollback, no commit and the unchanged thrown error. Review of remaining sinks and production-equivalent receipt checks remains open.",
-        "Wallet reconciliation scan failures now emit fixed operation messages, with the opaque wallet ID for per-wallet errors. Raw exception text is excluded from the scan log and background job error. The prior leak was reproduced with a synthetic reference. Remaining sink review and production-equivalent receipts are open.",
-        "Reviewed administrative mutation, geography, profile invitation and Terms error sinks now omit exception contents and untrusted team names. The Terms regression verifies the exact safe log, stable 500 response, rollback and release. Remaining service, worker, database and ingress sink review and live evidence remain open.",
-        "The alternate single-container proxy now omits raw paths, parameters and headers from JSON access records and keeps request failures observable through status and upstream status. The isolated proxy proof verified app and object forwarding, both upstream outage responses and no synthetic secret markers in logs. Other ingress configurations and production-equivalent receipt checks remain open.",
-        "The primary staging and pilot proxy configurations now use JSON outcomes and fixed route groups. Both isolated profiles kept routes and response behavior intact while excluding private path, query and header markers, including on 413 rejection and upstream 502. The existing Docker proxy checks now include a privacy regression. Exact hosted and production-equivalent receipt checks remain open."
+        "Review remaining provider, worker poller, database and process exception logs and persisted failure details. Keep fixed operation and bounded structured diagnostics.",
+        "Rehearse representative token, identity and payment inputs against all configured production-equivalent sinks, including the isolated proxy failure cases, and retain the observed redacted receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -494358,7 +494376,8 @@
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-single-proxy-log-redaction",
-          "release-0.6-staging-pilot-proxy-log-redaction"
+          "release-0.6-staging-pilot-proxy-log-redaction",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
@@ -494563,7 +494582,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
-          "release-0.6-staging-pilot-proxy-log-redaction"
+          "release-0.6-staging-pilot-proxy-log-redaction",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -494571,11 +494591,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/metrics/metrics.controller.ts",
-              "sha256": "c2b33dda5b151adea21984a1d82e5269ec058d553073319ff0fc18d02e9f934d"
+              "sha256": "80a3492af49a2ce9fb7c56b6ad95859c58dc8d6fef777ac17b5378ea25ff753d"
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -494698,7 +494718,8 @@
         "batches": [
           "release-0.6-database-client-pool-metrics",
           "release-0.6-private-session-cutover-and-health-probes",
-          "release-0.6-ai-inference-metrics"
+          "release-0.6-ai-inference-metrics",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "native-database-client-pool-and-query-metrics",
@@ -494706,11 +494727,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
             },
             {
               "path": "apps/api/src/metrics/metrics.service.test.ts",
-              "sha256": "0a7e1fcd85d098b8af97183e3f20aebeb21798d2ef82532a5eba5142c3d5e372"
+              "sha256": "4e16da0675c8f93177b495e685c40fbdb1f4d106eb9ea20218b220af351b36f2"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
@@ -494855,7 +494876,8 @@
           "release-0.6-external-provider-metrics-reconciliation",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-provider-attribution-and-circuit-metrics",
@@ -494923,7 +494945,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
@@ -495177,7 +495199,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-ai-inference-metrics"
+          "release-0.6-ai-inference-metrics",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-ai-provider-attempts-and-durable-budget-metrics",
@@ -495189,11 +495212,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
             },
             {
               "path": "apps/api/src/metrics/metrics.service.test.ts",
-              "sha256": "0a7e1fcd85d098b8af97183e3f20aebeb21798d2ef82532a5eba5142c3d5e372"
+              "sha256": "4e16da0675c8f93177b495e685c40fbdb1f4d106eb9ea20218b220af351b36f2"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
@@ -495253,7 +495276,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.controller.ts",
-              "sha256": "c2b33dda5b151adea21984a1d82e5269ec058d553073319ff0fc18d02e9f934d"
+              "sha256": "80a3492af49a2ce9fb7c56b6ad95859c58dc8d6fef777ac17b5378ea25ff753d"
             }
           ],
           "checks": [
@@ -496464,7 +496487,8 @@
         "batches": [
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-ai-inference-metrics"
+          "release-0.6-ai-inference-metrics",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-payment-idempotency-conflict-p1",
@@ -496532,7 +496556,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -496582,7 +496606,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-ai-inference-metrics",
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -496646,11 +496671,11 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
             },
             {
               "path": "apps/api/src/metrics/metrics.controller.ts",
-              "sha256": "c2b33dda5b151adea21984a1d82e5269ec058d553073319ff0fc18d02e9f934d"
+              "sha256": "80a3492af49a2ce9fb7c56b6ad95859c58dc8d6fef777ac17b5378ea25ff753d"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -498192,7 +498217,8 @@
           "release-0.6-private-session-cutover-and-health-probes",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-strict-otp-caller-preflight",
-          "release-0.6-staging-pilot-proxy-log-redaction"
+          "release-0.6-staging-pilot-proxy-log-redaction",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -498220,7 +498246,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.controller.ts",
-              "sha256": "c2b33dda5b151adea21984a1d82e5269ec058d553073319ff0fc18d02e9f934d"
+              "sha256": "80a3492af49a2ce9fb7c56b6ad95859c58dc8d6fef777ac17b5378ea25ff753d"
             },
             {
               "path": "apps/api/src/metrics/telemetry-http.integration.test.ts",
@@ -750642,7 +750668,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
             },
             {
               "path": "apps/api/src/notifications/customer-business-notifications.integration.test.ts",
@@ -754000,7 +754026,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-shared-webhook-signature-verification",
-          "release-0.6-immutable-staging-acceptance"
+          "release-0.6-immutable-staging-acceptance",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -754637,7 +754664,7 @@
             },
             {
               "path": "apps/api/src/metrics/metrics.service.ts",
-              "sha256": "f2e833d70f79d4cefa53e8302033a073042fee92f1616be3598a4bdb212ccaef"
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
             },
             {
               "path": "apps/api/src/notifications/customer-business-notifications.integration.test.ts",
@@ -757877,7 +757904,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-shared-webhook-signature-verification",
-          "release-0.6-immutable-staging-acceptance"
+          "release-0.6-immutable-staging-acceptance",
+          "release-0.6-runtime-failure-log-redaction"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -864329,6 +864357,83 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/staging-queue-acceptance",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "40ba8d655b17155663479cc8e46138d59243590fbe3a3aab5abd1d2e35688347"
+    },
+    "release-0.6-runtime-failure-log-redaction": {
+      "batch": "release-0.6-runtime-failure-log-redaction",
+      "base_commit": "37e85e87587ef952893d35b988d8ceb7d3116ab8",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.02.06"
+      ],
+      "changed_paths": [
+        "apps/api/src/common/shutdown.service.spec.ts",
+        "apps/api/src/common/shutdown.service.ts",
+        "apps/api/src/main.ts",
+        "apps/api/src/metrics/metrics.controller.ts",
+        "apps/api/src/metrics/metrics.service.test.ts",
+        "apps/api/src/metrics/metrics.service.ts",
+        "apps/worker/src/jobs/job-recorder.test.ts",
+        "apps/worker/src/jobs/job-recorder.ts",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/common/correlation-logger.ts",
+          "sha256": "d751f6cfb30907eb95ea9a281326a6ac51399e185f9957c38d70f18438e7d561"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "f0521f83368414076f6128aa3fbced34415a4757a8573bdeebb269ca8656e2d1"
+        },
+        {
+          "path": "apps/api/src/common/shutdown.service.spec.ts",
+          "sha256": "5f4d9adc92886f2ee3476a1a852c9d1f4ca9806e5e885b3f410938ed33fc4d59"
+        },
+        {
+          "path": "apps/api/src/common/shutdown.service.ts",
+          "sha256": "b5b39108463fb171c8c957ffe1e04fe375020967358970300bee9df9151005aa"
+        },
+        {
+          "path": "apps/api/src/main.ts",
+          "sha256": "e428e3f4bda6d6e2e26e9a4f72c42cb3c304b70c79c6f350430156b9e2f55c3c"
+        },
+        {
+          "path": "apps/api/src/metrics/database-telemetry.test.ts",
+          "sha256": "3a571730e5bc17502744a5ee87aa9398d4b37fde91d5a0faf42ae7a66b08ca73"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.controller.ts",
+          "sha256": "80a3492af49a2ce9fb7c56b6ad95859c58dc8d6fef777ac17b5378ea25ff753d"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.service.test.ts",
+          "sha256": "4e16da0675c8f93177b495e685c40fbdb1f4d106eb9ea20218b220af351b36f2"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.service.ts",
+          "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
+        },
+        {
+          "path": "apps/worker/src/jobs/job-recorder.test.ts",
+          "sha256": "6f030f3ecfd82591b1f663855a6f804d2a72d9f4fcd300dfea59529f47523e1e"
+        },
+        {
+          "path": "apps/worker/src/jobs/job-recorder.ts",
+          "sha256": "d00ebd4dabee92e77eab36df6e9abbbd8e8e97fa2ac4418c8c25e2c45c6b7204"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "6653c9457d561432953c2929caecbae4ce8ca0424671e17554e9fad6d0e59769"
+        }
+      ],
+      "checks": [
+        "Four new regression assertions reproduced private exception text in API scrape and shutdown logs and worker job-ledger failure logs.",
+        "API startup, shutdown and metrics failures emit fixed operation messages. Scrape exceptions still reach the HTTP filter, failed collections clear unavailable samples, and shutdown closes remaining resources. Worker record failures retain the typed job operation without exception detail and remain best-effort.",
+        "All 27 affected API tests and eight worker job-recorder tests passed. Both package typechecks, affected lint, formatting and diff checks passed.",
+        "No diagnostic assertion, failure signal, retry budget, correlation or lifecycle exit behavior was relaxed. Remaining worker and provider sinks and production-equivalent receipt checks are still open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/runtime-failure-logs",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "f4d928a29b918177e5133e9315ad474e927f66707f76f7078cfb8430f106d533"
     }
   },
   "historical_improvements": [

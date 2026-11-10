@@ -27,9 +27,7 @@ export class MetricsController {
     try {
       return await this.metricsService.collect();
     } catch (err) {
-      this.logger.error(
-        `Failed to serve /metrics: ${err instanceof Error ? err.message : String(err)}`
-      );
+      this.logger.error('Failed to serve /metrics');
       throw err;
     }
   }

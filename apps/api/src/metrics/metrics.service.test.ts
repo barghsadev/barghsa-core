@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { Logger } from '@nestjs/common';
 import promClient from 'prom-client';
 import { createMetricsSnapshot as snapshot } from '../test/metrics-fixture.js';
+import { MetricsController } from './metrics.controller.js';
 const collector = vi.hoisted(() => ({
   performance: vi.fn(),
   replication: vi.fn(),
@@ -26,6 +28,7 @@ beforeEach(() => {
 afterEach(async () => {
   await service.onModuleDestroy();
   promClient.register.clear();
+  vi.restoreAllMocks();
   vi.unstubAllEnvs();
 });
 
@@ -48,6 +51,26 @@ it.each(['failed', 'thrown'])(
     expect(await service.collect()).toMatch(/^pg_metrics_collection_success 1$/m);
   }
 );
+
+it('retains fixed collection diagnostics for a failure response and a thrown error', async () => {
+  const detail = 'row value PRIVATE_METRICS_FIXTURE';
+  const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+  const error = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+  collector.performance.mockResolvedValueOnce({ ok: false, metrics: null, error: detail });
+  expect(await service.collect()).toMatch(/^pg_metrics_collection_success 0$/m);
+  collector.performance.mockRejectedValueOnce(new Error(detail));
+  expect(await service.collect()).toMatch(/^pg_metrics_collection_success 0$/m);
+  expect(warn.mock.calls).toEqual([['Metrics collection failed']]);
+  expect(error.mock.calls).toEqual([['Metrics poll error']]);
+});
+
+it('hands a scrape failure to the HTTP filter without logging its private detail', async () => {
+  const failure = new Error('PRIVATE_METRICS_SCRAPE_FIXTURE');
+  vi.spyOn(service, 'collect').mockRejectedValueOnce(failure);
+  const error = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => undefined);
+  await expect(new MetricsController(service).getMetrics()).rejects.toBe(failure);
+  expect(error.mock.calls).toEqual([['Failed to serve /metrics']]);
+});
 
 it('removes unavailable optional samples instead of publishing zero or the previous sample', async () => {
   const healthy = await service.collect();

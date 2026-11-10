@@ -129,9 +129,9 @@ export class ShutdownService implements OnModuleInit, OnApplicationShutdown {
         });
         this.logger.log('HTTP server closed — no longer accepting requests');
       }
-    } catch (err: unknown) {
+    } catch {
       cleanShutdown = false;
-      this.logger.error(`HTTP server close error: ${String(err)}`);
+      this.logger.error('HTTP server close error');
     }
 
     // 2. Close the database connection pool.

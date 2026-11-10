@@ -34,3 +34,19 @@ it.each([false, true])(
     expect(process.listenerCount('SIGTERM')).toBe(before);
   }
 );
+
+it('logs a fixed HTTP close failure and still closes the remaining resources', async () => {
+  const adapter = new HttpAdapterHost();
+  adapter.httpAdapter = {
+    getHttpServer: () => ({
+      listening: true,
+      close: (callback: (error: Error) => void) => callback(new Error('PRIVATE_SHUTDOWN_FIXTURE')),
+    }),
+  } as HttpAdapterHost['httpAdapter'];
+  const storage = { destroy: vi.fn() };
+  const service = new ShutdownService(adapter, null, storage);
+  await service.onApplicationShutdown();
+  expect(Logger.prototype.error).toHaveBeenCalledExactlyOnceWith('HTTP server close error');
+  expect(closeDbPools).toHaveBeenCalledOnce();
+  expect(storage.destroy).toHaveBeenCalledOnce();
+});

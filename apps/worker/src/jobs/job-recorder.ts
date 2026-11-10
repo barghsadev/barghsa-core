@@ -115,10 +115,9 @@ export async function recordJobFailure(
         nextRunAt,
       ]
     );
-  } catch (err) {
+  } catch {
     // A ledger failure must never crash the worker loop.
-
-    console.error(`[worker] failed to record job failure: ${sanitizeError(String(err))}`);
+    console.error(`[worker] failed to record job failure: ${input.jobType}`);
   }
 }
 
@@ -145,8 +144,8 @@ export async function recordJobSuccess(
           AND status IN ('failed', 'retrying', 'dead_letter')`,
       [jobType, now]
     );
-  } catch (err) {
-    console.error(`[worker] failed to record job success: ${sanitizeError(String(err))}`);
+  } catch {
+    console.error(`[worker] failed to record job success: ${jobType}`);
   }
 }
 

@@ -83,11 +83,21 @@ describe('job-recorder (T-09.09.02)', () => {
   });
 
   it('never throws when the DB write fails (best-effort)', async () => {
-    const { mockQuery } = makePool();
-    mockQuery.mockRejectedValueOnce(new Error('db down'));
-    await expect(
-      recordJobFailure({ jobType: 'service_breach_scan', error: 'x' }, { query: mockQuery })
-    ).resolves.toBeUndefined();
+    const { mockQuery, pool } = makePool();
+    mockQuery.mockRejectedValue(new Error('duplicate value PRIVATE_JOB_LEDGER_FIXTURE'));
+    const error = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    try {
+      await expect(
+        recordJobFailure({ jobType: 'service_breach_scan', error: 'x' }, pool)
+      ).resolves.toBeUndefined();
+      await expect(recordJobSuccess('service_breach_scan', pool)).resolves.toBeUndefined();
+      expect(error.mock.calls).toEqual([
+        ['[worker] failed to record job failure: service_breach_scan'],
+        ['[worker] failed to record job success: service_breach_scan'],
+      ]);
+    } finally {
+      error.mockRestore();
+    }
   });
 
   it('resolves an active row on success (auto-clear)', async () => {

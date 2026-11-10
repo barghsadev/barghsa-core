@@ -328,7 +328,7 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
       const result = await collectPerformanceMetrics(10, 30);
       if (!result.ok || !result.metrics) {
         this.clearDatabaseMetrics();
-        this.logger.warn(`Metrics collection failed: ${result.error ?? 'unknown'}`);
+        this.logger.warn('Metrics collection failed');
         return;
       }
 
@@ -416,9 +416,9 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
         this.aiModelHealth.reset();
         this.aiModelMonthlySpend.reset();
       }
-    } catch (err) {
+    } catch {
       this.clearDatabaseMetrics();
-      this.logger.error(`Metrics poll error: ${err instanceof Error ? err.message : String(err)}`);
+      this.logger.error('Metrics poll error');
     }
   }
 }

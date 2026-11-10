@@ -103,6 +103,9 @@ Automatic, manual, adjustment, and replacement invoice failures log a fixed
 operation message. Request logs retain their correlation ID. Database exception
 text can contain payment references or other private values, so use the
 correlation ID and authorized audit records when investigating a failure.
+API startup, shutdown and metrics failures also use fixed diagnostics. Metrics
+collectors still signal unavailable samples. Worker job-ledger write failures
+record the job type while preserving retry and recovery behavior.
 
 ## Provider callback contracts
 
