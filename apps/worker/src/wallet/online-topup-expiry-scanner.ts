@@ -14,6 +14,7 @@ import {
   buildBankReceiptTopUpFailedNotificationPayload,
   onlineTopUpExpiryNoticeReason,
 } from '@barghsa/shared/finance';
+import { databaseFailureReason } from '../jobs/database-failure-reason.js';
 
 /**
  * Online top-up Pending TTL expiry scanner (S-04.2.02, T-04.2.02.07).
@@ -239,7 +240,7 @@ export async function expireStaleOnlineTopUps(
       }
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
-      const message = `${candidate.id}: ${(error as Error)?.message ?? String(error)}`;
+      const message = `${candidate.id}: ${databaseFailureReason(error)}`;
       result.errors.push(message);
       logger.warn(`Online top-up expiry failed: ${message}`);
     } finally {

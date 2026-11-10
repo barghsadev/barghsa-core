@@ -14,6 +14,7 @@ import {
   type ReminderOffsetToggleDto,
 } from '@barghsa/shared/finance';
 import { isValidTimeZone, type DeliveryWindowConfig } from '@barghsa/shared/notifications';
+import { databaseFailureReason } from '../jobs/database-failure-reason.js';
 import {
   isWithinWindow,
   loadDeliveryWindowConfig,
@@ -431,7 +432,7 @@ export async function scheduleIssuedInvoiceReminders(
         }
       } catch (error) {
         await client.query('ROLLBACK').catch(() => {});
-        const message = `${candidate.id}: ${(error as Error)?.message ?? String(error)}`;
+        const message = `${candidate.id}: ${databaseFailureReason(error)}`;
         result.errors.push(message);
         logger.warn(`Reminder schedule failed: ${message}`);
       } finally {

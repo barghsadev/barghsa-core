@@ -584,7 +584,7 @@ describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
   });
 
   it('isolates a per-invoice failure and continues the batch', async () => {
-    const rows = [unpaidCandidate('inv-ok'), unpaidCandidate('inv-boom')];
+    const rows = [unpaidCandidate('inv-boom'), unpaidCandidate('inv-ok')];
     const db = makeFakeDb((sql, params) => {
       if (sql.includes('NOT EXISTS')) return { rows };
       if (sql.includes('FOR UPDATE OF i SKIP LOCKED')) {
@@ -594,17 +594,25 @@ describe('scheduleIssuedInvoiceReminders (T-04.1.04.02)', () => {
         return { rows: [], rowCount: 0 };
       }
       if (sql.includes('INSERT INTO invoice_reminder_schedule')) {
-        if (params[0] === 'inv-boom') throw new Error('deadlock');
+        if (params[0] === 'inv-boom')
+          throw Object.assign(new Error('deadlock PRIVATE_REMINDER_SCHEDULE_FIXTURE'), {
+            code: '40P01',
+          });
         return { rows: [], rowCount: 6 };
       }
       return { rows: [] };
     });
 
-    const result = await scheduleIssuedInvoiceReminders(scheduleOptions(db));
+    const options = scheduleOptions(db);
+    const result = await scheduleIssuedInvoiceReminders(options);
     expect(result.scheduled).toBe(1);
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]).toContain('inv-boom');
-    expect(result.errors[0]).toContain('deadlock');
+    expect(result.errors).toEqual(['inv-boom: deadlock']);
+    expect(options.logger.warn).toHaveBeenCalledExactlyOnceWith(
+      'Reminder schedule failed: inv-boom: deadlock'
+    );
+    expect(
+      db.calls.filter(({ sql }) => sql === 'ROLLBACK' || sql === 'COMMIT').map(({ sql }) => sql)
+    ).toEqual(['ROLLBACK', 'COMMIT']);
   });
 
   it('sets truncated when the candidate query fills the batch cap', async () => {

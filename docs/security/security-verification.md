@@ -106,6 +106,9 @@ correlation ID and authorized audit records when investigating a failure.
 API startup, shutdown and metrics failures also use fixed diagnostics. Metrics
 collectors still signal unavailable samples. Worker job-ledger write failures
 record the job type while preserving retry and recovery behavior.
+Invoice overdue, reminder scheduling and top-up expiry scans log the operation,
+opaque record identifier when available and an allowlisted SQLSTATE category.
+Their retry records keep the same bounded diagnostics.
 
 ## Provider callback contracts
 

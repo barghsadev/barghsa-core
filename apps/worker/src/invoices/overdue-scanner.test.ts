@@ -193,7 +193,7 @@ describe('scanOverdueInvoices (T-04.1.03.04)', () => {
   });
 
   it('isolates a per-invoice failure and continues the batch', async () => {
-    const rows = [unpaidCandidate('inv-ok'), { id: 'inv-boom', state: 'Unpaid', due_at: PAST }];
+    const rows = [{ id: 'inv-boom', state: 'Unpaid', due_at: PAST }, unpaidCandidate('inv-ok')];
     const db = makeFakeDb((sql, params) => {
       if (sql.includes('FROM invoices') && sql.includes('due_at < $2')) {
         return { rows };
@@ -202,18 +202,24 @@ describe('scanOverdueInvoices (T-04.1.03.04)', () => {
         return { rows: [rows.find((r) => r.id === params[0])!] };
       }
       if (sql.includes("SET state = 'Overdue'")) {
-        if (params[0] === 'inv-boom') throw new Error('deadlock');
+        if (params[0] === 'inv-boom')
+          throw Object.assign(new Error('deadlock PRIVATE_OVERDUE_FIXTURE'), { code: '40P01' });
         return { rows: [], rowCount: 1 };
       }
       if (sql.includes('INSERT INTO audit_log')) return { rows: [] };
       return { rows: [] };
     });
 
-    const result = await scanOverdueInvoices(scanOptions(db));
+    const options = scanOptions(db);
+    const result = await scanOverdueInvoices(options);
     expect(result.marked).toBe(1);
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]).toContain('inv-boom');
-    expect(result.errors[0]).toContain('deadlock');
+    expect(result.errors).toEqual(['inv-boom: deadlock']);
+    expect(options.logger.warn).toHaveBeenCalledExactlyOnceWith(
+      'Overdue mark failed: inv-boom: deadlock'
+    );
+    expect(
+      db.calls.filter(({ sql }) => sql === 'ROLLBACK' || sql === 'COMMIT').map(({ sql }) => sql)
+    ).toEqual(['ROLLBACK', 'COMMIT']);
   });
 
   it('sets truncated when the candidate query fills the batch cap', async () => {

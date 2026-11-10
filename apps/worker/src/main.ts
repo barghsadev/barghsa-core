@@ -41,6 +41,7 @@ import { EmailNotificationTransport } from './notifications/email-transport.js';
 import { runAuthDelivery } from './auth-delivery/runner.js';
 import { publishAuthDeliveryNotice } from './auth-delivery/inbox-notice.js';
 import { PollerGroup } from './jobs/poller-group.js';
+import { databaseFailureReason } from './jobs/database-failure-reason.js';
 import { JobHandlerRegistry, runOneAsyncJob } from './jobs/async-runner.js';
 import {
   PROFILE_EXPORT_JOB_TYPE,
@@ -672,9 +673,7 @@ async function main(): Promise<void> {
       ? overdueScanRaw
       : OVERDUE_SCAN_DEFAULT_MS;
   if (INVOICE_OVERDUE_SCAN_MS !== overdueScanRaw) {
-    logger.warn(
-      `Invalid INVOICE_OVERDUE_SCAN_MS '${process.env['INVOICE_OVERDUE_SCAN_MS'] ?? ''}' — falling back to ${OVERDUE_SCAN_DEFAULT_MS}ms`
-    );
+    logger.warn(`Invalid INVOICE_OVERDUE_SCAN_MS — falling back to ${OVERDUE_SCAN_DEFAULT_MS}ms`);
   }
   let overdueScanInFlight = false;
   const overdueScanner = pollers.every(async () => {
@@ -697,11 +696,12 @@ async function main(): Promise<void> {
       } else {
         await recordJobSuccess(INVOICE_OVERDUE_JOB_TYPE);
       }
-    } catch (err) {
-      logger.error(`Overdue scan failed: ${(err as Error)?.message ?? String(err)}`);
+    } catch (error) {
+      const message = `Overdue scan failed: ${databaseFailureReason(error)}`;
+      logger.error(message);
       await recordJobFailure({
         jobType: INVOICE_OVERDUE_JOB_TYPE,
-        error: (err as Error)?.message ?? String(err),
+        error: message,
         errorCategory: 'transient',
       });
     } finally {
@@ -726,7 +726,7 @@ async function main(): Promise<void> {
       : REMINDER_SCHEDULE_DEFAULT_MS;
   if (INVOICE_REMINDER_SCHEDULE_MS !== reminderScheduleRaw) {
     logger.warn(
-      `Invalid INVOICE_REMINDER_SCHEDULE_MS '${process.env['INVOICE_REMINDER_SCHEDULE_MS'] ?? ''}' — falling back to ${REMINDER_SCHEDULE_DEFAULT_MS}ms`
+      `Invalid INVOICE_REMINDER_SCHEDULE_MS — falling back to ${REMINDER_SCHEDULE_DEFAULT_MS}ms`
     );
   }
   let reminderScheduleInFlight = false;
@@ -750,11 +750,12 @@ async function main(): Promise<void> {
       } else {
         await recordJobSuccess(INVOICE_REMINDER_JOB_TYPE);
       }
-    } catch (err) {
-      logger.error(`Reminder schedule failed: ${(err as Error)?.message ?? String(err)}`);
+    } catch (error) {
+      const message = `Reminder schedule failed: ${databaseFailureReason(error)}`;
+      logger.error(message);
       await recordJobFailure({
         jobType: INVOICE_REMINDER_JOB_TYPE,
-        error: (err as Error)?.message ?? String(err),
+        error: message,
         errorCategory: 'transient',
       });
     } finally {
@@ -1033,7 +1034,7 @@ async function main(): Promise<void> {
       : DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS;
   if (ONLINE_TOPUP_EXPIRY_SCAN_MS !== onlineTopUpExpiryRaw) {
     logger.warn(
-      `Invalid ONLINE_TOPUP_EXPIRY_SCAN_MS '${process.env['ONLINE_TOPUP_EXPIRY_SCAN_MS'] ?? ''}' — falling back to ${DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS}ms`
+      `Invalid ONLINE_TOPUP_EXPIRY_SCAN_MS — falling back to ${DEFAULT_ONLINE_TOPUP_EXPIRY_INTERVAL_MS}ms`
     );
   }
   let onlineTopUpExpiryInFlight = false;
@@ -1057,11 +1058,12 @@ async function main(): Promise<void> {
       } else {
         await recordJobSuccess(ONLINE_TOPUP_EXPIRY_JOB_TYPE);
       }
-    } catch (err) {
-      logger.error(`Online top-up expiry failed: ${(err as Error)?.message ?? String(err)}`);
+    } catch (error) {
+      const message = `Online top-up expiry failed: ${databaseFailureReason(error)}`;
+      logger.error(message);
       await recordJobFailure({
         jobType: ONLINE_TOPUP_EXPIRY_JOB_TYPE,
-        error: (err as Error)?.message ?? String(err),
+        error: message,
         errorCategory: 'transient',
       });
     } finally {

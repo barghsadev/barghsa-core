@@ -212,29 +212,43 @@ describe('expireStaleOnlineTopUps (T-04.2.02.07)', () => {
     expect(db.calls.some((c) => c.sql.includes("SET state = 'Rejected'"))).toBe(false);
   });
 
-  it('isolates a per-row failure and continues the batch', async () => {
-    const rows = [pendingCandidate('tx-ok'), pendingCandidate('tx-boom')];
-    const db = makeFakeDb((sql, params) => {
-      if (sql.includes("metadata->>'channel'") && sql.includes('created_at < $2')) {
-        return { rows };
-      }
-      if (sql.includes('FOR UPDATE SKIP LOCKED')) {
-        return { rows: [rows.find((r) => r.id === params?.[0])!] };
-      }
-      if (sql.includes("SET state = 'Rejected'")) {
-        if (params?.[0] === 'tx-boom') throw new Error('deadlock');
-        return { rows: [], rowCount: 1 };
-      }
-      if (sql.includes('INSERT INTO audit_log')) return { rows: [] };
-      return { rows: [] };
-    });
+  it.each([
+    {
+      failure: Object.assign(new Error('deadlock PRIVATE_TOPUP_EXPIRY_FIXTURE'), { code: '40P01' }),
+      reason: 'deadlock',
+    },
+    { failure: new Error('PRIVATE_TOPUP_EXPIRY_FIXTURE'), reason: 'database operation failed' },
+  ])(
+    'isolates a per-row failure and continues the batch ($reason)',
+    async ({ failure, reason }) => {
+      const rows = [pendingCandidate('tx-boom'), pendingCandidate('tx-ok')];
+      const db = makeFakeDb((sql, params) => {
+        if (sql.includes("metadata->>'channel'") && sql.includes('created_at < $2')) {
+          return { rows };
+        }
+        if (sql.includes('FOR UPDATE SKIP LOCKED')) {
+          return { rows: [rows.find((r) => r.id === params?.[0])!] };
+        }
+        if (sql.includes("SET state = 'Rejected'")) {
+          if (params?.[0] === 'tx-boom') throw failure;
+          return { rows: [], rowCount: 1 };
+        }
+        if (sql.includes('INSERT INTO audit_log')) return { rows: [] };
+        return { rows: [] };
+      });
 
-    const result = await expireStaleOnlineTopUps(scanOptions(db));
-    expect(result.rejected).toBe(1);
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]).toContain('tx-boom');
-    expect(result.errors[0]).toContain('deadlock');
-  });
+      const options = scanOptions(db);
+      const result = await expireStaleOnlineTopUps(options);
+      expect(result.rejected).toBe(1);
+      expect(result.errors).toEqual([`tx-boom: ${reason}`]);
+      expect(options.logger.warn).toHaveBeenCalledExactlyOnceWith(
+        `Online top-up expiry failed: tx-boom: ${reason}`
+      );
+      expect(
+        db.calls.filter(({ sql }) => sql === 'ROLLBACK' || sql === 'COMMIT').map(({ sql }) => sql)
+      ).toEqual(['ROLLBACK', 'COMMIT']);
+    }
+  );
 
   it('sets truncated when the candidate query fills the batch cap', async () => {
     const rows = Array.from({ length: 2 }, (_, i) => pendingCandidate(`tx-${i}`));

@@ -8,6 +8,7 @@ import {
   OVERDUE_ELIGIBLE_STATES,
   isEligibleForOverdueMark,
 } from '@barghsa/shared/finance';
+import { databaseFailureReason } from '../jobs/database-failure-reason.js';
 
 /**
  * Invoice overdue scanner (S-04.1.03, T-04.1.03.04).
@@ -213,7 +214,7 @@ export async function scanOverdueInvoices(
       }
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
-      const message = `${candidate.id}: ${(error as Error)?.message ?? String(error)}`;
+      const message = `${candidate.id}: ${databaseFailureReason(error)}`;
       result.errors.push(message);
       logger.warn(`Overdue mark failed: ${message}`);
     } finally {
