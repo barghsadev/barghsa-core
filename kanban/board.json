@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T14:56:39+00:00",
-  "source_commit": "27e484c138315c4c67f417afe402d55366f58a09",
+  "updated": "2026-11-10T15:11:39+00:00",
+  "source_commit": "d1308fc8ae872af644066243ea2ec9712425dd6e",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5642,7 +5642,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-solar-request-touch-target",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "release-0.6-isolated-live-scanner-and-safari-recovery"
         ],
         "current_acceptance": null
       }
@@ -493710,8 +493711,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The code gates cover immutable business documents, owner-scoped direct uploads and multipart template versions. New and retained template bytes are screened before extraction and publishing. The isolated native checks use controlled socket responses. The sealed worker now covers the full 100 MiB ceiling with a locally verified byte-integrity boundary. The video request and picker now also honor the full existing policy. The preceding hosted native job passed all 45 compiled document HTTP cases at the repaired upload ceiling.",
-        "The EU mirror and current signed daily 28179 are verified, including native clean/EICAR and full 100 MiB isolated receipts. Activate the reviewed scanner image and recurring private feed on the exact candidate, and verify application clean/EICAR, unavailable and retry receipts."
+        "The isolated exact source and reviewed real ClamAV image have persisted clean and EICAR quarantine verdicts and passed a real scheduled retry, including denial before availability. Activate the recurring private feed and repeat the exact application upload probes on the accepted deployed staging release."
       ],
       "owner": null,
       "depends_on": [],
@@ -493737,7 +493737,8 @@
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-official-clamav-feed-recheck",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-isolated-live-scanner-and-safari-recovery"
         ],
         "current_acceptance": null
       }
@@ -494451,7 +494452,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-isolated-live-scanner-and-safari-recovery"
         ],
         "current_acceptance": null
       },
@@ -776402,7 +776404,8 @@
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-native-credential-and-migration-acceptance",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "release-0.6-isolated-live-scanner-and-safari-recovery"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -888064,6 +888067,84 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-stable-native-feedback",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "5536155c27376b9ab989f4644ebb2ecd955606c6caf8f243735c09eb21565fd0"
+    },
+    "release-0.6-isolated-live-scanner-and-safari-recovery": {
+      "batch": "release-0.6-isolated-live-scanner-and-safari-recovery",
+      "base_commit": "d1308fc8ae872af644066243ea2ec9712425dd6e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "06-security-testing-observability.md#T-06.06.01.01",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/documents/document.service.ts",
+          "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
+        },
+        {
+          "path": "apps/api/src/documents/document-storage.service.ts",
+          "sha256": "13705337dea6b78ab1f7382d551e689444b33b3c6499fb84f00423aff90d2566"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+        },
+        {
+          "path": "apps/api/src/upload/upload-quota.ts",
+          "sha256": "808e2c8593ba46dd2f054c6dbce60e3f40ef44163b806e9e8ef80c3276e1c06e"
+        },
+        {
+          "path": "apps/api/src/upload/upload-reservations.ts",
+          "sha256": "6b0d4d612d4b056473d2d0ec5eac8453cbf7cf8c61b4a45609abe76c6d516ebd"
+        },
+        {
+          "path": "apps/api/src/upload/upload.service.ts",
+          "sha256": "ca91e1eac627ead097ecb64e10559e234ad14eb038ddd29fe6fa0938232a7642"
+        },
+        {
+          "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+          "sha256": "dc2e4233e1448a7130f4bd2eef642036a24c9a710d5e1c99d7f54da1dc6e149c"
+        },
+        {
+          "path": "apps/web/e2e/notice-placement.ts",
+          "sha256": "f02db6295e2f339f495de00a2ca271b80295fdcbcc0b33e6a43e1df7ebc92d2b"
+        },
+        {
+          "path": "apps/worker/src/documents/scan-runner.ts",
+          "sha256": "50e5fb79d340bbe07c0db7d2063255993f248fe7ad3932d97d7f38041ed477c4"
+        },
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "5accedbaa9b8dbd596fcc4324150399379017e5b395704ffdc368cd0743b2da2"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
+        },
+        {
+          "path": "docs/operations/clamav-signatures.md",
+          "sha256": "6da6a19188395057d152a9441a1063c2a1e5cba662ebe68078370cb2e2bcdd73"
+        },
+        {
+          "path": "packages/db/drizzle/production/0286_upload_scope_quotas.sql",
+          "sha256": "d6835daa6795c272399011dd2abf6462052f44e7108034998acd16945db3fdc0"
+        },
+        {
+          "path": "packages/shared/src/storage/clamav.ts",
+          "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
+        }
+      ],
+      "checks": [
+        "Compiled API and worker were exercised against disposable PostgreSQL and MinIO on staging infrastructure, with the reviewed ClamAV 100 MiB image sha256:9b03670406718952efd5f5451e327594ad4b30877091ea214e20a2029245ea0c and a separate read-only copy of vendor-signed daily 28179. All 207 production migrations applied through 0286. The active app and its storage were isolated from this fixture.",
+        "The earlier combined rehearsal persisted one Available/clean and one Quarantined/infected job with one attempt each from actual PDF and standard EICAR document uploads. A read-only query observed those rows. The combined run timed out before scheduled recovery and supplies no full-suite pass.",
+        "The focused real-socket recovery case passed. An unverified session received the step-up requirement; the verified owner started a pending scan. Connection closure persisted the first failed attempt and future due time, the document remained undownloadable, and an early healthy scan left the job pending. The real scheduled retry then persisted a clean verdict on attempt two and released the document.",
+        "Hosted Mobile Safari shard 3 (42834362257 job 129892516786) and Chromium shard 3 (job 129892516668) showed the same obsolete toast selector as Firefox. Both affected Mobile Safari advanced electricity review cases passed on the corrected source with no retries, preserving the inline notice clearance, captured retry, no order writes and read-only review assertions."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/isolated-live-document-scanner-retry",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "40773eec3c5a43ae69f2df55290d26c5426e2d733e6f0ac844139f5f8e01ad17"
     }
   },
   "historical_improvements": [
