@@ -4,6 +4,7 @@ import { t as workspaceCopy } from '@barghsa/i18n/workspace';
 import { tSolar } from '@barghsa/i18n/solar';
 import { t } from '@barghsa/i18n/app';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
+import { contractText } from '@barghsa/i18n/contracts';
 import AxeBuilder from '@axe-core/playwright';
 import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { test, expect } from './upload-fixture';
@@ -37,6 +38,11 @@ for (const locale of ['en', 'fa'] as const)
     let isStaff = false;
     let operatingContext: 'customer' | 'staff' = 'customer';
     let shipment: Record<string, unknown> | null = null;
+    let reviewedContract: SolarCommand | null = null;
+    let issuedContract: Record<string, unknown> | null = null;
+    const contractId = '66666666-6666-4666-8666-666666666666';
+    const invoiceId = '77777777-7777-4777-8777-777777777777';
+    const templateVersionId = '55555555-5555-4555-8555-555555555555';
     const submissions: Array<Record<string, unknown>> = [];
     const submissionBodies: Array<string | null> = [];
     let releaseFirstSubmission!: () => void;
@@ -173,9 +179,9 @@ for (const locale of ['en', 'fa'] as const)
             status: requestStatus,
             status_reason: null,
             support_path: null,
-            contract_id: null,
+            contract_id: issuedContract ? contractId : null,
             contract_published: false,
-            initial_invoice_id: null,
+            initial_invoice_id: issuedContract ? invoiceId : null,
             building_type: 'building_apartment',
             grid_type: 'off_grid',
             bill_identifier: null,
@@ -372,7 +378,8 @@ for (const locale of ['en', 'fa'] as const)
       route.fulfill({
         json: {
           requests:
-            postalStatus === 'shipped'
+            (postalStatus === 'shipped' || postalStatus === 'received') &&
+            requestStatus !== 'contract_created'
               ? [
                   {
                     id: requestId,
@@ -435,6 +442,75 @@ for (const locale of ['en', 'fa'] as const)
         return route.fulfill({ json: { status: postalStatus, requestStatus } });
       }
     );
+    const staffRequestPath = `/api/admin/solar/requests/${requestId}`;
+    const finalReviewHash = 'e'.repeat(64);
+    const contractReviewHash = 'f'.repeat(64);
+    await page.route(`**${staffRequestPath}/start-final-review`, (route) => {
+      expect(route.request().method()).toBe('POST');
+      expect(requestStatus).toBe('postal_documents_received');
+      expect(postalStatus).toBe('received');
+      requestStatus = 'final_review';
+      return route.fulfill({ json: { status: requestStatus } });
+    });
+    await page.route(`**${staffRequestPath}/final-decision/review`, (route) => {
+      expect(requestStatus).toBe('final_review');
+      expect(route.request().postDataJSON()).toEqual({ decision: 'approve' });
+      return route.fulfill({
+        json: {
+          hash: finalReviewHash,
+          data: {
+            requestId,
+            currentStatus: requestStatus,
+            postalStatus,
+            trackingNumber: shipment?.trackingNumber,
+            reason: null,
+            outcome: 'approved',
+          },
+        },
+      });
+    });
+    await page.route(`**${staffRequestPath}/final-approve`, (route) => {
+      expect(requestStatus).toBe('final_review');
+      expect(route.request().postDataJSON()).toEqual({ expectedReviewHash: finalReviewHash });
+      requestStatus = 'approved';
+      return route.fulfill({ json: { status: requestStatus } });
+    });
+    await page.route(`**${staffRequestPath}/contract-options`, (route) => {
+      expect(requestStatus).toBe('approved');
+      return route.fulfill({
+        json: {
+          templates: [
+            {
+              version_id: templateVersionId,
+              name: 'Solar construction template',
+              version_number: 3,
+            },
+          ],
+          documents: [],
+        },
+      });
+    });
+    await page.route(`**${staffRequestPath}/create-contract/review`, (route) => {
+      expect(requestStatus).toBe('approved');
+      reviewedContract = route.request().postDataJSON() as SolarCommand;
+      return route.fulfill({
+        json: { ...solarContractReview(requestId, reviewedContract), hash: contractReviewHash },
+      });
+    });
+    await page.route(`**${staffRequestPath}/create-contract`, (route) => {
+      expect(requestStatus).toBe('approved');
+      expect(postalStatus).toBe('received');
+      expect(route.request().headers()['x-csrf-token']).toBe('solar-contract-csrf');
+      issuedContract = route.request().postDataJSON() as Record<string, unknown>;
+      expect(issuedContract).toEqual({
+        ...reviewedContract,
+        expectedReviewHash: contractReviewHash,
+      });
+      requestStatus = 'contract_created';
+      return route.fulfill({
+        json: { status: requestStatus, contractId, invoiceIds: [invoiceId] },
+      });
+    });
     await page.route(`**/api/solar/requests/${requestId}/postal`, (route) =>
       route.fulfill({
         json: {
@@ -687,6 +763,84 @@ for (const locale of ['en', 'fa'] as const)
     await page.goto(`/solar/requests/${requestId}`);
     await expect(
       page.getByText(solarCopy('status_postal_documents_received', locale)).first()
+    ).toBeVisible();
+
+    operatingContext = 'staff';
+    await page.goto('/admin/solar-postal');
+    await page
+      .getByRole('button', { name: new RegExp(`Buyer.*${solarCopy('postal_received', locale)}`) })
+      .click();
+    const contractSource = page.getByLabel(solarCopy('solarContractSource', locale), {
+      exact: true,
+    });
+    const confirm = page.getByRole('dialog').getByRole('button', {
+      name: appCopy('team.confirm', locale),
+      exact: true,
+    });
+    await expect(contractSource).toHaveCount(0);
+    await page.getByRole('button', { name: solarCopy('solarStartFinalReview', locale) }).click();
+    await confirm.click();
+    await expect(
+      page.getByRole('button', { name: solarCopy('solarFinalApprove', locale) })
+    ).toBeVisible();
+    await expect(contractSource).toHaveCount(0);
+    await page.getByRole('button', { name: solarCopy('solarFinalApprove', locale) }).click();
+    await expect(page.getByRole('dialog')).toContainText('TRACK-123');
+    await confirm.click();
+
+    await contractSource.selectOption(`template:${templateVersionId}`);
+    await page
+      .getByLabel(solarCopy('solarContractTitle', locale), { exact: true })
+      .fill('Solar agreement');
+    await page
+      .getByLabel(solarCopy('solarContractText', locale), { exact: true })
+      .fill('Build the station.');
+    await page
+      .getByLabel(solarCopy('solarContractReason', locale), { exact: true })
+      .fill('Initial draft');
+    await page
+      .getByLabel(contractText('statedContractValue', locale), { exact: true })
+      .selectOption('fixed');
+    await page
+      .getByLabel(contractText('fixedContractAmount', locale), { exact: true })
+      .fill('900000');
+    await page
+      .getByLabel(solarCopy('solarInvoiceDescription', locale), { exact: true })
+      .fill('Deposit');
+    await page.getByLabel(solarCopy('solarInvoicePrice', locale), { exact: true }).fill('100000');
+    await page
+      .context()
+      .addCookies([
+        { name: 'barghsa_csrf', value: 'solar-contract-csrf', url: new URL(page.url()).origin },
+      ]);
+    await page
+      .getByRole('button', { name: solarCopy('solarCreateContract', locale), exact: true })
+      .click();
+    const review = page.getByRole('dialog').getByRole('region', {
+      name: solarCopy('solarContractReviewTitle', locale),
+      exact: true,
+    });
+    await expect(review).toContainText(new Intl.NumberFormat(locale).format(100000));
+    expect(reviewedContract).toMatchObject({
+      profileId,
+      idempotencyKey: expect.stringMatching(/^[a-f0-9-]{36}$/),
+      source: { kind: 'template', templateVersionId },
+      invoiceLines: [{ unitPrice: '100000' }],
+    });
+    await expect(confirm).toBeDisabled();
+    expect(issuedContract).toBeNull();
+    await approveRiskConfirmation(page, locale, 'financial');
+    await confirm.click();
+    await expect(
+      page
+        .locator('section[aria-live="polite"] [data-sonner-toast][data-type="success"]')
+        .getByText(solarCopy('status_contract_created', locale), { exact: true })
+    ).toBeVisible();
+    expect(issuedContract).not.toBeNull();
+    operatingContext = 'customer';
+    await page.goto(`/solar/requests/${requestId}`);
+    await expect(
+      page.getByText(solarCopy('status_contract_created', locale), { exact: true }).first()
     ).toBeVisible();
   });
 

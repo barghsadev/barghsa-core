@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T10:34:27+00:00",
-  "source_commit": "5e7409c3c09edc7a2e92b03c055412385db84a93",
+  "updated": "2026-11-10T10:42:48+00:00",
+  "source_commit": "510d784ddc0b5f303b83f4faa21f0bc7b6d135af",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5553,7 +5553,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read all 40 exact outcomes of actual scheduled run 42789410833. Targeted corrections and the current Mobile Safari staff comment, OTP and wallet replays have local evidence. Verify remaining scheduled cases and repeat the complete matrix on the exact candidate.",
+        "Actual scheduled run 42789410833 reported all 40 shards with 127 unexpected outcomes and 18 flakes. Targeted fixes and reruns cover several known cohorts. Resolve the remaining browser failures and repeat the complete matrix on the exact candidate.",
         "Bind current critical registration, MFA, legal onboarding, electricity and wallet, saving, solar construction and admin browser journeys to the accepted release source. The saving payment and fulfillment journey has separate local acceptance."
       ],
       "owner": null,
@@ -5619,7 +5619,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": null
       }
@@ -5808,7 +5809,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the complete scheduled outcome and quarantine receipts. The scheduled saving and ticket failures were reproduced in Playwright 1.65.0 and have exact local corrections. Complete the remaining corrections and preserve the strict flake guard.",
+        "Read back the current empty quarantine registry and the completed failed scheduled outcomes. Resolve remaining unexpected and flaky cases and verify a clean strict report on the exact candidate.",
         "Record the strict promotion report from the exact accepted candidate in the production approval package. The CLI and manual CI release path enforce the guard and the synthetic controls passed."
       ],
       "owner": null,
@@ -5876,7 +5877,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": null
       }
@@ -14033,8 +14035,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read back a complete actual scheduled 40-shard run across Chromium, Firefox, WebKit and both mobile projects. GitHub started run 42789410833 on November 10 at 09:17 UTC for the configured 02:00 UTC schedule. All 40 jobs were created and complete outcomes are pending.",
-        "The actual scheduled job 129738699584 verified dependency advisories, Drizzle drift and 178 literal/template navigation destinations. Read the completed seven-day outcome report. The rollup publishes internally in GitHub Actions and reports missing outcomes explicitly.",
+        "Actual scheduled run 42789410833 completed across all five projects and all 40 shards. Its published rollup reported 24 failed shards, 127 unexpected outcomes and 18 flakes. Correct residual failures and verify the current full matrix and strict report.",
+        "The actual scheduled advisory, Drizzle and navigation job and current outcome artifact were read back. Six earlier schedules had no outcome receipt. Verify the next exact rollup and the authorized dedicated results receiver.",
         "Verify runtime-generated navigation destinations against current complete journey evidence and configure an authorized dedicated results receiver. The registered shell and literal/template JSX links have local evidence."
       ],
       "owner": null,
@@ -14084,7 +14086,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": null
       }
@@ -42697,7 +42700,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -42765,7 +42769,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -398857,7 +398861,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -398901,7 +398906,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -399640,7 +399645,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -399684,7 +399690,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -400423,7 +400429,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -400467,7 +400474,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -401208,7 +401215,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -401252,7 +401260,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -401989,7 +401997,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-solar-building-form-and-address-snapshots",
@@ -402030,7 +402039,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -402643,7 +402652,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-solar-building-form-and-address-snapshots",
@@ -402684,7 +402694,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -403298,7 +403308,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -403342,7 +403353,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -404081,7 +404092,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -404125,7 +404137,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -404864,7 +404876,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -404908,7 +404921,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -405648,7 +405661,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -405692,7 +405706,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -406432,7 +406446,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -406476,7 +406491,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -407217,7 +407232,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -407261,7 +407277,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -408006,7 +408022,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -408050,7 +408067,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -408789,7 +408806,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -408833,7 +408851,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -409573,7 +409591,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "verified-existing-solar-request-document-postal-final-lifecycle",
@@ -409617,7 +409636,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -498461,19 +498480,75 @@
         "story": "06-security-testing-observability.md#spec-a2575d616ae6"
       },
       "requirement": "| T-06.10.03.10 | Write E2E: solar construction request → document upload → staff review → postal → contract creation | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/web/e2e/solar-journey.spec.ts"
+        ],
+        "batches": [
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-solar-upload-to-contract-browser-journey",
+          "reviewed_sha": "510d784ddc0b5f303b83f4faa21f0bc7b6d135af",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/browser-nightly.yml",
+              "sha256": "d8fd9f966e5488307a2e91535b326ff64960f2d8c7f433e7a100c53089dfb1c2"
+            },
+            {
+              "path": "apps/web/e2e/confirmation-fixture.ts",
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+            },
+            {
+              "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
+              "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "apps/web/src/components/SolarContractForm.tsx",
+              "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
+              "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+              "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+            },
+            {
+              "path": "scripts/report-nightly-browser.py",
+              "sha256": "f43b1769a315bf296b5234a9e501f18d196445c34b6346ea823b913b9478385f"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "The production browser follows one solar construction request through captured intake, write-once upload to a loopback receiver, sealing, protected document review, postal shipment and confirmation, final review and approval. The contract form is absent before final approval. All earlier document bytes, identity, draft, consent, retry and receipt assertions remain.",
+            "Staff selects the scoped template version and reviews the 100000 IRR initial invoice before acknowledging the financial confirmation. The exact approved request, CSRF, UUID idempotency key and review hash are preserved in the single contract-creation request. The browser confirms the localized polite receipt and reads back the same customer request in the contract-created state.",
+            "The first Persian runs had successful 200 preview and issuance responses. Their trace showed the exact localized success message in the polite live region. The corrected assertion uses that live region and requires the exact success text. All six final English and Persian cases passed on Firefox, Mobile Chrome and Mobile Safari without retries. Focused lint, formatting and diff checks passed."
+          ]
+        }
       }
     },
     {
@@ -548067,7 +548142,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -548479,7 +548555,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -603242,7 +603318,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -603770,7 +603847,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/e2e/solar-operation-form-fixture.ts",
@@ -746614,7 +746691,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -747767,7 +747844,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-paid-fulfillment-browser-journey",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -748721,7 +748799,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -749862,7 +749940,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-paid-fulfillment-browser-journey",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ]
       }
     },
@@ -755963,7 +756042,7 @@
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
-              "sha256": "12c46406dcbadb50f5ba1c3d9064c3a95d983350ee9f13fdfa89cff737b86ee8"
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
             },
             {
               "path": "apps/web/src/pages/AdminSolarConstructionPage.tsx",
@@ -758790,7 +758869,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ]
       }
     },
@@ -770706,7 +770786,7 @@
       "launch_required": true,
       "remaining": [
         "Reconcile every epic-01 and epic-06 criterion with current source and operational evidence. Apply the approved direct-main workflow while preserving all production gates.",
-        "Finish the full exact candidate browser matrix, source coverage and receipt review. The saving and consultation payment journeys passed in three local browsers. The complete scheduled and hosted candidate results remain open.",
+        "Finish the full exact candidate browser matrix, source coverage and receipt review. The saving, consultation and solar journeys passed in three local browsers. The actual scheduled matrix reported all shards and failed correctly. Residual fixes and exact candidate evidence remain open.",
         "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
@@ -770823,7 +770903,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
-          "release-0.6-consultation-paid-browser-journey"
+          "release-0.6-consultation-paid-browser-journey",
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -878444,6 +878525,76 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/consultation-paid-journey",
       "source_scope_proof": "consultation-paid-journey-source-scope-proof.json",
       "source_scope_proof_sha256": "06cd08a4d320843da607bdba3421cce46c4eaa4e4115d11ede20f5a8256444b5"
+    },
+    "release-0.6-solar-issued-browser-journey-and-nightly-receipts": {
+      "batch": "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
+      "base_commit": "510d784ddc0b5f303b83f4faa21f0bc7b6d135af",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.03.10",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/solar-journey.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "d8fd9f966e5488307a2e91535b326ff64960f2d8c7f433e7a100c53089dfb1c2"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+        },
+        {
+          "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
+          "sha256": "afb6a3e0239078bc86d7e38a4053793e77d5fc8fecd8917e219a5a06b4ee98b3"
+        },
+        {
+          "path": "apps/web/e2e/solar-journey.spec.ts",
+          "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
+        },
+        {
+          "path": "apps/web/e2e/upload-fixture.ts",
+          "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/SolarContractForm.tsx",
+          "sha256": "8acef0c5d19fa9703612ed3dd84086b85cdadc6131e9ba4618e58916fd58ec29"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSolarPostalPage.tsx",
+          "sha256": "a23b4bbd4245ee3a5c88fc49e83e7eca72155bc636fcfd16e7778ffb2105de75"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
+          "sha256": "3861387057ff0093edea8554bb44fb1986de365a02acb986908ab93bd2f99800"
+        },
+        {
+          "path": "scripts/report-nightly-browser.py",
+          "sha256": "f43b1769a315bf296b5234a9e501f18d196445c34b6346ea823b913b9478385f"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "The production browser follows one solar construction request through captured intake, write-once upload to a loopback receiver, sealing, protected document review, postal shipment and confirmation, final review and approval. The contract form is absent before final approval. All earlier document bytes, identity, draft, consent, retry and receipt assertions remain.",
+        "Staff selects the scoped template version and reviews the 100000 IRR initial invoice before acknowledging the financial confirmation. The exact approved request, CSRF, UUID idempotency key and review hash are preserved in the single contract-creation request. The browser confirms the localized polite receipt and reads back the same customer request in the contract-created state.",
+        "The first Persian runs had successful 200 preview and issuance responses. Their trace showed the exact localized success message in the polite live region. The corrected assertion uses that live region and requires the exact success text. All six final English and Persian cases passed on Firefox, Mobile Chrome and Mobile Safari without retries. Focused lint, formatting and diff checks passed.",
+        "Actual GitHub scheduled run 42789410833 completed on exact main 55753b1c. All 40 independently downloaded shard receipts sum to the published rollup: 14368 expected, 127 unexpected, 18 flaky, 22 skipped and zero runner errors. Twenty-four shards failed. The current report has no missing shards and correctly fails the strict gate. Six older scheduled runs had no summary receipt.",
+        "The scheduled quarantine artifact reports an empty registry and a successful registry check outside promotion. It does not certify a clean promotion matrix. The exact accepted candidate, residual failures and dedicated receiver still require verification."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/solar-issued-journey",
+      "source_scope_proof": "solar-issued-journey-source-scope-proof.json",
+      "source_scope_proof_sha256": "08926fd7741fcd9c9c27c3709c3c3dcc0dad630b18d6be6249613457688f781e"
     }
   },
   "historical_improvements": [
