@@ -168,6 +168,9 @@ restricted test results mask configured credentials and contacts when a
 provider echoes them. Verification adapter retries keep the provider and
 timing without exception text. The development stub omits submitted identity
 numbers from its diagnostics.
+Notification delivery, dead-letter and job errors remove quoted credentials,
+authorization and cookie headers, session cookies and OTP values before
+persisting diagnostic text. Verify these sinks with synthetic credentials.
 
 ## Provider callback contracts
 

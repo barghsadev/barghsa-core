@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T12:23:49+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T12:28:26+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -1216,7 +1216,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.06.02.07` | partial | Recorded batch work | Write tests: valid callback, expired timestamp, replayed event, wrong signature, missing signature, duplicate delivery |
 | `06-security-testing-observability.md#T-06.07.01.01` | verify | Inventory needed | Implement secrets resolution abstraction: env vars, AWS Secrets Manager / HashiCorp Vault / encrypted config file |
 | `06-security-testing-observability.md#T-06.07.01.02` | verify | Inventory needed | Ensure secrets are encrypted at rest and masked in every API response and admin UI display |
-| `06-security-testing-observability.md#T-06.07.01.03` | verify | Inventory needed | Exclude secrets from logs, analytics, error tracking, telemetry, and support exports |
+| `06-security-testing-observability.md#T-06.07.01.03` | verify | Recorded batch work | Exclude secrets from logs, analytics, error tracking, telemetry, and support exports |
 | `06-security-testing-observability.md#T-06.07.01.04` | verify | Recorded batch work | Implement rotation support: overlapping active/previous key period; key versioning |
 | `06-security-testing-observability.md#T-06.07.01.05` | done | Recorded batch work | Audit codebase for hardcoded secrets, .env committed, frontend-bundled secrets |
 | `06-security-testing-observability.md#T-06.07.01.06` | done | Recorded batch work | Add CI secret scan (e.g. truffleHog, gitLeaks) to block commits with secrets |

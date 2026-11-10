@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T12:23:49+00:00",
-  "source_commit": "802dd27290ac812ac9649986864354ea2d226cb5",
+  "updated": "2026-11-10T12:28:26+00:00",
+  "source_commit": "ab1db108d3e6fea5d74991d2f74754796bc5681f",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -39459,7 +39459,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -39519,7 +39520,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+              "sha256": "e8f516a2e27ecc8af2cb62f0480dd30afd3bb5945773fbb703af327b633a1ca7"
             },
             {
               "path": "apps/worker/src/notifications/recipient-preferences.integration.test.ts",
@@ -73502,7 +73503,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -73598,7 +73600,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+              "sha256": "e8f516a2e27ecc8af2cb62f0480dd30afd3bb5945773fbb703af327b633a1ca7"
             },
             {
               "path": "apps/worker/src/notifications/delivery-log.test.ts",
@@ -74819,7 +74821,8 @@
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -74923,7 +74926,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+              "sha256": "e8f516a2e27ecc8af2cb62f0480dd30afd3bb5945773fbb703af327b633a1ca7"
             },
             {
               "path": "apps/worker/src/notifications/delivery-log.test.ts",
@@ -77258,7 +77261,8 @@
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -77358,7 +77362,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+              "sha256": "e8f516a2e27ecc8af2cb62f0480dd30afd3bb5945773fbb703af327b633a1ca7"
             },
             {
               "path": "apps/worker/src/notifications/delivery-log.test.ts",
@@ -78682,7 +78686,8 @@
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -78802,7 +78807,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+              "sha256": "e8f516a2e27ecc8af2cb62f0480dd30afd3bb5945773fbb703af327b633a1ca7"
             },
             {
               "path": "apps/worker/src/notifications/delivery-log.test.ts",
@@ -104741,7 +104746,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-provider-timeout-and-redis-recovery",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -104877,11 +104883,11 @@
             },
             {
               "path": "apps/worker/src/notifications/error-redact.ts",
-              "sha256": "9bab5a2c91a460a49819b7b47ff3f1cf4672af904760bfc2f06c7de089fa4706"
+              "sha256": "f82b84cbea38b464f64fcb07307fd551178f27ab7ed49fc53e0292bc7364768f"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+              "sha256": "e8f516a2e27ecc8af2cb62f0480dd30afd3bb5945773fbb703af327b633a1ca7"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -105147,7 +105153,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-provider-timeout-and-redis-recovery",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -105283,11 +105290,11 @@
             },
             {
               "path": "apps/worker/src/notifications/error-redact.ts",
-              "sha256": "9bab5a2c91a460a49819b7b47ff3f1cf4672af904760bfc2f06c7de089fa4706"
+              "sha256": "f82b84cbea38b464f64fcb07307fd551178f27ab7ed49fc53e0292bc7364768f"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+              "sha256": "e8f516a2e27ecc8af2cb62f0480dd30afd3bb5945773fbb703af327b633a1ca7"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -451125,7 +451132,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451237,7 +451245,7 @@
             },
             {
               "path": "apps/worker/src/notifications/error-redact.ts",
-              "sha256": "9bab5a2c91a460a49819b7b47ff3f1cf4672af904760bfc2f06c7de089fa4706"
+              "sha256": "f82b84cbea38b464f64fcb07307fd551178f27ab7ed49fc53e0292bc7364768f"
             },
             {
               "path": "apps/worker/src/notifications/outbox-reader.ts",
@@ -451245,7 +451253,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+              "sha256": "e8f516a2e27ecc8af2cb62f0480dd30afd3bb5945773fbb703af327b633a1ca7"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -451548,7 +451556,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451632,7 +451641,7 @@
             },
             {
               "path": "apps/worker/src/notifications/error-redact.ts",
-              "sha256": "9bab5a2c91a460a49819b7b47ff3f1cf4672af904760bfc2f06c7de089fa4706"
+              "sha256": "f82b84cbea38b464f64fcb07307fd551178f27ab7ed49fc53e0292bc7364768f"
             },
             {
               "path": "apps/worker/src/notifications/outbox-reader.ts",
@@ -452111,7 +452120,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -452207,7 +452217,7 @@
             },
             {
               "path": "apps/worker/src/notifications/error-redact.ts",
-              "sha256": "9bab5a2c91a460a49819b7b47ff3f1cf4672af904760bfc2f06c7de089fa4706"
+              "sha256": "f82b84cbea38b464f64fcb07307fd551178f27ab7ed49fc53e0292bc7364768f"
             },
             {
               "path": "apps/worker/src/notifications/outbox-reader.ts",
@@ -452501,7 +452511,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -452597,7 +452608,7 @@
             },
             {
               "path": "apps/worker/src/notifications/error-redact.ts",
-              "sha256": "9bab5a2c91a460a49819b7b47ff3f1cf4672af904760bfc2f06c7de089fa4706"
+              "sha256": "f82b84cbea38b464f64fcb07307fd551178f27ab7ed49fc53e0292bc7364768f"
             },
             {
               "path": "apps/worker/src/notifications/outbox-reader.ts",
@@ -452891,7 +452902,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -452987,7 +452999,7 @@
             },
             {
               "path": "apps/worker/src/notifications/error-redact.ts",
-              "sha256": "9bab5a2c91a460a49819b7b47ff3f1cf4672af904760bfc2f06c7de089fa4706"
+              "sha256": "f82b84cbea38b464f64fcb07307fd551178f27ab7ed49fc53e0292bc7364768f"
             },
             {
               "path": "apps/worker/src/notifications/outbox-reader.ts",
@@ -487806,7 +487818,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -487846,7 +487859,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -487954,7 +487967,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -488010,7 +488024,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -488854,7 +488868,8 @@
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -488944,7 +488959,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             }
           ]
         }
@@ -488976,7 +488991,8 @@
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -489066,7 +489082,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             }
           ]
         }
@@ -489098,7 +489114,8 @@
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -489188,7 +489205,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             }
           ]
         }
@@ -489738,7 +489755,8 @@
         ],
         "batches": [
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-sql-field-allowlists",
@@ -489822,7 +489840,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             }
           ],
           "checks": [
@@ -492498,7 +492516,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -492626,7 +492645,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -492960,7 +492979,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -493020,7 +493040,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -493074,7 +493094,8 @@
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -493123,7 +493144,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -493333,7 +493354,8 @@
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -493413,7 +493435,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -493524,14 +493546,20 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "The worker diagnostic paths now remove the demonstrated quoted credential, authorization, cookie and OTP markers, with 43 targeted cases passing. Verify the remaining protected application logs, analytics, error tracking, telemetry and support export paths on the exact candidate with controlled markers and sink readback."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "apps/worker/src/notifications/error-redact.ts",
+          "apps/worker/src/notifications/outbox-runner.test.ts",
+          "docs/security/security-verification.md"
+        ],
+        "batches": [
+          "release-0.6-worker-structured-credential-redaction"
+        ],
         "current_acceptance": null
       }
     },
@@ -495104,7 +495132,8 @@
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -495112,7 +495141,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             },
             {
               "path": "docs/threat-model.md",
@@ -495265,7 +495294,8 @@
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -495273,7 +495303,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -495392,7 +495422,8 @@
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -495400,7 +495431,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -495467,7 +495498,8 @@
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -495483,7 +495515,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             }
           ],
           "checks": [
@@ -495559,7 +495591,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -495619,7 +495652,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -500737,7 +500770,8 @@
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -500753,7 +500787,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             }
           ],
           "checks": [
@@ -500819,7 +500853,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -500827,7 +500862,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -501494,7 +501529,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-provider-timeout-and-redis-recovery"
+          "release-0.6-provider-timeout-and-redis-recovery",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "source-matched-provider-and-redis-failure-injection",
@@ -501528,7 +501564,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+              "sha256": "e8f516a2e27ecc8af2cb62f0480dd30afd3bb5945773fbb703af327b633a1ca7"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -503720,7 +503756,8 @@
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-timeout-and-redis-recovery",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -503736,7 +503773,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+              "sha256": "e8f516a2e27ecc8af2cb62f0480dd30afd3bb5945773fbb703af327b633a1ca7"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -504064,7 +504101,8 @@
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-timeout-and-redis-recovery",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -504080,7 +504118,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+              "sha256": "e8f516a2e27ecc8af2cb62f0480dd30afd3bb5945773fbb703af327b633a1ca7"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -763245,7 +763283,7 @@
             },
             {
               "path": "apps/worker/src/notifications/error-redact.ts",
-              "sha256": "9bab5a2c91a460a49819b7b47ff3f1cf4672af904760bfc2f06c7de089fa4706"
+              "sha256": "f82b84cbea38b464f64fcb07307fd551178f27ab7ed49fc53e0292bc7364768f"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.test.ts",
@@ -763269,7 +763307,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+              "sha256": "e8f516a2e27ecc8af2cb62f0480dd30afd3bb5945773fbb703af327b633a1ca7"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -765227,7 +765265,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -767248,7 +767287,7 @@
             },
             {
               "path": "apps/worker/src/notifications/error-redact.ts",
-              "sha256": "9bab5a2c91a460a49819b7b47ff3f1cf4672af904760bfc2f06c7de089fa4706"
+              "sha256": "f82b84cbea38b464f64fcb07307fd551178f27ab7ed49fc53e0292bc7364768f"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.test.ts",
@@ -767272,7 +767311,7 @@
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.test.ts",
-              "sha256": "4dc15d96c6c230c8eaa9cf4599d820aa449da96c6c23aa545fe0d31f95e9c975"
+              "sha256": "e8f516a2e27ecc8af2cb62f0480dd30afd3bb5945773fbb703af327b633a1ca7"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -769136,7 +769175,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -773273,7 +773313,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-reusable-profile-and-staff-capability-scope",
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-worker-structured-credential-redaction"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -882633,6 +882674,61 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/encryption-key-overlap",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "b77298cc87be93b552f3f0faf1a231eb8fd533259aac3f4f893d9e1d52fc9b40"
+    },
+    "release-0.6-worker-structured-credential-redaction": {
+      "batch": "release-0.6-worker-structured-credential-redaction",
+      "base_commit": "ab1db108d3e6fea5d74991d2f74754796bc5681f",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.01.03",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/worker/src/notifications/error-redact.ts",
+        "apps/worker/src/notifications/outbox-runner.test.ts",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/jobs/job-recorder.ts",
+          "sha256": "d00ebd4dabee92e77eab36df6e9abbbd8e8e97fa2ac4418c8c25e2c45c6b7204"
+        },
+        {
+          "path": "apps/worker/src/notifications/dead-letter.ts",
+          "sha256": "483af94f514fe75ad0d99e91e9f58c24309a88c14b130d37837da18f9deecf54"
+        },
+        {
+          "path": "apps/worker/src/notifications/delivery-log.ts",
+          "sha256": "e5a7aa2820702c05bbba7068a0fb0cf89a8e1c00d5f4ef210832376d9334b94a"
+        },
+        {
+          "path": "apps/worker/src/notifications/error-redact.ts",
+          "sha256": "f82b84cbea38b464f64fcb07307fd551178f27ab7ed49fc53e0292bc7364768f"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-reader.ts",
+          "sha256": "7c85d1527191627faf3ada68737d4e69021ea2d5e8b03bfc5ab4b1db46046129"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.test.ts",
+          "sha256": "e8f516a2e27ecc8af2cb62f0480dd30afd3bb5945773fbb703af327b633a1ca7"
+        },
+        {
+          "path": "apps/worker/src/notifications/send-receipt.ts",
+          "sha256": "4c63b2247d0c93d52fed53332769ffab9b1530f473fddd5886b25632af10b421"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+        }
+      ],
+      "checks": [
+        "A local synthetic baseline reproduced surviving markers in quoted JSON credentials, Basic authorization and a session cookie. The shared worker sanitizer now removes full quoted secrets, authorization and cookie header values, named application cookies and OTP codes before delivery, dead-letter and job error persistence.",
+        "All 43 focused worker cases passed across outbox, delivery log, dead letter and job recorder. The regression removes each synthetic credential while retaining the provider failure status and diagnostics. Worker type checking, lint, formatting and diff checks passed.",
+        "No live diagnostic or real credential was generated. Complete the remaining release-bound analytics, support export and protected telemetry sink review separately."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/worker-credential-redaction",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "7b3a5ce997717909a086dc8d3b39df385d5fcf8db85f6e7378b3a318b6de44e1"
     }
   },
   "historical_improvements": [

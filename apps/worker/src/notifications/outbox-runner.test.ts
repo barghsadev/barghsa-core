@@ -400,6 +400,34 @@ describe('sanitizeLastError', () => {
     expect(s).toContain('[REDACTED]');
   });
 
+  it('removes structured secrets and credential headers from stored diagnostics', () => {
+    const message = [
+      'Provider request failed with HTTP 503',
+      JSON.stringify({
+        api_key: 'synthetic-provider-credential',
+        password: 'fixture phrase with "quoted text"',
+        otp_code: 423153,
+      }),
+      'Authorization: Basic Zml4dHVyZS11c2VyOmZpeHR1cmUtcGFzcw==',
+      'Cookie: barghsa_session=synthetic-session-reference',
+      'Retry context included barghsa_refresh=synthetic-refresh-reference;',
+    ].join('\n');
+    const sanitized = sanitizeLastError(message);
+    for (const marker of [
+      'synthetic-provider-credential',
+      'fixture phrase',
+      '423153',
+      'Zml4dHVyZS',
+      'synthetic-session-reference',
+      'synthetic-refresh-reference',
+    ])
+      expect(sanitized).not.toContain(marker);
+    expect(sanitized).toContain('Provider request failed with HTTP 503');
+    expect(sanitized).toContain('Authorization: [REDACTED]');
+    expect(sanitized).toContain('Cookie: [REDACTED]');
+    expect(sanitized).toContain('barghsa_refresh=[REDACTED]');
+  });
+
   it('caps the message length', () => {
     const s = sanitizeLastError('x'.repeat(2000));
     expect(s.length).toBeLessThanOrEqual(500);

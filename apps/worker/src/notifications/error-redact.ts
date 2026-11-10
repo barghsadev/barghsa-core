@@ -15,6 +15,23 @@ const LAST_ERROR_MAX_LEN = 500;
  */
 export function sanitizeError(message: string): string {
   const SECRET_PATTERNS: Array<{ re: RegExp; replacement: string }> = [
+    {
+      re: /(^|[\r\n])([ \t]*(?:authorization|proxy-authorization|cookie|set-cookie)[ \t]*:[ \t]*)[^\r\n]*/gi,
+      replacement: '$1$2[REDACTED]',
+    },
+    {
+      re: /((?:api[_-]?key|password|passphrase|secret(?:[_-]?access[_-]?key)?|token|authorization|cookie|otp(?:[_-]?code)?|barghsa_(?:session|refresh|csrf|device|public_csrf))["']?\s*[=:]\s*)(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/gi,
+      replacement: '$1[REDACTED]',
+    },
+    {
+      re: /(\b(?:proxy-)?authorization\s*:\s*basic\s+)[A-Za-z0-9+/=]+/gi,
+      replacement: '$1[REDACTED]',
+    },
+    {
+      re: /(barghsa_(?:session|refresh|csrf|device|public_csrf)\s*=\s*)[^\s,;]+/gi,
+      replacement: '$1[REDACTED]',
+    },
+    { re: /(\botp(?:[_-]?code)?["']?\s*[=:]\s*)\d{4,8}\b/gi, replacement: '$1[REDACTED]' },
     { re: /(bearer\s+)[A-Za-z0-9._~+/=-]+/gi, replacement: '$1[REDACTED]' },
     { re: /(api[_-]?key\s*[=:]\s*)[^\s,;]+/gi, replacement: '$1[REDACTED]' },
     { re: /(password\s*[=:]\s*)[^\s,;]+/gi, replacement: '$1[REDACTED]' },
