@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T03:41:00+00:00",
-  "source_commit": "e8a7cd99514d26d6e722ba8c221c68ad75856d5d",
+  "updated": "2026-11-10T03:45:17+00:00",
+  "source_commit": "f9929d093d92a366189803599621754e2daa621d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -108981,7 +108981,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "done",
@@ -109149,7 +109150,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
+              "sha256": "290f5d2227bfe5704fd49078182b359468f759048b63896d1038e59b8e3b5374"
             },
             {
               "path": "apps/web/e2e/agent-slots.spec.ts",
@@ -109695,7 +109696,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -109939,7 +109941,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
+              "sha256": "290f5d2227bfe5704fd49078182b359468f759048b63896d1038e59b8e3b5374"
             },
             {
               "path": "apps/web/e2e/assistant-chat-forms.spec.ts",
@@ -183477,7 +183479,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -183549,7 +183552,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -184302,7 +184305,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -184374,7 +184378,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -185124,7 +185128,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -185196,7 +185201,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -185945,7 +185950,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -186017,7 +186023,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -186768,7 +186774,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -186840,7 +186847,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -450491,7 +450498,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -450563,7 +450571,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -451310,7 +451318,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451494,7 +451503,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -451813,7 +451822,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451997,7 +452007,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -452301,7 +452311,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "done",
@@ -452345,7 +452356,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -452606,7 +452617,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "done",
@@ -452790,7 +452802,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -453105,7 +453117,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -453201,7 +453214,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -453640,7 +453653,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453684,7 +453698,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -453943,7 +453957,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "done",
@@ -454127,7 +454142,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -454440,7 +454455,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -454624,7 +454640,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -454961,7 +454977,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -455145,7 +455162,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -455482,7 +455499,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -455666,7 +455684,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -456003,7 +456021,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -456187,7 +456206,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -456523,7 +456542,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456707,7 +456727,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -457011,7 +457031,8 @@
           "release-0.5-review-preview-deadlines",
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -457055,7 +457076,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -464053,7 +464074,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464221,7 +464243,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
+              "sha256": "290f5d2227bfe5704fd49078182b359468f759048b63896d1038e59b8e3b5374"
             },
             {
               "path": "apps/web/e2e/agent-slots.spec.ts",
@@ -464541,7 +464563,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -464709,7 +464732,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
+              "sha256": "290f5d2227bfe5704fd49078182b359468f759048b63896d1038e59b8e3b5374"
             },
             {
               "path": "apps/web/e2e/agent-slots.spec.ts",
@@ -465055,7 +465078,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "done",
@@ -465223,7 +465247,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
+              "sha256": "290f5d2227bfe5704fd49078182b359468f759048b63896d1038e59b8e3b5374"
             },
             {
               "path": "apps/web/e2e/agent-slots.spec.ts",
@@ -465542,7 +465566,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -465710,7 +465735,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
+              "sha256": "290f5d2227bfe5704fd49078182b359468f759048b63896d1038e59b8e3b5374"
             },
             {
               "path": "apps/web/e2e/agent-slots.spec.ts",
@@ -466054,7 +466079,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "done",
@@ -466222,7 +466248,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
+              "sha256": "290f5d2227bfe5704fd49078182b359468f759048b63896d1038e59b8e3b5374"
             },
             {
               "path": "apps/web/e2e/agent-slots.spec.ts",
@@ -469963,7 +469989,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -470207,7 +470234,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
+              "sha256": "290f5d2227bfe5704fd49078182b359468f759048b63896d1038e59b8e3b5374"
             },
             {
               "path": "apps/web/e2e/assistant-chat-forms.spec.ts",
@@ -537765,7 +537792,8 @@
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -537801,7 +537829,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
+              "sha256": "290f5d2227bfe5704fd49078182b359468f759048b63896d1038e59b8e3b5374"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -537909,7 +537937,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -592463,7 +592491,8 @@
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592675,7 +592704,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -710439,7 +710468,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -710539,7 +710569,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -711030,7 +711060,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -711130,7 +711161,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -711620,7 +711651,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -711720,7 +711752,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -712212,7 +712244,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -712312,7 +712345,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -712802,7 +712835,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -712902,7 +712936,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -713392,7 +713426,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -713492,7 +713527,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-upload-controls.spec.ts",
@@ -723352,7 +723387,8 @@
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -723504,7 +723540,7 @@
             },
             {
               "path": "apps/web/e2e/team-details.spec.ts",
-              "sha256": "080406aacb31d7346fa03266203e9d444125a9fe93f77c0bbfc951cc68b09590"
+              "sha256": "e0d1a79db30f961a52ae628855e500b9bf7270ddac6b345e8f2288887a82c6b3"
             },
             {
               "path": "apps/web/e2e/team-directory.spec.ts",
@@ -723998,7 +724034,8 @@
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -724150,7 +724187,7 @@
             },
             {
               "path": "apps/web/e2e/team-details.spec.ts",
-              "sha256": "080406aacb31d7346fa03266203e9d444125a9fe93f77c0bbfc951cc68b09590"
+              "sha256": "e0d1a79db30f961a52ae628855e500b9bf7270ddac6b345e8f2288887a82c6b3"
             },
             {
               "path": "apps/web/e2e/team-directory.spec.ts",
@@ -724644,7 +724681,8 @@
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -724796,7 +724834,7 @@
             },
             {
               "path": "apps/web/e2e/team-details.spec.ts",
-              "sha256": "080406aacb31d7346fa03266203e9d444125a9fe93f77c0bbfc951cc68b09590"
+              "sha256": "e0d1a79db30f961a52ae628855e500b9bf7270ddac6b345e8f2288887a82c6b3"
             },
             {
               "path": "apps/web/e2e/team-directory.spec.ts",
@@ -725291,7 +725329,8 @@
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -725443,7 +725482,7 @@
             },
             {
               "path": "apps/web/e2e/team-details.spec.ts",
-              "sha256": "080406aacb31d7346fa03266203e9d444125a9fe93f77c0bbfc951cc68b09590"
+              "sha256": "e0d1a79db30f961a52ae628855e500b9bf7270ddac6b345e8f2288887a82c6b3"
             },
             {
               "path": "apps/web/e2e/team-directory.spec.ts",
@@ -725937,7 +725976,8 @@
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -726089,7 +726129,7 @@
             },
             {
               "path": "apps/web/e2e/team-details.spec.ts",
-              "sha256": "080406aacb31d7346fa03266203e9d444125a9fe93f77c0bbfc951cc68b09590"
+              "sha256": "e0d1a79db30f961a52ae628855e500b9bf7270ddac6b345e8f2288887a82c6b3"
             },
             {
               "path": "apps/web/e2e/team-directory.spec.ts",
@@ -726583,7 +726623,8 @@
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -726735,7 +726776,7 @@
             },
             {
               "path": "apps/web/e2e/team-details.spec.ts",
-              "sha256": "080406aacb31d7346fa03266203e9d444125a9fe93f77c0bbfc951cc68b09590"
+              "sha256": "e0d1a79db30f961a52ae628855e500b9bf7270ddac6b345e8f2288887a82c6b3"
             },
             {
               "path": "apps/web/e2e/team-directory.spec.ts",
@@ -727229,7 +727270,8 @@
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -727381,7 +727423,7 @@
             },
             {
               "path": "apps/web/e2e/team-details.spec.ts",
-              "sha256": "080406aacb31d7346fa03266203e9d444125a9fe93f77c0bbfc951cc68b09590"
+              "sha256": "e0d1a79db30f961a52ae628855e500b9bf7270ddac6b345e8f2288887a82c6b3"
             },
             {
               "path": "apps/web/e2e/team-directory.spec.ts",
@@ -727876,7 +727918,8 @@
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -728028,7 +728071,7 @@
             },
             {
               "path": "apps/web/e2e/team-details.spec.ts",
-              "sha256": "080406aacb31d7346fa03266203e9d444125a9fe93f77c0bbfc951cc68b09590"
+              "sha256": "e0d1a79db30f961a52ae628855e500b9bf7270ddac6b345e8f2288887a82c6b3"
             },
             {
               "path": "apps/web/e2e/team-directory.spec.ts",
@@ -728522,7 +728565,8 @@
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -728674,7 +728718,7 @@
             },
             {
               "path": "apps/web/e2e/team-details.spec.ts",
-              "sha256": "080406aacb31d7346fa03266203e9d444125a9fe93f77c0bbfc951cc68b09590"
+              "sha256": "e0d1a79db30f961a52ae628855e500b9bf7270ddac6b345e8f2288887a82c6b3"
             },
             {
               "path": "apps/web/e2e/team-directory.spec.ts",
@@ -729168,7 +729212,8 @@
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -729320,7 +729365,7 @@
             },
             {
               "path": "apps/web/e2e/team-details.spec.ts",
-              "sha256": "080406aacb31d7346fa03266203e9d444125a9fe93f77c0bbfc951cc68b09590"
+              "sha256": "e0d1a79db30f961a52ae628855e500b9bf7270ddac6b345e8f2288887a82c6b3"
             },
             {
               "path": "apps/web/e2e/team-directory.spec.ts",
@@ -731556,7 +731601,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_acceptance": {
           "kind": "accepted-admin-communications-ai-ui",
@@ -731568,7 +731614,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
+              "sha256": "290f5d2227bfe5704fd49078182b359468f759048b63896d1038e59b8e3b5374"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -739902,7 +739948,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/documents.spec.ts",
@@ -742152,7 +742198,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-staff-and-inbox-browser-verification"
         ]
       }
     },
@@ -747971,7 +748018,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
+              "sha256": "290f5d2227bfe5704fd49078182b359468f759048b63896d1038e59b8e3b5374"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -748011,7 +748058,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -750795,7 +750842,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -751952,7 +752000,7 @@
             },
             {
               "path": "apps/web/e2e/ai-agents.spec.ts",
-              "sha256": "f2d62f219ad6fbef31e8e4d5a61ca282338f0fc9fdf42c32827e23bdf1e4210d"
+              "sha256": "290f5d2227bfe5704fd49078182b359468f759048b63896d1038e59b8e3b5374"
             },
             {
               "path": "apps/web/e2e/ai-model-forms.spec.ts",
@@ -751992,7 +752040,7 @@
             },
             {
               "path": "apps/web/e2e/document-records.spec.ts",
-              "sha256": "17c8ed40e28cfe092b21f63baeccad1952964aff0162c26592f3712b117f57a8"
+              "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -754662,7 +754710,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -758642,7 +758691,8 @@
         "Twelve targeted notification editor, delivery-window, history and test receipt cases passed in English and Persian across Chromium and mobile Safari. Remaining cohorts and the exact production browser gate still require their own receipts.",
         "The electricity catalogue and order confirmation cohort passed twelve cases across Chromium and mobile Safari. The remaining electricity draft, finance history and staff browser cases still require verification.",
         "Rejected electricity contracts remain readable and document mutations stay unavailable. Four linked-intake browser cases passed. Preflight 42747135644 failed five receipt tests because mock record responses lacked the Fetch clone method. All 96 affected page and shared caller tests pass locally. The exact cumulative preflight and remaining release browser cases are still required.",
-        "Four guarded draft cases and twelve related customer financial-history and contract activation cases passed in Chromium and mobile Safari. The remaining staff, document and inbox cases still require verification, followed by the full candidate gate."
+        "Four guarded draft cases and twelve related customer financial-history and contract activation cases passed in Chromium and mobile Safari. The remaining staff, document and inbox cases still require verification, followed by the full candidate gate.",
+        "The remaining previously failing agent editor, document review, team activity and inbox cases passed all twenty English/Persian Chromium and mobile Safari variants. The full candidate browser matrix, combined coverage and live gates still require receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -758748,7 +758798,8 @@
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-staff-and-inbox-browser-verification"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -859784,6 +859835,75 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-guarded-draft",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "65b8a4558047e7477cc8877c997b76f69c3fa1094d231ed700624de3e50af62f"
+    },
+    "release-0.6-staff-and-inbox-browser-verification": {
+      "batch": "release-0.6-staff-and-inbox-browser-verification",
+      "base_commit": "f9929d093d92a366189803599621754e2daa621d",
+      "task_keys": [
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/ai-agents.spec.ts",
+        "apps/web/e2e/document-records.spec.ts",
+        "apps/web/e2e/team-details.spec.ts",
+        "apps/web/e2e/unified-inbox.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/ai-agents.spec.ts",
+          "sha256": "290f5d2227bfe5704fd49078182b359468f759048b63896d1038e59b8e3b5374"
+        },
+        {
+          "path": "apps/web/e2e/document-records.spec.ts",
+          "sha256": "58773093f12254efaec2b97048e43b7378b1b55981c9daa9115ab8c52a771752"
+        },
+        {
+          "path": "apps/web/e2e/team-details.spec.ts",
+          "sha256": "e0d1a79db30f961a52ae628855e500b9bf7270ddac6b345e8f2288887a82c6b3"
+        },
+        {
+          "path": "apps/web/e2e/unified-inbox.spec.ts",
+          "sha256": "5fbc963293b7670121258d55b89632209690f4a8273a61308c195da859d05c9d"
+        },
+        {
+          "path": "apps/web/src/components/DocumentDetail.tsx",
+          "sha256": "1e89690b7a6745b953b5bc5fb451b64adef63321a403e99e14a2f1bc0738700d"
+        },
+        {
+          "path": "apps/web/src/components/TeamActionDialog.tsx",
+          "sha256": "3e51519ff49c1b954f87d0c550d423a0dafdbb3b20024624f21d2ef6907f5a58"
+        },
+        {
+          "path": "apps/web/src/lib/notifications.ts",
+          "sha256": "51e967361b532d0f58c7e2b248d17e1725162acd7f7d3a73df33627318318dfc"
+        },
+        {
+          "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
+          "sha256": "4f7804d9b93b80b6dcd170c4063724bec0e2cc92c088a770b86c7cc73bd46faf"
+        },
+        {
+          "path": "apps/web/src/pages/TeamPage.tsx",
+          "sha256": "ebbecde19091a8a3109d3c236b388a7e6d362bda9ce71e11ce94a9cb9118fad0"
+        },
+        {
+          "path": "packages/shared/src/notifications/navigation.ts",
+          "sha256": "9c9421c69f56be8a7de6d88427c600d3c4cf3f4cb7d113346b3df7977b4b6eed"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "The agent editor scopes its expected localized list errors away from the unrelated guide. It still proves that the exact captured knowledge and policy groups survive password rejection and step-up, and that current access denial withdraws the private editor.",
+        "The document test distinguishes a malformed cross-profile response from an explicit authorization denial, checks that neither document identity nor action appears, and requires the fresh matching read before exactly retrying the reviewed approval.",
+        "The mobile team test uses the rendered list role and types the real destructive confirmation before any role write. The existing private destination masking, retained activity, focus restoration, and accessibility checks remain.",
+        "The inbox uses an authenticated customer, current active profile, a UUID notification and exact list, count and single-item read responses. It verifies that preserved text is escaped with the actual inherited layout direction and the legacy route opens the safe same-origin profile settings with one mark-read.",
+        "Twenty cases passed across English and Persian Chromium and mobile Safari. Related lint, formatting and diff checks passed. The reused runtime assets match the current UI source; local traces were disabled to fit scratch space."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-staff-inbox-final",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "805b0e1334c6cb02d8548c5a1820d358bc8a7b48acd46a1298d4f55ad3d691ed"
     }
   },
   "historical_improvements": [

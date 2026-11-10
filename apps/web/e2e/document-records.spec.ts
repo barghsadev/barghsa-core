@@ -189,7 +189,8 @@ for (const locale of ['en', 'fa'] as const)
     await expect(approve).toHaveCount(0);
     badRead = true;
     await detail.getByRole('button', check).click();
-    await expect(detail.getByRole('alert')).toContainText(word('denied'));
+    await expect(detail.getByRole('alert')).toContainText(word('error'));
+    await expect(detail.getByRole('heading', { name: documentRow.originalName })).toHaveCount(0);
     await expect(detail.getByText('PRIVATE FOREIGN DOCUMENT')).toHaveCount(0);
     await expect(approve).toHaveCount(0);
     expect(approvals).toHaveLength(1);

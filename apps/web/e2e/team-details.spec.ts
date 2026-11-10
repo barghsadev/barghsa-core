@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import { crmShell } from './crm-shell-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { teamCatalogue, teamProfiles } from '../src/test/team-catalogue-fixtures';
@@ -92,7 +93,9 @@ for (const locale of ['en', 'fa'] as const)
         return route.fulfill({ json: { roles: body.roles, sessionRevoked: false } });
       });
       await page.goto('/settings/team');
-      const member = page.getByRole('row').filter({ hasText: fa ? 'عضو نمونه' : 'Example Member' });
+      const member = page
+        .getByRole('listitem')
+        .filter({ has: page.getByRole('heading', { name: fa ? 'عضو نمونه' : 'Example Member' }) });
       await member
         .getByRole('button', { name: fa ? 'مشاهده جزئیات' : 'View details', exact: true })
         .click();
@@ -158,14 +161,14 @@ for (const locale of ['en', 'fa'] as const)
         .getByRole('dialog')
         .getByRole('button', { name: fa ? 'ذخیره نقش‌ها' : 'Save roles', exact: true })
         .click();
-      const password = page
+      const confirm = page
         .getByRole('dialog')
-        .getByLabel(fa ? 'رمز عبور' : 'Password', { exact: true });
-      if (await password.isVisible()) await password.fill('fixture-password');
-      await page
-        .getByRole('dialog')
-        .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
-        .click();
+        .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
+      await expect(confirm).toBeDisabled();
+      expect(commands).toBe(0);
+      await approveRiskConfirmation(page, locale, 'destructive');
+      await expect(confirm).toBeEnabled();
+      await confirm.click();
       await expect(
         page
           .getByRole('dialog')
@@ -180,7 +183,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         member.getByRole('button', { name: fa ? 'مشاهده جزئیات' : 'View details', exact: true })
       ).toBeFocused();
-      const invitation = page.getByRole('row').filter({ hasText: 'i***@example.test' });
+      const invitation = page.getByRole('listitem').filter({ hasText: 'i***@example.test' });
       await invitation
         .getByRole('button', { name: fa ? 'مشاهده جزئیات' : 'View details', exact: true })
         .click();

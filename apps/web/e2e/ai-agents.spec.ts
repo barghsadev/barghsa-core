@@ -1,5 +1,6 @@
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
+import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { cookieResponse } from './cookie-response';
 for (const locale of ['en', 'fa'])
   test(`admin can test an agent and inspect response context (${locale})`, async ({ page }) => {
@@ -91,7 +92,7 @@ for (const locale of ['en', 'fa'])
       message: 'General advice',
     });
   });
-for (const locale of ['en', 'fa'])
+for (const locale of ['en', 'fa'] as const)
   test(`agent editor retries captured group selections (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => {
@@ -137,7 +138,10 @@ for (const locale of ['en', 'fa'])
         : route.fulfill({ status: 401, json: {} });
     });
     await page.goto('/admin/agents');
-    await expect(page.getByRole('alert')).toBeVisible();
+    const main = page.getByRole('main');
+    await expect(
+      main.getByRole('alert').filter({ hasText: adminText('admin.agents.error', locale) })
+    ).toBeVisible();
     failed = false;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
     await page.getByRole('button', { name: fa ? 'افزودن عامل' : 'Add agent', exact: true }).click();
@@ -176,9 +180,9 @@ for (const locale of ['en', 'fa'])
         policyGroupIds: [policy],
       })
     );
-    await expect(page.getByRole('alert')).toContainText(
-      fa ? 'اجازه مدیریت' : 'permission to manage'
-    );
+    await expect(
+      main.getByRole('alert').filter({ hasText: adminText('admin.agents.denied', locale) })
+    ).toBeVisible();
     await expect(
       page.getByRole('form', { name: fa ? 'تنظیمات عامل' : 'Agent settings' })
     ).toHaveCount(0);
