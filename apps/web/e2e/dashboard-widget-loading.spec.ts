@@ -110,7 +110,14 @@ for (const locale of ['en', 'fa'] as const) {
           wallet.getByText(formatCurrencyIrr('9007199254740993', locale), { exact: true }).first()
         ).toBeVisible();
         await page.evaluate(() => document.fonts.ready);
-        const position = (element: Element) => {
+        const position = async (element: Element) => {
+          // Measure the grid after the card's entrance animation finishes.
+          await Promise.all(
+            element
+              .getAnimations()
+              .filter((animation) => animation.effect?.getComputedTiming().endTime !== Infinity)
+              .map((animation) => animation.finished.catch(() => {}))
+          );
           const box = element.getBoundingClientRect();
           const grid = element.parentElement!.getBoundingClientRect();
           return {

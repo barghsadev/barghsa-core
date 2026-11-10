@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T16:53:15+00:00",
-  "source_commit": "25a6c07ee9b5f335cbe1521b488a016e12de4dca",
+  "updated": "2026-11-10T16:56:06+00:00",
+  "source_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5583,7 +5583,8 @@
       "remaining": [
         "Actual scheduled run 42789410833 reported all 40 shards with 127 unexpected outcomes and 18 flakes. The customer request, owned-read and Firefox document replays passed. The Firefox electricity submission race and the Persian saving touch-target flake now have source-bound local passing evidence. Resolve remaining failures and repeat the complete matrix on the exact candidate. The solar Submit request touch target also has source-bound passing geometry and mobile gate receipts.",
         "Registration, MFA, legal onboarding, electricity and wallet, saving, consultation, solar construction and admin configuration have targeted source-bound receipts. The exact hosted release matrix and strict rollup still need a clean pass. The cancellation and OTP repairs have targeted local browser receipts.",
-        "The exact 150bec1e browser matrix exposed Firefox invitation focus and Mobile Safari account-menu/custom-trigger failures. Final focused Linux Firefox/Mobile Safari, Chromium, Mobile Chrome and native mobile combobox runs passed. Read back all hosted outcomes and run the complete matrix on the final release candidate."
+        "The exact 150bec1e browser matrix exposed Firefox invitation focus and Mobile Safari account-menu/custom-trigger failures. Final focused Linux Firefox/Mobile Safari, Chromium, Mobile Chrome and native mobile combobox runs passed. Read back all hosted outcomes and run the complete matrix on the final release candidate.",
+        "Hosted WebKit widget entry geometry failures now have passing exact Linux WebKit and Chromium receipts. Verify the final matrix and strict outcome."
       ],
       "owner": null,
       "depends_on": [],
@@ -5663,7 +5664,8 @@
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": null
       }
@@ -68054,7 +68056,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-current-profile-dashboard",
@@ -68106,7 +68109,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/dashboard-entry.spec.ts",
@@ -68251,6 +68254,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-workspace-navigation/acceptance-proof.json"
               ],
               "scope": "Scoped renewal only: current native/39UI/118i18n/100distinct browser checks, final14 navigation renewals, exact retained engines/guards/business sources, default-auth BrandMark proof,16 additive dictionary values and all original numerical budgets retained with explicit startup parents/compact bar and separately tested click-only gates. Layout/profile identity/rich switch changes preserve money, grants, current authority, captured target/confirmation and stale-response boundaries. Existing task/release status, unmet criteria, historical evidence and live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -68440,7 +68451,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-current-profile-dashboard",
@@ -68492,7 +68504,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/dashboard-entry.spec.ts",
@@ -68637,6 +68649,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-workspace-navigation/acceptance-proof.json"
               ],
               "scope": "Scoped renewal only: current native/39UI/118i18n/100distinct browser checks, final14 navigation renewals, exact retained engines/guards/business sources, default-auth BrandMark proof,16 additive dictionary values and all original numerical budgets retained with explicit startup parents/compact bar and separately tested click-only gates. Layout/profile identity/rich switch changes preserve money, grants, current authority, captured target/confirmation and stale-response boundaries. Existing task/release status, unmet criteria, historical evidence and live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -68827,7 +68847,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-current-profile-dashboard",
@@ -68879,7 +68900,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/dashboard-entry.spec.ts",
@@ -69024,6 +69045,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-workspace-navigation/acceptance-proof.json"
               ],
               "scope": "Scoped renewal only: current native/39UI/118i18n/100distinct browser checks, final14 navigation renewals, exact retained engines/guards/business sources, default-auth BrandMark proof,16 additive dictionary values and all original numerical budgets retained with explicit startup parents/compact bar and separately tested click-only gates. Layout/profile identity/rich switch changes preserve money, grants, current authority, captured target/confirmation and stale-response boundaries. Existing task/release status, unmet criteria, historical evidence and live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -505326,7 +505355,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
-          "release-0.6-wallet-keyboard-before-responsive-probe"
+          "release-0.6-wallet-keyboard-before-responsive-probe",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -505358,7 +505388,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
@@ -505395,6 +505425,16 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ]
         }
@@ -548490,7 +548530,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548506,7 +548547,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -548760,6 +548801,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            }
           ]
         }
       }
@@ -548817,7 +548868,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548833,7 +548885,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -549087,6 +549139,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            }
           ]
         }
       }
@@ -549144,7 +549206,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549160,7 +549223,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -549414,6 +549477,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            }
           ]
         }
       }
@@ -549471,7 +549544,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-native-safari-saving-shell-staff-team"
+          "release-0.6-native-safari-saving-shell-staff-team",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549487,7 +549561,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/ladle-components.spec.ts",
@@ -549740,6 +549814,16 @@
               "batch": "release-0.5-component-direction-matrix",
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ]
         }
@@ -553527,7 +553611,8 @@
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-paid-fulfillment-browser-journey"
+          "release-0.6-saving-paid-fulfillment-browser-journey",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "populated-canonical-viewport-matrix",
@@ -553563,7 +553648,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardWidget.tsx",
@@ -553630,6 +553715,16 @@
               "batch": "release-0.5-saving-conditional-agreement",
               "base_commit": "5829eaff544bddcf4044c8a021055497684ee48e",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-saving-conditional-agreement/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ]
         }
@@ -553700,7 +553795,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
-          "release-0.6-wallet-keyboard-before-responsive-probe"
+          "release-0.6-wallet-keyboard-before-responsive-probe",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553732,7 +553828,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -554084,6 +554180,16 @@
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            }
           ]
         }
       }
@@ -554162,7 +554268,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
-          "release-0.6-wallet-keyboard-before-responsive-probe"
+          "release-0.6-wallet-keyboard-before-responsive-probe",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554194,7 +554301,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
@@ -554552,6 +554659,16 @@
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            }
           ]
         }
       }
@@ -554630,7 +554747,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
-          "release-0.6-wallet-keyboard-before-responsive-probe"
+          "release-0.6-wallet-keyboard-before-responsive-probe",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554662,7 +554780,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
@@ -555020,6 +555138,16 @@
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            }
           ]
         }
       }
@@ -555090,7 +555218,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
-          "release-0.6-wallet-keyboard-before-responsive-probe"
+          "release-0.6-wallet-keyboard-before-responsive-probe",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555122,7 +555251,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -555473,6 +555602,16 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ]
         }
@@ -558258,7 +558397,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
-          "release-0.6-wallet-keyboard-before-responsive-probe"
+          "release-0.6-wallet-keyboard-before-responsive-probe",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558290,7 +558430,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
@@ -558647,6 +558787,16 @@
               "batch": "release-0.5-required-input-semantics",
               "base_commit": "b811d149c49fb0e38b83bb15e92f0b1cd8751032",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-input-semantics/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ]
         }
@@ -559331,7 +559481,8 @@
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-public-registration-privacy",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559431,7 +559582,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
@@ -560109,6 +560260,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ]
         }
@@ -560235,7 +560394,8 @@
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-public-registration-privacy",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560335,7 +560495,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
@@ -561013,6 +561173,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ]
         }
@@ -561697,7 +561865,8 @@
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-public-registration-privacy",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561797,7 +561966,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
@@ -562475,6 +562644,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ]
         }
@@ -562531,7 +562708,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
-          "release-0.6-wallet-keyboard-before-responsive-probe"
+          "release-0.6-wallet-keyboard-before-responsive-probe",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -562566,7 +562744,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
@@ -562583,7 +562761,17 @@
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-required-check-activation",
           "rule_id": 26844024,
-          "job_id": 129001187379
+          "job_id": 129001187379,
+          "source_renewals": [
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            }
+          ]
         }
       }
     },
@@ -611749,7 +611937,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -611945,7 +612134,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/date-picker-component.spec.ts",
@@ -614576,6 +614765,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ]
         }
@@ -699872,7 +700069,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -699964,7 +700162,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -700347,6 +700545,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -700546,7 +700752,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -700638,7 +700845,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -701021,6 +701228,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -701220,7 +701435,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -701312,7 +701528,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -701695,6 +701911,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -701892,7 +702116,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -701984,7 +702209,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -702367,6 +702592,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -702564,7 +702797,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -702656,7 +702890,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -703039,6 +703273,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -703238,7 +703480,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -703330,7 +703573,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -703713,6 +703956,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -703911,7 +704162,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -704003,7 +704255,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -704386,6 +704638,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -704584,7 +704844,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -704676,7 +704937,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -705059,6 +705320,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -705257,7 +705526,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -705349,7 +705619,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -705732,6 +706002,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -705930,7 +706208,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -706022,7 +706301,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -706405,6 +706684,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -706603,7 +706890,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -706695,7 +706983,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -707078,6 +707366,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -707276,7 +707572,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -707368,7 +707665,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -707751,6 +708048,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ],
           "presentation_renewals": [
@@ -779183,7 +779488,7 @@
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
-              "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+              "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -781154,6 +781459,14 @@
                 "apps/api/src/route-errors/route-errors.controller.ts"
               ],
               "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            },
+            {
+              "batch": "release-0.6-dashboard-grid-after-entrance",
+              "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+              "paths": [
+                "apps/web/e2e/dashboard-widget-loading.spec.ts"
+              ],
+              "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
             }
           ]
         },
@@ -781296,7 +781609,8 @@
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-dashboard-grid-after-entrance"
         ]
       }
     },
@@ -781405,7 +781719,8 @@
         "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "The primary mobile populated-paint measurement now excludes demonstrated test-runner polling delay. All 12 focused cases passed with unchanged budgets. Verify the repaired hosted integrity check before closing the release gate.",
         "Nightly 42817801007 exposed additional login and electricity timing/overlay flakes and Linux WebKit Terms selection failures. The focused repairs pass locally; the hosted candidate rerun and other matrix outcomes remain open.",
-        "The generated contract now matches the rate-limit routes and contact-proof registration response. The exact hosted quality check is pending. Scope-tested touch and focus fixes cover observed hosted browser failures. Remaining matrix jobs and strict rollup are open."
+        "The generated contract now matches the rate-limit routes and contact-proof registration response. The exact hosted quality check is pending. Scope-tested touch and focus fixes cover observed hosted browser failures. Remaining matrix jobs and strict rollup are open.",
+        "Hosted WebKit widget entry geometry failures now have passing exact Linux WebKit and Chromium receipts. Verify the final matrix and strict outcome."
       ],
       "owner": null,
       "depends_on": [],
@@ -781563,7 +781878,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-dashboard-grid-after-entrance"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -894828,6 +895144,63 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
       "source_scope_proof": "browser-keyboard-mobile-touch-source-proof.json",
       "source_scope_proof_sha256": "deb65a06de1c3cf096a51e15e1fc59cd7e87d7eebc3ae038ab832092ac91ed0c"
+    },
+    "release-0.6-dashboard-grid-after-entrance": {
+      "batch": "release-0.6-dashboard-grid-after-entrance",
+      "base_commit": "16df8e2624a750393e3bf5078096ac7ae42f803d",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "release-readiness#R-05.02",
+        "02-auth-users-admin.md#T-08.01.01",
+        "02-auth-users-admin.md#T-08.01.02",
+        "02-auth-users-admin.md#T-08.01.03",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "07-ui-ux-design.md#T-07.04.01.01",
+        "07-ui-ux-design.md#T-07.04.01.02",
+        "07-ui-ux-design.md#T-07.04.01.03",
+        "07-ui-ux-design.md#T-07.04.01.04",
+        "07-ui-ux-design.md#T-07.04.02.04",
+        "07-ui-ux-design.md#T-07.05.01.01",
+        "07-ui-ux-design.md#T-07.05.01.02",
+        "07-ui-ux-design.md#T-07.05.01.03",
+        "07-ui-ux-design.md#T-07.05.01.04",
+        "07-ui-ux-design.md#T-07.05.01.09",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.19.01.01",
+        "07-ui-ux-design.md#T-07.19.01.02",
+        "07-ui-ux-design.md#T-07.19.01.03",
+        "07-ui-ux-design.md#T-07.19.02.01",
+        "07-ui-ux-design.md#T-07.19.02.02",
+        "07-ui-ux-design.md#T-07.19.02.03",
+        "07-ui-ux-design.md#T-07.19.02.04",
+        "07-ui-ux-design.md#T-07.19.02.05",
+        "07-ui-ux-design.md#T-07.19.02.06",
+        "07-ui-ux-design.md#T-07.19.02.07",
+        "07-ui-ux-design.md#T-07.19.02.08",
+        "07-ui-ux-design.md#T-07.19.02.09",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/dashboard-widget-loading.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+          "sha256": "bd0ba80e6b16b20299488dd79f1714a3680161d9fe9e34f1d7e47a1203a03bdc"
+        }
+      ],
+      "checks": [
+        "Hosted desktop WebKit job 129951677092 failed English and Persian widget geometry. Its initial left offset exceeded the final position by 2.935 px in both locales. The source applies a finite 98% scale-in to each widget before its settled layout.",
+        "Final exact Linux WebKit and local Chromium passed both locales with unchanged geometry precision, held invoice deadline, independent request counts, exact 9007199254740993 IRR rendering, viewport census and accessibility assertions. The measurement waits for finite card animations while the invoice response remains held.",
+        "Changed-file lint, formatting and diff validation passed. The full hosted release matrix and strict rollup remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "source_scope_proof": "dashboard-widget-after-entrance-source-proof.json",
+      "source_scope_proof_sha256": "ac2c679c7889874fd6b03728e0449d97a025fd3c1eecd940a19ff7834d447a48"
     }
   },
   "historical_improvements": [
