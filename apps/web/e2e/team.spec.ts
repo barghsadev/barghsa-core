@@ -410,9 +410,11 @@ for (const locale of ['fa', 'en'] as const) {
     const input = dialog.getByLabel(fa ? 'ایمیل یا شماره موبایل' : 'Email or mobile number');
     await expect(input).toBeFocused();
     await input.fill('new@example.test');
-    await dialog.getByLabel(fa ? 'نقش' : 'Role', { exact: true }).selectOption('Finance');
+    const role = dialog.getByLabel(fa ? 'نقش' : 'Role', { exact: true });
+    await role.selectOption('Finance');
+    await expect(role).toHaveValue('Finance');
     await expect(dialog.getByRole('status')).toContainText('Example company');
-    await page.keyboard.press('Escape');
+    await input.press('Escape');
     await expect(dialog).toHaveCount(0);
     await expect(trigger).toBeFocused();
     expect(sent).toEqual([]);
@@ -1337,15 +1339,22 @@ for (const locale of ['en', 'fa'] as const) {
   for (const operation of ['roles', 'remove'] as const) {
     test(`own ${operation} change follows server sign-out (${locale})`, async ({ page }) => {
       await shell(page, locale, false);
+      let revoked = false;
+      await page.route('**/api/auth/user', (route) =>
+        revoked ? route.fulfill({ status: 401, json: {} }) : route.fallback()
+      );
       await page.route(
         `**/api/profiles/${profileId}/agents/member${operation === 'roles' ? '/roles' : ''}`,
-        (route) =>
-          route.fulfill({
+        (route) => {
+          expect(route.request().method()).toBe(operation === 'roles' ? 'PUT' : 'DELETE');
+          revoked = true;
+          return route.fulfill({
             json:
               operation === 'roles'
                 ? { roles: ['Manager', 'Finance'], sessionRevoked: true }
                 : { removed: true, sessionRevoked: true },
-          })
+          });
+        }
       );
       await page.goto('/settings/team');
       const member = page
@@ -1370,6 +1379,7 @@ for (const locale of ['en', 'fa'] as const) {
         .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
         .click();
       await expect(page).toHaveURL(/\/login$/);
+      expect(revoked).toBe(true);
     });
   }
 }

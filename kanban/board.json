@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T15:18:26+00:00",
-  "source_commit": "d7fc70509455e1fc0fe8ff627ff5133ae5380846",
+  "updated": "2026-11-10T15:20:23+00:00",
+  "source_commit": "be4700a3ce2f0765fe38554804184343de6c923f",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5644,7 +5644,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-isolated-live-scanner-and-safari-recovery",
-          "release-0.6-conversation-identity-rtl-native-checkboxes"
+          "release-0.6-conversation-identity-rtl-native-checkboxes",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": null
       }
@@ -5908,7 +5909,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-solar-request-touch-target",
           "release-0.6-quarantine-coverage-and-reporting",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": null
       }
@@ -56777,7 +56779,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -56821,7 +56824,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -56986,7 +56989,8 @@
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
           "limitations": [
@@ -57584,7 +57588,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -57636,7 +57641,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -57905,7 +57910,8 @@
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
           "limitations": [
@@ -58562,7 +58568,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -58610,7 +58617,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -58769,7 +58776,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
           "limitations": [
@@ -59379,7 +59387,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-additive-agent-permissions-across-current-business-consumers",
@@ -59391,7 +59400,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -59854,7 +59863,8 @@
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/agent-operational-permissions",
@@ -60694,7 +60704,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -60738,7 +60749,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -60908,7 +60919,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/identity-and-membership",
           "limitations": [
@@ -62112,7 +62124,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -62128,7 +62141,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -62181,7 +62194,8 @@
             "Bindings renewed by release-0.5-form-and-document-accessibility: reviewed form semantics and unchanged financial/upload authority paths. All original dependency resolutions and budgets are preserved; the added packages are UI development dependencies only.",
             "Bindings renewed by release-0.5-ui-coverage-collection: coverage-only fixture output retains the same eligible V8 ranges; OTP scope and original audit/expiry gates and exact theme notice assertions pass. No application source changed.",
             "Bindings renewed by release-0.5-dependency-gate-closure: strict patched dependency graph, 7 workspace builds, 7764 isolated API tests and API floors, 6796 package unit tests, affected validator and OTP tests, native launch/authority/wallet scenarios, contract/schema checks, and 97 unchanged-or-additional budgets. Prior unchanged task evidence retained.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/staff-administration",
           "limitations": [
@@ -501113,7 +501127,8 @@
         ],
         "batches": [
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "source-bound-legal-agent-invitation-and-permissions-browser-journey",
@@ -501137,7 +501152,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -501176,7 +501191,8 @@
             "The actual team form sends one CSRF-protected Legal invitation for the exact recipient and company. The modeled recipient sees the same company and Legal role, accepts the exact invite/profile/role once, and explicitly selects the company using the rotated CSRF value.",
             "After company selection the browser uses scoped customer navigation, follows the allowed contracts link and completes the contracts read. Wallet, invoices and team links are unavailable. A direct wallet visit receives 403 for the selected profile and shows no balance or funding controls. The exact request sequence contains no wallet writes.",
             "Six local production-build cases passed in Persian and English across Firefox, Mobile Chrome and Mobile Safari. Four existing invitation-recovery cases passed in Firefox and Mobile Chrome. Focused format, lint and diff checks passed. The test uses controlled API responses and performs no real invitation or financial action.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ]
         }
       }
@@ -504622,7 +504638,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-browser-stable-native-feedback",
-          "release-0.6-conversation-identity-rtl-native-checkboxes"
+          "release-0.6-conversation-identity-rtl-native-checkboxes",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": null
       }
@@ -552190,7 +552207,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-browser-stable-native-feedback",
-          "release-0.6-conversation-identity-rtl-native-checkboxes"
+          "release-0.6-conversation-identity-rtl-native-checkboxes",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -552670,7 +552688,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/e2e/telegram-link.spec.ts",
@@ -553661,7 +553679,8 @@
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
             "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
-            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
           "scope_dispositions": [
@@ -555849,7 +555868,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-wallet-receipt-native-viewport"
+          "release-0.6-wallet-receipt-native-viewport",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556081,7 +556101,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -556360,7 +556380,8 @@
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -556730,7 +556751,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-wallet-receipt-native-viewport"
+          "release-0.6-wallet-receipt-native-viewport",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556962,7 +556984,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -557241,7 +557263,8 @@
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -558149,7 +558172,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-wallet-receipt-native-viewport"
+          "release-0.6-wallet-receipt-native-viewport",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558381,7 +558405,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -558660,7 +558684,8 @@
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -607799,7 +607824,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-browser-stable-native-feedback",
-          "release-0.6-conversation-identity-rtl-native-checkboxes"
+          "release-0.6-conversation-identity-rtl-native-checkboxes",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -608403,7 +608429,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/e2e/telegram-link.spec.ts",
@@ -610604,7 +610630,8 @@
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain.",
             "Renewed the affected binding using the exact native form, review recovery and route-budget results in this batch. Prior workflow, financial and accessibility assertions remain.",
-            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch."
+            "Renewed the dialogue binding through the native Firefox and Mobile Safari RTL, accessibility and draft recovery proofs in the associated batch.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -695352,7 +695379,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -695456,7 +695484,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/package.json",
@@ -695758,7 +695786,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Responsive1/2/3-column DashboardLayout, mounted Card headers with icon/title/optional navigation and independently rendered customer/staff bodies verified.",
           "limitations": [
@@ -696014,7 +696043,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -696118,7 +696148,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/package.json",
@@ -696420,7 +696450,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Each authorized widget owns loading/error/retry/empty/data behavior. Customer server-query and staff useAsyncData readers independently fetch, validate ownership and fence account/profile changes. No sibling read depends on a failed resource.",
           "limitations": [
@@ -696676,7 +696707,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -696780,7 +696812,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/package.json",
@@ -697082,7 +697114,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Mounted widgets reserve32rem card height across loading/error/empty/ready; browser geometry checks verify unchanged coordinates and sizes during independent widget loads, with keyboard-scrollable long bodies.",
           "limitations": [
@@ -697336,7 +697369,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -697440,7 +697474,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/package.json",
@@ -697742,7 +697776,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Exact available/posted/reserved IRR and toman, all-outstanding-invoice low-funds warning, charge navigation and isolated failed-wallet alert/retry verified using current native and shared money evidence.",
           "limitations": [
@@ -697996,7 +698031,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -698100,7 +698136,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/package.json",
@@ -698402,7 +698438,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Four localized counts with icons/color and exact filtered navigation: active contracts, orders in progress, customer open tickets, unpaid invoices. Current permissions and native no-double-count union retained.",
           "limitations": [
@@ -698658,7 +698695,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -698762,7 +698800,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/package.json",
@@ -699064,7 +699102,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Current crm:verify permission, policy-enabled pending count, latest five non-archived profiles with deterministic timestamp ties, detail/show-all navigation, empty/disabled/malformed/denied behavior verified.",
           "limitations": [
@@ -699319,7 +699358,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -699423,7 +699463,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/package.json",
@@ -699725,7 +699765,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Account-bound customer invitations persist above shared dashboard header until explicit accept/decline; previously accepted bilingual private-details, recovery, native invitation and owner-bound action evidence matches current sources.",
           "limitations": [
@@ -699980,7 +700021,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -700084,7 +700126,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/package.json",
@@ -700386,7 +700428,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Latest five submitted electricity/saving orders merge in deterministic chronological order with localized status/date, exact invoice amount or explicit missing amount and service-specific view-all/detail links. Electricity submit transaction atomically establishes contract/invoice, so pre-publication submitted orders are included.",
           "limitations": [
@@ -700641,7 +700684,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -700745,7 +700789,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/package.json",
@@ -701047,7 +701091,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "First three next-due invoices show exact remaining amount, due date and timezone-based days/urgency. Payment availability text distinguishes future payable dates; pay links open guarded invoice details and profile changes clear old rows.",
           "limitations": [
@@ -701302,7 +701347,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -701406,7 +701452,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/package.json",
@@ -701708,7 +701754,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Active published contracts retain recorded service end dates/status, bounded elapsed-term progress, explicit missing/invalid-date fallback and contract links. Progress does not fabricate fulfillment.",
           "limitations": [
@@ -701963,7 +702010,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -702067,7 +702115,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/package.json",
@@ -702369,7 +702417,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Staff queue independently reads current-grant ticket/order/unassigned-consultation counts with appropriate filtered links; tickets:assigned is constrained to that actor and concurrent grant removal withdraws results.",
           "limitations": [
@@ -702624,7 +702673,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -702728,7 +702778,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/package.json",
@@ -703030,7 +703080,8 @@
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Admin dashboard exposes unresolved refund obligations in open business work and failed/exhausted subset in failures alongside failed background jobs and open delivery dead letters. Severity, links, independent retry, permission denial and stale-zero handling verified.",
           "limitations": [
@@ -740382,7 +740433,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -740542,7 +740594,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -740802,7 +740854,8 @@
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Full-page individual/legal/both checkbox chooser, canonical selection order, owner-bound durable request key, resume and lost-receipt recovery verified.",
           "limitations": [
@@ -741050,7 +741103,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -741210,7 +741264,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -741470,7 +741524,8 @@
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Required personal identity and checksum, optional title, dependent province/city, address/postal validation, save-before-step server drafts, review and exact submission receipt verified.",
           "limitations": [
@@ -741718,7 +741773,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -741878,7 +741934,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -742138,7 +742194,8 @@
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Representative and company identity, required/unique national identifier, company type, optional localized registration date/contact/economic fields, required dependent address, optional verified document workflow, review and persisted verification status verified.",
           "limitations": [
@@ -742387,7 +742444,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -742547,7 +742605,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -742807,7 +742865,8 @@
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Aggregate persisted profile summaries, first initial dashboard choice, explicit alternate selection, saved context, exact final receipt and current /app dashboard entry verified.",
           "limitations": [
@@ -743055,7 +743114,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -743215,7 +743275,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -743475,7 +743535,8 @@
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Customer /app and nested availability guard redirects empty accounts to onboarding; unavailable reads fail rather than inventing an empty account; staff context remains independent.",
           "limitations": [
@@ -743723,7 +743784,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -743883,7 +743945,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -744143,7 +744205,8 @@
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Active legal-profile directory verifies initials avatars, masked contacts, role/status badges, actual/unknown invitation/join/sign-in dates, owner crown and transfer entry.",
           "limitations": [
@@ -744391,7 +744454,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -744551,7 +744615,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -744811,7 +744875,8 @@
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Invitation username/role and optional bounded plain-text message, local validation, self/existing-member safeguards, current authority, retained failure draft and safe note display verified.",
           "limitations": [
@@ -745060,7 +745125,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -745220,7 +745286,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -745480,7 +745546,8 @@
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Member/invitation detail dialogs verify scoped identity and public activity, role editing, guarded removal, withdrawal, current ownership and captured step-up/receipt recovery.",
           "limitations": [
@@ -745728,7 +745795,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -745888,7 +745956,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -746148,7 +746216,8 @@
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Account-bound pending invitations identify company/inviter and remain until accept/decline. Onboarding acceptance requires no new profile, binds company/role and opens the accepted context explicitly.",
           "limitations": [
@@ -746396,7 +746465,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -746556,7 +746626,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -746816,7 +746886,8 @@
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "criterion_result": "Owner rows cannot be removed or edited through ordinary member actions. Bound ownership transfer, current authority, step-up, stale/expiry/retry and last-owner safeguards verified.",
           "limitations": [
@@ -760094,7 +760165,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "dd39adf1d9e5f74a0038c19978b9338d7992249be34d77cf7e758c2ab8cbf36e"
+              "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -762684,7 +762755,8 @@
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
-            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+            "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved.",
+            "Renewed the team fixture binding using the exact two-browser cancellation, draft and session-revocation proofs in the associated batch."
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/staff-order-detail-authority",
@@ -764303,7 +764375,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ]
       }
     },
@@ -776430,7 +776503,8 @@
           "release-0.6-native-credential-and-migration-acceptance",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-isolated-live-scanner-and-safari-recovery",
-          "release-0.6-conversation-identity-rtl-native-checkboxes"
+          "release-0.6-conversation-identity-rtl-native-checkboxes",
+          "release-0.6-team-native-cancel-and-session-revocation-fixtures"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -888211,6 +888285,68 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/conversation-identity-rtl-native-checkboxes",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "2120b4e4c53d46cfb1a33e55ddd03fc0ce08c380092cb13faa48d78785cb7aae"
+    },
+    "release-0.6-team-native-cancel-and-session-revocation-fixtures": {
+      "batch": "release-0.6-team-native-cancel-and-session-revocation-fixtures",
+      "base_commit": "be4700a3ce2f0765fe38554804184343de6c923f",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "02-auth-users-admin.md#T-05.04.01",
+        "02-auth-users-admin.md#T-05.04.02",
+        "02-auth-users-admin.md#T-05.04.03",
+        "02-auth-users-admin.md#T-05.04.04",
+        "02-auth-users-admin.md#T-05.04.05",
+        "02-auth-users-admin.md#T-05.05.02",
+        "06-security-testing-observability.md#T-06.10.03.05",
+        "06-security-testing-observability.md#T-06.12.05.01",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.19.01.01",
+        "07-ui-ux-design.md#T-07.19.01.02",
+        "07-ui-ux-design.md#T-07.19.01.03",
+        "07-ui-ux-design.md#T-07.19.02.01",
+        "07-ui-ux-design.md#T-07.19.02.02",
+        "07-ui-ux-design.md#T-07.19.02.03",
+        "07-ui-ux-design.md#T-07.19.02.04",
+        "07-ui-ux-design.md#T-07.19.02.05",
+        "07-ui-ux-design.md#T-07.19.02.06",
+        "07-ui-ux-design.md#T-07.19.02.07",
+        "07-ui-ux-design.md#T-07.19.02.08",
+        "07-ui-ux-design.md#T-07.19.02.09",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-02.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/team.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "4a9dba5a1bc033aaf3517422f1b37bc5c0b7d1f7cca407214334a474d2b4757e"
+        }
+      ],
+      "checks": [
+        "Hosted pinned Firefox shard 8 (42834362257 job 129892516796) recorded two first-attempt flakes. The invitation test dispatched Escape while the native role selector owned focus; the test now asserts the selected role and sends the same real Escape through the dialog text field. The close, preserved draft, restored trigger focus, no cancellation write and identical retry payload assertions remain.",
+        "The self-removal trace showed DELETE 200 with sessionRevoked, navigation to /login, then the fixture still responded to /api/auth/user with 200 and sent the user back to /app. The corrected fixture now asserts the exact PUT or DELETE and responds 401 after the successful revocation. The expected /login destination remains.",
+        "All 24 affected invitation and session revocation cases passed on Firefox and Chromium across two no-retry runs in both locales. Changed-file lint, formatting and whitespace passed. Application source was unchanged."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/team-native-cancel-signout",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "565de65bf7328b14b76942d0ac9cd81479c55cbaad999a4811c41257309e27b9"
     }
   },
   "historical_improvements": [
