@@ -2,6 +2,7 @@ import { QueryProvider } from '../test/query-provider.js';
 import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
+import { fireEvent, render as renderWithTestingLibrary, within } from '@testing-library/react';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { t } from '@barghsa/i18n/admin-ui';
 import Users from './AdminStaffUsersPage.js';
@@ -460,18 +461,39 @@ it('withdrawn roles can be removed without losing a staff explanation', async ()
         : read(url)
     )
   );
-  await render(Users);
-  await click('Edit roles');
-  await fill('#staff-role-reason', 'Retain this explanation');
-  withdrawn = true;
-  await click('Refresh staff and access');
-  const input = host.querySelector<HTMLInputElement>('label input[type="checkbox"]')!;
-  expect(input).not.toBeNull();
-  expect(host.textContent).toContain('Role no longer available');
-  await approveVisibleConfirmation();
-  await act(async () => input.click());
-  await click('Save roles');
-  expect(captured.action?.body).toEqual({ roleIds: [], reason: 'Retain this explanation' });
+  const view = renderWithTestingLibrary(
+    <QueryProvider>
+      <Users />
+    </QueryProvider>
+  );
+  try {
+    await tick();
+    const accounts = view.getByRole('table', { name: 'Staff users' });
+    fireEvent.click(within(accounts).getByRole('button', { name: 'Edit roles' }));
+    fireEvent.change(view.getByRole('textbox', { name: 'Reason' }), {
+      target: { value: 'Retain this explanation' },
+    });
+    withdrawn = true;
+    await approveVisibleConfirmation();
+    fireEvent.click(view.getByRole('button', { name: 'Refresh staff and access' }));
+    await tick();
+    expect(view.container.textContent).toContain('Role no longer available');
+    const roles = view.getByRole('group', { name: 'Roles' });
+    const summary = roles.querySelector('summary');
+    expect(summary).not.toBeNull();
+    fireEvent.click(summary!);
+    expect(summary?.parentElement).toHaveProperty('open', true);
+    const input = view.getByRole('checkbox', { name: /Role no longer available/ });
+    expect(input).toHaveProperty('checked', true);
+    await approveVisibleConfirmation();
+    fireEvent.click(input);
+    fireEvent.click(view.getByRole('button', { name: 'Save roles' }));
+    await vi.dynamicImportSettled();
+    await act(async () => {});
+    expect(captured.action?.body).toEqual({ roleIds: [], reason: 'Retain this explanation' });
+  } finally {
+    view.unmount();
+  }
 });
 it('routine login telemetry does not discard an unchanged role-review draft', async () => {
   let updated = false;

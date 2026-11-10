@@ -1,6 +1,6 @@
 import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentProps } from 'react';
-import { createRoot } from 'react-dom/client';
+import { render as renderWithTestingLibrary, within } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import Page from './AdminCataloguePage.js';
 import type { TeamActionDialog } from '../components/TeamActionDialog.js';
@@ -33,12 +33,12 @@ afterEach(() => {
   document.documentElement.lang = 'fa';
   dialog = null;
 });
-function button(host: ParentNode, name: string) {
-  const found = Array.from(host.querySelectorAll('button')).find(
-    (item) => (item.getAttribute('aria-label') || item.textContent) === name
-  );
-  expect(found, name).toBeDefined();
-  return found!;
+function button(host: HTMLElement, name: string) {
+  return within(host).getByRole<HTMLButtonElement>('button', { name });
+}
+function editProduct(host: HTMLElement) {
+  const catalogue = within(host).getByRole('table', { name: / · Product catalogue$/ });
+  return button(catalogue, 'Edit Sample product');
 }
 function fill(host: ParentNode, field: string, value: string) {
   const input = host.querySelector<HTMLInputElement>(`#catalogue-${field}`)!;
@@ -67,17 +67,22 @@ async function mount(
   );
   const host = document.createElement('div');
   document.body.append(host);
-  const root = createRoot(host);
-  await act(async () => root.render(<QueryProvider>{<Page initialType={type} />}</QueryProvider>));
+  const view = renderWithTestingLibrary(
+    <QueryProvider>
+      <Page initialType={type} />
+    </QueryProvider>,
+    { container: host }
+  );
+  await act(async () => {});
   return {
     host,
     close: async () => {
-      await act(async () => root.unmount());
+      view.unmount();
       host.remove();
     },
   };
 }
-async function submit(host: ParentNode, name = 'Save product') {
+async function submit(host: HTMLElement, name = 'Save product') {
   await act(async () => button(host, name).click());
   await vi.waitFor(async () => {
     await act(async () => {});
@@ -112,7 +117,7 @@ it.each(['consultation', 'hardware', 'saving_plan', 'electricity'] as const)(
   async (type) => {
     const { host, close } = await mount(type);
     try {
-      await act(async () => button(host, 'Edit Sample product').click());
+      await act(async () => editProduct(host).click());
       await act(async () => fill(host, 'titleEn', '  Updated product  '));
       if (type === 'electricity') {
         await act(async () => fill(host, 'minKwh', ' ۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳ '));
@@ -175,10 +180,39 @@ it('exact localized initial prices and trimmed titles are captured while creatio
     await close();
   }
 });
+it('archives an ordinary product only after the expected empty receipt', async () => {
+  let archived = false;
+  const { host, close } = await mount('consultation', (url) =>
+    archived && url.includes('?type=consultation')
+      ? Response.json([{ ...catalogueProduct(), status: 'archived' }])
+      : undefined
+  );
+  try {
+    await act(async () => editProduct(host).click());
+    await act(async () => button(host, 'Archive').click());
+    expect(dialog?.action).toMatchObject({
+      path: `${base}/${id}`,
+      method: 'DELETE',
+      successStatus: 204,
+    });
+    await act(async () => {
+      await expect(dialog!.onSuccess({})).rejects.toThrow('acknowledgement');
+    });
+    expect(button(host, 'Archive')).toBeTruthy();
+    archived = true;
+    await act(async () => dialog!.onSuccess(null));
+    expect((await within(host).findAllByText('Archived', { exact: true })).length).toBeGreaterThan(
+      0
+    );
+    expect(within(host).queryByRole('button', { name: 'Archive' })).toBeNull();
+  } finally {
+    await close();
+  }
+});
 it('owned server fields receive localized messages but hidden and protected fields remain general', async () => {
   const { host, close } = await mount();
   try {
-    await act(async () => button(host, 'Edit Sample product').click());
+    await act(async () => editProduct(host).click());
     await submit(host);
     expect(dialog!.onValidationError?.(['type'])).toBe(false);
     expect(dialog!.onValidationError?.(['price'])).toBe(false);
@@ -206,7 +240,7 @@ it('failed or malformed detail refreshes retain drafts and successful unchanged 
       : undefined
   );
   try {
-    await act(async () => button(host, 'Edit Sample product').click());
+    await act(async () => editProduct(host).click());
     await act(async () => fill(host, 'titleEn', 'Keep draft'));
     for (const value of ['failed', 'malformed'] as const) {
       mode = value;
@@ -230,7 +264,7 @@ it('changed rules cancel a pending confirmation and obsolete success cannot clea
       : undefined
   );
   try {
-    await act(async () => button(host, 'Edit Sample product').click());
+    await act(async () => editProduct(host).click());
     await submit(host);
     const obsolete = dialog!.onSuccess;
     changed = true;
@@ -252,7 +286,7 @@ it('withdrawn hardware cancels confirmation, remains visible and must be removed
     url.includes('?type=hardware') && withdrawn ? Response.json([]) : undefined
   );
   try {
-    await act(async () => button(host, 'Edit Sample product').click());
+    await act(async () => editProduct(host).click());
     await submit(host);
     withdrawn = true;
     await act(async () => button(host, 'Refresh').click());
@@ -281,7 +315,7 @@ it('withdrawn hardware cancels confirmation, remains visible and must be removed
 it('exact price proposals own only visible server fields and permission denial clears both editors', async () => {
   const { host, close } = await mount();
   try {
-    await act(async () => button(host, 'Edit Sample product').click());
+    await act(async () => editProduct(host).click());
     await act(async () => button(host, 'Add price version').click());
     await act(async () => fill(host, 'price', ' ۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳ '));
     await submit(host, 'Save price');
@@ -306,7 +340,7 @@ it('unchanged category selections survive registration without editing companion
         : undefined
   );
   try {
-    await act(async () => button(host, 'Edit Sample product').click());
+    await act(async () => editProduct(host).click());
     await submit(host);
     expect(dialog!.action.body).toHaveProperty('categories', categories);
   } finally {
@@ -317,7 +351,7 @@ it('unchanged category selections survive registration without editing companion
 it('a missing scheduled date focuses the calendar trigger and exposes its linked error', async () => {
   const { host, close } = await mount();
   try {
-    await act(async () => button(host, 'Edit Sample product').click());
+    await act(async () => editProduct(host).click());
     await act(async () => button(host, 'Add price version').click());
     await act(async () => fill(host, 'price', '123'));
     await act(async () =>

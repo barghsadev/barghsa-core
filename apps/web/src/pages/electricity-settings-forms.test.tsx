@@ -1,6 +1,6 @@
 import { QueryProvider } from '../test/query-provider.js';
 import { act, useEffect, type ComponentProps } from 'react';
-import { createRoot } from 'react-dom/client';
+import { render as renderWithTestingLibrary, within } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 import AdminElectricityRulesPage from './AdminElectricityRulesPage.js';
 import type { TeamActionDialog } from '../components/TeamActionDialog.js';
@@ -45,10 +45,8 @@ const buttons = {
   template: 'Save contract template',
 };
 type Kind = keyof typeof fields;
-function button(host: ParentNode, name: string) {
-  const el = Array.from(host.querySelectorAll('button')).find((el) => el.textContent === name);
-  expect(el, name).toBeDefined();
-  return el!;
+function button(host: HTMLElement, name: string) {
+  return within(host).getByRole<HTMLButtonElement>('button', { name });
 }
 function field(host: ParentNode, kind: Kind) {
   return host.querySelector<HTMLInputElement | HTMLSelectElement>(`#${fields[kind]}`)!;
@@ -76,16 +74,18 @@ async function mount(read: (path: string) => Response = defaultRead) {
   vi.stubGlobal('fetch', fetch);
   const host = document.createElement('div');
   document.body.append(host);
-  const root = createRoot(host);
-  await act(async () =>
-    root.render(<QueryProvider>{<AdminElectricityRulesPage />}</QueryProvider>)
+  const view = renderWithTestingLibrary(
+    <QueryProvider>
+      <AdminElectricityRulesPage />
+    </QueryProvider>,
+    { container: host }
   );
   await flush(() => expect(field(host, 'retention')).not.toBeNull());
   return {
     host,
     fetch,
     close: async () => {
-      await act(async () => root.unmount());
+      view.unmount();
       host.remove();
     },
   };
@@ -101,7 +101,7 @@ function defaultRead(path: string) {
           : templateSetting
   );
 }
-async function submit(host: ParentNode, kind: Kind) {
+async function submit(host: HTMLElement, kind: Kind) {
   await act(async () => button(host, buttons[kind]).click());
   await flush(() => expect(dialog).not.toBeNull());
 }

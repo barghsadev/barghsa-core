@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T18:49:34+00:00",
-  "source_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+  "updated": "2026-11-10T18:54:19+00:00",
+  "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -75763,7 +75763,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-native-provider-fixtures-and-staff-log-assertion"
+          "release-0.6-native-provider-fixtures-and-staff-log-assertion",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -75819,7 +75820,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "packages/db/src/schema/staff-roles.ts",
@@ -75968,6 +75969,14 @@
                 "apps/api/src/admin/admin-permission-boundaries.test.ts"
               ],
               "scope": "Correct the single operator-log assertion while preserving authorization and all authorized creation fields."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -110224,7 +110233,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -110436,7 +110446,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -110923,6 +110933,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -111112,7 +111130,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -111324,7 +111343,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -111811,6 +111830,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -116055,7 +116082,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -116327,7 +116355,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -116573,6 +116601,14 @@
                 "apps/api/src/invoice/vat-calculation.repository.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -116825,7 +116861,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -117097,7 +117134,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -117342,6 +117379,14 @@
                 "apps/api/src/invoice/vat-calculation.repository.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -118643,7 +118688,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -118855,7 +118901,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -119342,6 +119388,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -119530,7 +119584,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -119802,7 +119857,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/policy-catalogue-recovery.test.tsx",
@@ -120047,6 +120102,14 @@
                 "apps/api/src/invoice/vat-calculation.repository.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -120517,7 +120580,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -120601,7 +120665,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "packages/db/src/schema/staff-roles.ts",
@@ -121064,6 +121128,14 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -121254,7 +121326,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -121310,7 +121383,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "packages/db/src/schema/staff-roles.ts",
@@ -121444,6 +121517,14 @@
                 "apps/api/src/admin/admin.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -287432,7 +287513,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -287584,7 +287666,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -288297,6 +288379,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -288444,7 +288534,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -288596,7 +288687,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -289309,6 +289400,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -289456,7 +289555,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -289608,7 +289708,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -290321,6 +290421,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -290468,7 +290576,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -290620,7 +290729,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -291333,6 +291442,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -291480,7 +291597,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -291632,7 +291750,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -292345,6 +292463,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -292492,7 +292618,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -292644,7 +292771,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -293357,6 +293484,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -293504,7 +293639,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -293656,7 +293792,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -294369,6 +294505,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -294516,7 +294660,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -294668,7 +294813,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -295381,6 +295526,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -295528,7 +295681,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -295680,7 +295834,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -296393,6 +296547,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -296540,7 +296702,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -296692,7 +296855,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -297405,6 +297568,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -297552,7 +297723,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -297704,7 +297876,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -298417,6 +298589,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -298564,7 +298744,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -298716,7 +298897,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -299429,6 +299610,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -299577,7 +299766,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -299729,7 +299919,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -300442,6 +300632,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -300589,7 +300787,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -300741,7 +300940,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -301454,6 +301653,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -301601,7 +301808,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -301753,7 +301961,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -302466,6 +302674,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -302613,7 +302829,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -302765,7 +302982,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -303478,6 +303695,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -303625,7 +303850,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -303777,7 +304003,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -304490,6 +304716,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -509841,19 +510075,81 @@
         "story": "06-security-testing-observability.md#spec-f7421d6dc1ea"
       },
       "requirement": "| T-06.09.03.08 | Write RTL tests for admin pages: configuration, role management, product/settings CRUD | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-admin-settings-role-catalogue-testing-library"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-react-testing-library-administration-verification",
+          "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/pages/catalogue-forms.test.tsx",
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
+            },
+            {
+              "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
+            },
+            {
+              "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+              "sha256": "0ce4eb4228c830c1d8dd2a426e953dfe0b47154d8e33967bb26c67d65f96d1b6"
+            },
+            {
+              "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+              "sha256": "9753e41d3caf52f333ff9991276aa7c1307dc7207ba2b65d1aafcd637a2a9d9b"
+            },
+            {
+              "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+              "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
+            },
+            {
+              "path": "apps/web/src/test/catalogue-fixtures.ts",
+              "sha256": "7e16a4127db6176b5da89a1850b8097df1f0207d202f5c828ca35833dc210933"
+            },
+            {
+              "path": "apps/web/src/test/electricity-settings-fixtures.ts",
+              "sha256": "eab8f575c70b6a28282473a98839ce8b877b565658aacea7620bdd1d96bc99bc"
+            },
+            {
+              "path": "apps/web/src/test/staff-directory-fixtures.ts",
+              "sha256": "0ddeb100432a4fa4374ed9b00e4d6a37ee881027d1fdfe4daa69b7a50640550c"
+            },
+            {
+              "path": "apps/web/src/test/query-provider.tsx",
+              "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "ee1028396c08b722b5b9b1862c626e445de1f10e296b9622117863109ed29f64"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            }
+          ],
+          "checks": [
+            "React Testing Library renders the versioned electricity settings forms and exercises accessible save controls while preserving field validation, localization and retry assertions. The staff role assignment case selects the table action, opens the Roles disclosure and removes a withdrawn grant while preserving the authorized reason and exact command.",
+            "The catalogue case uses the actual product list and editor for create, read and update. The added archive case selects the exact DELETE command, rejects a malformed acknowledgement and shows the archived status only after the expected empty 204 receipt. Existing catalogue confirmation and pricing assertions remain.",
+            "Jsdom contains both responsive copies of table actions. Role queries scope the edit actions to the named table. The two unchanged settings and catalogue suites passed 24 cases in the combined invocation with one role-case failure. The corrected role suite passed all 20 cases in its focused rerun. Web TypeScript, ESLint, Prettier and whitespace checks passed."
+          ]
+        }
       }
     },
     {
@@ -597899,7 +598195,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -598555,7 +598852,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -598655,7 +598952,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -598775,7 +599072,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -599645,6 +599942,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -599834,7 +600141,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -600490,7 +600798,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -600590,7 +600898,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -600710,7 +601018,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -601580,6 +601888,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -601770,7 +602088,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -602426,7 +602745,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -602526,7 +602845,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -602646,7 +602965,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -603516,6 +603835,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -603675,7 +604004,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -604331,7 +604661,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -604431,7 +604761,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -604551,7 +604881,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -605421,6 +605751,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -605606,7 +605946,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -606262,7 +606603,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -606362,7 +606703,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -606482,7 +606823,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -607352,6 +607693,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -607546,7 +607897,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -608202,7 +608554,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -608302,7 +608654,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -608422,7 +608774,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -609292,6 +609644,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -609459,7 +609821,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -610115,7 +610478,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -610215,7 +610578,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -610335,7 +610698,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -611205,6 +611568,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -611336,7 +611709,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -611992,7 +612366,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -612092,7 +612466,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -612212,7 +612586,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -613082,6 +613456,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -613213,7 +613597,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -613869,7 +614254,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -613969,7 +614354,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -614089,7 +614474,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -614959,6 +615344,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -615091,7 +615486,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -615747,7 +616143,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -615847,7 +616243,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -615967,7 +616363,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -616837,6 +617233,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -616968,7 +617374,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -617624,7 +618031,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -617724,7 +618131,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -617844,7 +618251,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -618714,6 +619121,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -618840,7 +619257,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -619560,7 +619978,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -619660,7 +620078,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -619788,7 +620206,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -620699,6 +621117,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -620819,7 +621247,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -621539,7 +621968,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -621639,7 +622068,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -621767,7 +622196,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -622678,6 +623107,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -622847,7 +623286,8 @@
           "release-0.6-dashboard-grid-after-entrance",
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -625183,7 +625623,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -625299,7 +625739,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -625435,7 +625875,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -625732,6 +626172,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -625852,7 +626302,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -626592,7 +627043,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -626692,7 +627143,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -626820,7 +627271,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -627724,6 +628175,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -627844,7 +628305,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -628564,7 +629026,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -628664,7 +629126,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -628792,7 +629254,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -629703,6 +630165,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -629823,7 +630295,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -630543,7 +631016,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -630643,7 +631116,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -630771,7 +631244,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -631682,6 +632155,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -631802,7 +632285,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -632522,7 +633006,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -632622,7 +633106,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -632750,7 +633234,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -633661,6 +634145,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -633781,7 +634275,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -634501,7 +634996,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -634601,7 +635096,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -634729,7 +635224,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -635640,6 +636135,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -635760,7 +636265,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -636480,7 +636986,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -636580,7 +637086,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -636708,7 +637214,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -637619,6 +638125,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -637739,7 +638255,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -638459,7 +638976,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -638559,7 +639076,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -638687,7 +639204,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -639598,6 +640115,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -639718,7 +640245,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -640438,7 +640966,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -640538,7 +641066,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -640666,7 +641194,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -641577,6 +642105,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -641697,7 +642235,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -642417,7 +642956,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -642517,7 +643056,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -642645,7 +643184,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -643556,6 +644095,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -643676,7 +644225,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -644396,7 +644946,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -644496,7 +645046,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -644624,7 +645174,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -645535,6 +646085,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -645655,7 +646215,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -646375,7 +646936,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -646475,7 +647036,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -646603,7 +647164,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -647514,6 +648075,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -648401,7 +648972,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -649121,7 +649693,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -649221,7 +649793,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -649349,7 +649921,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -650260,6 +650832,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -650380,7 +650962,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -651100,7 +651683,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -651200,7 +651783,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -651328,7 +651911,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -652239,6 +652822,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         }
@@ -653825,7 +654418,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -654481,7 +655075,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -654581,7 +655175,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -654701,7 +655295,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -655571,6 +656165,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -655698,7 +656302,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -656354,7 +656959,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -656454,7 +657059,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -656574,7 +657179,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -657444,6 +658049,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -657571,7 +658186,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -658227,7 +658843,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -658327,7 +658943,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -658447,7 +659063,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -659317,6 +659933,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -659444,7 +660070,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -660100,7 +660727,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -660200,7 +660827,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -660320,7 +660947,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -661190,6 +661817,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -661317,7 +661954,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -661973,7 +662611,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -662073,7 +662711,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -662193,7 +662831,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -663063,6 +663701,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -663190,7 +663838,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -663846,7 +664495,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -663946,7 +664595,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -664066,7 +664715,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -664936,6 +665585,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -665063,7 +665722,8 @@
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -665719,7 +666379,7 @@
             },
             {
               "path": "apps/web/src/pages/catalogue-forms.test.tsx",
-              "sha256": "cd574a4a21fe8f7360ba1be8accb2fbf99c234b0846968857890111566a73f5e"
+              "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
             },
             {
               "path": "apps/web/src/pages/catalogue-list-recovery.test.tsx",
@@ -665819,7 +666479,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/electricity-staff-reason-forms.test.tsx",
@@ -665939,7 +666599,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "apps/web/src/pages/staff-order-list-query.test.tsx",
@@ -666809,6 +667469,16 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/catalogue-forms.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx",
+                "apps/web/src/pages/staff-directory-recovery.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ]
         },
@@ -767362,7 +768032,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -767446,7 +768117,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/pages/limit-settings-forms.test.tsx",
@@ -767503,6 +768174,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -778593,7 +779272,7 @@
             },
             {
               "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
-              "sha256": "bf65df647e8e4648a5f5e2cc334ee31177729425b0c1c379e8fde3217f47c65c"
+              "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
             },
             {
               "path": "packages/db/src/schema/staff-roles.ts",
@@ -779185,7 +779864,7 @@
             },
             {
               "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
-              "sha256": "34467a77bb65284de548ee2d15a8059ae6b93a9935d6acddcfd2fe200fcdb334"
+              "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
             },
             {
               "path": "apps/web/src/test/electricity-settings-fixtures.ts",
@@ -782505,6 +783184,15 @@
                 "apps/web/src/components/ContractCancellationPanel.test.tsx"
               ],
               "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
+            },
+            {
+              "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+              "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+              "paths": [
+                "apps/web/src/pages/staff-directory-recovery.test.tsx",
+                "apps/web/src/pages/electricity-settings-forms.test.tsx"
+              ],
+              "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -782938,7 +783626,8 @@
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-native-provider-fixtures-and-staff-log-assertion",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-admin-settings-role-catalogue-testing-library"
         ]
       }
     },
@@ -911064,6 +911753,154 @@
         {
           "file": "cancellation-permission-rtl.log",
           "sha256": "1a351f13a0b0d1193371471de68cd2a672e230a7407c8aea8afec79f564600d2"
+        }
+      ]
+    },
+    "release-0.6-admin-settings-role-catalogue-testing-library": {
+      "batch": "release-0.6-admin-settings-role-catalogue-testing-library",
+      "base_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.03.08",
+        "02-auth-users-admin.md#T-09.05.01",
+        "02-auth-users-admin.md#T-09.10.02",
+        "02-auth-users-admin.md#T-09.10.03",
+        "02-auth-users-admin.md#T-09.12.01",
+        "02-auth-users-admin.md#T-09.12.02",
+        "02-auth-users-admin.md#T-09.12.04",
+        "02-auth-users-admin.md#T-09.12.05",
+        "02-auth-users-admin.md#T-10.01.01",
+        "02-auth-users-admin.md#T-10.01.02",
+        "03-core-business.md#T-03.04.01.01",
+        "03-core-business.md#T-03.04.01.02",
+        "03-core-business.md#T-03.04.01.03",
+        "03-core-business.md#T-03.04.01.04",
+        "03-core-business.md#T-03.04.01.05",
+        "03-core-business.md#T-03.04.02.01",
+        "03-core-business.md#T-03.04.02.02",
+        "03-core-business.md#T-03.04.02.03",
+        "03-core-business.md#T-03.04.02.04",
+        "03-core-business.md#T-03.04.03.01",
+        "03-core-business.md#T-03.04.03.02",
+        "03-core-business.md#T-03.04.03.03",
+        "03-core-business.md#T-03.04.03.04",
+        "03-core-business.md#T-03.04.04.01",
+        "03-core-business.md#T-03.04.04.02",
+        "03-core-business.md#T-03.04.04.03",
+        "03-core-business.md#T-03.04.04.04",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.30.02.09",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/pages/catalogue-forms.test.tsx",
+        "apps/web/src/pages/electricity-settings-forms.test.tsx",
+        "apps/web/src/pages/staff-directory-recovery.test.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/catalogue-forms.test.tsx",
+          "sha256": "ca5b58f06abd321ad0bcf3ac553a3db1c95d35392c7b677fc1168965350a9e3a"
+        },
+        {
+          "path": "apps/web/src/pages/electricity-settings-forms.test.tsx",
+          "sha256": "3e1f0fc1b8aa2f92e9f7e7b36ea315f9fccf97d5ef972d28668fc47b083c7400"
+        },
+        {
+          "path": "apps/web/src/pages/staff-directory-recovery.test.tsx",
+          "sha256": "8ea25a757bc102e46edc900b54f17a208458e9d157028aa63c45d618ae12b2d4"
+        },
+        {
+          "path": "apps/web/src/pages/AdminCataloguePage.tsx",
+          "sha256": "0ce4eb4228c830c1d8dd2a426e953dfe0b47154d8e33967bb26c67d65f96d1b6"
+        },
+        {
+          "path": "apps/web/src/pages/AdminElectricityRulesPage.tsx",
+          "sha256": "9753e41d3caf52f333ff9991276aa7c1307dc7207ba2b65d1aafcd637a2a9d9b"
+        },
+        {
+          "path": "apps/web/src/pages/AdminStaffUsersPage.tsx",
+          "sha256": "0616beadc1ed04eb27194991f630fe0dcc55c2f781b6620126ea9733e0408ca4"
+        },
+        {
+          "path": "apps/web/src/test/catalogue-fixtures.ts",
+          "sha256": "7e16a4127db6176b5da89a1850b8097df1f0207d202f5c828ca35833dc210933"
+        },
+        {
+          "path": "apps/web/src/test/electricity-settings-fixtures.ts",
+          "sha256": "eab8f575c70b6a28282473a98839ce8b877b565658aacea7620bdd1d96bc99bc"
+        },
+        {
+          "path": "apps/web/src/test/staff-directory-fixtures.ts",
+          "sha256": "0ddeb100432a4fa4374ed9b00e4d6a37ee881027d1fdfe4daa69b7a50640550c"
+        },
+        {
+          "path": "apps/web/src/test/query-provider.tsx",
+          "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "ee1028396c08b722b5b9b1862c626e445de1f10e296b9622117863109ed29f64"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+        }
+      ],
+      "checks": [
+        "React Testing Library renders the versioned electricity settings forms and exercises accessible save controls while preserving field validation, localization and retry assertions. The staff role assignment case selects the table action, opens the Roles disclosure and removes a withdrawn grant while preserving the authorized reason and exact command.",
+        "The catalogue case uses the actual product list and editor for create, read and update. The added archive case selects the exact DELETE command, rejects a malformed acknowledgement and shows the archived status only after the expected empty 204 receipt. Existing catalogue confirmation and pricing assertions remain.",
+        "Jsdom contains both responsive copies of table actions. Role queries scope the edit actions to the named table. The two unchanged settings and catalogue suites passed 24 cases in the combined invocation with one role-case failure. The corrected role suite passed all 20 cases in its focused rerun. Web TypeScript, ESLint, Prettier and whitespace checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "proof_logs": [
+        {
+          "file": "admin-settings-role-catalogue-rtl.log",
+          "sha256": "d06b45d7d2393b704be0bed676349a75c31b950ef982669023796f7378ad46a1"
+        },
+        {
+          "file": "admin-settings-role-catalogue-rtl-final.log",
+          "sha256": "d27a56cfda701fc7a0e8d5ecf1887b9ab18e01fde04cd098576e0279b7f28a5f"
+        },
+        {
+          "file": "admin-role-rtl-final.log",
+          "sha256": "b6a4eea73cd5d3d961e15c39c8527a199a3354a7c67c94d9208e65afba0de207"
         }
       ]
     }
