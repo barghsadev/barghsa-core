@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T13:18:23+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T13:19:36+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1180 | Accepted with unchanged source bindings. |
-| verify | 128 | Existing work may be complete; inspect evidence before building. |
+| done | 1182 | Accepted with unchanged source bindings. |
+| verify | 126 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1217,7 +1217,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.07.01.01` | verify | Inventory needed | Implement secrets resolution abstraction: env vars, AWS Secrets Manager / HashiCorp Vault / encrypted config file |
 | `06-security-testing-observability.md#T-06.07.01.02` | verify | Recorded batch work | Ensure secrets are encrypted at rest and masked in every API response and admin UI display |
 | `06-security-testing-observability.md#T-06.07.01.03` | verify | Recorded batch work | Exclude secrets from logs, analytics, error tracking, telemetry, and support exports |
-| `06-security-testing-observability.md#T-06.07.01.04` | verify | Recorded batch work | Implement rotation support: overlapping active/previous key period; key versioning |
+| `06-security-testing-observability.md#T-06.07.01.04` | done | Recorded batch work | Implement rotation support: overlapping active/previous key period; key versioning |
 | `06-security-testing-observability.md#T-06.07.01.05` | done | Recorded batch work | Audit codebase for hardcoded secrets, .env committed, frontend-bundled secrets |
 | `06-security-testing-observability.md#T-06.07.01.06` | done | Recorded batch work | Add CI secret scan (e.g. truffleHog, gitLeaks) to block commits with secrets |
 | `06-security-testing-observability.md#T-06.07.02.01` | done | Recorded batch work | Configure SCA tool (e.g. Snyk, npm audit, OWASP Dependency-Check) in CI |
@@ -1330,7 +1330,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.12.01.04` | done | Recorded batch work | Write coverage exception template: requires technical justification + domain owner approval |
 | `06-security-testing-observability.md#T-06.12.02.01` | verify | Inventory needed | Implement CI workflow with all 12 PR gate checks in parallel where possible |
 | `06-security-testing-observability.md#T-06.12.02.02` | verify | Inventory needed | Configure step dependencies: lint → typecheck → unit → integration → migration → OpenAPI → build → coverage → security scans → review |
-| `06-security-testing-observability.md#T-06.12.02.03` | verify | Inventory needed | Implement migration validation: apply on clean DB + upgrade from previous schema |
+| `06-security-testing-observability.md#T-06.12.02.03` | done | Recorded batch work | Implement migration validation: apply on clean DB + upgrade from previous schema |
 | `06-security-testing-observability.md#T-06.12.02.04` | done | Recorded batch work | Implement OpenAPI drift detection: generated schema vs committed spec |
 | `06-security-testing-observability.md#T-06.12.02.05` | verify | Inventory needed | Configure required reviewers: domain owner; Finance/Security/Legal when protected rules change |
 | `06-security-testing-observability.md#T-06.12.02.06` | verify | Inventory needed | Add status check reporting: pass/fail per check, summary comment on PR |
