@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T10:19:49+00:00",
-  "source_commit": "7e3ee4f151fc5dd2f759b51a725d68f88f412495",
+  "updated": "2026-11-10T10:26:33+00:00",
+  "source_commit": "5092029ce83fb034f286bb01a708f49c76012186",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5554,7 +5554,7 @@
       "launch_required": true,
       "remaining": [
         "Read all 40 exact outcomes of actual scheduled run 42789410833. Targeted catalogue, tooltip, onboarding, form, staff, WebKit, saving agreement and ticket preview fixes passed locally. Staff comment, OTP settings and wallet receipt timeline results remain under review.",
-        "Bind current critical registration, MFA, legal onboarding, electricity and wallet, saving, solar construction and admin browser journeys to the accepted release source."
+        "Bind current critical registration, MFA, legal onboarding, electricity and wallet, saving, solar construction and admin browser journeys to the accepted release source. The saving payment and fulfillment journey has separate local acceptance."
       ],
       "owner": null,
       "depends_on": [],
@@ -5617,7 +5617,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": null
       }
@@ -42694,7 +42695,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -42754,7 +42756,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -361768,7 +361770,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -361812,7 +361815,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -362773,7 +362776,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -362817,7 +362821,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -363780,7 +363784,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -363824,7 +363829,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -364785,7 +364790,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -364829,7 +364835,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -365790,7 +365796,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -365834,7 +365841,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -366795,7 +366802,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -366839,7 +366847,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -367801,7 +367809,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -367845,7 +367854,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -368806,7 +368815,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -368850,7 +368860,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -369811,7 +369821,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -369855,7 +369866,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -370816,7 +370827,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -370860,7 +370872,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -371823,7 +371835,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-installation-address-selection",
@@ -371839,7 +371852,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "packages/i18n/src/saving.ts",
@@ -372560,7 +372573,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -372604,7 +372618,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -373566,7 +373580,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-authoritative-final-review",
@@ -373583,7 +373598,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "packages/i18n/src/saving.ts",
@@ -374309,7 +374324,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -374353,7 +374369,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -375314,7 +375330,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -375358,7 +375375,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -376319,7 +376336,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -376363,7 +376381,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -377326,7 +377344,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -377370,7 +377389,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -378331,7 +378350,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -378375,7 +378395,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -379341,7 +379361,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -379385,7 +379406,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -380355,7 +380376,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -380399,7 +380421,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -381369,7 +381391,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -381413,7 +381436,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -498238,21 +498261,93 @@
         "story": "06-security-testing-observability.md#spec-a2575d616ae6"
       },
       "requirement": "| T-06.10.03.08 | Write E2E: saving-plan order → agreement → invoice → payment → fulfillment stages | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "The existing browser journey covers order, reviewed and accepted agreement, invoice handoff and fulfillment. Verify the payment operation and resulting funded invoice in the same saving journey. The existing invoice-link assertions do not execute payment."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+        "changed_paths": [
+          "apps/web/e2e/saving-journey.spec.ts"
         ],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-saving-paid-fulfillment-browser-journey",
+          "reviewed_sha": "5092029ce83fb034f286bb01a708f49c76012186",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/confirmation-fixture.ts",
+              "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+            },
+            {
+              "path": "apps/web/e2e/saving-journey.spec.ts",
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
+            },
+            {
+              "path": "apps/web/src/components/InvoicePaymentSummary.tsx",
+              "sha256": "93d8b6443069032d549b373b099504b5f4eacfa04fcdb505e3d7b79068340d4e"
+            },
+            {
+              "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
+              "sha256": "ef268e2ee3303c37b3b7fa2b75d5170dd41fe15112e0459db7f7d79bfae9daa7"
+            },
+            {
+              "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
+            },
+            {
+              "path": "apps/web/src/lib/saving-staff-operation-form.ts",
+              "sha256": "cc4e99f2828a2716a22e8948b52f1c7b65afe2768e09bdfff4e154115b3ac505"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "98ac0194357d870547c1abc3a340f3ac1a49b90e22cac09ed5fb4ceee2ad543e"
+            },
+            {
+              "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
+              "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
+            },
+            {
+              "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
+            },
+            {
+              "path": "apps/web/src/pages/SavingsPage.tsx",
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-payment-review.ts",
+              "sha256": "0d41b27f86956261051d124698778a07a8d9f4bea3d7fda7a6e11a966b175d9a"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "The existing bilingual browser journey creates the saving draft, reviews the current quote and agreement, submits the captured order, verifies the accepted immutable agreement, and confirms staff review and invoice handoff. Its earlier private-scope, stale read, retry, exact amount and agreement assertions remain intact.",
+            "The customer follows the owned saving invoice payment action and confirms exactly one 200000 IRR wallet charge for the remaining 300000 IRR invoice after prior funding. The request carries the exact captured review hash, a UUID idempotency key and the correct CSRF header. The UI reads back the wallet transaction, 100 percent paid progress, the paid saving invoice and the removed payment action.",
+            "Before payment the staff delivery transition stays disabled. After the paid readback, staff obtains an exact stage review, acknowledges the financial confirmation and submits one product-delivery completion with the expected stage status, explanation, review hash and idempotency key. The same customer order then shows installation and document upload as the current stage.",
+            "The production browser suite passed the expanded saving journey in Persian and English on Firefox, Mobile Chrome and Mobile Safari without retries. Fixtures remain local and deterministic. Focused lint, formatting and diff checks passed. The exact full candidate and deployed payment and operational gates remain separate."
+          ]
+        }
       }
     },
     {
@@ -545893,7 +545988,8 @@
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-owned-solar-and-consultation-feedback",
           "release-0.5-saving-conditional-agreement",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "populated-canonical-viewport-matrix",
@@ -545913,7 +546009,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -547891,7 +547987,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -548263,7 +548360,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
@@ -550298,7 +550395,8 @@
           "release-0.5-conditional-control-contrast",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-accessibility-impact-and-manual-review"
+          "release-0.6-accessibility-impact-and-manual-review",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -550338,7 +550436,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -603048,7 +603146,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -603524,7 +603623,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/e2e/saving-staff-operation-form-fixture.ts",
@@ -746381,7 +746480,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -747536,7 +747635,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -748486,7 +748586,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -749629,7 +749729,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ]
       }
     },
@@ -755350,7 +755451,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -758555,7 +758656,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ]
       }
     },
@@ -770469,7 +770571,7 @@
       "launch_required": true,
       "remaining": [
         "Reconcile every epic-01 and epic-06 criterion with current source and operational evidence. Apply the approved direct-main workflow while preserving all production gates.",
-        "Finish the full exact candidate browser matrix, source coverage and receipt review. Targeted saving agreement and private ticket preview cases now pass. Exact hosted performance and remaining scheduled outcomes are open.",
+        "Finish the full exact candidate browser matrix, source coverage and receipt review. The saving wallet-payment and post-payment fulfillment journey passed in three local browsers. The complete scheduled and hosted candidate results remain open.",
         "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
@@ -770584,7 +770686,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+          "release-0.6-saving-agreement-and-ticket-browser-corrections",
+          "release-0.6-saving-paid-fulfillment-browser-journey"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -878057,6 +878160,89 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-42789410833",
       "source_scope_proof": "saving-ticket-source-scope-proof.json",
       "source_scope_proof_sha256": "5e5ab0ddcac02fd6fc34e47304a3c0f21047f41e01e29f05d08070f1f8db7f4b"
+    },
+    "release-0.6-saving-paid-fulfillment-browser-journey": {
+      "batch": "release-0.6-saving-paid-fulfillment-browser-journey",
+      "base_commit": "5092029ce83fb034f286bb01a708f49c76012186",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.03.08",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/saving-journey.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+        },
+        {
+          "path": "apps/web/e2e/saving-journey.spec.ts",
+          "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
+          "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
+        },
+        {
+          "path": "apps/web/src/components/InvoicePaymentSummary.tsx",
+          "sha256": "93d8b6443069032d549b373b099504b5f4eacfa04fcdb505e3d7b79068340d4e"
+        },
+        {
+          "path": "apps/web/src/components/SavingStaffOperationForm.tsx",
+          "sha256": "ef268e2ee3303c37b3b7fa2b75d5170dd41fe15112e0459db7f7d79bfae9daa7"
+        },
+        {
+          "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+          "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
+        },
+        {
+          "path": "apps/web/src/lib/saving-staff-operation-form.ts",
+          "sha256": "cc4e99f2828a2716a22e8948b52f1c7b65afe2768e09bdfff4e154115b3ac505"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+          "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "98ac0194357d870547c1abc3a340f3ac1a49b90e22cac09ed5fb4ceee2ad543e"
+        },
+        {
+          "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
+          "sha256": "33df230a8aef3d1f135da4c9d99db0d9f27bd5943f01a2015ffd7498a0b80552"
+        },
+        {
+          "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+          "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
+        },
+        {
+          "path": "apps/web/src/pages/SavingsPage.tsx",
+          "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-payment-review.ts",
+          "sha256": "0d41b27f86956261051d124698778a07a8d9f4bea3d7fda7a6e11a966b175d9a"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "The existing bilingual browser journey creates the saving draft, reviews the current quote and agreement, submits the captured order, verifies the accepted immutable agreement, and confirms staff review and invoice handoff. Its earlier private-scope, stale read, retry, exact amount and agreement assertions remain intact.",
+        "The customer follows the owned saving invoice payment action and confirms exactly one 200000 IRR wallet charge for the remaining 300000 IRR invoice after prior funding. The request carries the exact captured review hash, a UUID idempotency key and the correct CSRF header. The UI reads back the wallet transaction, 100 percent paid progress, the paid saving invoice and the removed payment action.",
+        "Before payment the staff delivery transition stays disabled. After the paid readback, staff obtains an exact stage review, acknowledges the financial confirmation and submits one product-delivery completion with the expected stage status, explanation, review hash and idempotency key. The same customer order then shows installation and document upload as the current stage.",
+        "The production browser suite passed the expanded saving journey in Persian and English on Firefox, Mobile Chrome and Mobile Safari without retries. Fixtures remain local and deterministic. Focused lint, formatting and diff checks passed. The exact full candidate and deployed payment and operational gates remain separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/saving-paid-journey",
+      "source_scope_proof": "saving-paid-journey-source-scope-proof.json",
+      "source_scope_proof_sha256": "27a6eb1de2f0dc976a33dbb0bce7e1c79259210750aa762c8a1135c6e8310565"
     }
   },
   "historical_improvements": [

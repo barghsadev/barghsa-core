@@ -1,9 +1,12 @@
+import { createHash } from 'node:crypto';
 import { tSaving as savingCopy } from '@barghsa/i18n/saving';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { contractText as contractCopy } from '@barghsa/i18n/contracts';
 import { tSavingStaffReview as savingReviewCopy } from '@barghsa/i18n/saving-staff-review';
 import { t as appCopy } from '@barghsa/i18n/app';
 import { t as workspaceCopy } from '@barghsa/i18n/workspace';
+import { tWalletInvoicePayment as walletCopy } from '@barghsa/i18n/wallet-invoice-payment';
+import type { WalletPaymentReviewData } from '@barghsa/shared/finance';
 import { test, expect, type Page } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { checkRoutePresentation } from './route-presentation';
@@ -19,7 +22,9 @@ const olderOrderId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
 const parentOrderId = '77777777-7777-4777-8777-777777777777';
 const invoiceId = '88888888-8888-4888-8888-888888888888';
 const contractId = '99999999-9999-4999-8999-999999999999';
+const transactionId = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 const submittedAt = '2026-09-23T10:00:00.000Z';
+const deliveryNote = 'Ready to deliver';
 const stageNames = [
   'request_confirmation',
   'product_delivery',
@@ -56,12 +61,29 @@ for (const locale of ['en', 'fa'] as const)
     const submissions: Array<Record<string, unknown>> = [];
     const submissionBodies: Array<string | null> = [];
     const staffActions: Array<{ path: string; body: Record<string, unknown> }> = [];
+    const stagePreviews: Array<Record<string, unknown>> = [];
+    const walletPayments: Array<Record<string, unknown>> = [];
     const staffReviewHash = 'b'.repeat(64);
+    const deliveryReviewHash = 'c'.repeat(64);
     let approved = false;
     let stageIndex = -1;
     let invoiceState = 'Unpaid';
     let contractState = 'AwaitingCustomerAcceptance';
+    let walletBalance = '500000';
     let operatingContext: 'customer' | 'staff' = 'customer';
+    const paidAmount = () =>
+      invoiceState === 'Paid' ? '300000' : invoiceState === 'PartiallyFunded' ? '100000' : '0';
+    const financialStatus = () => (invoiceState === 'Paid' ? 'paid' : 'unpaid');
+    const orderStatus = () =>
+      stageIndex > 1 ? 'in_progress' : approved ? 'approved' : 'awaiting_staff_review';
+    const stages = () =>
+      stageNames.map((stage, index) => ({
+        stage,
+        status: index < stageIndex ? 'completed' : index === stageIndex ? 'in_progress' : 'pending',
+        completed_at: index < stageIndex ? submittedAt : null,
+        explanation: index === 1 && stageIndex > 1 ? deliveryNote : null,
+        handover_description: null,
+      }));
     let detailReads = 0;
     let releaseFirstDetail!: () => void;
     const firstDetail = new Promise<void>((resolve) => {
@@ -246,7 +268,7 @@ for (const locale of ['en', 'fa'] as const)
       })
     );
     await page.route(`**/api/wallet/${profileId}`, (route) =>
-      route.fulfill({ json: { availableBalance: '500000' } })
+      route.fulfill({ json: { availableBalance: walletBalance } })
     );
     await page.route('**/api/saving/orders', (route) => {
       submissionBodies.push(route.request().postData());
@@ -284,8 +306,8 @@ for (const locale of ['en', 'fa'] as const)
               orders: [
                 {
                   id: savingOrderId,
-                  status: approved ? 'approved' : 'awaiting_staff_review',
-                  financial_status: 'unpaid',
+                  status: orderStatus(),
+                  financial_status: financialStatus(),
                   invoice_id: invoiceId,
                   invoice_state: invoiceState,
                   contract_id: approved ? contractId : null,
@@ -317,8 +339,8 @@ for (const locale of ['en', 'fa'] as const)
           current_hardware_title: { en: 'Efficient device', fa: 'دستگاه کم‌مصرف' },
           installation_address_id: addressId,
           can_edit: false,
-          status: approved ? 'approved' : 'awaiting_staff_review',
-          financial_status: 'unpaid',
+          status: orderStatus(),
+          financial_status: financialStatus(),
           bill_identifier: '1234567890123',
           submitted_at: submittedAt,
           address_snapshot: { full_address: 'Saving Street', postal_code: '1234567890' },
@@ -343,19 +365,7 @@ for (const locale of ['en', 'fa'] as const)
           invoice_id: invoiceId,
           invoice_state: invoiceState,
           cancellation_pending: false,
-          stages: stageNames.map((stage, index) => ({
-            stage,
-            status: approved
-              ? index < stageIndex
-                ? 'completed'
-                : index === stageIndex
-                  ? 'in_progress'
-                  : 'pending'
-              : 'pending',
-            completed_at: approved && index < stageIndex ? submittedAt : null,
-            explanation: null,
-            handover_description: null,
-          })),
+          stages: stages(),
           revisions: [],
           addressAmendments: [],
           hardwareAmendments: [],
@@ -387,8 +397,8 @@ for (const locale of ['en', 'fa'] as const)
       orderId: parentOrderId,
       profileId,
       customerName: 'Buyer',
-      status: approved ? 'approved' : 'awaiting_staff_review',
-      financialStatus: 'unpaid',
+      status: orderStatus(),
+      financialStatus: financialStatus(),
       submittedAt,
       billIdentifier: '1234567890123',
       addressSnapshot: { full_address: 'Saving Street' },
@@ -403,7 +413,7 @@ for (const locale of ['en', 'fa'] as const)
       invoiceState,
       contractState: approved ? contractState : 'AwaitingStaffReview',
       totalIrR: '300000',
-      paidIrR: '0',
+      paidIrR: paidAmount(),
       refundedIrR: '0',
       pendingRefundIrR: '0',
     });
@@ -420,19 +430,7 @@ for (const locale of ['en', 'fa'] as const)
       route.fulfill({
         json: {
           ...staffOrder(),
-          stages: stageNames.map((stage, index) => ({
-            stage,
-            status: approved
-              ? index < stageIndex
-                ? 'completed'
-                : index === stageIndex
-                  ? 'in_progress'
-                  : 'pending'
-              : 'pending',
-            completed_at: index < stageIndex ? submittedAt : null,
-            explanation: null,
-            handover_description: null,
-          })),
+          stages: stages(),
           events: [],
           revisions: [],
           addressAmendments: [],
@@ -488,6 +486,71 @@ for (const locale of ['en', 'fa'] as const)
       stageIndex = 1;
       return route.fulfill({ json: { savingOrderId, status: 'approved', refundId: null } });
     });
+    const deliveryPath = `/api/staff/saving/orders/${savingOrderId}/stages/product_delivery/complete`;
+    await page.route(`**${deliveryPath}/review`, (route) => {
+      stagePreviews.push(route.request().postDataJSON() as Record<string, unknown>);
+      const order = staffOrder();
+      return route.fulfill({
+        json: {
+          schemaVersion: 1,
+          scope: {
+            action: 'saving.staff-fulfillment-stage-transition',
+            profileId,
+            resourceId: savingOrderId,
+          },
+          data: {
+            customerName: order.customerName,
+            profileName: order.customerName,
+            billIdentifier: order.billIdentifier,
+            addressSnapshot: order.addressSnapshot,
+            hardwareTitle: order.hardwareTitle,
+            pricingSnapshot: order.pricingSnapshot,
+            agreementSnapshot: order.agreementSnapshot,
+            contractId,
+            contractState,
+            versionId: agreementVersionId,
+            versionNumber: 1,
+            contractSnapshot: {},
+            invoiceId,
+            invoiceState,
+            invoiceTotalIrR: order.totalIrR,
+            paidAmountIrR: order.paidIrR,
+            refundedAmountIrR: order.refundedIrR,
+            pendingRefundAmountIrR: order.pendingRefundIrR,
+            orderStatus: order.status,
+            stages: stages().map(({ stage, status }) => ({ stage, status })),
+            hasPendingUpgrade: false,
+            stage: 'product_delivery',
+            action: 'complete',
+            currentStatus: 'in_progress',
+            nextStatus: 'completed',
+            nextStage: 'installation_and_document_upload',
+            commercialStatus: 'in_progress',
+            explanation: deliveryNote,
+            handoverDescription: null,
+          },
+          hash: deliveryReviewHash,
+        },
+      });
+    });
+    await page.route(`**${deliveryPath}`, (route) => {
+      expect(invoiceState).toBe('Paid');
+      expect(stageIndex).toBe(1);
+      staffActions.push({
+        path: 'complete-delivery',
+        body: route.request().postDataJSON() as Record<string, unknown>,
+      });
+      stageIndex = 2;
+      return route.fulfill({
+        json: {
+          savingOrderId,
+          status: 'in_progress',
+          stage: 'product_delivery',
+          stageStatus: 'completed',
+          nextStage: 'installation_and_document_upload',
+        },
+      });
+    });
     const invoice = {
       invoiceId,
       role: 'original',
@@ -508,20 +571,108 @@ for (const locale of ['en', 'fa'] as const)
       explanation: null,
       lines: [],
     };
-    await page.route(`**/api/invoices/${invoiceId}`, (route) =>
-      route.fulfill({
+    await page.route(`**/api/invoices/${invoiceId}`, (route) => {
+      const current = { ...invoice, state: invoiceState, paidAmount: paidAmount() };
+      return route.fulfill({
         json: {
           viewedInvoiceId: invoiceId,
           originalInvoiceId: invoiceId,
           savingOrderId,
-          invoice,
-          chain: [invoice],
+          invoice: current,
+          chain: [current],
           payments: [],
           bankReceipts: [],
           refunds: [],
         },
-      })
-    );
+      });
+    });
+    const walletReview = () => {
+      const remaining = BigInt(invoice.totalAmount) - BigInt(paidAmount());
+      const data: WalletPaymentReviewData = {
+        currency: 'IRR',
+        profile: { id: profileId, title: 'Buyer', type: 'INDIVIDUAL' },
+        invoice: {
+          id: invoiceId,
+          state: invoiceState,
+          orderId: parentOrderId,
+          serviceType: 'savings',
+          issuedAt: invoice.issuedAt,
+          payableFrom: invoice.payableFrom,
+          dueAt: invoice.dueAt,
+          totalAmount: invoice.totalAmount,
+          paidAmount: paidAmount(),
+          remainingAmount: String(remaining),
+        },
+        lines: [],
+        totals: null,
+        payment: {
+          source: 'wallet',
+          availableBefore: walletBalance,
+          availableAfter: String(BigInt(walletBalance) - remaining),
+        },
+        contracts: [
+          {
+            id: contractId,
+            versionId: agreementVersionId,
+            state: contractState,
+            serviceType: 'savings',
+            ruleRevision: 1,
+            signatureRequired: true,
+            paymentRequired: true,
+            initialInvoice: true,
+            serviceStartRequired: false,
+            serviceStartsAt: null,
+            serviceEndsAt: null,
+            cancellationRefund: 'staff_decision',
+          },
+        ],
+        cancellation: 'separate_review_required',
+      };
+      return {
+        schemaVersion: 1,
+        scope: { action: 'invoice.wallet-payment', profileId, resourceId: invoiceId },
+        data,
+        hash: createHash('sha256').update(JSON.stringify(data)).digest('hex'),
+      };
+    };
+    await page.route(`**/api/invoices/${invoiceId}/wallet-payment`, (route) => {
+      const review = walletReview();
+      const remainingAmount = review.data.invoice.remainingAmount;
+      if (route.request().method() === 'GET')
+        return route.fulfill({
+          json: {
+            invoiceId,
+            profileId,
+            remainingAmount,
+            availableBalance: walletBalance,
+            canPay: ['Unpaid', 'PartiallyFunded'].includes(invoiceState),
+            review,
+          },
+        });
+      expect(route.request().method()).toBe('POST');
+      expect(route.request().headers()['x-csrf-token']).toBe('saving-wallet-csrf');
+      expect(invoiceState).toBe('PartiallyFunded');
+      const body = route.request().postDataJSON() as Record<string, unknown>;
+      expect(body).toEqual({
+        idempotencyKey: expect.stringMatching(/^[a-f0-9-]{36}$/),
+        expectedRemainingAmount: '200000',
+        expectedReviewHash: review.hash,
+      });
+      walletPayments.push(body);
+      invoiceState = 'Paid';
+      walletBalance = review.data.payment.availableAfter;
+      return route.fulfill({
+        json: {
+          invoiceId,
+          profileId,
+          idempotencyKey: body.idempotencyKey,
+          state: invoiceState,
+          amount: remainingAmount,
+          walletTransactionId: transactionId,
+          reviewHash: review.hash,
+        },
+      });
+    });
 
     await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.goto('/savings');
@@ -810,9 +961,7 @@ for (const locale of ['en', 'fa'] as const)
       page.getByText(savingCopy('product_delivery', locale), { exact: true })
     ).toBeVisible();
     await expect(page.getByText(savingCopy('staffPaymentRequired', locale))).toBeVisible();
-    await page
-      .getByRole('textbox', { name: savingCopy('staffReason', locale) })
-      .fill('Ready to deliver');
+    await page.getByRole('textbox', { name: savingCopy('staffReason', locale) }).fill(deliveryNote);
     await expect(
       page.getByRole('button', { name: savingCopy('staffComplete', locale) })
     ).toBeDisabled();
@@ -876,24 +1025,6 @@ for (const locale of ['en', 'fa'] as const)
     await expect(page.getByRole('heading', { name: contractCopy('title', locale) })).toBeVisible();
 
     contractState = 'Active';
-    invoiceState = 'PartiallyFunded';
-    await page.goto('/savings/orders');
-    await expect(
-      page.getByRole('link', { name: savingCopy('action.payInvoice', locale) })
-    ).toHaveAttribute('href', `/invoices/${invoiceId}`);
-    await page.goto(`/savings/orders/${savingOrderId}`);
-    await expect(
-      page.getByRole('region', { name: appCopy('workflow.summary', locale) }).getByRole('link', {
-        name: savingCopy('action.payInvoice', locale),
-      })
-    ).toHaveAttribute('href', `/invoices/${invoiceId}`);
-    await expect(
-      page.getByText(savingCopy('PartiallyFunded', locale), { exact: true })
-    ).toBeVisible();
-    await expect(
-      page.getByRole('link', { name: savingCopy('viewInvoice', locale) })
-    ).toHaveAttribute('href', `/invoices/${invoiceId}`);
-
     invoiceState = 'Draft';
     await page.goto(`/savings/orders/${savingOrderId}`);
     await expect(page.getByText(savingCopy('action.awaitInvoice', locale))).toBeVisible();
@@ -906,4 +1037,88 @@ for (const locale of ['en', 'fa'] as const)
     await expect(
       page.getByRole('link', { name: savingCopy('viewInvoice', locale) })
     ).toHaveAttribute('href', `/invoices/${invoiceId}`);
+
+    invoiceState = 'PartiallyFunded';
+    await page.goto('/savings/orders');
+    await expect(
+      page.getByRole('link', { name: savingCopy('action.payInvoice', locale) })
+    ).toHaveAttribute('href', `/invoices/${invoiceId}`);
+    await page.goto(`/savings/orders/${savingOrderId}`);
+    const payLink = page
+      .getByRole('region', { name: appCopy('workflow.summary', locale) })
+      .getByRole('link', { name: savingCopy('action.payInvoice', locale) });
+    await expect(payLink).toHaveAttribute('href', `/invoices/${invoiceId}`);
+    await expect(
+      page.getByText(savingCopy('PartiallyFunded', locale), { exact: true })
+    ).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: savingCopy('viewInvoice', locale) })
+    ).toHaveAttribute('href', `/invoices/${invoiceId}`);
+
+    const paymentHash = walletReview().hash;
+    await page
+      .context()
+      .addCookies([
+        { name: 'barghsa_csrf', value: 'saving-wallet-csrf', url: new URL(page.url()).origin },
+      ]);
+    await payLink.click();
+    const wallet = page.locator('#wallet-invoice-payment');
+    await wallet.getByRole('button', { name: walletCopy('pay', locale), exact: true }).click();
+    await expect(approve).toBeDisabled();
+    expect(walletPayments).toHaveLength(0);
+    await approveRiskConfirmation(page, locale, 'financial');
+    await approve.click();
+    await expect(wallet.getByRole('status')).toContainText(transactionId);
+    expect(walletPayments).toEqual([
+      {
+        idempotencyKey: expect.stringMatching(/^[a-f0-9-]{36}$/),
+        expectedRemainingAmount: '200000',
+        expectedReviewHash: paymentHash,
+      },
+    ]);
+    await expect(
+      page.getByRole('progressbar', { name: appCopy('invoices.payment.progress', locale) })
+    ).toHaveAttribute('aria-valuenow', '100');
+    await page
+      .getByRole('link', { name: appCopy('invoices.details.backToSavingOrder', locale) })
+      .click();
+    await expect(page).toHaveURL(new RegExp(`/savings/orders/${savingOrderId}$`));
+    await expect(payLink).toHaveCount(0);
+    await expect(page.getByText(savingCopy('Paid', locale), { exact: true })).toBeVisible();
+
+    operatingContext = 'staff';
+    await page.goto('/admin/saving-orders');
+    await page
+      .getByRole('button', { name: savingCopy('fulfillment', locale), exact: true })
+      .click();
+    await page
+      .getByRole('button', {
+        name: new RegExp(`Buyer.*${locale === 'fa' ? 'طرح صرفه‌جویی خانه' : 'Home saving plan'}`),
+      })
+      .click();
+    await page.getByRole('textbox', { name: savingCopy('staffReason', locale) }).fill(deliveryNote);
+    const complete = page.getByRole('button', { name: savingCopy('staffComplete', locale) });
+    await expect(complete).toBeEnabled();
+    await complete.click();
+    await expect(approve).toBeDisabled();
+    expect(stagePreviews).toEqual([{ expectedStatus: 'in_progress', explanation: deliveryNote }]);
+    expect(staffActions).toHaveLength(1);
+    await approveRiskConfirmation(page, locale, 'financial');
+    await approve.click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect(staffActions).toHaveLength(2);
+    expect(staffActions.at(-1)).toEqual({
+      path: 'complete-delivery',
+      body: {
+        idempotencyKey: expect.stringMatching(/^[a-f0-9-]{36}$/),
+        expectedReviewHash: deliveryReviewHash,
+        expectedStatus: 'in_progress',
+        explanation: deliveryNote,
+      },
+    });
+    operatingContext = 'customer';
+    await page.goto(`/savings/orders/${savingOrderId}`);
+    await expect(page.locator('li[aria-current="step"]')).toContainText(
+      savingCopy('installation_and_document_upload', locale)
+    );
   });
