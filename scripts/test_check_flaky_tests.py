@@ -22,6 +22,11 @@ RECORD = {
     "expiryDate": "2026-09-23",
     "severity": "critical",
     "reason": "Shared database race",
+    "temporaryCoverage": {
+        "testPath": "apps/api/src/wallet/online-topup-http.integration.test.ts",
+        "testName": "records one credited payment",
+        "rationale": "Exercises the same authenticated credit and replay assertion",
+    },
 }
 
 
@@ -39,6 +44,28 @@ class QuarantineTests(unittest.TestCase):
         self.assertEqual(report["status"], "passed")
         self.assertFalse(report["promotion_check"])
         self.assertEqual(report["active_quarantine_count"], 1)
+        self.assertEqual(report['quarantines'][0]['owner'], RECORD['owner'])
+        self.assertEqual(report['quarantines'][0]['days_in_quarantine'], 14)
+
+    def test_temporary_coverage_requires_distinct_unquarantined_test(self):
+        for coverage in (None, {}, {'rationale': 'same flow', 'testPath': '../test.ts', 'testName': 'case'},
+                         {**RECORD['temporaryCoverage'], 'testPath': RECORD['testPath'],
+                          'testName': RECORD['testName']}):
+            with self.subTest(coverage=coverage), self.assertRaises(ValueError):
+                self.evaluate(dict(RECORD, temporaryCoverage=coverage))
+        second = dict(RECORD, testName='second test', temporaryCoverage={
+            **RECORD['temporaryCoverage'], 'testPath': RECORD['testPath'], 'testName': RECORD['testName'],
+        })
+        with self.assertRaisesRegex(ValueError, 'independent test'):
+            self.evaluate(RECORD, second)
+
+    def test_summary_escapes_test_names_and_shows_current_age(self):
+        report = self.evaluate(dict(RECORD, testName='fixture | <img>'))
+        summary = '\n'.join(module.summary_lines(report, 'Observed flakes: unknown'))
+        self.assertIn('fixture &#124; &lt;img&gt;', summary)
+        self.assertIn('<code>@barghsadev/core</code> | active | 14 |', summary)
+        self.assertIn(RECORD['temporaryCoverage']['testName'], summary)
+        self.assertNotIn('<img>', summary)
 
     def test_promotion_blocks_valid_critical_quarantine_until_cleared(self):
         registry = {"version": 1, "quarantined": [RECORD]}

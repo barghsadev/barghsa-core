@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T13:00:32+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T13:04:23+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1178 | Accepted with unchanged source bindings. |
-| verify | 130 | Existing work may be complete; inspect evidence before building. |
+| done | 1180 | Accepted with unchanged source bindings. |
+| verify | 128 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1346,8 +1346,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.12.05.01` | verify | Inventory needed | Configure nightly CI: cross-browser E2E, full dep + security scan, dead-link check, flaky test report |
 | `06-security-testing-observability.md#T-06.12.05.02` | verify | Inventory needed | Configure weekly CI: load/performance regression, critical-domain mutation testing, dependency update PR |
 | `06-security-testing-observability.md#T-06.12.05.03` | verify | Inventory needed | Configure quarterly manual trigger: PG restore, DR rehearsal, access review, threat-model review, incident runbook exercise |
-| `06-security-testing-observability.md#T-06.12.05.04` | verify | Inventory needed | Flaky test management: quarantine system with owner, issue, expiry, equivalent temporary coverage |
-| `06-security-testing-observability.md#T-06.12.05.05` | verify | Inventory needed | Flaky test report dashboard: list, trend, owner, days in quarantine |
+| `06-security-testing-observability.md#T-06.12.05.04` | done | Recorded batch work | Flaky test management: quarantine system with owner, issue, expiry, equivalent temporary coverage |
+| `06-security-testing-observability.md#T-06.12.05.05` | done | Recorded batch work | Flaky test report dashboard: list, trend, owner, days in quarantine |
 | `06-security-testing-observability.md#T-06.13.01.01` | verify | Inventory needed | Install OpenTelemetry JS SDK + instrumentations (HTTP, NestJS, Express, PostgreSQL, Redis, gRPC) |
 | `06-security-testing-observability.md#T-06.13.01.02` | verify | Inventory needed | Configure OTel SDK auto-instrumentation for all process types (web, API, worker) |
 | `06-security-testing-observability.md#T-06.13.01.03` | verify | Inventory needed | Implement custom NestJS decorator/interceptor for span creation in domain services |

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T13:00:32+00:00",
-  "source_commit": "7b531f8a2cb12ad6a3c345917b535590dc244181",
+  "updated": "2026-11-10T13:04:23+00:00",
+  "source_commit": "82854b0b68dfced19cfd87abdab9b56a27356e6d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5198,7 +5198,8 @@
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-quarantine-coverage-and-reporting"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5242,7 +5243,7 @@
             },
             {
               "path": "docs/flaky-test-quarantine.md",
-              "sha256": "7d775e050d6a44c3953db16d9bde7f1e92fbc5cabb983951ad0f777ead10c2a0"
+              "sha256": "06458dfbc7fb851e5339230c826c38d889b789ecc2092f448db3069e93a928c9"
             }
           ],
           "checks": [
@@ -5317,7 +5318,8 @@
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-quarantine-coverage-and-reporting"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5361,7 +5363,7 @@
             },
             {
               "path": "docs/flaky-test-quarantine.md",
-              "sha256": "7d775e050d6a44c3953db16d9bde7f1e92fbc5cabb983951ad0f777ead10c2a0"
+              "sha256": "06458dfbc7fb851e5339230c826c38d889b789ecc2092f448db3069e93a928c9"
             }
           ],
           "checks": [
@@ -5738,7 +5740,8 @@
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-quarantine-coverage-and-reporting"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5782,7 +5785,7 @@
             },
             {
               "path": "docs/flaky-test-quarantine.md",
-              "sha256": "7d775e050d6a44c3953db16d9bde7f1e92fbc5cabb983951ad0f777ead10c2a0"
+              "sha256": "06458dfbc7fb851e5339230c826c38d889b789ecc2092f448db3069e93a928c9"
             }
           ],
           "checks": [
@@ -5886,7 +5889,8 @@
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-solar-request-touch-target"
+          "release-0.6-solar-request-touch-target",
+          "release-0.6-quarantine-coverage-and-reporting"
         ],
         "current_acceptance": null
       }
@@ -499969,7 +499973,8 @@
           "apps/web/e2e/solar-journey.spec.ts"
         ],
         "batches": [
-          "release-0.6-solar-issued-browser-journey-and-nightly-receipts"
+          "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
+          "release-0.6-quarantine-coverage-and-reporting"
         ],
         "current_acceptance": {
           "kind": "source-bound-solar-upload-to-contract-browser-journey",
@@ -500013,7 +500018,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "f43b1769a315bf296b5234a9e501f18d196445c34b6346ea823b913b9478385f"
+              "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -502730,7 +502735,8 @@
           "deploy/production/test_check_promotion.py"
         ],
         "batches": [
-          "release-0.6-first-launch-promotion-check"
+          "release-0.6-first-launch-promotion-check",
+          "release-0.6-quarantine-coverage-and-reporting"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -502767,11 +502773,11 @@
             },
             {
               "path": "scripts/check-flaky-tests.py",
-              "sha256": "0768ffe3ef92d4c170fc72b2ba406a3bf78e81ba3338a8b5c78089755ef14b02"
+              "sha256": "460d14c40fad8d345d4917c572a56abace1b39f7d7a859b2bf2a2260f4f249de"
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "f43b1769a315bf296b5234a9e501f18d196445c34b6346ea823b913b9478385f"
+              "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
             }
           ]
         }
@@ -502999,19 +503005,74 @@
         "story": "06-security-testing-observability.md#spec-bbcc8377dfff"
       },
       "requirement": "| T-06.12.05.04 | Flaky test management: quarantine system with owner, issue, expiry, equivalent temporary coverage | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/flaky-test-quarantine.md",
+          "scripts/check-flaky-tests.py",
+          "scripts/report-nightly-browser.py",
+          "scripts/test_check_flaky_tests.py",
+          "scripts/test_report_nightly_browser.py"
+        ],
+        "batches": [
+          "release-0.6-quarantine-coverage-and-reporting"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-quarantine-coverage-and-reporting",
+          "reviewed_sha": "82854b0b68dfced19cfd87abdab9b56a27356e6d",
+          "checks": [
+            "Quarantine records now identify an independently enabled temporary test and rationale. Self-reference and any replacement also in quarantine fail closed. The documented issue review requires the exact passing alternative and verification that it covers the original critical assertions.",
+            "Eleven quarantine, three nightly rollup and six promotion-gate checks passed. The current strict registry report passed with zero recorded quarantines and no inferred runtime-flake count. No case was skipped or exempted by this batch."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/browser-nightly.yml",
+              "sha256": "d8fd9f966e5488307a2e91535b326ff64960f2d8c7f433e7a100c53089dfb1c2"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+            },
+            {
+              "path": "deploy/production/check-promotion.py",
+              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+            },
+            {
+              "path": "docs/flaky-test-quarantine.md",
+              "sha256": "06458dfbc7fb851e5339230c826c38d889b789ecc2092f448db3069e93a928c9"
+            },
+            {
+              "path": "scripts/check-flaky-tests.py",
+              "sha256": "460d14c40fad8d345d4917c572a56abace1b39f7d7a859b2bf2a2260f4f249de"
+            },
+            {
+              "path": "scripts/check-flaky-tests.sh",
+              "sha256": "91b4d08510670e61adc283e56136fd8aa8eef0df88e1ed4b6506ed6a7fa9f128"
+            },
+            {
+              "path": "scripts/quarantine-registry.json",
+              "sha256": "157a74b0da194e57fcfd444594a710eeba719bb205bfd9969b5d5e634fbb58b2"
+            },
+            {
+              "path": "scripts/report-nightly-browser.py",
+              "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+            },
+            {
+              "path": "scripts/test_check_flaky_tests.py",
+              "sha256": "ea6ba6ee7b8033f850951697c4b684d8ee74656d08a33033526f902311b05372"
+            },
+            {
+              "path": "scripts/test_report_nightly_browser.py",
+              "sha256": "8f57cfe2b989c2e385765166354e3f624bbce6f1b44552f3c2406aff50099efa"
+            }
+          ]
+        }
       }
     },
     {
@@ -503025,19 +503086,74 @@
         "story": "06-security-testing-observability.md#spec-bbcc8377dfff"
       },
       "requirement": "| T-06.12.05.05 | Flaky test report dashboard: list, trend, owner, days in quarantine | S |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/flaky-test-quarantine.md",
+          "scripts/check-flaky-tests.py",
+          "scripts/report-nightly-browser.py",
+          "scripts/test_check_flaky_tests.py",
+          "scripts/test_report_nightly_browser.py"
+        ],
+        "batches": [
+          "release-0.6-quarantine-coverage-and-reporting"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-quarantine-coverage-and-reporting",
+          "reviewed_sha": "82854b0b68dfced19cfd87abdab9b56a27356e6d",
+          "checks": [
+            "Current CI summaries list the test, owner, status, age, expiry and temporary coverage. The nightly summary shows active quarantines and observed flaky cases separately across the existing seven-day history. Missing history stays unknown.",
+            "Eleven quarantine, three nightly rollup and six promotion-gate checks passed. The current strict registry report passed with zero recorded quarantines and no inferred runtime-flake count. No case was skipped or exempted by this batch."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/browser-nightly.yml",
+              "sha256": "d8fd9f966e5488307a2e91535b326ff64960f2d8c7f433e7a100c53089dfb1c2"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+            },
+            {
+              "path": "deploy/production/check-promotion.py",
+              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+            },
+            {
+              "path": "docs/flaky-test-quarantine.md",
+              "sha256": "06458dfbc7fb851e5339230c826c38d889b789ecc2092f448db3069e93a928c9"
+            },
+            {
+              "path": "scripts/check-flaky-tests.py",
+              "sha256": "460d14c40fad8d345d4917c572a56abace1b39f7d7a859b2bf2a2260f4f249de"
+            },
+            {
+              "path": "scripts/check-flaky-tests.sh",
+              "sha256": "91b4d08510670e61adc283e56136fd8aa8eef0df88e1ed4b6506ed6a7fa9f128"
+            },
+            {
+              "path": "scripts/quarantine-registry.json",
+              "sha256": "157a74b0da194e57fcfd444594a710eeba719bb205bfd9969b5d5e634fbb58b2"
+            },
+            {
+              "path": "scripts/report-nightly-browser.py",
+              "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+            },
+            {
+              "path": "scripts/test_check_flaky_tests.py",
+              "sha256": "ea6ba6ee7b8033f850951697c4b684d8ee74656d08a33033526f902311b05372"
+            },
+            {
+              "path": "scripts/test_report_nightly_browser.py",
+              "sha256": "8f57cfe2b989c2e385765166354e3f624bbce6f1b44552f3c2406aff50099efa"
+            }
+          ]
+        }
       }
     },
     {
@@ -773597,7 +773713,8 @@
           "release-0.6-existing-config-store-and-secret-service",
           "release-0.6-first-launch-promotion-check",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-quarantine-coverage-and-reporting"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -883483,6 +883600,73 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/sealed-document-stream-scan",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "5a3de527dc5ec38f1abae59e0e76e3b29c8427ec4d8d12c93f75de60a1fe3b4c"
+    },
+    "release-0.6-quarantine-coverage-and-reporting": {
+      "batch": "release-0.6-quarantine-coverage-and-reporting",
+      "base_commit": "82854b0b68dfced19cfd87abdab9b56a27356e6d",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "docs/flaky-test-quarantine.md",
+        "scripts/check-flaky-tests.py",
+        "scripts/report-nightly-browser.py",
+        "scripts/test_check_flaky_tests.py",
+        "scripts/test_report_nightly_browser.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "d8fd9f966e5488307a2e91535b326ff64960f2d8c7f433e7a100c53089dfb1c2"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+        },
+        {
+          "path": "docs/flaky-test-quarantine.md",
+          "sha256": "06458dfbc7fb851e5339230c826c38d889b789ecc2092f448db3069e93a928c9"
+        },
+        {
+          "path": "scripts/check-flaky-tests.py",
+          "sha256": "460d14c40fad8d345d4917c572a56abace1b39f7d7a859b2bf2a2260f4f249de"
+        },
+        {
+          "path": "scripts/check-flaky-tests.sh",
+          "sha256": "91b4d08510670e61adc283e56136fd8aa8eef0df88e1ed4b6506ed6a7fa9f128"
+        },
+        {
+          "path": "scripts/quarantine-registry.json",
+          "sha256": "157a74b0da194e57fcfd444594a710eeba719bb205bfd9969b5d5e634fbb58b2"
+        },
+        {
+          "path": "scripts/report-nightly-browser.py",
+          "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+        },
+        {
+          "path": "scripts/test_check_flaky_tests.py",
+          "sha256": "ea6ba6ee7b8033f850951697c4b684d8ee74656d08a33033526f902311b05372"
+        },
+        {
+          "path": "scripts/test_report_nightly_browser.py",
+          "sha256": "8f57cfe2b989c2e385765166354e3f624bbce6f1b44552f3c2406aff50099efa"
+        }
+      ],
+      "checks": [
+        "Quarantine records now identify an independently enabled temporary test and rationale. Self-reference and any replacement also in quarantine fail closed. The documented issue review requires the exact passing alternative and verification that it covers the original critical assertions.",
+        "Current CI summaries list the test, owner, status, age, expiry and temporary coverage. The nightly summary shows active quarantines and observed flaky cases separately across the existing seven-day history. Missing history stays unknown.",
+        "Eleven quarantine, three nightly rollup and six promotion-gate checks passed. The current strict registry report passed with zero recorded quarantines and no inferred runtime-flake count. No case was skipped or exempted by this batch."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/quarantine-coverage-and-reporting",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "1ce8a413ff7f93da644c110f58fd20751c78e71a8e750719afef2d10854f6557"
     }
   },
   "historical_improvements": [

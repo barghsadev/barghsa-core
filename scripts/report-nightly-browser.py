@@ -66,8 +66,8 @@ def history_lines(runs, directory):
     lines = [
         f"{sum(run['conclusion'] == 'success' for run in runs)} of {len(runs)} scheduled runs passed.",
         "",
-        "| Run | Conclusion | Shards with results | Observed flaky cases |",
-        "| --- | --- | ---: | ---: |",
+        "| Run | Conclusion | Shards with results | Observed flaky cases | Active quarantines |",
+        "| --- | --- | ---: | ---: | ---: |",
     ]
     for run in runs:
         run_id = int(run["databaseId"])
@@ -86,7 +86,14 @@ def history_lines(runs, directory):
             shards = f"{reported}/{expected}"
         else:
             shards, flakes = "Unavailable", "Unknown"
-        lines.append(f"| {run_id} | {run['conclusion']} | {shards} | {flakes} |")
+        quarantine = read_json(directory / str(run_id) / 'nightly-quarantine.json')
+        active = 'Unknown'
+        if (isinstance(quarantine, dict) and quarantine.get('schema_version') == 1
+                and quarantine.get('status') in ('passed', 'blocked')
+                and type(quarantine.get('active_quarantine_count')) is int
+                and quarantine['active_quarantine_count'] >= 0):
+            active = quarantine['active_quarantine_count']
+        lines.append(f"| {run_id} | {run['conclusion']} | {shards} | {flakes} | {active} |")
     return lines
 
 

@@ -17,6 +17,7 @@ Every quarantined test MUST have a durable record containing:
 - **Owner** — the GitHub user or team responsible for fixing the flaky test.
 - **Issue link** — a link to the GitHub issue tracking the root cause fix.
 - **Expiry date** — a date by which the test must be either fixed or re-quarantined with a new issue. No expiry may exceed 30 days from the quarantine date. If the root cause is still not fixed, the issue must be updated and re-assessed before the expiry.
+- **Equivalent temporary coverage** — an enabled test identified by path and name, with a rationale for the critical assertions it preserves. Attach its passing run to the issue before approving the quarantine.
 
 ### 2. Critical Tests in Quarantine
 
@@ -66,7 +67,12 @@ Quarantine records live in a file at `scripts/quarantine-registry.json`. Each re
   "quarantineDate": "2026-08-24",
   "expiryDate": "2026-09-23",
   "severity": "critical",
-  "reason": "Intermittent timeout in CI due to shared DB state"
+  "reason": "Intermittent timeout in CI due to shared DB state",
+  "temporaryCoverage": {
+    "testPath": "apps/api/src/wallet/online-topup-http.integration.test.ts",
+    "testName": "records one credited payment",
+    "rationale": "Preserves authenticated credit and replay assertions"
+  }
 }
 ```
 
@@ -80,7 +86,7 @@ Calculate locale-sensitive date expectations in the browser being tested. When c
 
 1. Confirm the test is genuinely flaky (not a deterministic failure from a code change).
 2. Create a GitHub issue describing the failure pattern.
-3. Add the JSON record to `scripts/quarantine-registry.json`.
+3. Verify the independent replacement test exercises the same required behavior and link its passing run from the issue. Add the JSON record to `scripts/quarantine-registry.json`.
 4. In the test runner config, mark the test as skipped with a comment referencing the quarantine issue.
 
 Historical migration tests run the production SQL and journal prefix for the specific
@@ -132,4 +138,4 @@ The nightly browser workflow is `.github/workflows/browser-nightly.yml` and is s
 
 A separate nightly job fetches a fresh dependency advisory report and checks it with the same validator as ordinary CI. It also runs Drizzle generation against the checkout and requires an unchanged migration directory. The job retains both reports for 14 days. Web typechecking verifies that workspace shell link destinations exist in the generated route tree.
 
-The nightly rollup checks the quarantine registry once per run and publishes current shard counts alongside seven days of scheduled run outcomes in GitHub Actions. An incomplete shard receipt keeps the current report incomplete. Historical runs without receipts show unknown flake counts. The compact rollup and quarantine report are retained for 14 days.
+The nightly rollup checks the quarantine registry once per run. Its summary lists each recorded test, owner, age, expiry and replacement test. The seven-day history shows observed flaky cases and active quarantine counts separately. An incomplete shard receipt keeps the current report incomplete. Historical runs without a receipt show unknown counts for that receipt. The compact rollup and quarantine report are retained for 14 days.

@@ -55,6 +55,9 @@ class NightlyBrowserReportTests(unittest.TestCase):
         receipt = self.root / "1" / "nightly-browser-summary.json"
         receipt.parent.mkdir()
         receipt.write_text(json.dumps(nightly.summarize_shards(self.root)))
+        (receipt.parent / 'nightly-quarantine.json').write_text(json.dumps({
+            'schema_version': 1, 'status': 'blocked', 'active_quarantine_count': 2,
+        }))
         history = nightly.history_lines(
             [
                 {"databaseId": 1, "conclusion": "failure"},
@@ -63,6 +66,6 @@ class NightlyBrowserReportTests(unittest.TestCase):
             self.root,
         )
         self.assertIn("0 of 2 scheduled runs passed.", history)
-        self.assertIn("| 1 | failure | 1/40 | 3 |", history)
-        self.assertIn("| 2 | cancelled | Unavailable | Unknown |", history)
+        self.assertIn("| 1 | failure | 1/40 | 3 | 2 |", history)
+        self.assertIn("| 2 | cancelled | Unavailable | Unknown | Unknown |", history)
         self.assertEqual(nightly.history_lines(None, self.root), ["Scheduled run history unavailable."])
