@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T12:39:15+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T12:43:14+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1177 | Accepted with unchanged source bindings. |
-| verify | 131 | Existing work may be complete; inspect evidence before building. |
+| done | 1179 | Accepted with unchanged source bindings. |
+| verify | 129 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1067,10 +1067,10 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-07.01.02` | verify | Earlier deferred | Configure dev-mode OTP bypass and console printing |
 | `01-platform-infrastructure.md#T-07.01.03` | verify | Earlier deferred | Create `pnpm db:push` script for dev schema synchronization |
 | `01-platform-infrastructure.md#T-07.01.04` | verify | Earlier deferred | Add environment indicator middleware |
-| `01-platform-infrastructure.md#T-07.02.01` | verify | Earlier deferred | Create versioned configuration store in PostgreSQL |
+| `01-platform-infrastructure.md#T-07.02.01` | done | Earlier deferred | Create versioned configuration store in PostgreSQL |
 | `01-platform-infrastructure.md#T-07.02.02` | verify | Earlier deferred | Create configuration validation framework |
 | `01-platform-infrastructure.md#T-07.02.03` | verify | Earlier deferred | Implement configuration rollback |
-| `01-platform-infrastructure.md#T-07.02.04` | verify | Earlier deferred | Create secrets encryption and masking service |
+| `01-platform-infrastructure.md#T-07.02.04` | done | Earlier deferred | Create secrets encryption and masking service |
 | `01-platform-infrastructure.md#T-07.02.05` | verify | Earlier deferred | Implement provider configuration lifecycle with test-send |
 | `01-platform-infrastructure.md#T-07.03.01` | done | Earlier deferred | Create shared ESLint configuration |
 | `01-platform-infrastructure.md#T-07.03.02` | done | Earlier deferred | Configure Prettier with consistent formatting |

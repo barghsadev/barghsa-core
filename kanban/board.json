@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T12:39:15+00:00",
-  "source_commit": "8a5bc157791c3ae44b82fbf6a8038e68bf1c961f",
+  "updated": "2026-11-10T12:43:14+00:00",
+  "source_commit": "539dbcc9ed4f642e7ebb4485d20c1f84c18fbe90",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -17601,12 +17601,10 @@
         "story": "01-platform-infrastructure.md#spec-8b76025ce35a"
       },
       "requirement": "- **T-07.02.01:** Create versioned configuration store in PostgreSQL\n  - **Notes:** Table `admin_config`: `id` (UUIDv7), `key` (unique, namespaced like `notifications.sms.provider`), `value` (JSONB), `version` (integer, auto-incrementing per key), `state` (enum: 'draft', 'active', 'superseded'), `created_by` (FK to staff user), `activated_at` (timestamptz, nullable), `superseded_at` (timestamptz, nullable), `effective_from` (timestamptz, nullable for scheduled changes), `prev_version_id` (FK to previous version), `validation_result` (JSONB, store last validation). Every key has a `draft`, at most one `active`, any number of `superseded`.\n  - **Dependencies:** S-02.02\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17635,8 +17633,59 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-existing-config-store-and-secret-service"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-postgresql-versioned-config-store",
+          "reviewed_sha": "539dbcc9ed4f642e7ebb4485d20c1f84c18fbe90",
+          "checks": [
+            "The existing PostgreSQL app_config store persists per-key JSON values, monotonic versions and update times. Mutations update the global cache epoch in the transaction; cache reads recheck the durable version. All 43 focused config-writer cases passed. The 37 selected cache cases were included in the passing shared Vitest stage. The unrelated object-store Node test stage was stopped and supplies no evidence.",
+            "Read-only staging schema inventory on the deployed v0.5 database confirmed both primary keys, all required columns, three positive per-key versions and one positive global version. No setting values were selected."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
+            },
+            {
+              "path": "apps/api/src/admin/delivery-window-config.service.test.ts",
+              "sha256": "6bfa57d9e66a4742745e59fb4ab1262ea5460943bcee8a246ff6632566e222c7"
+            },
+            {
+              "path": "apps/api/src/admin/green-electricity-config.service.test.ts",
+              "sha256": "eca9036f1ca9abf2d2a6581e1336078dab40f34d35f8846bda448496aca42d39"
+            },
+            {
+              "path": "apps/api/src/admin/wallet-topup-limit-config.service.test.ts",
+              "sha256": "dd513c97f676fc8633619264a0e13000cec8a309b37589988d91bfff8b56f835"
+            },
+            {
+              "path": "apps/api/src/config-cache/config-cache.service.ts",
+              "sha256": "72398081aea677a3495577ca8effa59594eee1f02988bb982bb6251a03b88e83"
+            },
+            {
+              "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+              "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+            },
+            {
+              "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
+              "sha256": "2bc3a50f31c5fab9548992be2d06741e8d5da86c53fab3be86ec85075a74dff8"
+            },
+            {
+              "path": "packages/db/src/schema/config.ts",
+              "sha256": "2914db0bae7de10cf8897980590547e744ca6afbb2840e9a457883d9759215bb"
+            },
+            {
+              "path": "packages/shared/src/config-cache/config-cache.test.ts",
+              "sha256": "627b63a633340301a773cb84dbe3152b4083ca7cb78ab81f48fe62b2461524aa"
+            },
+            {
+              "path": "packages/shared/src/config-cache/config-cache.ts",
+              "sha256": "e58d2b6837cec2af58cb7793ee5a033267b2cfe81321b623e790b75cf2c9d7f0"
+            }
+          ]
+        }
       }
     },
     {
@@ -17748,12 +17797,10 @@
         "story": "01-platform-infrastructure.md#spec-8b76025ce35a"
       },
       "requirement": "- **T-07.02.04:** Create secrets encryption and masking service\n  - **Notes:** Secrets stored in admin_config with `sensitive: true` flag. On write: encrypt value with AES-256-GCM using a master key from environment variable (`CONFIG_ENCRYPTION_KEY`, 32 bytes, never logged). Store nonce + ciphertext + tag in `value`. On read in admin UI: always return `••••••••` (masked) with last 4 chars visible for identification. On read in backend: decrypt only in the service that needs it. No other service or log has access to cleartext. Export: `encryptSecret(plaintext)`, `decryptSecret(ciphertext)`, `maskSecret(ciphertext)`. Master key rotation supported via `active_key_id` and `previous_key_id` fields in a separate secrets table.\n  - **Dependencies:** T-07.02.01\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17782,8 +17829,54 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-existing-config-store-and-secret-service"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-platform-secret-service",
+          "reviewed_sha": "539dbcc9ed4f642e7ebb4485d20c1f84c18fbe90",
+          "checks": [
+            "The existing platform encryption and masking service uses authenticated encryption and purpose-specific keys. Reused the 58 shared and 94 API cases bound to unchanged sources, including v1/v2 overlap, missing/wrong key, tampering, masking and placeholder preservation. This platform implementation acceptance leaves native rollout, production inventory and telemetry verification on their separate security tasks."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
+              "sha256": "dad6e0a1a6978cfac5184664637e4b197bf6cc5cea5b00482ac6d43df1eef102"
+            },
+            {
+              "path": "apps/api/src/provider-config/provider-secrets.service.ts",
+              "sha256": "550f26b0c594a1982f466162c223b79722b72e40be2e851ec2c436dc0f7bc45a"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+            },
+            {
+              "path": "packages/shared/src/ai-models/secrets.test.ts",
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
+            },
+            {
+              "path": "packages/shared/src/ai-models/secrets.ts",
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/crypto.test.ts",
+              "sha256": "2841674ca2e2f87017ec15927a7c2224127ece4856bfe4662aa5ff6193fae60d"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/crypto.ts",
+              "sha256": "0490f5cbdd0eb0a7959cb820681162b87c6342d5fc59195660e7ceb0a92a8701"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.test.ts",
+              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.ts",
+              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+            }
+          ]
+        }
       }
     },
     {
@@ -773417,7 +773510,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-credential-storage-and-projection-review",
           "release-0.6-delivery-window-feedback-overlay",
-          "release-0.6-production-notes-and-provider-inventory"
+          "release-0.6-production-notes-and-provider-inventory",
+          "release-0.6-existing-config-store-and-secret-service"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -883037,6 +883131,102 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/production-notes-and-credential-inventory",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "3932fd74446089347a4e197f2466658766e6f2c94632e088b0c88cd57b8ce74e"
+    },
+    "release-0.6-existing-config-store-and-secret-service": {
+      "batch": "release-0.6-existing-config-store-and-secret-service",
+      "base_commit": "539dbcc9ed4f642e7ebb4485d20c1f84c18fbe90",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.02.01",
+        "01-platform-infrastructure.md#T-07.02.04",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
+        },
+        {
+          "path": "apps/api/src/admin/delivery-window-config.service.test.ts",
+          "sha256": "6bfa57d9e66a4742745e59fb4ab1262ea5460943bcee8a246ff6632566e222c7"
+        },
+        {
+          "path": "apps/api/src/admin/green-electricity-config.service.test.ts",
+          "sha256": "eca9036f1ca9abf2d2a6581e1336078dab40f34d35f8846bda448496aca42d39"
+        },
+        {
+          "path": "apps/api/src/admin/wallet-topup-limit-config.service.test.ts",
+          "sha256": "dd513c97f676fc8633619264a0e13000cec8a309b37589988d91bfff8b56f835"
+        },
+        {
+          "path": "apps/api/src/config-cache/config-cache.service.ts",
+          "sha256": "72398081aea677a3495577ca8effa59594eee1f02988bb982bb6251a03b88e83"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
+          "sha256": "dad6e0a1a6978cfac5184664637e4b197bf6cc5cea5b00482ac6d43df1eef102"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-secrets.service.ts",
+          "sha256": "550f26b0c594a1982f466162c223b79722b72e40be2e851ec2c436dc0f7bc45a"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "2a44eb37adb1827d1fed47d91e04de4568ba712a1a14f4adc1b7ca883425a9cf"
+        },
+        {
+          "path": "packages/db/drizzle/production/0080_complete_schema.sql",
+          "sha256": "720825ecc169d6e20cecc1af71edf14ed7dff558148b6acafaccd5616b049940"
+        },
+        {
+          "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
+          "sha256": "2bc3a50f31c5fab9548992be2d06741e8d5da86c53fab3be86ec85075a74dff8"
+        },
+        {
+          "path": "packages/db/src/schema/config.ts",
+          "sha256": "2914db0bae7de10cf8897980590547e744ca6afbb2840e9a457883d9759215bb"
+        },
+        {
+          "path": "packages/shared/src/ai-models/secrets.test.ts",
+          "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
+        },
+        {
+          "path": "packages/shared/src/ai-models/secrets.ts",
+          "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/crypto.test.ts",
+          "sha256": "2841674ca2e2f87017ec15927a7c2224127ece4856bfe4662aa5ff6193fae60d"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/crypto.ts",
+          "sha256": "0490f5cbdd0eb0a7959cb820681162b87c6342d5fc59195660e7ceb0a92a8701"
+        },
+        {
+          "path": "packages/shared/src/config-cache/config-cache.test.ts",
+          "sha256": "627b63a633340301a773cb84dbe3152b4083ca7cb78ab81f48fe62b2461524aa"
+        },
+        {
+          "path": "packages/shared/src/config-cache/config-cache.ts",
+          "sha256": "e58d2b6837cec2af58cb7793ee5a033267b2cfe81321b623e790b75cf2c9d7f0"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.test.ts",
+          "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.ts",
+          "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+        }
+      ],
+      "checks": [
+        "The existing PostgreSQL app_config store persists per-key JSON values, monotonic versions and update times. Mutations update the global cache epoch in the transaction; cache reads recheck the durable version. All 43 focused config-writer cases passed. The 37 selected cache cases were included in the passing shared Vitest stage. The unrelated object-store Node test stage was stopped and supplies no evidence.",
+        "Read-only staging schema inventory on the deployed v0.5 database confirmed both primary keys, all required columns, three positive per-key versions and one positive global version. No setting values were selected.",
+        "The existing platform encryption and masking service uses authenticated encryption and purpose-specific keys. Reused the 58 shared and 94 API cases bound to unchanged sources, including v1/v2 overlap, missing/wrong key, tampering, masking and placeholder preservation. This platform implementation acceptance leaves native rollout, production inventory and telemetry verification on their separate security tasks."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/config-store-and-secret-service",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "ac8bf92006b7f20bfd66a94cd9acfa37a9361b2046f731fc608e9db928431f8c"
     }
   },
   "historical_improvements": [
