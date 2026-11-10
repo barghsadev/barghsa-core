@@ -627,11 +627,11 @@ export function ConsultationDetailPage() {
           {error === 'notFound' ? loadingText('recordUnavailable', locale) : copy(error)}
         </p>
       )}
-      <CommandFeedback
-        kind="error"
-        message={offerRecovery ? copy('decisionUnconfirmed') : null}
-        className="text-destructive"
-      />
+      {offerRecovery && (
+        <p role="alert" className="text-destructive">
+          {copy('decisionUnconfirmed')}
+        </p>
+      )}
       {request && (
         <>
           <WorkflowStatusBanner

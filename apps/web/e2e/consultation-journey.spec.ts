@@ -10,12 +10,17 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page, type Route } from './coverage-fixture';
 import { shellText } from '@barghsa/i18n/shell';
 
-async function switchLanguage(page: Page, locale: 'en' | 'fa') {
+async function switchLanguage(page: Page, locale: 'en' | 'fa', touch: boolean) {
   const switcher = page.getByRole('button', { name: shellText('language', locale), exact: true });
   const compact = !(await switcher.isVisible());
-  if (compact)
-    await page.getByRole('button', { name: shellText('accountMenu', locale), exact: true }).click();
-  await switcher.click();
+  const activate = (control: Locator) => (touch ? control.tap() : control.click());
+  if (compact) {
+    await activate(
+      page.getByRole('button', { name: shellText('accountMenu', locale), exact: true })
+    );
+  }
+  await activate(switcher);
+  await expect(page.locator('html')).toHaveAttribute('lang', locale === 'en' ? 'fa' : 'en');
   if (compact) await page.keyboard.press('Escape');
 }
 
@@ -55,7 +60,8 @@ const title = { en: 'Energy consultation', fa: 'مشاوره انرژی' };
 for (const locale of ['en', 'fa'] as const)
   test(`customer consultation moves through staff offer, payment handoff, and completion (${locale})`, async ({
     page,
-  }) => {
+  }, info) => {
+    const touch = info.project.use.hasTouch === true;
     const reference = `CONSULTATION-${'2026ENERGY'.repeat(10)}`;
     const scope = {
       value:
@@ -556,7 +562,7 @@ for (const locale of ['en', 'fa'] as const)
     await expect(page.getByText(deliverables.value)).toBeVisible();
     await expectOfferTextFits(page, page.locator('main[data-area=dashboard]'), fields);
     const alternate = locale === 'en' ? 'fa' : 'en';
-    await switchLanguage(page, locale);
+    await switchLanguage(page, locale, touch);
     await page.clock.install();
     const decline = page.getByRole('button', { name: consultationCopy('declineOffer', alternate) });
     await decline.click();
@@ -590,7 +596,7 @@ for (const locale of ['en', 'fa'] as const)
     await declineReview
       .getByRole('button', { name: consultationCopy('decisionReviewClose', alternate) })
       .click();
-    await switchLanguage(page, alternate);
+    await switchLanguage(page, alternate, touch);
     await page.getByRole('button', { name: consultationCopy('acceptOffer', locale) }).click();
     const review = page.getByRole('dialog', {
       name: consultationCopy('decisionReviewTitle', locale),
@@ -608,9 +614,9 @@ for (const locale of ['en', 'fa'] as const)
     const readsBeforeRecovery = offerReads;
     await page.clock.fastForward(15_001);
     await expect(review).toHaveCount(0);
-    await expect(
-      page.getByText(consultationCopy('decisionUnconfirmed', locale), { exact: true })
-    ).toBeVisible();
+    const unconfirmed = consultationCopy('decisionUnconfirmed', locale);
+    await expect(page.getByText(unconfirmed, { exact: true })).toBeVisible();
+    await expect(page.getByRole('alert').filter({ hasText: unconfirmed })).toHaveText(unconfirmed);
     await expect.poll(() => offerReads).toBeGreaterThan(readsBeforeRecovery);
     await expect(page).toHaveURL(new RegExp(`/consultations/${requestId}$`));
     await expect(

@@ -72,9 +72,8 @@ for (const locale of ['en', 'fa'] as const) {
     const dialog = page.getByRole('dialog');
     await completeOtp(dialog, locale);
     await expect(dialog).toHaveCount(0);
-    await expect(panel.getByRole('status')).toHaveText(
-      locale === 'en' ? 'Threshold saved.' : 'آستانه ذخیره شد.'
-    );
+    const saved = locale === 'en' ? 'Threshold saved.' : 'آستانه ذخیره شد.';
+    await expect(panel.getByRole('status').filter({ hasText: saved })).toHaveText(saved);
     expect(writes).toEqual([{ threshold_irr: 250000 }]);
   });
 }
