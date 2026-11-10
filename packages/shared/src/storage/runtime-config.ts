@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { encryptAuthDelivery, decryptAuthDelivery } from '../auth-delivery/crypto.js';
+import { SecretCipher } from '../auth-delivery/crypto.js';
 import { createStorageProvider } from './storage-factory.js';
 import type { IFileStorageProvider } from './storage-provider.js';
 
@@ -49,17 +49,17 @@ export const storedStorageConfig = storageConfigFields
   .strict();
 export type StoredStorageConfig = z.infer<typeof storedStorageConfig>;
 
-function encryptionKey() {
-  const key = process.env.STORAGE_CONFIG_ENCRYPTION_KEY;
-  if (!key) throw new Error('Storage configuration encryption is unavailable');
-  return key;
+function storageCipher() {
+  const cipher = new SecretCipher('STORAGE_CONFIG_ENCRYPTION_KEY');
+  if (!cipher.available) throw new Error('Storage configuration encryption is unavailable');
+  return cipher;
 }
 export function encryptStorageSecret(secret: string): string | null {
-  return secret ? encryptAuthDelivery(STORAGE_CONFIG_KEY, secret, encryptionKey()) : null;
+  return secret ? storageCipher().encrypt(JSON.stringify(secret), STORAGE_CONFIG_KEY) : null;
 }
 export function decryptStorageSecret(secret: string | null): string {
   if (!secret) return '';
-  const value = decryptAuthDelivery(STORAGE_CONFIG_KEY, secret, encryptionKey());
+  const value: unknown = JSON.parse(storageCipher().decrypt(secret, STORAGE_CONFIG_KEY));
   if (typeof value !== 'string') throw new Error('Invalid storage secret');
   return value;
 }

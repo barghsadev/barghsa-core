@@ -1,4 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
+import { decryptProviderSecret } from '@barghsa/shared/auth-delivery';
 import {
   ProviderSecretsService,
   isEncryptedSecretValue,
@@ -12,12 +13,28 @@ describe('ProviderSecretsService (T-05.06.05)', () => {
   const originalEnv = process.env[PROVIDER_SECRET_ENCRYPTION_ENV];
 
   afterEach(() => {
+    vi.unstubAllEnvs();
     if (originalEnv === undefined) {
       delete process.env[PROVIDER_SECRET_ENCRYPTION_ENV];
     } else {
       process.env[PROVIDER_SECRET_ENCRYPTION_ENV] = originalEnv;
     }
     vi.restoreAllMocks();
+  });
+
+  it('writes identified secrets and keeps older ciphertext usable by the delivery worker', () => {
+    const legacy = new ProviderSecretsService(KEY).encryptValue('legacy-provider-fixture');
+    vi.stubEnv(PROVIDER_SECRET_ENCRYPTION_ENV, 'new-provider-fixture-key');
+    vi.stubEnv('PROVIDER_CONFIG_ENCRYPTION_KEY_ID', 'next');
+    vi.stubEnv('PROVIDER_CONFIG_ENCRYPTION_PREVIOUS_KEY', KEY);
+    const rotated = new ProviderSecretsService();
+    const encrypted = rotated.encryptValue('next-provider-fixture');
+    expect(encrypted).toMatch(/^v2:next:/);
+    expect(isEncryptedSecretValue(encrypted)).toBe(true);
+    expect(decryptProviderSecret(legacy)).toBe('legacy-provider-fixture');
+    expect(decryptProviderSecret(encrypted)).toBe('next-provider-fixture');
+    expect(rotated.maskConfig('smsir', { api_key: encrypted }).api_key).toMatch(/^\*+ture$/);
+    expect(rotated.maskConfig('smsir', { api_key: 'v2:unknown:bad' }).api_key).toBe('[encrypted]');
   });
 
   it('encrypts and decrypts a value round-trip', () => {

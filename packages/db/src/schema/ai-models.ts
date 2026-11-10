@@ -18,7 +18,7 @@ import { users } from './users.js';
  *   path (`/chat/completions` or `/messages`) and SSRF-guards the host.
  * - `model_name` — model identifier sent to the provider.
  * - `api_token` — provider API token, encrypted at rest (AES-256-GCM,
- *   `v1:` format, `AI_MODEL_ENCRYPTION_KEY`). Never returned plaintext by
+ *   versioned envelope, `AI_MODEL_ENCRYPTION_KEY`). Never returned plaintext by
  *   the API; nullable for token-less local endpoints.
  * - `last_test_status` / `last_tested_at` / `last_test_error` — outcome of
  *   the most recent test-button ping, driving the UI reachable/unreachable

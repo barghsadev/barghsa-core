@@ -1,7 +1,8 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { AiModelSecrets, isMaskedAiToken, isEncryptedAiToken } from './secrets.js';
 
 const TEST_KEY = Buffer.from('0123456789abcdef0123456789abcdef'); // 32 raw bytes
+afterEach(() => vi.unstubAllEnvs());
 
 describe('AiModelSecrets (T-09.11.01)', () => {
   let service: AiModelSecrets;
@@ -15,6 +16,21 @@ describe('AiModelSecrets (T-09.11.01)', () => {
     expect(stored).not.toContain('super-secret');
     expect(stored.startsWith('v1:')).toBe(true);
     expect(service.decryptToken(stored)).toBe('sk-super-secret-token-1234');
+  });
+
+  it('keeps the previous token readable and masked during key rotation', () => {
+    const previous = new AiModelSecrets('earlier-model-fixture-key').encryptToken('old-token-1234');
+    vi.stubEnv('AI_MODEL_ENCRYPTION_KEY', 'current-model-fixture-key');
+    vi.stubEnv('AI_MODEL_ENCRYPTION_KEY_ID', 'current');
+    vi.stubEnv('AI_MODEL_ENCRYPTION_PREVIOUS_KEY', 'earlier-model-fixture-key');
+    const rotating = new AiModelSecrets();
+    const current = rotating.encryptToken('current-token-9876');
+    expect(current).toMatch(/^v2:current:/);
+    expect(isEncryptedAiToken(current)).toBe(true);
+    expect(rotating.decryptToken(previous)).toBe('old-token-1234');
+    expect(rotating.decryptToken(current)).toBe('current-token-9876');
+    expect(rotating.maskToken(previous)).toMatch(/^\*+1234$/);
+    expect(rotating.maskToken('v2:unknown:bad')).toBe('[encrypted]');
   });
 
   it('uses a fresh IV per encryption (no two blobs are identical)', () => {

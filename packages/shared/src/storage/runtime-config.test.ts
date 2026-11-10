@@ -72,6 +72,17 @@ it('encrypts secrets with authenticated encryption and refuses a missing or wron
   vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY', 'different-key');
   expect(() => decryptStorageSecret(first)).toThrow();
 });
+it('reads the previous storage key and writes with the current identifier', () => {
+  vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY', 'old-storage-fixture-key');
+  const previous = encryptStorageSecret('older-storage-credential')!;
+  vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY', 'new-storage-fixture-key');
+  vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY_ID', 'current');
+  vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_PREVIOUS_KEY', 'old-storage-fixture-key');
+  const current = encryptStorageSecret('current-storage-credential')!;
+  expect(current).toMatch(/^v2:current:/);
+  expect(decryptStorageSecret(previous)).toBe('older-storage-credential');
+  expect(decryptStorageSecret(current)).toBe('current-storage-credential');
+});
 it('uses the browser endpoint for scoped URLs and refreshes credentials on every operation', async () => {
   vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY', 'test-storage-encryption-key');
   let value = { ...fields, encryptedSecret: encryptStorageSecret('first-secret') };

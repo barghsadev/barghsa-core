@@ -1,6 +1,12 @@
 import { Injectable, Logger, Inject, Optional } from '@nestjs/common';
-import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:crypto';
+import {
+  isSecretCiphertext,
+  PROVIDER_SECRET_ENCRYPTION_ENV,
+  SecretCipher,
+} from '@barghsa/shared/auth-delivery';
 import type { EmailProviderTransport, ProviderConfigBody } from './email-provider-config.service';
+
+export { PROVIDER_SECRET_ENCRYPTION_ENV };
 
 /**
  * Union of every provider transport the secrets service knows how to encrypt
@@ -22,8 +28,8 @@ export type ProviderTransport = EmailProviderTransport | 'smsir';
  * Guarantees:
  * - Secrets are encrypted at rest with AES-256-GCM (random 96-bit IV per
  *   value; the 128-bit auth tag is embedded, so tampering fails decryption).
- * - Encrypted values are prefixed `v1:` so legacy plaintext rows (from before
- *   this task) still decrypt as themselves — backward-compatible migration.
+ * - Versioned ciphertext supports an active and previous key. Legacy
+ *   plaintext rows still decrypt as themselves during migration.
  * - The API never returns plaintext secrets: `maskConfig` emits a display
  *   value of `*`s plus the last 4 characters.
  * - A missing `PROVIDER_CONFIG_ENCRYPTION_KEY` fails closed (throws) whenever
@@ -33,8 +39,6 @@ export type ProviderTransport = EmailProviderTransport | 'smsir';
  * Key resolution: `PROVIDER_CONFIG_ENCRYPTION_KEY`. A 64-char hex value is
  * used as 32 raw bytes; any other value is SHA-256-derived to a 32-byte key.
  */
-
-export const PROVIDER_SECRET_ENCRYPTION_ENV = 'PROVIDER_CONFIG_ENCRYPTION_KEY';
 
 /** Injection token to override the encryption key (used by tests). */
 export const PROVIDER_SECRETS_KEY = Symbol('PROVIDER_SECRETS_KEY');
@@ -46,9 +50,6 @@ const SECRET_FIELDS: Record<ProviderTransport, readonly string[]> = {
   smsir: ['api_key'],
 };
 
-/** Encrypted blob prefix (versioned so formats can evolve). */
-const ENCRYPTED_VERSION = 'v1';
-
 export interface ProviderMaskedConfig {
   [key: string]: unknown;
 }
@@ -56,15 +57,15 @@ export interface ProviderMaskedConfig {
 @Injectable()
 export class ProviderSecretsService {
   private readonly logger = new Logger(ProviderSecretsService.name);
-  private readonly key: Buffer | null;
+  private readonly cipher: SecretCipher;
 
   constructor(
     @Optional()
     @Inject(PROVIDER_SECRETS_KEY)
     key?: Buffer | string
   ) {
-    this.key = resolveKey(key);
-    if (!this.key) {
+    this.cipher = new SecretCipher(PROVIDER_SECRET_ENCRYPTION_ENV, key);
+    if (!this.available) {
       this.logger.warn(
         `${PROVIDER_SECRET_ENCRYPTION_ENV} is not set — new provider secret writes are unavailable.`
       );
@@ -73,7 +74,7 @@ export class ProviderSecretsService {
 
   /** True when a key is configured, so callers can enforce fail-closed policy. */
   get available(): boolean {
-    return this.key !== null;
+    return this.cipher.available;
   }
 
   /** Secret field names for a transport. */
@@ -83,35 +84,12 @@ export class ProviderSecretsService {
 
   /** Encrypt a single plaintext secret value. */
   encryptValue(plaintext: string): string {
-    const key = this.requireKey();
-    const iv = randomBytes(12);
-    const cipher = createCipheriv('aes-256-gcm', key, iv);
-    const encrypted = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
-    const tag = cipher.getAuthTag();
-    return [
-      ENCRYPTED_VERSION,
-      iv.toString('base64url'),
-      tag.toString('base64url'),
-      encrypted.toString('base64url'),
-    ].join(':');
+    return this.cipher.encrypt(plaintext);
   }
 
   /** Decrypt a stored value; values without the encrypted format pass through. */
   decryptValue(stored: string): string {
-    if (!stored.startsWith(ENCRYPTED_VERSION + ':')) return stored;
-    const [, ivB64, tagB64, dataB64] = stored.split(':');
-    if (!ivB64 || !tagB64 || !dataB64) {
-      // Malformed encrypted blob — fail closed rather than guess.
-      throw new Error('Provider secrets: malformed encrypted value');
-    }
-    const key = this.requireKey();
-    const decipher = createDecipheriv('aes-256-gcm', key, Buffer.from(ivB64, 'base64url'));
-    decipher.setAuthTag(Buffer.from(tagB64, 'base64url'));
-    const decrypted = Buffer.concat([
-      decipher.update(Buffer.from(dataB64, 'base64url')),
-      decipher.final(),
-    ]);
-    return decrypted.toString('utf8');
+    return isSecretCiphertext(stored) ? this.cipher.decrypt(stored) : stored;
   }
 
   /**
@@ -195,33 +173,10 @@ export class ProviderSecretsService {
       return isEncryptedSecretValue(stored) ? '[encrypted]' : this.maskValue(stored);
     }
   }
-
-  private requireKey(): Buffer {
-    const key = this.key;
-    if (!key) {
-      throw new Error(
-        `Provider secrets: ${PROVIDER_SECRET_ENCRYPTION_ENV} is not set; cannot encrypt/decrypt provider secrets`
-      );
-    }
-    return key;
-  }
-}
-
-function resolveKey(configured?: Buffer | string): Buffer | null {
-  const raw =
-    configured ??
-    (typeof process !== 'undefined' ? (process.env[PROVIDER_SECRET_ENCRYPTION_ENV] ?? '') : '');
-  if (!raw) return null;
-  if (typeof raw === 'string') {
-    // 64 hex chars = exactly 32 raw bytes.
-    if (/^[0-9a-fA-F]{64}$/.test(raw)) return Buffer.from(raw, 'hex');
-    return createHash('sha256').update(raw).digest();
-  }
-  return raw;
 }
 
 export function isEncryptedSecretValue(value: unknown): boolean {
-  return typeof value === 'string' && value.startsWith(ENCRYPTED_VERSION + ':');
+  return isSecretCiphertext(value);
 }
 
 /**

@@ -1,4 +1,4 @@
-import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:crypto';
+import { isSecretCiphertext, SecretCipher } from '../auth-delivery/crypto.js';
 
 /**
  * Field-level encryption for AI model API tokens (S-09.11, T-09.11.01).
@@ -8,11 +8,8 @@ import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:
  * 128-bit auth tag is embedded, so tampering fails decryption) and never
  * returns plaintext tokens through the API.
  *
- * Format: `v1:<iv-b64url>:<tag-b64url>:<data-b64url>` — the same versioned
- * envelope as the provider-secrets service (T-05.06.05), so stored blobs are
- * interchangeable if the two setters are ever consolidated. Values without
- * the `v1:` prefix are treated as legacy plaintext and pass through on
- * decrypt (backward-compatible), matching provider-secrets semantics.
+ * The shared envelope reads existing v1 records and supports identified
+ * active and previous keys. Unprefixed legacy plaintext remains readable.
  *
  * Key: `AI_MODEL_ENCRYPTION_KEY`. A 64-char hex value is used as 32 raw
  * bytes; any other value is SHA-256-derived to a 32-byte key.
@@ -28,19 +25,16 @@ export const AI_MODEL_ENCRYPTION_ENV = 'AI_MODEL_ENCRYPTION_KEY';
 /** Injection token to override the encryption key (used by tests). */
 export const AI_MODEL_SECRETS_KEY = Symbol('AI_MODEL_SECRETS_KEY');
 
-/** Encrypted blob prefix (versioned so formats can evolve). */
-const ENCRYPTED_VERSION = 'v1';
-
 export class AiModelSecrets {
-  private readonly key: Buffer | null;
+  private readonly cipher: SecretCipher;
 
   constructor(key?: Buffer | string) {
-    this.key = resolveKey(key);
+    this.cipher = new SecretCipher(AI_MODEL_ENCRYPTION_ENV, key);
   }
 
   /** True when a key is configured, so callers can fail closed. */
   get available(): boolean {
-    return this.key !== null;
+    return this.cipher.available;
   }
 
   /**
@@ -48,17 +42,7 @@ export class AiModelSecrets {
    * token must never be persisted in clear text.
    */
   encryptToken(plaintext: string): string {
-    const key = this.requireKey();
-    const iv = randomBytes(12);
-    const cipher = createCipheriv('aes-256-gcm', key, iv);
-    const encrypted = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
-    const tag = cipher.getAuthTag();
-    return [
-      ENCRYPTED_VERSION,
-      iv.toString('base64url'),
-      tag.toString('base64url'),
-      encrypted.toString('base64url'),
-    ].join(':');
+    return this.cipher.encrypt(plaintext);
   }
 
   /**
@@ -66,19 +50,7 @@ export class AiModelSecrets {
    * (legacy plaintext). Throws on a malformed or tampered blob — fail closed.
    */
   decryptToken(stored: string): string {
-    if (!stored.startsWith(ENCRYPTED_VERSION + ':')) return stored;
-    const [, ivB64, tagB64, dataB64] = stored.split(':');
-    if (!ivB64 || !tagB64 || !dataB64) {
-      throw new Error('AI model token: malformed encrypted value');
-    }
-    const key = this.requireKey();
-    const decipher = createDecipheriv('aes-256-gcm', key, Buffer.from(ivB64, 'base64url'));
-    decipher.setAuthTag(Buffer.from(tagB64, 'base64url'));
-    const decrypted = Buffer.concat([
-      decipher.update(Buffer.from(dataB64, 'base64url')),
-      decipher.final(),
-    ]);
-    return decrypted.toString('utf8');
+    return isSecretCiphertext(stored) ? this.cipher.decrypt(stored) : stored;
   }
 
   /**
@@ -102,34 +74,11 @@ export class AiModelSecrets {
       return isEncryptedAiToken(stored) ? '[encrypted]' : this.maskValue(stored);
     }
   }
-
-  private requireKey(): Buffer {
-    const key = this.key;
-    if (!key) {
-      throw new Error(
-        `AI model tokens: ${AI_MODEL_ENCRYPTION_ENV} is not set; cannot encrypt/decrypt API tokens`
-      );
-    }
-    return key;
-  }
 }
 
-function resolveKey(configured?: Buffer | string): Buffer | null {
-  const raw =
-    configured ??
-    (typeof process !== 'undefined' ? (process.env[AI_MODEL_ENCRYPTION_ENV] ?? '') : '');
-  if (!raw) return null;
-  if (typeof raw === 'string') {
-    // 64 hex chars = exactly 32 raw bytes.
-    if (/^[0-9a-fA-F]{64}$/.test(raw)) return Buffer.from(raw, 'hex');
-    return createHash('sha256').update(raw).digest();
-  }
-  return raw;
-}
-
-/** True when a value looks like an encrypted `v1:` blob. */
+/** True when a value uses a supported encrypted envelope prefix. */
 export function isEncryptedAiToken(value: unknown): boolean {
-  return typeof value === 'string' && value.startsWith(ENCRYPTED_VERSION + ':');
+  return isSecretCiphertext(value);
 }
 
 /**

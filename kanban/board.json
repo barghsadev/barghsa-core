@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T12:14:52+00:00",
-  "source_commit": "770185ba13b12da7e3a7598d46e7a917eac1bc12",
+  "updated": "2026-11-10T12:23:49+00:00",
+  "source_commit": "802dd27290ac812ac9649986864354ea2d226cb5",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -6842,7 +6842,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "deployed_base_column_and_clock_verification",
@@ -6926,7 +6927,7 @@
             },
             {
               "path": "packages/db/src/schema/ai-models.ts",
-              "sha256": "1496d2c9831813acf5642bdf7f38a0c01eb776ccefac264168a16471a3d77cc9"
+              "sha256": "e86e46e90f9a10df401ca017d1922c2333635119a11e69f8a77d60229bedb2ed"
             },
             {
               "path": "packages/db/src/schema/ai-policies.ts",
@@ -10130,7 +10131,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-api-and-worker-process-verification",
@@ -10194,7 +10196,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -11607,7 +11609,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -11623,11 +11626,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "885e982d1f734a3c551b811f3230240b163f6eb5aab9ddbc83f72b354e934c3b"
+              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -11773,7 +11776,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -11829,11 +11833,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "885e982d1f734a3c551b811f3230240b163f6eb5aab9ddbc83f72b354e934c3b"
+              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -12047,7 +12051,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -12087,7 +12092,7 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.ts",
-              "sha256": "17fe265691828cecd084cef72d146c036b6c2695441b7f0871975000c18455d0"
+              "sha256": "0490f5cbdd0eb0a7959cb820681162b87c6342d5fc59195660e7ceb0a92a8701"
             },
             {
               "path": "packages/shared/src/storage/file-operations.test.ts",
@@ -12099,11 +12104,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "885e982d1f734a3c551b811f3230240b163f6eb5aab9ddbc83f72b354e934c3b"
+              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -88481,7 +88486,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -88569,11 +88575,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
-              "sha256": "ca4cdff8410d0767d31e39583e436391a428820691cd6d0658548b7b718ccdfd"
+              "sha256": "dad6e0a1a6978cfac5184664637e4b197bf6cc5cea5b00482ac6d43df1eef102"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.ts",
-              "sha256": "a929e4b046eb4da531d72060041f2c7e9e82509d7f970b6269934bb5288d3891"
+              "sha256": "550f26b0c594a1982f466162c223b79722b72e40be2e851ec2c436dc0f7bc45a"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
@@ -88745,11 +88751,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.test.ts",
-              "sha256": "4957ffd8f44e2b5a4bad4ad4a59f706ff753ba21ef60d4d79d899c05c93055c1"
+              "sha256": "2841674ca2e2f87017ec15927a7c2224127ece4856bfe4662aa5ff6193fae60d"
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.ts",
-              "sha256": "17fe265691828cecd084cef72d146c036b6c2695441b7f0871975000c18455d0"
+              "sha256": "0490f5cbdd0eb0a7959cb820681162b87c6342d5fc59195660e7ceb0a92a8701"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
@@ -89455,7 +89461,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -89543,11 +89550,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
-              "sha256": "ca4cdff8410d0767d31e39583e436391a428820691cd6d0658548b7b718ccdfd"
+              "sha256": "dad6e0a1a6978cfac5184664637e4b197bf6cc5cea5b00482ac6d43df1eef102"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.ts",
-              "sha256": "a929e4b046eb4da531d72060041f2c7e9e82509d7f970b6269934bb5288d3891"
+              "sha256": "550f26b0c594a1982f466162c223b79722b72e40be2e851ec2c436dc0f7bc45a"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
@@ -89719,11 +89726,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.test.ts",
-              "sha256": "4957ffd8f44e2b5a4bad4ad4a59f706ff753ba21ef60d4d79d899c05c93055c1"
+              "sha256": "2841674ca2e2f87017ec15927a7c2224127ece4856bfe4662aa5ff6193fae60d"
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.ts",
-              "sha256": "17fe265691828cecd084cef72d146c036b6c2695441b7f0871975000c18455d0"
+              "sha256": "0490f5cbdd0eb0a7959cb820681162b87c6342d5fc59195660e7ceb0a92a8701"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
@@ -90429,7 +90436,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -90517,11 +90525,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
-              "sha256": "ca4cdff8410d0767d31e39583e436391a428820691cd6d0658548b7b718ccdfd"
+              "sha256": "dad6e0a1a6978cfac5184664637e4b197bf6cc5cea5b00482ac6d43df1eef102"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.ts",
-              "sha256": "a929e4b046eb4da531d72060041f2c7e9e82509d7f970b6269934bb5288d3891"
+              "sha256": "550f26b0c594a1982f466162c223b79722b72e40be2e851ec2c436dc0f7bc45a"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
@@ -90693,11 +90701,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.test.ts",
-              "sha256": "4957ffd8f44e2b5a4bad4ad4a59f706ff753ba21ef60d4d79d899c05c93055c1"
+              "sha256": "2841674ca2e2f87017ec15927a7c2224127ece4856bfe4662aa5ff6193fae60d"
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.ts",
-              "sha256": "17fe265691828cecd084cef72d146c036b6c2695441b7f0871975000c18455d0"
+              "sha256": "0490f5cbdd0eb0a7959cb820681162b87c6342d5fc59195660e7ceb0a92a8701"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
@@ -91404,7 +91412,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -91492,11 +91501,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
-              "sha256": "ca4cdff8410d0767d31e39583e436391a428820691cd6d0658548b7b718ccdfd"
+              "sha256": "dad6e0a1a6978cfac5184664637e4b197bf6cc5cea5b00482ac6d43df1eef102"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.ts",
-              "sha256": "a929e4b046eb4da531d72060041f2c7e9e82509d7f970b6269934bb5288d3891"
+              "sha256": "550f26b0c594a1982f466162c223b79722b72e40be2e851ec2c436dc0f7bc45a"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
@@ -91668,11 +91677,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.test.ts",
-              "sha256": "4957ffd8f44e2b5a4bad4ad4a59f706ff753ba21ef60d4d79d899c05c93055c1"
+              "sha256": "2841674ca2e2f87017ec15927a7c2224127ece4856bfe4662aa5ff6193fae60d"
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.ts",
-              "sha256": "17fe265691828cecd084cef72d146c036b6c2695441b7f0871975000c18455d0"
+              "sha256": "0490f5cbdd0eb0a7959cb820681162b87c6342d5fc59195660e7ceb0a92a8701"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
@@ -92378,7 +92387,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -92466,11 +92476,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
-              "sha256": "ca4cdff8410d0767d31e39583e436391a428820691cd6d0658548b7b718ccdfd"
+              "sha256": "dad6e0a1a6978cfac5184664637e4b197bf6cc5cea5b00482ac6d43df1eef102"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.ts",
-              "sha256": "a929e4b046eb4da531d72060041f2c7e9e82509d7f970b6269934bb5288d3891"
+              "sha256": "550f26b0c594a1982f466162c223b79722b72e40be2e851ec2c436dc0f7bc45a"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
@@ -92642,11 +92652,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.test.ts",
-              "sha256": "4957ffd8f44e2b5a4bad4ad4a59f706ff753ba21ef60d4d79d899c05c93055c1"
+              "sha256": "2841674ca2e2f87017ec15927a7c2224127ece4856bfe4662aa5ff6193fae60d"
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.ts",
-              "sha256": "17fe265691828cecd084cef72d146c036b6c2695441b7f0871975000c18455d0"
+              "sha256": "0490f5cbdd0eb0a7959cb820681162b87c6342d5fc59195660e7ceb0a92a8701"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
@@ -93355,7 +93365,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -93415,11 +93426,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
-              "sha256": "ca4cdff8410d0767d31e39583e436391a428820691cd6d0658548b7b718ccdfd"
+              "sha256": "dad6e0a1a6978cfac5184664637e4b197bf6cc5cea5b00482ac6d43df1eef102"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.ts",
-              "sha256": "a929e4b046eb4da531d72060041f2c7e9e82509d7f970b6269934bb5288d3891"
+              "sha256": "550f26b0c594a1982f466162c223b79722b72e40be2e851ec2c436dc0f7bc45a"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
@@ -93555,7 +93566,7 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.ts",
-              "sha256": "17fe265691828cecd084cef72d146c036b6c2695441b7f0871975000c18455d0"
+              "sha256": "0490f5cbdd0eb0a7959cb820681162b87c6342d5fc59195660e7ceb0a92a8701"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
@@ -94115,7 +94126,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-worker-outbox-dashboard",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -94187,11 +94199,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
-              "sha256": "ca4cdff8410d0767d31e39583e436391a428820691cd6d0658548b7b718ccdfd"
+              "sha256": "dad6e0a1a6978cfac5184664637e4b197bf6cc5cea5b00482ac6d43df1eef102"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.ts",
-              "sha256": "a929e4b046eb4da531d72060041f2c7e9e82509d7f970b6269934bb5288d3891"
+              "sha256": "550f26b0c594a1982f466162c223b79722b72e40be2e851ec2c436dc0f7bc45a"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
@@ -94339,7 +94351,7 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.ts",
-              "sha256": "17fe265691828cecd084cef72d146c036b6c2695441b7f0871975000c18455d0"
+              "sha256": "0490f5cbdd0eb0a7959cb820681162b87c6342d5fc59195660e7ceb0a92a8701"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.ts",
@@ -94775,7 +94787,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -94863,11 +94876,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
-              "sha256": "ca4cdff8410d0767d31e39583e436391a428820691cd6d0658548b7b718ccdfd"
+              "sha256": "dad6e0a1a6978cfac5184664637e4b197bf6cc5cea5b00482ac6d43df1eef102"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.ts",
-              "sha256": "a929e4b046eb4da531d72060041f2c7e9e82509d7f970b6269934bb5288d3891"
+              "sha256": "550f26b0c594a1982f466162c223b79722b72e40be2e851ec2c436dc0f7bc45a"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
@@ -95039,11 +95052,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.test.ts",
-              "sha256": "4957ffd8f44e2b5a4bad4ad4a59f706ff753ba21ef60d4d79d899c05c93055c1"
+              "sha256": "2841674ca2e2f87017ec15927a7c2224127ece4856bfe4662aa5ff6193fae60d"
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.ts",
-              "sha256": "17fe265691828cecd084cef72d146c036b6c2695441b7f0871975000c18455d0"
+              "sha256": "0490f5cbdd0eb0a7959cb820681162b87c6342d5fc59195660e7ceb0a92a8701"
             },
             {
               "path": "packages/shared/src/auth-delivery/smtp-network-guard.test.ts",
@@ -108759,7 +108772,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -108891,11 +108905,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
@@ -108915,7 +108929,7 @@
             },
             {
               "path": "packages/db/src/schema/ai-models.ts",
-              "sha256": "1496d2c9831813acf5642bdf7f38a0c01eb776ccefac264168a16471a3d77cc9"
+              "sha256": "e86e46e90f9a10df401ca017d1922c2333635119a11e69f8a77d60229bedb2ed"
             },
             {
               "path": "packages/db/src/schema/ai-model-circuit-states.ts",
@@ -111330,7 +111344,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -111794,11 +111809,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -453247,7 +453262,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453263,7 +453279,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -453287,7 +453303,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "885e982d1f734a3c551b811f3230240b163f6eb5aab9ddbc83f72b354e934c3b"
+              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
             },
             {
               "path": "packages/shared/src/storage/immutable-storage.test.ts",
@@ -453447,7 +453463,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453463,7 +453480,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -453487,7 +453504,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "885e982d1f734a3c551b811f3230240b163f6eb5aab9ddbc83f72b354e934c3b"
+              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
             },
             {
               "path": "packages/shared/src/storage/immutable-storage.test.ts",
@@ -453655,7 +453672,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453707,11 +453725,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "885e982d1f734a3c551b811f3230240b163f6eb5aab9ddbc83f72b354e934c3b"
+              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
             },
             {
               "path": "packages/shared/src/storage/immutable-storage.test.ts",
@@ -453945,7 +453963,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453997,11 +454016,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "885e982d1f734a3c551b811f3230240b163f6eb5aab9ddbc83f72b354e934c3b"
+              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
             },
             {
               "path": "packages/shared/src/storage/immutable-storage.test.ts",
@@ -464475,7 +464494,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464607,11 +464627,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
@@ -464631,7 +464651,7 @@
             },
             {
               "path": "packages/db/src/schema/ai-models.ts",
-              "sha256": "1496d2c9831813acf5642bdf7f38a0c01eb776ccefac264168a16471a3d77cc9"
+              "sha256": "e86e46e90f9a10df401ca017d1922c2333635119a11e69f8a77d60229bedb2ed"
             },
             {
               "path": "packages/db/src/schema/ai-model-circuit-states.ts",
@@ -464981,7 +465001,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -465113,11 +465134,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
@@ -465137,7 +465158,7 @@
             },
             {
               "path": "packages/db/src/schema/ai-models.ts",
-              "sha256": "1496d2c9831813acf5642bdf7f38a0c01eb776ccefac264168a16471a3d77cc9"
+              "sha256": "e86e46e90f9a10df401ca017d1922c2333635119a11e69f8a77d60229bedb2ed"
             },
             {
               "path": "packages/db/src/schema/ai-model-circuit-states.ts",
@@ -465489,7 +465510,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -465621,11 +465643,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
@@ -465645,7 +465667,7 @@
             },
             {
               "path": "packages/db/src/schema/ai-models.ts",
-              "sha256": "1496d2c9831813acf5642bdf7f38a0c01eb776ccefac264168a16471a3d77cc9"
+              "sha256": "e86e46e90f9a10df401ca017d1922c2333635119a11e69f8a77d60229bedb2ed"
             },
             {
               "path": "packages/db/src/schema/ai-model-circuit-states.ts",
@@ -465995,7 +466017,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -466127,11 +466150,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/completion.ts",
@@ -466151,7 +466174,7 @@
             },
             {
               "path": "packages/db/src/schema/ai-models.ts",
-              "sha256": "1496d2c9831813acf5642bdf7f38a0c01eb776ccefac264168a16471a3d77cc9"
+              "sha256": "e86e46e90f9a10df401ca017d1922c2333635119a11e69f8a77d60229bedb2ed"
             },
             {
               "path": "packages/db/src/schema/ai-model-circuit-states.ts",
@@ -472054,7 +472077,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -472342,11 +472366,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -472641,7 +472665,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -472929,11 +472954,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -473226,7 +473251,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -473514,11 +473540,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -473811,7 +473837,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -474099,11 +474126,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -474895,7 +474922,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -475183,11 +475211,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -475527,7 +475555,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -475995,11 +476024,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -476697,7 +476726,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -476985,11 +477015,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -477281,7 +477311,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -477569,11 +477600,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -477866,7 +477897,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -478154,11 +478186,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -478452,7 +478484,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -478740,11 +478773,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -479060,7 +479093,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -479348,11 +479382,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -479644,7 +479678,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "status": "done",
@@ -479932,11 +479967,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -487770,7 +487805,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -487810,7 +487846,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -487917,7 +487953,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -487973,7 +488010,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -488816,7 +488853,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -488906,7 +488944,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             }
           ]
         }
@@ -488937,7 +488975,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -489027,7 +489066,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             }
           ]
         }
@@ -489058,7 +489097,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -489148,7 +489188,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             }
           ]
         }
@@ -489697,7 +489737,8 @@
           "docs/security/security-verification.md"
         ],
         "batches": [
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "source-bound-sql-field-allowlists",
@@ -489781,7 +489822,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             }
           ],
           "checks": [
@@ -492456,7 +492497,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -492584,7 +492626,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -492917,7 +492959,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -492977,7 +493020,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -493030,7 +493073,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -493079,7 +493123,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -493288,7 +493332,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -493368,7 +493413,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -493505,14 +493550,28 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Read back the native PostgreSQL worker and delivery verification for the exact rotation implementation. Local shared and API tests, the fixed historical envelope, consumer type checks and migration drift checks passed; the local database-backed worker suite stopped before its tests."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "apps/api/src/provider-config/provider-secrets.service.test.ts",
+          "apps/api/src/provider-config/provider-secrets.service.ts",
+          "docs/operations/storage-configuration.md",
+          "docs/security/security-verification.md",
+          "packages/db/src/schema/ai-models.ts",
+          "packages/shared/src/ai-models/secrets.test.ts",
+          "packages/shared/src/ai-models/secrets.ts",
+          "packages/shared/src/auth-delivery/crypto.test.ts",
+          "packages/shared/src/auth-delivery/crypto.ts",
+          "packages/shared/src/storage/runtime-config.test.ts",
+          "packages/shared/src/storage/runtime-config.ts"
+        ],
+        "batches": [
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+        ],
         "current_acceptance": null
       }
     },
@@ -495044,7 +495103,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -495052,7 +495112,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             },
             {
               "path": "docs/threat-model.md",
@@ -495204,7 +495264,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -495212,7 +495273,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -495330,7 +495391,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -495338,7 +495400,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -495404,7 +495466,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -495420,7 +495483,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             }
           ],
           "checks": [
@@ -495495,7 +495558,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -495555,7 +495619,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -500672,7 +500736,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -500688,7 +500753,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             }
           ],
           "checks": [
@@ -500753,7 +500818,8 @@
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-ai-and-payment-transport-boundaries",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -500761,7 +500827,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "89c3093e7f6523630b010920169ff29e8c35dc20161eb2d3ed2deb1ea2904edc"
+              "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -761915,11 +761981,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
-              "sha256": "ca4cdff8410d0767d31e39583e436391a428820691cd6d0658548b7b718ccdfd"
+              "sha256": "dad6e0a1a6978cfac5184664637e4b197bf6cc5cea5b00482ac6d43df1eef102"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.ts",
-              "sha256": "a929e4b046eb4da531d72060041f2c7e9e82509d7f970b6269934bb5288d3891"
+              "sha256": "550f26b0c594a1982f466162c223b79722b72e40be2e851ec2c436dc0f7bc45a"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
@@ -763683,7 +763749,7 @@
             },
             {
               "path": "packages/db/src/schema/ai-models.ts",
-              "sha256": "1496d2c9831813acf5642bdf7f38a0c01eb776ccefac264168a16471a3d77cc9"
+              "sha256": "e86e46e90f9a10df401ca017d1922c2333635119a11e69f8a77d60229bedb2ed"
             },
             {
               "path": "packages/db/src/schema/ai-policies.ts",
@@ -763875,11 +763941,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -763895,11 +763961,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.test.ts",
-              "sha256": "4957ffd8f44e2b5a4bad4ad4a59f706ff753ba21ef60d4d79d899c05c93055c1"
+              "sha256": "2841674ca2e2f87017ec15927a7c2224127ece4856bfe4662aa5ff6193fae60d"
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.ts",
-              "sha256": "17fe265691828cecd084cef72d146c036b6c2695441b7f0871975000c18455d0"
+              "sha256": "0490f5cbdd0eb0a7959cb820681162b87c6342d5fc59195660e7ceb0a92a8701"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -764043,11 +764109,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "885e982d1f734a3c551b811f3230240b163f6eb5aab9ddbc83f72b354e934c3b"
+              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -765160,7 +765226,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -765941,11 +766008,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
-              "sha256": "ca4cdff8410d0767d31e39583e436391a428820691cd6d0658548b7b718ccdfd"
+              "sha256": "dad6e0a1a6978cfac5184664637e4b197bf6cc5cea5b00482ac6d43df1eef102"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.ts",
-              "sha256": "a929e4b046eb4da531d72060041f2c7e9e82509d7f970b6269934bb5288d3891"
+              "sha256": "550f26b0c594a1982f466162c223b79722b72e40be2e851ec2c436dc0f7bc45a"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
@@ -767685,7 +767752,7 @@
             },
             {
               "path": "packages/db/src/schema/ai-models.ts",
-              "sha256": "1496d2c9831813acf5642bdf7f38a0c01eb776ccefac264168a16471a3d77cc9"
+              "sha256": "e86e46e90f9a10df401ca017d1922c2333635119a11e69f8a77d60229bedb2ed"
             },
             {
               "path": "packages/db/src/schema/ai-policies.ts",
@@ -767877,11 +767944,11 @@
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
-              "sha256": "77f3b49df1f8624598d45660b5a3325571c206bdb7af12cceba2aea4d25607fb"
+              "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.ts",
-              "sha256": "c1718275b3c71e0e74dd980507be7ad3c4c6dbdb258d46650565f22ed3a56ad7"
+              "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
             },
             {
               "path": "packages/shared/src/ai-models/tester.test.ts",
@@ -767897,11 +767964,11 @@
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.test.ts",
-              "sha256": "4957ffd8f44e2b5a4bad4ad4a59f706ff753ba21ef60d4d79d899c05c93055c1"
+              "sha256": "2841674ca2e2f87017ec15927a7c2224127ece4856bfe4662aa5ff6193fae60d"
             },
             {
               "path": "packages/shared/src/auth-delivery/crypto.ts",
-              "sha256": "17fe265691828cecd084cef72d146c036b6c2695441b7f0871975000c18455d0"
+              "sha256": "0490f5cbdd0eb0a7959cb820681162b87c6342d5fc59195660e7ceb0a92a8701"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -768041,11 +768108,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "885e982d1f734a3c551b811f3230240b163f6eb5aab9ddbc83f72b354e934c3b"
+              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "7e35bb12545ebe9f932fa671d47c4f0d855ed9ebd6a2cd20008e6b659fb663db"
+              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -769068,7 +769135,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -773204,7 +773272,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-reusable-profile-and-staff-capability-scope",
-          "release-0.6-sql-field-allowlist-review"
+          "release-0.6-sql-field-allowlist-review",
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -882456,6 +882525,114 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/sql-field-allowlists",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "1ae7e2f071e6a2887a56be9a8da685741a0269c71198949f564efd37be65ca13"
+    },
+    "release-0.6-encryption-key-overlap-and-versioned-envelopes": {
+      "batch": "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+      "base_commit": "802dd27290ac812ac9649986864354ea2d226cb5",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.01.04",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/provider-config/provider-secrets.service.test.ts",
+        "apps/api/src/provider-config/provider-secrets.service.ts",
+        "docs/operations/storage-configuration.md",
+        "docs/security/security-verification.md",
+        "packages/db/src/schema/ai-models.ts",
+        "packages/shared/src/ai-models/secrets.test.ts",
+        "packages/shared/src/ai-models/secrets.ts",
+        "packages/shared/src/auth-delivery/crypto.test.ts",
+        "packages/shared/src/auth-delivery/crypto.ts",
+        "packages/shared/src/storage/runtime-config.test.ts",
+        "packages/shared/src/storage/runtime-config.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/ai-models/ai-model-secrets.service.ts",
+          "sha256": "9fcea417682f1cb6c35fcebfb4a6cf5dccd92ae7ee47eaaaf37b151877e1e79c"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
+          "sha256": "dad6e0a1a6978cfac5184664637e4b197bf6cc5cea5b00482ac6d43df1eef102"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-secrets.service.ts",
+          "sha256": "550f26b0c594a1982f466162c223b79722b72e40be2e851ec2c436dc0f7bc45a"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config.service.ts",
+          "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+        },
+        {
+          "path": "apps/worker/src/ai-models/test-runner.test.ts",
+          "sha256": "4c65ab65b8cddb3ef8d5c2ec0a29327f49473acbeb96249ac0f56bf7f307a0b0"
+        },
+        {
+          "path": "apps/worker/src/ai-models/test-runner.ts",
+          "sha256": "c7cc9369acbad0945138b6f5178c4d99053bcd822b547c20c87885aaa6be0aab"
+        },
+        {
+          "path": "apps/worker/src/auth-delivery/runner.ts",
+          "sha256": "d8734308b2f9ecade81c09e44553886a126056a20f80c170bab6406e970e790a"
+        },
+        {
+          "path": "docs/operations/storage-configuration.md",
+          "sha256": "8dfff467605df5a39e03bb882760d329cb1d90e570d6cc9d0626882b8b4d3a31"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "23d9f802b80966110c22686d49a2e3983062587d110186fc34db924b4e4fa514"
+        },
+        {
+          "path": "packages/db/src/schema/ai-models.ts",
+          "sha256": "e86e46e90f9a10df401ca017d1922c2333635119a11e69f8a77d60229bedb2ed"
+        },
+        {
+          "path": "packages/shared/src/ai-models/secrets.test.ts",
+          "sha256": "06382d26ce72e99fa109958ed674a71acb6df2a8646561aae54ac299be85cb45"
+        },
+        {
+          "path": "packages/shared/src/ai-models/secrets.ts",
+          "sha256": "978d9c94cf26d0d04354e6b44f7f23b32c682ce4d2e757e17511e0ac05599708"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/crypto.test.ts",
+          "sha256": "2841674ca2e2f87017ec15927a7c2224127ece4856bfe4662aa5ff6193fae60d"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/crypto.ts",
+          "sha256": "0490f5cbdd0eb0a7959cb820681162b87c6342d5fc59195660e7ceb0a92a8701"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/index.ts",
+          "sha256": "c1312017deaf5f564a80418f6c91e90f48d04f263f7647bb8a65587b41277db9"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email.ts",
+          "sha256": "c41ba3123682efdec817653ad3783f8ee2718d862f198c70c6df81600c6f4f31"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/sms.ts",
+          "sha256": "6bc26f856a25df6e17b8cc7b6e1dd8c4463ea845f20f96167e3fc624de15fede"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.test.ts",
+          "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.ts",
+          "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+        }
+      ],
+      "checks": [
+        "The shared authenticated envelope covers provider credentials, AI model tokens, storage and auth delivery. The active key writes and a previous key supports overlap. A configured key identifier enables v2; default writes keep the v1 format. The new authenticated context binds the family, key identifier and, where applicable, the auth delivery row.",
+        "During a staged swap, readers with both configured keys can consume ciphertext written in either direction. The fixed v1 outbox fixture, legacy records, duplicate key identifiers, wrong rows or families, tampered and retired ciphertext, and masked v2 API responses were exercised. The provider API writer was verified with the worker-facing decrypt helper.",
+        "All 58 focused shared cases and 94 API unit cases passed. The final historical-format file passed all four cases. Shared package build checks, API and worker type checking, focused lint and format checks, and unchanged Drizzle generation passed.",
+        "The local AI worker integration suite stopped at PostgreSQL setup, before its 14 cases. That suite is excluded from passing counts. Complete current native worker and delivery verification through hosted CI. No runtime key configuration was changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/encryption-key-overlap",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "b77298cc87be93b552f3f0faf1a231eb8fd533259aac3f4f893d9e1d52fc9b40"
     }
   },
   "historical_improvements": [

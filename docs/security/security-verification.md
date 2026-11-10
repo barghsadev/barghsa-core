@@ -58,6 +58,29 @@ rtk proxy pnpm --filter @barghsa/api exec vitest run \
   src/wallet/online-topup-http.integration.test.ts
 ```
 
+## Encryption key rotation
+
+The API and workers use separate key families for auth delivery, provider
+configuration, storage and AI models. For each family, the existing
+`*_ENCRYPTION_KEY` remains the active key. `*_ENCRYPTION_KEY_ID` enables
+identified ciphertext. `*_ENCRYPTION_PREVIOUS_KEY` and its optional
+`*_ENCRYPTION_PREVIOUS_KEY_ID` keep older ciphertext readable. Store the
+values in protected runtime configuration.
+
+1. Deploy the compatible readers to every API and worker first. Leaving key
+   IDs unset keeps new writes in the existing v1 format.
+2. Assign a stable ID to the current key. Provision the next key and its ID
+   in the secondary slot on every reader before swapping writers. During the
+   swap both configurations can read either identified key.
+3. Promote the new key and its ID to the active slots and retain the old key
+   and ID in the previous slots. Verify reads and new writes with synthetic
+   records for each affected family. Versioned ciphertext binds its key ID
+   and purpose. Auth delivery also binds the outbox row.
+4. Keep the old key available until pending jobs and retained configuration
+   versions no longer depend on it. Version 1 records lack an identifier, so
+   verify their migration or expiry explicitly. Preserve restore access for
+   retained backups. After v2 writes begin, rollback needs a compatible reader.
+
 ## Original files and previews
 
 Document, template and receipt originals use 300-second private signed URLs
