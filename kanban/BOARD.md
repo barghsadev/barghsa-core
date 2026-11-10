@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1206 | Accepted with unchanged source bindings. |
+| done | 1209 | Accepted with unchanged source bindings. |
 | verify | 94 | Existing work may be complete; inspect evidence before building. |
-| partial | 60 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 57 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -39,10 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile the exact replacement browser matrix and native/combined coverage outcomes. Preserve focused evidence and verify every explicit release prerequisite.
+Reconcile exact full coverage and scheduled receipts, and continue the remaining v0.6.0 operational and security acceptance work.
 
-- `01-platform-infrastructure.md#T-01.04.04`: Configure Playwright for E2E testing
-- `01-platform-infrastructure.md#T-01.04.06`: Configure flaky-test quarantine process
+- `06-security-testing-observability.md#T-06.12.03.01`: Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM
 - `01-platform-infrastructure.md#T-05.05.01`: Create nightly CI schedule
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
@@ -970,9 +969,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-01.04.01` | done | Earlier acceptance_verified | Create root `vitest.workspace.ts` that includes all packages and apps |
 | `01-platform-infrastructure.md#T-01.04.02` | done | Earlier acceptance_verified | Configure per-package Vitest with coverage thresholds |
 | `01-platform-infrastructure.md#T-01.04.03` | done | Earlier partial | Configure backend integration test setup with real PostgreSQL |
-| `01-platform-infrastructure.md#T-01.04.04` | partial | Earlier partial | Configure Playwright for E2E testing |
+| `01-platform-infrastructure.md#T-01.04.04` | done | Earlier partial | Configure Playwright for E2E testing |
 | `01-platform-infrastructure.md#T-01.04.05` | done | Earlier acceptance_verified | Wire `test` and `test:coverage` tasks in `turbo.json` |
-| `01-platform-infrastructure.md#T-01.04.06` | partial | Earlier partial | Configure flaky-test quarantine process |
+| `01-platform-infrastructure.md#T-01.04.06` | done | Earlier partial | Configure flaky-test quarantine process |
 | `01-platform-infrastructure.md#T-01.05.01` | done | Earlier acceptance_verified | Implement global NestJS `HttpExceptionFilter` and `CorrelationIdMiddleware` |
 | `01-platform-infrastructure.md#T-02.01.01` | done | Earlier acceptance_verified | Initialize `packages/db` with Drizzle ORM, `pg`, `pg-pool`, and drizzle-kit |
 | `01-platform-infrastructure.md#T-02.01.02` | done | Earlier acceptance_verified | Create PostgreSQL pool factory with configurable pool, statement timeout, lock timeout, and idle transaction guard |
@@ -1343,7 +1342,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.12.04.03` | partial | Recorded batch work | Implement auto-halt/rollback on: smoke failure, elevated error rate, SLO burn, reconciliation mismatch, security alert |
 | `06-security-testing-observability.md#T-06.12.04.04` | done | Recorded batch work | Create production release notes template: changes, customer/support impact, owner, dashboard links, alert/runbook links, on-call |
 | `06-security-testing-observability.md#T-06.12.04.05` | verify | Inventory needed | Implement post-deploy smoke tests and SLO/error comparison against previous release |
-| `06-security-testing-observability.md#T-06.12.05.01` | partial | Recorded batch work | Configure nightly CI: cross-browser E2E, full dep + security scan, dead-link check, flaky test report |
+| `06-security-testing-observability.md#T-06.12.05.01` | done | Recorded batch work | Configure nightly CI: cross-browser E2E, full dep + security scan, dead-link check, flaky test report |
 | `06-security-testing-observability.md#T-06.12.05.02` | verify | Inventory needed | Configure weekly CI: load/performance regression, critical-domain mutation testing, dependency update PR |
 | `06-security-testing-observability.md#T-06.12.05.03` | verify | Inventory needed | Configure quarterly manual trigger: PG restore, DR rehearsal, access review, threat-model review, incident runbook exercise |
 | `06-security-testing-observability.md#T-06.12.05.04` | done | Recorded batch work | Flaky test management: quarantine system with owner, issue, expiry, equivalent temporary coverage |

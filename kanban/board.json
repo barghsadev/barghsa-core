@@ -5661,12 +5661,10 @@
         "story": "01-platform-infrastructure.md#spec-ad6901869722"
       },
       "requirement": "- **T-01.04.04:** Configure Playwright for E2E testing\n  - **Notes:** Install `@playwright/test`. Configure `playwright.config.ts` with: projects for Chromium (PR), Firefox/WebKit (nightly), mobile viewports (iPhone, Android). Base URL configurable per environment. Record trace on failure (`trace: 'retain-on-failure'`). Use isolated accounts/profiles and deterministic seed data. Never call production payment, SMS, email, storage, bill-data, or AI providers. Critical flows: registration, login/MFA, legal onboarding, electricity ordering + wallet funding, saving-plan order, solar construction, admin config changes.\n  - **Dependencies:** T-01.04.01\n  - **Complexity:** L",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Require a clean exact-candidate rollup for all five browser projects. Run 42878628863 reported all 40 shards; targeted repairs passed for the four failed shards. Retain and verify seven days of quarantine history."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -5757,9 +5755,112 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-native-csp-fixture-teardown",
           "release-0.6-report-mounted-emergency-recovery",
-          "release-0.6-logout-probe-auth-bootstrap"
+          "release-0.6-logout-probe-auth-bootstrap",
+          "release-0.6-clean-browser-rollup-and-brand-rehearsal"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source-bound-clean-hosted-browser-rollup",
+          "base_commit": "f0f9434c3a396ee80c20243cfed15c972e5b680f",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/browser-nightly.yml",
+              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+            },
+            {
+              "path": "apps/web/e2e/consultation-journey.spec.ts",
+              "sha256": "cea609cf06c31f9d79c32fa2cf76e4e4cb91e4f710ec80ba88842c7659c577ac"
+            },
+            {
+              "path": "apps/web/e2e/coverage-fixture.ts",
+              "sha256": "0157a19660c4eff58eb388396211c192b1b106e86ad73d08b2e8478dc4cec21c"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "231929ebc3795d67d8190975bb6e60e5b580a9b1520c75931b1d39b3f1a6bd75"
+            },
+            {
+              "path": "apps/web/e2e/global-setup.ts",
+              "sha256": "24f59ff7dd0f3ee0d385e7f72fbefc9c9c560c8a153fb251ccf344733bb0ee84"
+            },
+            {
+              "path": "apps/web/e2e/local-network.ts",
+              "sha256": "a121fe7feaf0a217ee39b4ea5a7c60d1b90d0dd58062437080bd9a0b7b63008d"
+            },
+            {
+              "path": "apps/web/e2e/login-native-forms.spec.ts",
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
+            },
+            {
+              "path": "apps/web/e2e/registration-feature.spec.ts",
+              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+            },
+            {
+              "path": "apps/web/e2e/saving-journey.spec.ts",
+              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+            },
+            {
+              "path": "apps/web/e2e/solar-construction-progress.spec.ts",
+              "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
+            },
+            {
+              "path": "apps/web/e2e/theme-components.spec.ts",
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
+            },
+            {
+              "path": "apps/web/e2e/ui-feedback.spec.ts",
+              "sha256": "47691cf17fd5ce7f1b32c72704531485c8e366096a7e9b7c47bd45906e501f4c"
+            },
+            {
+              "path": "apps/web/e2e/versioned-settings.spec.ts",
+              "sha256": "14d0fac699fb940c5484dd120f09ffe4546aabb1aecc1ec9284a5a7fef7a0fd0"
+            },
+            {
+              "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+              "sha256": "15e40d795f0daedfa9ea575f9b14d8fd329a67b60217916c7f45e28ec37215d2"
+            },
+            {
+              "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+              "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "ee1028396c08b722b5b9b1862c626e445de1f10e296b9622117863109ed29f64"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "3b484e904f53a2d21d1b2dd54ae3c87ed68ca500b76565ba3fc762dc1ecc5cf5"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            },
+            {
+              "path": "scripts/browser-projects.mjs",
+              "sha256": "e0a3a2e38d0f3cdbc813be151f11807acb6f5c8e8c4c69993e18b49f0f028f72"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "Run 42894685607 completed all 40 shards on f0f9434c with 14,593 expected, zero unexpected, zero flaky and zero runner errors. The 22 declared skips are Chromium-only forced textarea fallback variants on other projects and coarse-pointer cases on desktop. All eight shards passed for Chromium, Firefox, WebKit, Mobile Chrome and Mobile Safari.",
+            "The registered suite includes registration, sign-in/OTP, legal onboarding, electricity and wallet funding/payment, saving, solar construction, consultation and versioned staff settings. The fixture accepts only loopback application URLs, proxies external browser requests to a deny server, and uses deterministic accounts, mock providers and disposable databases. Failure traces and custom local application URLs are configured.",
+            "The bound workflow, harness and representative flow sources retain their tested bytes. Current provider changes have separate targeted evidence. The final immutable milestone still requires its own release gate."
+          ]
+        }
       }
     },
     {
@@ -5954,13 +6055,10 @@
         "story": "01-platform-infrastructure.md#spec-ad6901869722"
       },
       "requirement": "- **T-01.04.06:** Configure flaky-test quarantine process\n  - **Notes:** Flaky test is treated as a defect. Quarantine requires owner, issue link, and expiry. Quarantined critical tests must not silently allow production promotion. CI reports flaky count per run.\n  - **Dependencies:** T-01.04.04\n  - **Complexity:** S\n  - **UI/UX:** N/A\n\n---",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Require a clean exact-candidate rollup for all five browser projects. Run 42878628863 reported all 40 shards; targeted repairs passed for the four failed shards. Retain and verify seven days of quarantine history.",
-        "Record the strict promotion report from the accepted candidate in the production approval package."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -6049,9 +6147,76 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-native-csp-fixture-teardown",
           "release-0.6-report-mounted-emergency-recovery",
-          "release-0.6-logout-probe-auth-bootstrap"
+          "release-0.6-logout-probe-auth-bootstrap",
+          "release-0.6-clean-browser-rollup-and-brand-rehearsal"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source-bound-clean-hosted-browser-rollup",
+          "base_commit": "f0f9434c3a396ee80c20243cfed15c972e5b680f",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/browser-nightly.yml",
+              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "3b484e904f53a2d21d1b2dd54ae3c87ed68ca500b76565ba3fc762dc1ecc5cf5"
+            },
+            {
+              "path": "deploy/production/check-promotion.py",
+              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+            },
+            {
+              "path": "docs/flaky-test-quarantine.md",
+              "sha256": "06458dfbc7fb851e5339230c826c38d889b789ecc2092f448db3069e93a928c9"
+            },
+            {
+              "path": "scripts/check-browser-results.py",
+              "sha256": "1e7086dac76325086f48072519d3c9052fd973eee4299d1c533b484d4b4f45b0"
+            },
+            {
+              "path": "scripts/check-flaky-tests.py",
+              "sha256": "460d14c40fad8d345d4917c572a56abace1b39f7d7a859b2bf2a2260f4f249de"
+            },
+            {
+              "path": "scripts/check-flaky-tests.sh",
+              "sha256": "91b4d08510670e61adc283e56136fd8aa8eef0df88e1ed4b6506ed6a7fa9f128"
+            },
+            {
+              "path": "scripts/quarantine-registry.json",
+              "sha256": "157a74b0da194e57fcfd444594a710eeba719bb205bfd9969b5d5e634fbb58b2"
+            },
+            {
+              "path": "scripts/report-nightly-browser.py",
+              "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+            },
+            {
+              "path": "scripts/test-browser-flake-gate.mjs",
+              "sha256": "2fa4b7f75abbc054140d225acef15c5e17835a0a162ad422facf745f56c42009"
+            },
+            {
+              "path": "scripts/test_check_browser_results.py",
+              "sha256": "92825d371a4eba553b459e76779fcdbdce3e82edfe30bedcfcd20c6588ab5475"
+            },
+            {
+              "path": "scripts/test_check_flaky_tests.py",
+              "sha256": "ea6ba6ee7b8033f850951697c4b684d8ee74656d08a33033526f902311b05372"
+            },
+            {
+              "path": "scripts/test_report_nightly_browser.py",
+              "sha256": "8f57cfe2b989c2e385765166354e3f624bbce6f1b44552f3c2406aff50099efa"
+            }
+          ],
+          "checks": [
+            "Run 42894685607 completed all 40 shards on f0f9434c with 14,593 expected, zero unexpected, zero flaky and zero runner errors. The 22 declared skips are Chromium-only forced textarea fallback variants on other projects and coarse-pointer cases on desktop. All eight shards passed for Chromium, Firefox, WebKit, Mobile Chrome and Mobile Safari.",
+            "Quarantine metadata requires an owner, issue link and valid expiry. The actual retry fixture rejected a first-failed retry. Strict promotion mode rejects active or expired critical entries, and the current strict registry readback found zero of either.",
+            "The hosted rollup queried all seven scheduled runs. One has full outcome artifacts and six historical details are reported unavailable. The current run has a complete rollup. The final-candidate promotion package and the successful scheduled receiver receipt remain separate release gates."
+          ]
+        }
       }
     },
     {
@@ -14527,8 +14692,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Require a clean exact-candidate rollup for all five browser projects. Run 42878628863 reported all 40 shards; targeted repairs passed for the four failed shards. Retain and verify seven days of quarantine history.",
-        "Read back the hosted navigation checks and complete journey coverage on final source. Verify delivery of the scheduled results to the authorized dedicated receiver."
+        "Read back a successful 02:00 UTC scheduled run on current release source and its seven-day history, preserving the six unavailable historical detailed receipts as gaps. The same workflow passed by manual dispatch at f0f9434c.",
+        "Verify actual result delivery to the authorized dedicated receiver and repeat invalidated checks for the exact accepted candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -14595,7 +14760,8 @@
           "release-0.6-runtime-navigation-route-checks",
           "release-0.6-nightly-source-security-scan",
           "release-0.6-report-mounted-emergency-recovery",
-          "release-0.6-logout-probe-auth-bootstrap"
+          "release-0.6-logout-probe-auth-bootstrap",
+          "release-0.6-clean-browser-rollup-and-brand-rehearsal"
         ],
         "current_acceptance": null
       }
@@ -72344,7 +72510,7 @@
             },
             {
               "path": "packages/db/src/brand-history-upgrade.migrated.test.ts",
-              "sha256": "fd72635b690435d8181d7131625fe4cc2301e31ff95103a077e2a12e63845ac4"
+              "sha256": "b20518e803418ef6fb65e1155b78cbb256fe0d9cca446a2abb17ee5e8dfbdc4e"
             },
             {
               "path": "packages/i18n/src/branding.ts",
@@ -72486,6 +72652,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-clean-browser-rollup-and-brand-rehearsal",
+              "base_commit": "d3e18d19d11796b4bc7e422b32efd532e692c64f",
+              "paths": [
+                "packages/db/src/brand-history-upgrade.migrated.test.ts"
+              ],
+              "scope": "Move the fresh branding database creation and exact migrations into bounded test setup. Both migrated cases and every seed-history assertion passed under V8 coverage. Migration and application source retain their exact bytes."
             }
           ],
           "presentation_renewals": [
@@ -519520,7 +519694,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Manually dispatched CI now enables all release checks and uses the last released commit for changed coverage. Run and verify the full unit, real PostgreSQL, browser, accessibility and combined coverage gates on the exact release candidate."
+        "Verify full unit, migrated PostgreSQL, browser accessibility and combined coverage on the exact release candidate. Run 42902282297 hit one branding fixture timeout and the pending license gate; the isolated branding fix passed in coverage mode."
       ],
       "owner": null,
       "depends_on": [],
@@ -519531,7 +519705,8 @@
           "release-0.6-runtime-sbom-provenance",
           "release-0.6-private-api-monitoring",
           "release-0.6-browser-story-build-prerequisite",
-          "release-0.6-workspace-test-and-coverage-configuration"
+          "release-0.6-workspace-test-and-coverage-configuration",
+          "release-0.6-clean-browser-rollup-and-brand-rehearsal"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -520095,13 +520270,10 @@
         "story": "06-security-testing-observability.md#spec-bbcc8377dfff"
       },
       "requirement": "| T-06.12.05.01 | Configure nightly CI: cross-browser E2E, full dep + security scan, dead-link check, flaky test report | M |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Require a clean exact-candidate rollup for all five browser projects. Run 42878628863 reported all 40 shards; targeted repairs passed for the four failed shards. Retain and verify seven days of quarantine history.",
-        "Read back the final hosted dependency, expanded navigation, schema drift and source-security reports. The exact local Semgrep gate scanned 2,124 files with zero findings or errors, and the selected navigation scope passed 26 browser cases."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -520120,9 +520292,64 @@
           "release-0.6-runtime-navigation-route-checks",
           "release-0.6-nightly-source-security-scan",
           "release-0.6-report-mounted-emergency-recovery",
-          "release-0.6-logout-probe-auth-bootstrap"
+          "release-0.6-logout-probe-auth-bootstrap",
+          "release-0.6-clean-browser-rollup-and-brand-rehearsal"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source-bound-clean-hosted-browser-rollup",
+          "base_commit": "f0f9434c3a396ee80c20243cfed15c972e5b680f",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/browser-nightly.yml",
+              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "3b484e904f53a2d21d1b2dd54ae3c87ed68ca500b76565ba3fc762dc1ecc5cf5"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            },
+            {
+              "path": "scripts/check-browser-results.py",
+              "sha256": "1e7086dac76325086f48072519d3c9052fd973eee4299d1c533b484d4b4f45b0"
+            },
+            {
+              "path": "scripts/check-dependency-audit.mjs",
+              "sha256": "419d82abc01f0f46614ec100e7c15074b7c092e30f1ceebf3ff4de6506877c61"
+            },
+            {
+              "path": "scripts/check-flaky-tests.py",
+              "sha256": "460d14c40fad8d345d4917c572a56abace1b39f7d7a859b2bf2a2260f4f249de"
+            },
+            {
+              "path": "scripts/check-sast.py",
+              "sha256": "93fb331d8107e3ba79858d6b9fa9bd0460de11438b99f93844a75df0134a4ab9"
+            },
+            {
+              "path": "scripts/check-web-navigation.mjs",
+              "sha256": "c85b9d5db83d218894a28b9e52a93f310e5764fa8115f3093ed11e9c59eab645"
+            },
+            {
+              "path": "scripts/report-nightly-browser.py",
+              "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+            },
+            {
+              "path": "scripts/web-navigation-paths.mjs",
+              "sha256": "d25cabd5951de602b8c3210b1ef48f7479e9045687027ef2326c7d04c4ce4c31"
+            },
+            {
+              "path": "scripts/web-navigation-paths.test.mjs",
+              "sha256": "97001bc93746334bb6e26622eb372392657d40b67e3ae8ec94981882cf4ecac8"
+            }
+          ],
+          "checks": [
+            "Run 42894685607 completed all 40 shards on f0f9434c with 14,593 expected, zero unexpected, zero flaky and zero runner errors. The 22 declared skips are Chromium-only forced textarea fallback variants on other projects and coarse-pointer cases on desktop. All eight shards passed for Chromium, Firefox, WebKit, Mobile Chrome and Mobile Safari.",
+            "The same exact hosted contracts job passed dependency audit at the high/critical gate, Drizzle generation with zero drift, 180 registered navigation checks, and Semgrep 1.176.1 over 2,124 files with zero findings or scanner errors. All three artifacts were read back. Source-compatible runtime navigation proof covered 26 cases.",
+            "The workflow has the daily 02:00 UTC schedule and records seven days of scheduled outcomes. This workflow was verified through its manual dispatch. The successful scheduled execution on final source and delivery to the dedicated receiver remain under T-05.05.01."
+          ]
+        }
       }
     },
     {
@@ -773792,7 +774019,7 @@
             },
             {
               "path": "packages/db/src/brand-history-upgrade.migrated.test.ts",
-              "sha256": "fd72635b690435d8181d7131625fe4cc2301e31ff95103a077e2a12e63845ac4"
+              "sha256": "b20518e803418ef6fb65e1155b78cbb256fe0d9cca446a2abb17ee5e8dfbdc4e"
             },
             {
               "path": "packages/i18n/src/branding.ts",
@@ -773933,6 +774160,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-clean-browser-rollup-and-brand-rehearsal",
+              "base_commit": "d3e18d19d11796b4bc7e422b32efd532e692c64f",
+              "paths": [
+                "packages/db/src/brand-history-upgrade.migrated.test.ts"
+              ],
+              "scope": "Move the fresh branding database creation and exact migrations into bounded test setup. Both migrated cases and every seed-history assertion passed under V8 coverage. Migration and application source retain their exact bytes."
             }
           ],
           "presentation_renewals": [
@@ -802994,9 +803229,9 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Require a clean exact-candidate rollup for all five browser projects. Run 42878628863 reported all 40 shards; targeted repairs passed for the four failed shards. Retain and verify seven days of quarantine history.",
+        "Preserve passing run 42894685607 at f0f9434c and verify a clean 40-shard rollup plus quarantine report for the final immutable v0.6.0 candidate.",
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
-        "Read back full hosted native and combined coverage on the revised auth, financial and browser fixtures. Push run 42857945735 used fast mode. The older manual run 42751525133 failed native upload and coverage-mode browser tests; targeted repairs have passing receipts.",
+        "Reconcile full hosted native and combined coverage. Run 42902282297 hit the fresh branding setup timeout and pending license gate; the isolated branding fix passed under coverage. Require final-source full evidence.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
@@ -803168,7 +803403,8 @@
           "release-0.6-native-csp-fixture-teardown",
           "release-0.6-runtime-navigation-route-checks",
           "release-0.6-report-mounted-emergency-recovery",
-          "release-0.6-logout-probe-auth-bootstrap"
+          "release-0.6-logout-probe-auth-bootstrap",
+          "release-0.6-clean-browser-rollup-and-brand-rehearsal"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -921076,6 +921312,293 @@
           "sha256": "4bb559f868b3307999010431f8e473a912d96a34f47a26400516b80fada5012e"
         }
       ]
+    },
+    "release-0.6-clean-browser-rollup-and-brand-rehearsal": {
+      "batch": "release-0.6-clean-browser-rollup-and-brand-rehearsal",
+      "base_commit": "d3e18d19d11796b4bc7e422b32efd532e692c64f",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "06-security-testing-observability.md#T-06.12.05.01",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "packages/db/src/brand-history-upgrade.migrated.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+        },
+        {
+          "path": "apps/web/e2e/consultation-journey.spec.ts",
+          "sha256": "cea609cf06c31f9d79c32fa2cf76e4e4cb91e4f710ec80ba88842c7659c577ac"
+        },
+        {
+          "path": "apps/web/e2e/coverage-fixture.ts",
+          "sha256": "0157a19660c4eff58eb388396211c192b1b106e86ad73d08b2e8478dc4cec21c"
+        },
+        {
+          "path": "apps/web/e2e/electricity-journey.spec.ts",
+          "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "231929ebc3795d67d8190975bb6e60e5b580a9b1520c75931b1d39b3f1a6bd75"
+        },
+        {
+          "path": "apps/web/e2e/global-setup.ts",
+          "sha256": "24f59ff7dd0f3ee0d385e7f72fbefc9c9c560c8a153fb251ccf344733bb0ee84"
+        },
+        {
+          "path": "apps/web/e2e/local-network.ts",
+          "sha256": "a121fe7feaf0a217ee39b4ea5a7c60d1b90d0dd58062437080bd9a0b7b63008d"
+        },
+        {
+          "path": "apps/web/e2e/login-native-forms.spec.ts",
+          "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
+        },
+        {
+          "path": "apps/web/e2e/registration-feature.spec.ts",
+          "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+        },
+        {
+          "path": "apps/web/e2e/saving-journey.spec.ts",
+          "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+        },
+        {
+          "path": "apps/web/e2e/solar-construction-progress.spec.ts",
+          "sha256": "1916baf3fb0d42d9a37fc35f11cdbe112fda7a29a7b1c48d8046819acbbaadd5"
+        },
+        {
+          "path": "apps/web/e2e/solar-journey.spec.ts",
+          "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
+        },
+        {
+          "path": "apps/web/e2e/ui-feedback.spec.ts",
+          "sha256": "47691cf17fd5ce7f1b32c72704531485c8e366096a7e9b7c47bd45906e501f4c"
+        },
+        {
+          "path": "apps/web/e2e/versioned-settings.spec.ts",
+          "sha256": "14d0fac699fb940c5484dd120f09ffe4546aabb1aecc1ec9284a5a7fef7a0fd0"
+        },
+        {
+          "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+          "sha256": "15e40d795f0daedfa9ea575f9b14d8fd329a67b60217916c7f45e28ec37215d2"
+        },
+        {
+          "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+          "sha256": "0c671ed23fb47980f8e78f28612969573ede59a26e1b24d28581d6d5daa4f338"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "ee1028396c08b722b5b9b1862c626e445de1f10e296b9622117863109ed29f64"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "3b484e904f53a2d21d1b2dd54ae3c87ed68ca500b76565ba3fc762dc1ecc5cf5"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+        },
+        {
+          "path": "docs/flaky-test-quarantine.md",
+          "sha256": "06458dfbc7fb851e5339230c826c38d889b789ecc2092f448db3069e93a928c9"
+        },
+        {
+          "path": "packages/db/drizzle/production/0278_brand_history_repair.sql",
+          "sha256": "9f49e0449f5ef7a27961ec4fb2e2e336b4b8e831762f4150a53933156e3217f8"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "9dbce91a0519f6081e756b4dbbb6bbfbc633ca87b11e6d74e3054ca7f52c13dd"
+        },
+        {
+          "path": "packages/db/src/brand-history-upgrade.migrated.test.ts",
+          "sha256": "b20518e803418ef6fb65e1155b78cbb256fe0d9cca446a2abb17ee5e8dfbdc4e"
+        },
+        {
+          "path": "packages/db/src/migrate.ts",
+          "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+        },
+        {
+          "path": "packages/db/src/test/migrated-db.ts",
+          "sha256": "b4ffc68618775ab4247a5d0b514d21fb5c4dbe5efd49b2de8793d800cd3d5afe"
+        },
+        {
+          "path": "packages/db/src/test/migration-prefix.ts",
+          "sha256": "76264f50922f6a6e7692fdca9dde2c28bf9ac605f5bdd5bfe1b377a589b333f8"
+        },
+        {
+          "path": "packages/db/vitest.config.ts",
+          "sha256": "58b0adf9cde19568d2a87c9298b2936f24622cd1d2a192d4d298e8b92d8d77f0"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+        },
+        {
+          "path": "scripts/browser-projects.mjs",
+          "sha256": "e0a3a2e38d0f3cdbc813be151f11807acb6f5c8e8c4c69993e18b49f0f028f72"
+        },
+        {
+          "path": "scripts/check-browser-results.py",
+          "sha256": "1e7086dac76325086f48072519d3c9052fd973eee4299d1c533b484d4b4f45b0"
+        },
+        {
+          "path": "scripts/check-dependency-audit.mjs",
+          "sha256": "419d82abc01f0f46614ec100e7c15074b7c092e30f1ceebf3ff4de6506877c61"
+        },
+        {
+          "path": "scripts/check-flaky-tests.py",
+          "sha256": "460d14c40fad8d345d4917c572a56abace1b39f7d7a859b2bf2a2260f4f249de"
+        },
+        {
+          "path": "scripts/check-flaky-tests.sh",
+          "sha256": "91b4d08510670e61adc283e56136fd8aa8eef0df88e1ed4b6506ed6a7fa9f128"
+        },
+        {
+          "path": "scripts/check-sast.py",
+          "sha256": "93fb331d8107e3ba79858d6b9fa9bd0460de11438b99f93844a75df0134a4ab9"
+        },
+        {
+          "path": "scripts/check-web-navigation.mjs",
+          "sha256": "c85b9d5db83d218894a28b9e52a93f310e5764fa8115f3093ed11e9c59eab645"
+        },
+        {
+          "path": "scripts/quarantine-registry.json",
+          "sha256": "157a74b0da194e57fcfd444594a710eeba719bb205bfd9969b5d5e634fbb58b2"
+        },
+        {
+          "path": "scripts/report-nightly-browser.py",
+          "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        },
+        {
+          "path": "scripts/test-browser-flake-gate.mjs",
+          "sha256": "2fa4b7f75abbc054140d225acef15c5e17835a0a162ad422facf745f56c42009"
+        },
+        {
+          "path": "scripts/test_check_browser_results.py",
+          "sha256": "92825d371a4eba553b459e76779fcdbdce3e82edfe30bedcfcd20c6588ab5475"
+        },
+        {
+          "path": "scripts/test_check_flaky_tests.py",
+          "sha256": "ea6ba6ee7b8033f850951697c4b684d8ee74656d08a33033526f902311b05372"
+        },
+        {
+          "path": "scripts/test_report_nightly_browser.py",
+          "sha256": "8f57cfe2b989c2e385765166354e3f624bbce6f1b44552f3c2406aff50099efa"
+        },
+        {
+          "path": "scripts/web-navigation-paths.mjs",
+          "sha256": "d25cabd5951de602b8c3210b1ef48f7479e9045687027ef2326c7d04c4ce4c31"
+        },
+        {
+          "path": "scripts/web-navigation-paths.test.mjs",
+          "sha256": "97001bc93746334bb6e26622eb372392657d40b67e3ae8ec94981882cf4ecac8"
+        }
+      ],
+      "checks": [
+        "Run 42894685607 completed all 40 shards on f0f9434c with 14,593 expected, zero unexpected, zero flaky and zero runner errors. The 22 declared skips are Chromium-only forced textarea fallback variants on other projects and coarse-pointer cases on desktop. All eight shards passed for Chromium, Firefox, WebKit, Mobile Chrome and Mobile Safari.",
+        "The registered suite includes registration, sign-in/OTP, legal onboarding, electricity and wallet funding/payment, saving, solar construction, consultation and versioned staff settings. The fixture accepts only loopback application URLs, proxies external browser requests to a deny server, and uses deterministic accounts, mock providers and disposable databases. Failure traces and custom local application URLs are configured.",
+        "The bound workflow, harness and representative flow sources retain their tested bytes. Current provider changes have separate targeted evidence. The final immutable milestone still requires its own release gate.",
+        "Quarantine metadata requires an owner, issue link and valid expiry. The actual retry fixture rejected a first-failed retry. Strict promotion mode rejects active or expired critical entries, and the current strict registry readback found zero of either.",
+        "The hosted rollup queried all seven scheduled runs. One has full outcome artifacts and six historical details are reported unavailable. The current run has a complete rollup. The final-candidate promotion package and the successful scheduled receiver receipt remain separate release gates.",
+        "The same exact hosted contracts job passed dependency audit at the high/critical gate, Drizzle generation with zero drift, 180 registered navigation checks, and Semgrep 1.176.1 over 2,124 files with zero findings or scanner errors. All three artifacts were read back. Source-compatible runtime navigation proof covered 26 cases.",
+        "The workflow has the daily 02:00 UTC schedule and records seven days of scheduled outcomes. This workflow was verified through its manual dispatch. The successful scheduled execution on final source and delivery to the dedicated receiver remain under T-05.05.01.",
+        "Full manual CI run 42902282297 at f0f9434c reported one native database failure: a fresh brand migration inside an assertion used the five-second default test timeout. The other 1,348 database cases passed in that job before the aggregate stopped. Its strict shipped-license gate remains open.",
+        "The branding fixture now creates and migrates its own clean PostgreSQL database during bounded setup and drops it during teardown. Both the historical migration/retry case and the exact fresh active/superseded seed assertions passed with V8 coverage on isolated Linux PostgreSQL. All 375 source and fixture digests matched. The test assertions and global test timeout are unchanged.",
+        "All 16 Python gate tests and five Node gate tests passed. DB TypeScript, changed-file ESLint, Prettier and whitespace checks passed. Full native and combined coverage and the final exact browser gate remain open."
+      ],
+      "proof_logs": [
+        {
+          "file": "run.json",
+          "sha256": "4ec0eff1fe498803d10205cafc069d2fcf7adda2bfdea11596208e13990353b1"
+        },
+        {
+          "file": "rollup.log",
+          "sha256": "6dc18515f920e49b58b90358cc75ace1045db7d3851bc04adee23bb562eb6e63"
+        },
+        {
+          "file": "contracts.log",
+          "sha256": "0d6c958c208d27f6f7c5a9a305157b3df9a602008306252e8dc399ac099da96a"
+        },
+        {
+          "file": "scheduled-runs.json",
+          "sha256": "41163da43b20ddb46ad821cddd11da4d63b3f52d2baacd4fac1a2d22770bc456"
+        },
+        {
+          "file": "registered-tests.log",
+          "sha256": "612598c4ad43834d36934b669a97d5c6ea4b69ff74b339699f1114a2c67bfd6e"
+        },
+        {
+          "file": "browser-gate-unit.log",
+          "sha256": "65a8bd88b744e7353406a674ce175dbd3a69b67e458e99f061558fb19d1a6f47"
+        },
+        {
+          "file": "browser-gate-node.log",
+          "sha256": "3f5eb2ec4b5dfdf58c898c8a5c73c9a9a53205515ffd2293b1c8e982bebc90dd"
+        },
+        {
+          "file": "current-promotion-quarantine.json",
+          "sha256": "25c57a98f26bbbfcaec3c9fc0daf75a08285b2e28a1c66a8636395e54fba8f56"
+        },
+        {
+          "file": "brand-migration-coverage.log",
+          "sha256": "bf25a3e7eee744e98cd18c25932d0139d1b66db71c0fe958e6ed1e9ed672c846"
+        },
+        {
+          "file": "brand-migration-source.sha256",
+          "sha256": "3fe1b05af7636b25aea881c35145aed66e4efb2f33664dc85f9c08ba118d9e4e"
+        },
+        {
+          "file": "brand-migration-source-check.log",
+          "sha256": "3b119e85c9e2db7aaf5818c23c045a8c73df705a25dd237afe3ff8612207fad7"
+        },
+        {
+          "file": "reviewed-brand-fixture.patch",
+          "sha256": "c77a38cd1b778198b5c0015a0aecfcf56e042945a25dbbd0cb4a0a8dab4cfb15"
+        },
+        {
+          "file": "full-native-130131117786.log",
+          "sha256": "e7cc91f814df1aafbc717701eb5ce2c798d269404fdb41712e4e558dc445dce3"
+        },
+        {
+          "file": "artifacts/nightly-browser-summary/nightly-browser-summary.json",
+          "sha256": "b9c07e2a8671a71a4701fb4501c893fe30f5a099b3c52845b4f1006440b9237d"
+        },
+        {
+          "file": "artifacts/nightly-browser-summary/nightly-quarantine.json",
+          "sha256": "4255bd8d37adcb1c68e7f1c59b1732b585b94520a5b3f4503f38e704dd3cc563"
+        },
+        {
+          "file": "artifacts/nightly-dependencies-and-migrations/dependency-audit.json",
+          "sha256": "9ad244f63536be96f47dce6499d1eef6a919d7e6ad1129746967abdc126348ee"
+        },
+        {
+          "file": "artifacts/nightly-dependencies-and-migrations/drizzle-generate.log",
+          "sha256": "3afa0af3170456706c8bbc2221186f9ffb9bbed5847ebb9122c9bbc484923f6c"
+        },
+        {
+          "file": "artifacts/nightly-dependencies-and-migrations/static-security.json",
+          "sha256": "dc653330ef84e63841db76861dfa9353965d2288387df95f206f89d27de3a359"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -921115,20 +921638,19 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-hosted-browser-failure-reconciliation",
+    "id": "release-0.6-coverage-and-scheduled-receipts",
     "release": "0.6.0",
     "task_keys": [
-      "01-platform-infrastructure.md#T-01.04.04",
-      "01-platform-infrastructure.md#T-01.04.06",
+      "06-security-testing-observability.md#T-06.12.03.01",
       "01-platform-infrastructure.md#T-05.05.01",
       "release-readiness#R-05.02"
     ],
-    "goal": "Reconcile the exact replacement browser matrix and native/combined coverage outcomes. Preserve focused evidence and verify every explicit release prerequisite."
+    "goal": "Reconcile exact full coverage and scheduled receipts, and continue the remaining v0.6.0 operational and security acceptance work."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
     "next_update_after": "Complete v0.6.0 scheduled quality receipts, CSP observation, package license disposition, image distribution, and production-equivalent environment evidence.",
-    "method": "v0.5.0 staging and Telegram receipts are confirmed. v0.6.0 targeted admin/browser diagnostics passed. The next scheduled browser run is due November 10 at 02:00 UTC. CSP observation began November 9, so the November 9 delivery target cannot be met with the current gates. The license decision, candidate CSP window, and production-equivalent TLS, provider, off-server recovery and load proof remain open."
+    "method": "v0.5.0 staging and Telegram receipts are confirmed. The v0.6.0 predecessor f0f9434c passed all 40 hosted browser shards. The latest full manual check has a locally repaired database-fixture timeout and a pending license disposition. The November 9 delivery target passed. The required scheduled receipt, candidate CSP window, package approval, and production-equivalent TLS, provider, off-server recovery and load proof remain open."
   },
   "capabilities": [
     {

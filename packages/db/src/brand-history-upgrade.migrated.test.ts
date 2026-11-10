@@ -4,7 +4,7 @@ import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, rmSy
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { Pool } from 'pg';
-import { expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { runMigrations } from './migrate';
 import { createMigratedTestDb } from './test/migrated-db';
 
@@ -80,9 +80,18 @@ it('supersedes only obsolete drafts on upgrade without changing published brandi
   }
 }, 120000);
 
-it('fresh installs retain a coherent active version and superseded seed history', async () => {
-  const database = await createMigratedTestDb();
-  try {
+describe('fresh branding installations', () => {
+  let database: Awaited<ReturnType<typeof createMigratedTestDb>>;
+
+  beforeAll(async () => {
+    database = await createMigratedTestDb();
+  }, 120_000);
+
+  afterAll(async () => {
+    await database?.close();
+  });
+
+  it('retains a coherent active version and superseded seed history', async () => {
     const rows = (
       await database.pool.query('SELECT version,status FROM brand_config ORDER BY version')
     ).rows;
@@ -90,7 +99,5 @@ it('fresh installs retain a coherent active version and superseded seed history'
       { version: 1, status: 'superseded' },
       { version: 2, status: 'active' },
     ]);
-  } finally {
-    await database.close();
-  }
+  });
 });
