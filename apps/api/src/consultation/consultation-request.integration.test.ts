@@ -406,3 +406,58 @@ it('owns only malformed product selection and rejects protected or unauthorized 
   });
   expect(await snapshot()).toEqual(before);
 });
+
+it('keeps foreign financial rows out of an owned consultation even when their references match', async () => {
+  const requestId = randomUUID();
+  const invoiceId = randomUUID();
+  await http.pool.query(
+    `INSERT INTO consultation_requests(id,profile_id,product_id,product_snapshot,submitted_by,submission_key)
+     SELECT $1,$2,id,jsonb_build_object('title',title),'individual',$3
+     FROM products WHERE system_key='electricity_generation_station'`,
+    [requestId, profiles.individual, randomUUID()]
+  );
+  await http.pool.query(
+    `INSERT INTO invoices(id,profile_id,consultation_id,type,state,total_amount,paid_amount,issued_at,payable_from)
+     VALUES($1,$2,$3,'manual','Paid',500,500,NOW(),NOW())`,
+    [invoiceId, profiles.company, requestId]
+  );
+  await http.pool.query(
+    `INSERT INTO invoices(profile_id,consultation_id,type,total_amount,adjustment_kind,adjustment_for_invoice_id)
+     VALUES($1,$2,'manual',50,'charge',$3)`,
+    [profiles.company, requestId, invoiceId]
+  );
+  await http.pool.query(
+    `INSERT INTO refunds(invoice_id,profile_id,amount,destination,idempotency_key)
+     VALUES($1,$2,100,'wallet',$3)`,
+    [invoiceId, profiles.company, randomUUID()]
+  );
+  await http.pool.query('UPDATE consultation_requests SET invoice_id=$2 WHERE id=$1', [
+    requestId,
+    invoiceId,
+  ]);
+  const detail = await fetch(`${http.base}/api/consultations/requests/${requestId}`, {
+    headers: headers.individual!,
+  });
+  expect(detail.status, http.logs()).toBe(200);
+  expect(await detail.json()).toMatchObject({
+    request: { id: requestId, invoice_id: null, invoice_state: null, has_paid_invoice: false },
+    adjustments: [],
+    refunds: [],
+  });
+
+  const list = await fetch(
+    `${http.base}/api/consultations/requests?profileId=${profiles.individual}`,
+    { headers: headers.individual! }
+  );
+  expect(list.status, http.logs()).toBe(200);
+  expect(await list.json()).toMatchObject({
+    requests: expect.arrayContaining([
+      expect.objectContaining({
+        id: requestId,
+        invoice_id: null,
+        invoice_state: null,
+        refund_pending: false,
+      }),
+    ]),
+  });
+});

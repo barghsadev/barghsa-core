@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T05:45:49+00:00",
-  "source_commit": "71edc3a0b69f849c979744ebf4ff0637229432dd",
+  "updated": "2026-11-10T05:50:10+00:00",
+  "source_commit": "b9a437ac048ab30da40c37110322189fa4a0000f",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35702,7 +35702,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35710,7 +35711,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -43844,7 +43845,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -43872,7 +43874,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -45224,7 +45226,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -45252,7 +45255,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -46612,7 +46615,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -46640,7 +46644,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/orders/orders.service.test.ts",
@@ -74355,7 +74359,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -74619,11 +74624,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -200307,7 +200312,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -200491,7 +200497,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "packages/db/src/schema/saving-orders.ts",
@@ -201240,7 +201246,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -201424,7 +201431,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "packages/db/src/schema/saving-orders.ts",
@@ -202175,7 +202182,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
@@ -202203,7 +202211,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
@@ -203258,7 +203266,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -203286,7 +203295,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-workflow.service.ts",
@@ -205228,7 +205237,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -205256,7 +205266,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-workflow.service.ts",
@@ -207173,7 +207183,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -207357,7 +207368,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "packages/db/src/schema/saving-orders.ts",
@@ -208144,7 +208155,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -208180,11 +208192,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -209506,7 +209518,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -209542,11 +209555,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -210868,7 +210881,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -210904,11 +210918,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -212231,7 +212245,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -212267,11 +212282,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -213553,7 +213568,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -213589,11 +213605,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -214875,7 +214891,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -214911,11 +214928,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -216197,7 +216214,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -216233,11 +216251,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -217519,7 +217537,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -217555,11 +217574,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -218841,7 +218860,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -218877,11 +218897,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -220163,7 +220183,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -220199,11 +220220,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -221486,7 +221507,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -221522,11 +221544,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -222808,7 +222830,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -222844,11 +222867,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -224131,7 +224154,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -224167,11 +224191,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -225453,7 +225477,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -225489,11 +225514,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -226775,7 +226800,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -226811,11 +226837,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -228097,7 +228123,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -228133,11 +228160,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -229419,7 +229446,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -229455,11 +229483,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -230741,7 +230769,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -230777,11 +230806,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -232064,7 +232093,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -232100,11 +232130,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -233386,7 +233416,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -233422,11 +233453,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -234708,7 +234739,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -234744,11 +234776,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -236030,7 +236062,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -236066,11 +236099,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -237352,7 +237385,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -237388,11 +237422,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -238674,7 +238708,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -238710,11 +238745,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -239997,7 +240032,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -240033,11 +240069,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -241320,7 +241356,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -241356,11 +241393,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -242643,7 +242680,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -242679,11 +242717,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -243965,7 +244003,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -244001,11 +244040,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -245287,7 +245326,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -245323,11 +245363,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -246609,7 +246649,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -246645,11 +246686,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/saving/saving-order.integration.test.ts",
@@ -261834,7 +261875,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -261894,11 +261936,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -262984,7 +263026,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -263044,11 +263087,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -264130,7 +264173,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -264190,11 +264234,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -265275,7 +265319,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -265335,11 +265380,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -266421,7 +266466,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -266481,11 +266527,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -267567,7 +267613,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -267627,11 +267674,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -268718,7 +268765,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -268778,11 +268826,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -269867,7 +269915,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -269927,11 +269976,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -271014,7 +271063,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -271074,11 +271124,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -272164,7 +272214,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -272224,11 +272275,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -273316,7 +273367,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -273376,11 +273428,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -274463,7 +274515,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -274523,11 +274576,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -275609,7 +275662,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -275669,11 +275723,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -276756,7 +276810,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -276816,11 +276871,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -277903,7 +277958,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -277963,11 +278019,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -279051,7 +279107,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -279111,11 +279168,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -431839,7 +431896,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -431863,7 +431921,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -432557,7 +432615,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "accepted-all-applicable-order-review-wallet-disclosure",
@@ -432581,7 +432640,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -434012,7 +434071,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -434036,7 +434096,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -435850,7 +435910,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -435874,7 +435935,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -436524,7 +436585,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -436548,7 +436610,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -437198,7 +437260,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -437222,7 +437285,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -437872,7 +437935,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -437896,7 +437960,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -438546,7 +438610,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -438570,7 +438635,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -439220,7 +439285,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -439244,7 +439310,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -439894,7 +439960,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -439918,7 +439985,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -441287,7 +441354,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -441311,7 +441379,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -441960,7 +442028,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -441984,7 +442053,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -442645,7 +442714,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -442669,7 +442739,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -444040,7 +444110,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -444064,7 +444135,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -444718,7 +444789,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -444742,7 +444814,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -445393,7 +445465,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-common-four-service-gate-with-current-count-authority",
@@ -445417,7 +445490,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -483985,7 +484058,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-authority-for-queued-and-private-results"
+          "release-0.6-authority-for-queued-and-private-results",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -483993,7 +484067,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "6715afdaa6a0c2ec3f0a1b68f888afa7599c417709c73acfbd2e1bd906386177"
+              "sha256": "3d3635791cadb37702c277080586edb8096c089196e769c74b0a3f6a97d0ca64"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -484137,7 +484211,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Finish tracing object-level profile predicates and opaque cross-profile misses through the remaining explicit-ID saving, solar and consultation paths, using the approved explicit-profile and server-owned preference design."
+        "Verify the new consultation HTTP regression and existing valid financial projections on the exact hosted source and full production schema.",
+        "Finish tracing explicit-ID saving and solar related records and opaque cross-profile misses under the approved context design."
       ],
       "owner": null,
       "depends_on": [],
@@ -484145,7 +484220,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-authority-for-queued-and-private-results"
+          "release-0.6-authority-for-queued-and-private-results",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": null
       }
@@ -484171,7 +484247,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-authority-for-queued-and-private-results"
+          "release-0.6-authority-for-queued-and-private-results",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -484292,7 +484369,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "6715afdaa6a0c2ec3f0a1b68f888afa7599c417709c73acfbd2e1bd906386177"
+              "sha256": "3d3635791cadb37702c277080586edb8096c089196e769c74b0a3f6a97d0ca64"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -484333,7 +484410,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-authority-for-queued-and-private-results"
+          "release-0.6-authority-for-queued-and-private-results",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -484341,7 +484419,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "6715afdaa6a0c2ec3f0a1b68f888afa7599c417709c73acfbd2e1bd906386177"
+              "sha256": "3d3635791cadb37702c277080586edb8096c089196e769c74b0a3f6a97d0ca64"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -487668,7 +487746,8 @@
         "batches": [
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-submission-quota-and-replay-authority",
@@ -487676,11 +487755,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
@@ -490648,7 +490727,8 @@
         ],
         "batches": [
           "release-0.6-source-grounded-threat-model-and-review",
-          "release-0.6-authority-for-queued-and-private-results"
+          "release-0.6-authority-for-queued-and-private-results",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -490660,7 +490740,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "6715afdaa6a0c2ec3f0a1b68f888afa7599c417709c73acfbd2e1bd906386177"
+              "sha256": "3d3635791cadb37702c277080586edb8096c089196e769c74b0a3f6a97d0ca64"
             },
             {
               "path": "docs/threat-model.md",
@@ -493008,7 +493088,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "verified-source-bound-postgresql-and-http-invariants",
@@ -493020,7 +493101,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-http.integration.test.ts",
@@ -738067,7 +738148,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-verification-settings",
@@ -738123,7 +738205,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/crm/crm-profile-records-http.integration.test.ts",
@@ -739777,7 +739859,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-workflow.integration.test.ts",
@@ -740988,7 +741070,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -741872,7 +741955,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-workflow.integration.test.ts",
@@ -743071,7 +743154,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ]
       }
     },
@@ -747996,11 +748080,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-state.test.ts",
@@ -751970,7 +752054,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ]
       }
     },
@@ -752326,11 +752411,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-status-notifications.integration.test.ts",
@@ -755963,7 +756048,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -756328,11 +756414,11 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
-              "sha256": "0859cc46733f292a363a375d82d74263d248afe52f28c19dd3d14fd31e00e8fe"
+              "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
             },
             {
               "path": "apps/api/src/consultation/consultation-request.service.ts",
-              "sha256": "70c8266f100baaeb6c9b50e3930b6bad5ea20d04117b8735bc3f4a87d0e3b6a3"
+              "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
             },
             {
               "path": "apps/api/src/consultation/consultation-status-notifications.integration.test.ts",
@@ -759847,7 +759933,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-consultation-financial-profile-scope"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -867329,6 +867416,61 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/authorization-scope",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "37dcfbf1d49188546d74484686741ddad48ee4a80e640b814640430a90d1d7b6"
+    },
+    "release-0.6-consultation-financial-profile-scope": {
+      "batch": "release-0.6-consultation-financial-profile-scope",
+      "base_commit": "b9a437ac048ab30da40c37110322189fa4a0000f",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.01.04"
+      ],
+      "changed_paths": [
+        "apps/api/src/consultation/consultation-request.integration.test.ts",
+        "apps/api/src/consultation/consultation-request.service.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/consultation/consultation-request.controller.ts",
+          "sha256": "b322a7fc20fd929aed9b0872082b6981661fbe8a5abfa991b0acca5b2e6a3ce7"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
+          "sha256": "d1f8c26467cb715e08f3ed7bc19f8d5819dcbe4cbb0c8e8256854db04851bdc2"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-request.service.ts",
+          "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
+        },
+        {
+          "path": "apps/api/src/orders/orders.service.ts",
+          "sha256": "22c6aef1fc109cedb37c0df86da4b2df55b0f5d507448b674942f86c547b1427"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "3d3635791cadb37702c277080586edb8096c089196e769c74b0a3f6a97d0ca64"
+        },
+        {
+          "path": "packages/db/drizzle/production/0135_refund_storage.sql",
+          "sha256": "7f5c77314dd28ef5e483e3411040920ea1b62295c788c19abaf4bfe82071c22b"
+        },
+        {
+          "path": "packages/db/drizzle/production/0168_consultation_requests.sql",
+          "sha256": "f7e4fdbba35f2322c983018878213c09e9741c773d47fa11576f2111170c5eb6"
+        },
+        {
+          "path": "packages/db/drizzle/production/0259_invoice_origin_foreign_keys.sql",
+          "sha256": "7da9064616117595d2f418dd0ed725da20f12a7e8968101c4a44dbf72fceac87"
+        }
+      ],
+      "checks": [
+        "The consultation parent invoice and invoice origin foreign keys permit older references across profiles. The previous owned consultation list and detail SQL exposed a foreign invoice identity and state, payment and pending-refund flags, adjustment amounts and refund details in that fixture.",
+        "The customer projections now include the authorized consultation profile when selecting associated financial rows and only return the joined invoice identity. Same-profile results, ownership, staff, financial mutation and replay behavior are preserved.",
+        "The exact previous and current projection SQL ran in disposable PostgreSQL 16.15. It reproduced the previous exposure, excluded all foreign financial rows, retained same-profile invoice, adjustment and refund access, and removed the isolated container.",
+        "All 73 targeted consultation controller and state tests, API typecheck, lint, formatting and diff checks passed. An HTTP regression using the production schema is included and still needs an exact hosted run."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/consultation-finance-scope",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "322a02c69d169bafbccb796dc464f13b95eb6f184e180de08fe4d183ab64da1d"
     }
   },
   "historical_improvements": [
