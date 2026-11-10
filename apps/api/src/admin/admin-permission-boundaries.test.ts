@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { Logger } from '@nestjs/common';
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { AdminController } from './admin.controller.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 
@@ -205,7 +206,8 @@ describe.each(operations)('$name capability boundary', ({ permission, invoke }) 
   });
 });
 
-it('retains the username in the authorized creation result and omits it from process logs', async () => {
+it('retains the authorized creation result and logs only keyed identities', async () => {
+  vi.stubEnv('SESSION_SECRET', 'test-admin-controller-log-key');
   const log = vi.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
   const { controller } = fixture();
   const username = 'staff@example.test';
@@ -214,12 +216,21 @@ it('retains the username in the authorized creation result and omits it from pro
       { username, firstName: 'Test', lastName: 'Staff', activationMethod: 'link' },
       request(['admin:users:create'])
     );
-    expect(result.username).toBe('staff@example.com');
-    expect(log).toHaveBeenCalledWith(expect.stringContaining(target));
-    expect(JSON.stringify(log.mock.calls)).not.toContain(result.username);
-    expect(JSON.stringify(log.mock.calls)).not.toContain(username);
+    expect(result).toMatchObject({ userId: target, username: 'staff@example.com' });
+    const targetReference = privateLogId('actor', target);
+    const actorReference = privateLogId('actor', 'actor');
+    expect(targetReference).toMatch(/^actor:[a-f0-9]{32}$/);
+    expect(actorReference).toMatch(/^actor:[a-f0-9]{32}$/);
+    expect(log).toHaveBeenCalledExactlyOnceWith(
+      `Staff user created: userId=${targetReference}, method=link, actor=${actorReference}`
+    );
+    const messages = JSON.stringify(log.mock.calls);
+    expect(messages).not.toContain(target);
+    expect(messages).not.toContain(result.username);
+    expect(messages).not.toContain(username);
   } finally {
     log.mockRestore();
+    vi.unstubAllEnvs();
   }
 });
 

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T18:31:47+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T18:36:48+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1191 | Accepted with unchanged source bindings. |
-| verify | 113 | Existing work may be complete; inspect evidence before building. |
+| done | 1192 | Accepted with unchanged source bindings. |
+| verify | 112 | Existing work may be complete; inspect evidence before building. |
 | partial | 56 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1337,7 +1337,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.12.03.01` | partial | Recorded batch work | Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM |
 | `06-security-testing-observability.md#T-06.12.03.02` | partial | Recorded batch work | Build staging smoke deployment: readiness/liveness verification, migration rehearsal |
 | `06-security-testing-observability.md#T-06.12.03.03` | verify | Inventory needed | Implement automatic gate: block RC if P0/P1 defect or unexplained flaky critical test |
-| `06-security-testing-observability.md#T-06.12.03.04` | verify | Inventory needed | Provider contract tests in CI: SMTP fake, SMS.ir fake, payment fake, storage fake |
+| `06-security-testing-observability.md#T-06.12.03.04` | done | Recorded batch work | Provider contract tests in CI: SMTP fake, SMS.ir fake, payment fake, storage fake |
 | `06-security-testing-observability.md#T-06.12.04.01` | done | Recorded batch work | Define production release checklist and automated gate runner |
 | `06-security-testing-observability.md#T-06.12.04.02` | verify | Inventory needed | Implement automatic canary/gradual rollout for high-risk changes (payment, wallet, auth, contract, pricing) |
 | `06-security-testing-observability.md#T-06.12.04.03` | partial | Recorded batch work | Implement auto-halt/rollback on: smoke failure, elevated error rate, SLO burn, reconciliation mismatch, security alert |

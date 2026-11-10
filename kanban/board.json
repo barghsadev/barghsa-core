@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T18:31:47+00:00",
-  "source_commit": "5933315b319bbd3f3108450a5b45215314c947fd",
+  "updated": "2026-11-10T18:36:48+00:00",
+  "source_commit": "4f924a6fe7725d23e77a91b5616dae0f7447e4e1",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -75542,7 +75542,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-native-provider-fixtures-and-staff-log-assertion"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -75550,7 +75551,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
-              "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
+              "sha256": "80b7e25656bbfa8a9335db806968fb8a056b87fcb904fa43bca56429a81303d4"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -75739,6 +75740,14 @@
                 "apps/api/src/admin/admin.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-native-provider-fixtures-and-staff-log-assertion",
+              "base_commit": "4f924a6fe7725d23e77a91b5616dae0f7447e4e1",
+              "paths": [
+                "apps/api/src/admin/admin-permission-boundaries.test.ts"
+              ],
+              "scope": "Correct the single operator-log assertion while preserving authorization and all authorized creation fields."
             }
           ],
           "presentation_renewals": [
@@ -496303,7 +496312,8 @@
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-reusable-profile-and-staff-capability-scope"
+          "release-0.6-reusable-profile-and-staff-capability-scope",
+          "release-0.6-native-provider-fixtures-and-staff-log-assertion"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -496379,7 +496389,7 @@
             },
             {
               "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
-              "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
+              "sha256": "80b7e25656bbfa8a9335db806968fb8a056b87fcb904fa43bca56429a81303d4"
             }
           ],
           "checks": [
@@ -496393,6 +496403,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-native-provider-fixtures-and-staff-log-assertion",
+              "base_commit": "4f924a6fe7725d23e77a91b5616dae0f7447e4e1",
+              "paths": [
+                "apps/api/src/admin/admin-permission-boundaries.test.ts"
+              ],
+              "scope": "Correct the single operator-log assertion while preserving authorization and all authorized creation fields."
             }
           ]
         }
@@ -496860,7 +496878,8 @@
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-reusable-profile-and-staff-capability-scope"
+          "release-0.6-reusable-profile-and-staff-capability-scope",
+          "release-0.6-native-provider-fixtures-and-staff-log-assertion"
         ],
         "current_acceptance": {
           "kind": "source-bound-authorization-policy-and-current-staff-grants",
@@ -496936,7 +496955,7 @@
             },
             {
               "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
-              "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
+              "sha256": "80b7e25656bbfa8a9335db806968fb8a056b87fcb904fa43bca56429a81303d4"
             }
           ],
           "checks": [
@@ -496950,6 +496969,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-native-provider-fixtures-and-staff-log-assertion",
+              "base_commit": "4f924a6fe7725d23e77a91b5616dae0f7447e4e1",
+              "paths": [
+                "apps/api/src/admin/admin-permission-boundaries.test.ts"
+              ],
+              "scope": "Correct the single operator-log assertion while preserving authorization and all authorized creation fields."
             }
           ]
         }
@@ -496980,7 +497007,8 @@
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-reusable-profile-and-staff-capability-scope"
+          "release-0.6-reusable-profile-and-staff-capability-scope",
+          "release-0.6-native-provider-fixtures-and-staff-log-assertion"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -496994,7 +497022,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
-              "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
+              "sha256": "80b7e25656bbfa8a9335db806968fb8a056b87fcb904fa43bca56429a81303d4"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -497143,6 +497171,14 @@
                 "apps/api/src/verification/verification-provider.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-native-provider-fixtures-and-staff-log-assertion",
+              "base_commit": "4f924a6fe7725d23e77a91b5616dae0f7447e4e1",
+              "paths": [
+                "apps/api/src/admin/admin-permission-boundaries.test.ts"
+              ],
+              "scope": "Correct the single operator-log assertion while preserving authorization and all authorized creation fields."
             }
           ]
         }
@@ -497759,7 +497795,8 @@
           "docs/security/authorization.md"
         ],
         "batches": [
-          "release-0.6-reusable-profile-and-staff-capability-scope"
+          "release-0.6-reusable-profile-and-staff-capability-scope",
+          "release-0.6-native-provider-fixtures-and-staff-log-assertion"
         ],
         "current_acceptance": {
           "kind": "source-bound-profile-and-staff-capability-scope",
@@ -497767,7 +497804,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
-              "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
+              "sha256": "80b7e25656bbfa8a9335db806968fb8a056b87fcb904fa43bca56429a81303d4"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -498098,6 +498135,14 @@
                 "apps/api/src/verification/verification-provider.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-native-provider-fixtures-and-staff-log-assertion",
+              "base_commit": "4f924a6fe7725d23e77a91b5616dae0f7447e4e1",
+              "paths": [
+                "apps/api/src/admin/admin-permission-boundaries.test.ts"
+              ],
+              "scope": "Correct the single operator-log assertion while preserving authorization and all authorized creation fields."
             }
           ]
         }
@@ -507812,7 +507857,8 @@
         "batches": [
           "release-0.6-domain-unit-acceptance",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-native-provider-fixtures-and-staff-log-assertion"
         ],
         "current_acceptance": {
           "kind": "source-bound-domain-unit-tests",
@@ -507824,7 +507870,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
-              "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
+              "sha256": "80b7e25656bbfa8a9335db806968fb8a056b87fcb904fa43bca56429a81303d4"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -507889,6 +507935,14 @@
                 "apps/api/src/profiles/profiles.guard.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-native-provider-fixtures-and-staff-log-assertion",
+              "base_commit": "4f924a6fe7725d23e77a91b5616dae0f7447e4e1",
+              "paths": [
+                "apps/api/src/admin/admin-permission-boundaries.test.ts"
+              ],
+              "scope": "Correct the single operator-log assertion while preserving authorization and all authorized creation fields."
             }
           ]
         }
@@ -514783,19 +514837,105 @@
         "story": "06-security-testing-observability.md#spec-7e8081f9925c"
       },
       "requirement": "| T-06.12.03.04 | Provider contract tests in CI: SMTP fake, SMS.ir fake, payment fake, storage fake | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-native-provider-fixtures-and-staff-log-assertion"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-hosted-provider-contract-verification",
+          "base_commit": "4f924a6fe7725d23e77a91b5616dae0f7447e4e1",
+          "tested_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            },
+            {
+              "path": "packages/shared/package.json",
+              "sha256": "58dd479ccf2bb40d2200ff73e85ef2ef2306f92702f66fdcf7140314010d3219"
+            },
+            {
+              "path": "packages/shared/vitest.config.ts",
+              "sha256": "b2bf47a797ffcf142d0e6ea7310b05b80252160ddda02d52ecce54f9ecb8935c"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/email.ts",
+              "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/email-errors.ts",
+              "sha256": "61f631fb71f65206fba19769f673e4d58e7a3c3821d082105274857c40840754"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/smtp-wire.test.ts",
+              "sha256": "9cbe6e6e40bd16b28e604d53250ba1a76bcb78d4738a309ea97e2d21b12a9917"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smsir-client.ts",
+              "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
+              "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.ts",
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.test.ts",
+              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+            },
+            {
+              "path": "packages/shared/src/storage/s3-storage-provider.ts",
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+            },
+            {
+              "path": "packages/shared/src/storage/read-capped-bytes.ts",
+              "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
+            },
+            {
+              "path": "apps/api/package.json",
+              "sha256": "c207a40dafb60e5c8e2c2933b9860308d613cb544286e1592fef0d866d3551ce"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway.ts",
+              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
+              "sha256": "caf55b622346eeafd6977ebaa77325dcf3641521d364d22159f96bc0e551f130"
+            },
+            {
+              "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
+              "sha256": "d76ca1f9e100eeb3e2c8d68568c41ac0bc4ff20a3fa8f92dd0e93aa5e6817f6f"
+            }
+          ],
+          "checks": [
+            "Hosted Run tests job 130003644787 executed and passed all five named provider fixture files. SMTP TLS wire fixtures passed seven, SMS.ir request and receipt fixtures six, payment adapter fixtures 41, storage SDK/runtime fixtures 20, and scoped storage HTTP fixtures three. Job 129998094069 independently passed the same 77 named cases.",
+            "The overall hosted test job failed on the separate staff-log assertion. The provider tests, adapters, fixture configuration, dependency lock and CI selection are byte-identical to the tested source. Acceptance covers the CI provider fixture criterion. Live provider and delivery receipts remain separate."
+          ]
+        }
       }
     },
     {
@@ -515675,7 +515815,8 @@
         ],
         "batches": [
           "release-0.6-operator-log-pseudonyms",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-native-provider-fixtures-and-staff-log-assertion"
         ],
         "current_acceptance": {
           "kind": "scoped-operator-log-verification",
@@ -515987,7 +516128,8 @@
             "The final changed behavior was checked with keyed-reference tests, 34 ESM/CommonJS export and declaration checks, strict shared/API/worker type checks, and changed-file ESLint. The OTP console still requires both local-development controls and existing OTP unit assertions passed.",
             "The initial affected API unit selection passed 999 of 1021 cases. Four expected log assertions were replaced with keyed-reference and raw-data exclusion checks. Four financial fixtures were reconciled with the existing atomic policy-and-counter SQL and preserve assertions for limits, exact wallet debits, rollback, replay, provider uncertainty and receipt sealing. All 82 financial fixture cases and the four follow-up admin/approval/TOS/template files passed. Worker scanner units passed, including unchanged restricted wallet failure results and the pseudonymous emitted warning.",
             "Pinned Linux PostgreSQL applied all 207 migrations. Compiled API audit and gift-code HTTP suites passed all 50 cases, including an unavailable audit table, preserved opaque denial, matching correlation ID, pseudonymous actor reference and unchanged gift-code permissions, audit rollback and counters. The final CRM orphan diagnostic and template-upload log were reviewed as output-only and are outside those HTTP scenarios.",
-            "The existing shared runtime secret is used only for domain-separated operator references. It never enters output. Missing keys or identifiers emit an unavailable marker. Old log references change on key rotation. Restricted audit and job records retain original values."
+            "The existing shared runtime secret is used only for domain-separated operator references. It never enters output. Missing keys or identifiers emit an unavailable marker. Old log references change on key rotation. Restricted audit and job records retain original values.",
+            "Hosted test job 130003644787 failed only on the staff controller fixture requiring a raw user ID in the operator log. The updated fixture preserves the authorized user ID and username response, verifies both exact keyed log references, and checks that raw target and username values stay out of the log. 183 controller and service tests, two shared keyed-reference tests, lint and formatting passed. Runtime, permissions and durable audit writes are unchanged."
           ],
           "source_renewals": [
             {
@@ -516743,7 +516885,8 @@
         ],
         "batches": [
           "release-0.6-operator-log-pseudonyms",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-native-provider-fixtures-and-staff-log-assertion"
         ],
         "current_acceptance": {
           "kind": "scoped-operator-log-verification",
@@ -517055,7 +517198,8 @@
             "The final changed behavior was checked with keyed-reference tests, 34 ESM/CommonJS export and declaration checks, strict shared/API/worker type checks, and changed-file ESLint. The OTP console still requires both local-development controls and existing OTP unit assertions passed.",
             "The initial affected API unit selection passed 999 of 1021 cases. Four expected log assertions were replaced with keyed-reference and raw-data exclusion checks. Four financial fixtures were reconciled with the existing atomic policy-and-counter SQL and preserve assertions for limits, exact wallet debits, rollback, replay, provider uncertainty and receipt sealing. All 82 financial fixture cases and the four follow-up admin/approval/TOS/template files passed. Worker scanner units passed, including unchanged restricted wallet failure results and the pseudonymous emitted warning.",
             "Pinned Linux PostgreSQL applied all 207 migrations. Compiled API audit and gift-code HTTP suites passed all 50 cases, including an unavailable audit table, preserved opaque denial, matching correlation ID, pseudonymous actor reference and unchanged gift-code permissions, audit rollback and counters. The final CRM orphan diagnostic and template-upload log were reviewed as output-only and are outside those HTTP scenarios.",
-            "The existing shared runtime secret is used only for domain-separated operator references. It never enters output. Missing keys or identifiers emit an unavailable marker. Old log references change on key rotation. Restricted audit and job records retain original values."
+            "The existing shared runtime secret is used only for domain-separated operator references. It never enters output. Missing keys or identifiers emit an unavailable marker. Old log references change on key rotation. Restricted audit and job records retain original values.",
+            "Hosted test job 130003644787 failed only on the staff controller fixture requiring a raw user ID in the operator log. The updated fixture preserves the authorized user ID and username response, verifies both exact keyed log references, and checks that raw target and username values stay out of the log. 183 controller and service tests, two shared keyed-reference tests, lint and formatting passed. Runtime, permissions and durable audit writes are unchanged."
           ],
           "source_renewals": [
             {
@@ -776729,7 +776873,7 @@
             },
             {
               "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
-              "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
+              "sha256": "80b7e25656bbfa8a9335db806968fb8a056b87fcb904fa43bca56429a81303d4"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -780661,6 +780805,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-native-provider-fixtures-and-staff-log-assertion",
+              "base_commit": "4f924a6fe7725d23e77a91b5616dae0f7447e4e1",
+              "paths": [
+                "apps/api/src/admin/admin-permission-boundaries.test.ts"
+              ],
+              "scope": "Correct the single operator-log assertion while preserving authorization and all authorized creation fields."
             }
           ],
           "presentation_renewals": [
@@ -781092,7 +781244,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-native-provider-fixtures-and-staff-log-assertion"
         ]
       }
     },
@@ -908619,6 +908772,167 @@
         {
           "file": "hosted-upload-quota-run-42838242571.json",
           "sha256": "e1b6e9e1797191bd908313b0635cd2e17d42f18a31801428c430631e688f01ed"
+        }
+      ]
+    },
+    "release-0.6-native-provider-fixtures-and-staff-log-assertion": {
+      "batch": "release-0.6-native-provider-fixtures-and-staff-log-assertion",
+      "base_commit": "4f924a6fe7725d23e77a91b5616dae0f7447e4e1",
+      "tested_commit": "2629485641dc879ed804d315b92ec9bab62f0100",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.13.02.03",
+        "06-security-testing-observability.md#T-06.13.02.07",
+        "02-auth-users-admin.md#T-09.05.01",
+        "06-security-testing-observability.md#T-06.03.01.01",
+        "06-security-testing-observability.md#T-06.03.01.06",
+        "06-security-testing-observability.md#T-06.03.01.07",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.09.02.03",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/admin-permission-boundaries.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
+          "sha256": "80b7e25656bbfa8a9335db806968fb8a056b87fcb904fa43bca56429a81303d4"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "8894a41f2a3bb588b4bf77da0fb15ff1eafcb0d3d4a038ffc1a51e9171331ae5"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "ef3c78cbea293cec37798fc72ce3cd5eb1bb08162e5669ff3bcd4ca95367f6c5"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.test.ts",
+          "sha256": "960c460ea8eeaea0030e42e11d7c88278e13a672bde4972337f9bc0ae6990689"
+        },
+        {
+          "path": "packages/shared/src/log-privacy.ts",
+          "sha256": "84799e1cc81b93284cc017491221e112b67f2cfe53aeda2c1220987282f012e6"
+        },
+        {
+          "path": "packages/shared/src/log-privacy.test.ts",
+          "sha256": "3833251795aa79c57146023b01aa7e6367a543f541f20a0d6adac8f6626b035b"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "58dd479ccf2bb40d2200ff73e85ef2ef2306f92702f66fdcf7140314010d3219"
+        },
+        {
+          "path": "packages/shared/vitest.config.ts",
+          "sha256": "b2bf47a797ffcf142d0e6ea7310b05b80252160ddda02d52ecce54f9ecb8935c"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email.ts",
+          "sha256": "209c8f88729ce1871d12ae6a821b3957d9208987e3d3f2a8c6679caabcc95f15"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email-errors.ts",
+          "sha256": "61f631fb71f65206fba19769f673e4d58e7a3c3821d082105274857c40840754"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/smtp-wire.test.ts",
+          "sha256": "9cbe6e6e40bd16b28e604d53250ba1a76bcb78d4738a309ea97e2d21b12a9917"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smsir-client.ts",
+          "sha256": "45f1278d866916a08e5b06f7fced45e9e9cc2d8b5878e6ea202c22756bd47711"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
+          "sha256": "3a940338413814543f74530d2060227d3f1198791fe2b1a29763fdeab82019af"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.ts",
+          "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.test.ts",
+          "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+        },
+        {
+          "path": "packages/shared/src/storage/read-capped-bytes.ts",
+          "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
+        },
+        {
+          "path": "apps/api/package.json",
+          "sha256": "c207a40dafb60e5c8e2c2933b9860308d613cb544286e1592fef0d866d3551ce"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway.ts",
+          "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
+          "sha256": "caf55b622346eeafd6977ebaa77325dcf3641521d364d22159f96bc0e551f130"
+        },
+        {
+          "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
+          "sha256": "d76ca1f9e100eeb3e2c8d68568c41ac0bc4ff20a3fa8f92dd0e93aa5e6817f6f"
+        }
+      ],
+      "checks": [
+        "Hosted test job 130003644787 failed only on the staff controller fixture requiring a raw user ID in the operator log. The updated fixture preserves the authorized user ID and username response, verifies both exact keyed log references, and checks that raw target and username values stay out of the log. 183 controller and service tests, two shared keyed-reference tests, lint and formatting passed. Runtime, permissions and durable audit writes are unchanged.",
+        "Hosted Run tests job 130003644787 executed and passed all five named provider fixture files. SMTP TLS wire fixtures passed seven, SMS.ir request and receipt fixtures six, payment adapter fixtures 41, storage SDK/runtime fixtures 20, and scoped storage HTTP fixtures three. Job 129998094069 independently passed the same 77 named cases.",
+        "The overall hosted test job failed on the separate staff-log assertion. The provider tests, adapters, fixture configuration, dependency lock and CI selection are byte-identical to the tested source. Acceptance covers the CI provider fixture criterion. Live provider and delivery receipts remain separate."
+      ],
+      "hosted_test_jobs": [
+        130003644787,
+        129998094069
+      ],
+      "provider_test_counts": {
+        "src/notification-delivery/smtp-wire.test.ts": 7,
+        "src/auth-delivery/smsir-client.test.ts": 6,
+        "src/wallet/payment-gateway-http-boundaries.test.ts": 41,
+        "src/storage/runtime-config.test.ts": 20,
+        "src/storage/storage-access-http.integration.test.ts": 3
+      },
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "proof_logs": [
+        {
+          "file": "hosted-ci-130003644787.log",
+          "sha256": "0955ba802b1028d43d37f3450e76851bee38656e4a1f2272c2a7d6fc20eb6227"
+        },
+        {
+          "file": "hosted-provider-contracts-129998094069.log",
+          "sha256": "21486ea2e250ca82f07eb7df26b623cfee68245497f1e4ebd63d02ea386b3527"
+        },
+        {
+          "file": "staff-creation-operator-log-final.log",
+          "sha256": "a0435b053c98309c2fd3f57e10daf903e7ee52104274cecbd978c78a67c4306b"
+        },
+        {
+          "file": "staff-creation-log-helper.log",
+          "sha256": "3cc196c873180ed799f7d695a469cc42154c6d20ebacd83fc0d722d6daa6e91c"
+        },
+        {
+          "file": "hosted-provider-run-42865215933.json",
+          "sha256": "66cbd6e86c60cf507b90214657f35a6ef90314f8ace0c37cf3a4170bfa584a33"
         }
       ]
     }
