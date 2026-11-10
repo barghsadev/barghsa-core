@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T18:36:48+00:00",
-  "source_commit": "4f924a6fe7725d23e77a91b5616dae0f7447e4e1",
+  "updated": "2026-11-10T18:44:32+00:00",
+  "source_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -4071,7 +4071,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4099,12 +4100,22 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             }
           ],
           "checks": [
             "GitHub quality job 129286725191 passed the exact frozen install and workspace build at fe665002. Current app, package, lock, workspace and CI build inputs match. Local Turbo discovery verified seven executable build tasks.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -4466,7 +4477,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4482,7 +4494,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4500,6 +4512,16 @@
           "checks": [
             "The actual Turbo plan runs seven typechecks with upstream builds. GitHub quality job 129286725191 passed typecheck and the suppression gate. The current local suppression gate passed eight unit cases and found no unapproved production suppressions.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -4675,7 +4697,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -4699,7 +4722,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             }
           ],
           "checks": [
@@ -4716,6 +4739,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -4997,7 +5028,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -5005,7 +5037,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".size-limit.json",
@@ -5031,6 +5063,16 @@
           "checks": [
             "Node 24 passed all 101 current route and interaction budgets through both the default gzip and Size Limit checks. Electricity measures 246.71 KB under its restored 250 KB limit, wallet 299.44 KB under 300 KB, login 146.51 KB under 150 KB and admin wallet receipts 499.90 KB under 500 KB. CI runs this command on every integrity build, including ordinary changes, and uses its own bundled checker tests once.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -5222,7 +5264,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-quarantine-coverage-and-reporting"
+          "release-0.6-quarantine-coverage-and-reporting",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5262,7 +5305,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5279,6 +5322,16 @@
             "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check.",
             "Renewed the quarantine process document binding after recording the 02:00 UTC schedule and all three desktop engines plus both mobile projects.",
             "Renewed the quarantine process document binding after documenting scheduled outcome rollup and receipt handling."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -5342,7 +5395,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-quarantine-coverage-and-reporting"
+          "release-0.6-quarantine-coverage-and-reporting",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5382,7 +5436,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5399,6 +5453,16 @@
             "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check.",
             "Renewed the quarantine process document binding after recording the 02:00 UTC schedule and all three desktop engines plus both mobile projects.",
             "Renewed the quarantine process document binding after documenting scheduled outcome rollup and receipt handling."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -5798,7 +5862,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-quarantine-coverage-and-reporting"
+          "release-0.6-quarantine-coverage-and-reporting",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5838,7 +5903,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5855,6 +5920,16 @@
             "Renewed the quarantine process document binding after documenting the independent nightly dependency and migration check.",
             "Renewed the quarantine process document binding after recording the 02:00 UTC schedule and all three desktop engines plus both mobile projects.",
             "Renewed the quarantine process document binding after documenting scheduled outcome rollup and receipt handling."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -8655,7 +8730,8 @@
           "release-0.6-database-migration-baseline-and-upgrade",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "current-migration-source-and-native-postgresql-receipts",
@@ -8675,11 +8751,21 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             }
           ],
           "checks": [
             "The reviewed-batch checklist uses the owner-authorized direct-main flow. It requires phase identification, migration evidence, a separate contraction batch after old writers are retired, tested backup/restore proof and retention-aware archival. Existing migration and startup checks remain in the checklist."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -8981,7 +9067,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-first-launch-promotion-check",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -8989,7 +9076,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "deploy/production/README.md",
@@ -9031,6 +9118,16 @@
             "The application Docker recipe includes the new launcher. The procedure uses the existing isolated migration environment and explicit protected bootstrap inputs. Production-equivalent host roles, external migration and seed receipts, and release and backup gates remain separate.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -9542,7 +9639,8 @@
         "batches": [
           "release-0.6-shipped-component-license-gate",
           "release-0.6-packaged-production-seed",
-          "release-0.6-private-clamav-signature-mirror"
+          "release-0.6-private-clamav-signature-mirror",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "current-application-image-healthchecks",
@@ -9550,7 +9648,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "Dockerfile.web",
@@ -9581,6 +9679,16 @@
             "Exact prior hosted image metadata contains native 30s interval, 10s timeout, 40s startup and three retries for app/worker and web. The shared app image selects readiness from the actual API or worker process command.",
             "The web image recipe only adds build-time license inventory and its private copy. The Docker health instruction, runtime entry points and all probe implementations retain their prior bytes.",
             "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -9656,7 +9764,8 @@
           "docker-compose.prod.yml"
         ],
         "batches": [
-          "release-0.6-container-runtime-hardening"
+          "release-0.6-container-runtime-hardening",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "packaged-runtime-and-compose-hardening",
@@ -9664,7 +9773,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "Dockerfile.web",
@@ -9692,6 +9801,16 @@
             "A synthetic hybrid Compose environment previously overrode Node flags in API, worker, AI inference and migrator. With the fixed heap option the manifest refuses that override in all four services. Local overlay and hybrid Compose checks passed. The production rollout remains separate.",
             "The persistent isolated smoke test uses real packaged migrations, waits for PostgreSQL TCP readiness, and mirrors production read-only and tmpfs settings. Exact fixture images pass non-root UID/GID, no inspector listener, strict HTTP parsing, readiness loss and recovery, same app image for API and worker, and clean API, web and worker shutdown. A standalone Node 24 control returns 200 with the insecure parser and 400 with the strict parser.",
             "The fixture reused recorded image IDs and created no production resources. The test removed its disposable containers and private network. Verify the final immutable release images and actual production ingress separately."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -13633,7 +13752,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13641,7 +13761,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "docs/development/ci.md",
@@ -13664,6 +13784,16 @@
             "The current CI workflow runs frozen installation, affected or full tests, PostgreSQL fixtures, build/type/lint/format, migration snapshot, API contract, budgets and security jobs. The owner-authorized direct-main flow uses a reviewed preflight with the exact required integrity check. Strict coverage and license enforcement are configured for the full release lane. The active ruleset and successful exact 530f2840 integrity receipt were read back.",
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -13721,7 +13851,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13729,7 +13860,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -13761,6 +13892,16 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "The hosted upgrade fixture expected only 0282 but the production journal applied 0282, 0283 and 0284. The fixture now proves the exact historical clock migration through 0282, then asserts the complete ordered remaining journal tail and an empty replay. All existing row, constraint and clock assertions remain. The native migrated database passed 3 cases across the upgrade and baseline suites.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -13823,7 +13964,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13831,7 +13973,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "package.json",
@@ -13867,6 +14009,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -13932,7 +14082,8 @@
           "release-0.6-staging-postgres-monitoring-readback",
           "release-0.6-package-metadata-review",
           "release-0.6-current-license-inventory-readback",
-          "release-0.6-strict-license-gate-readback"
+          "release-0.6-strict-license-gate-readback",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -13952,7 +14103,7 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -13967,6 +14118,16 @@
             "Full CI 42709841616 at exact fa7d7416, job 129476154963, failed Check shipped component licenses after the earlier image steps succeeded.",
             "All four image inventories match the 42d2c407 comparison across 594 package/scope/license/status tuples. 170 still require exact dispositions, 424 are allowed, and GeoLite2 is absent.",
             "The policy and approvals file are unchanged. Owner or legal dispositions, verification of applicable conditions and strict acceptance of the immutable release images remain required."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         },
         "exact_license_report": {
@@ -14048,7 +14209,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -14056,7 +14218,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -14081,6 +14243,16 @@
           ],
           "checks": [
             "The strict CI lane measures and merges same-revision package and browser coverage, enforces unchanged package and critical-source floors, and uploads reports. Eleven guard controls and thirteen browser coverage controls passed. The updated documentation distinguishes manual release comparison from fast affected tests. An exact candidate coverage run is still required for promotion."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -18508,7 +18680,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -18521,7 +18694,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "docs/development/ci.md",
@@ -18550,6 +18723,16 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -18605,7 +18788,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -18621,7 +18805,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".prettierignore",
@@ -18638,6 +18822,16 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -18697,7 +18891,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -18715,7 +18910,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".husky/commit-msg",
@@ -18772,6 +18967,16 @@
             {
               "path": "scripts/install-git-hooks.mjs",
               "sha256": "e443b208fe9756ee088667b707f44b3db78916c8baa0a00e6d6b40e2d5870c1c"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -19473,7 +19678,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -19488,7 +19694,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".prettierignore",
@@ -19556,6 +19762,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -114526,7 +114740,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -114534,7 +114749,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "apps/api/openapi.json",
@@ -115424,6 +115639,14 @@
                 "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -459025,7 +459248,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459033,7 +459257,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -459337,6 +459561,14 @@
                 "apps/worker/src/ai-models/test-runner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -459468,7 +459700,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459476,7 +459709,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -459918,6 +460151,14 @@
                 "apps/worker/src/ai-models/test-runner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -460053,7 +460294,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460061,7 +460303,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -460360,6 +460602,14 @@
                 "apps/worker/src/ai-models/test-runner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -460461,7 +460711,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460469,7 +460720,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -460768,6 +461019,14 @@
                 "apps/worker/src/ai-models/test-runner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -460869,7 +461128,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460877,7 +461137,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -461176,6 +461436,14 @@
                 "apps/worker/src/ai-models/test-runner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -484095,7 +484363,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -484103,7 +484372,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "apps/api/openapi.json",
@@ -485017,6 +485286,14 @@
                 "apps/api/src/knowledge-bases/knowledge-bases.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -490542,7 +490819,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-private-clamav-signature-mirror"
+          "release-0.6-private-clamav-signature-mirror",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -490550,7 +490828,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "apps/api/scripts/benchmark-password-hash.mjs",
@@ -490580,6 +490858,16 @@
           "checks": [
             "A reusable synthetic benchmark ran in the isolated Node 24.22.2 Linux x64 staging app image under the API memory limit. Default verification was 365 ms p95, upper-bound verification was 663 ms p95. Four-way wall time was 391 ms versus 767 ms, and peak RSS was 183484 KiB versus 315000 KiB. Exact production load calibration remains separate.",
             "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -490616,7 +490904,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -490624,7 +490913,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "apps/api/scripts/benchmark-password-hash.mjs",
@@ -490698,6 +490987,14 @@
                 "apps/api/test/auth.service.spec.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -493711,7 +494008,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-public-registration-privacy",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-api-and-private-cutover-proof",
@@ -493755,11 +494053,11 @@
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
-              "sha256": "a7b760489c96751317d07ee493eb5dfbb8adfde2efa2c6d0f096c99a667cf868"
+              "sha256": "c094b466bb55afed29675c4e226e4a74ab3a9aa4aba626bfc41b9dfbd9782da5"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
-              "sha256": "51c8b4a0ad538b1913bcedb8ffdd67138224445809c86a0b030123eed4d69a31"
+              "sha256": "e49ccc0b70bc28383ce14b669219b187379df58e1655b44163a93f5b5d1bc28b"
             },
             {
               "path": "apps/api/src/session/cookie.helper.ts",
@@ -493957,6 +494255,15 @@
                 "apps/api/src/crm/crm.service.ts"
               ],
               "scope": "Preserve all current query and authority semantics. Build profile summaries after bounded user pagination where aggregate eligibility and sort do not apply."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "apps/api/src/route-errors/route-errors.controller.test.ts",
+                "apps/api/src/route-errors/route-errors.controller.ts"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -495159,7 +495466,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-private-clamav-signature-mirror"
+          "release-0.6-private-clamav-signature-mirror",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -495167,7 +495475,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "Dockerfile.web",
@@ -495209,6 +495517,16 @@
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -495380,7 +495698,8 @@
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
-          "release-0.6-wallet-keyboard-before-responsive-probe"
+          "release-0.6-wallet-keyboard-before-responsive-probe",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -495424,7 +495743,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -495453,6 +495772,14 @@
                 "apps/web/e2e/onboarding-wizard.spec.ts"
               ],
               "scope": "Wait for actual password scoring and preserve original trusted native consent, registration and profile assertions. The eight affected journeys passed."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -495496,7 +495823,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-private-clamav-signature-mirror"
+          "release-0.6-private-clamav-signature-mirror",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -495504,7 +495832,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "Dockerfile.web",
@@ -495546,6 +495874,16 @@
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -495814,7 +496152,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-primary-mobile-paint-observation"
+          "release-0.6-primary-mobile-paint-observation",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -495842,7 +496181,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             }
           ],
           "checks": [
@@ -495851,6 +496190,16 @@
             "Staging API initially lacked Permissions-Policy. Its NGINX configuration matched v0.5.0. Applied the existing main template whose only delta is the approved Permissions-Policy and duplicate handling. Validated syntax, reloaded NGINX and verified the HTTPS API, login and 404 responses. The application remains v0.5.0, CSP remains report-only, and HSTS stays disabled on staging.",
             "The production-equivalent TLS and HSTS verification, the required CSP observation window, and the accepted v0.6.0 staging rollout remain open.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -499766,7 +500115,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-transaction-provider-static-guard",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -499774,7 +500124,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -499798,6 +500148,16 @@
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -500709,7 +501069,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -500729,11 +501090,11 @@
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
-              "sha256": "a7b760489c96751317d07ee493eb5dfbb8adfde2efa2c6d0f096c99a667cf868"
+              "sha256": "c094b466bb55afed29675c4e226e4a74ab3a9aa4aba626bfc41b9dfbd9782da5"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
-              "sha256": "51c8b4a0ad538b1913bcedb8ffdd67138224445809c86a0b030123eed4d69a31"
+              "sha256": "e49ccc0b70bc28383ce14b669219b187379df58e1655b44163a93f5b5d1bc28b"
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
@@ -500787,6 +501148,15 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "apps/api/src/route-errors/route-errors.controller.test.ts",
+                "apps/api/src/route-errors/route-errors.controller.ts"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -500832,7 +501202,8 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -500852,11 +501223,11 @@
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
-              "sha256": "a7b760489c96751317d07ee493eb5dfbb8adfde2efa2c6d0f096c99a667cf868"
+              "sha256": "c094b466bb55afed29675c4e226e4a74ab3a9aa4aba626bfc41b9dfbd9782da5"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
-              "sha256": "51c8b4a0ad538b1913bcedb8ffdd67138224445809c86a0b030123eed4d69a31"
+              "sha256": "e49ccc0b70bc28383ce14b669219b187379df58e1655b44163a93f5b5d1bc28b"
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
@@ -500910,6 +501281,15 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "apps/api/src/route-errors/route-errors.controller.test.ts",
+                "apps/api/src/route-errors/route-errors.controller.ts"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -503729,7 +504109,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-isolated-live-scanner-and-safari-recovery",
-          "release-0.6-hosted-upload-admission-and-scanner-tests"
+          "release-0.6-hosted-upload-admission-and-scanner-tests",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "hosted-native-upload-regression-test-verification",
@@ -503738,7 +504119,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -503829,6 +504210,16 @@
             "GitHub run 42838242571 and its Run tests job 129914620408 passed at exact 27e484c138315c4c67f417afe402d55366f58a09. The report lists 45 document, 26 storage-record, 19 upload-policy, 34 upload-controller, five admission, two multipart and seven ClamAV cases.",
             "Reviewed the exercised source for valid sealed bytes, denied extensions and MIME mismatches, oversized claims and forged stored sizes, configured clean and infected scanner outcomes, quarantine download denial, and durable private quarantine notifications. The upload quota, scanner workers, test fixtures and migrations are unchanged from that hosted run.",
             "The shared byte-reader relocation preserves its storage behavior byte for byte. The intervening protected S3 origin guard has its own exact 31 compiled PostgreSQL HTTP cases plus the authenticated isolated MinIO read/write and signing proof. This accepts the regression test criterion. Live deployment and scanner operations remain separate gates."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       },
@@ -504753,7 +505144,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -504765,7 +505157,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".gitignore",
@@ -504814,6 +505206,14 @@
                 ".env.example"
               ],
               "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -504853,7 +505253,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -504865,7 +505266,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".gitignore",
@@ -504901,6 +505302,14 @@
                 ".env.example"
               ],
               "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         },
@@ -505008,7 +505417,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -505016,7 +505426,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -505033,6 +505443,16 @@
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "Reused the exact dependency artifact from GitHub run 42660509974. The shared parser accepted zero high and critical advisories, and seven clean, vulnerable and malformed input controls passed."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         },
         "ci_checkpoint": {
@@ -505123,7 +505543,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-transaction-provider-static-guard",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -505131,7 +505552,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -505155,6 +505576,16 @@
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -505196,7 +505627,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -505204,11 +505636,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "Dockerfile.web",
@@ -505241,6 +505673,17 @@
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -505279,7 +505722,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -505291,7 +505735,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".gitignore",
@@ -505327,6 +505771,14 @@
                 ".env.example"
               ],
               "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         },
@@ -505416,7 +505868,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -505428,7 +505881,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -505439,6 +505892,16 @@
             "The current runbook defines how to triage medium findings, blocks high and critical findings with credible production paths and requires explicit approval with reason, compensating control and expiry for accepted risk.",
             "The existing hosted image and dependency scan enforcement remains stronger for high and critical findings. The new license gate does not change those scan thresholds.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -505475,7 +505938,8 @@
           "release-0.6-package-metadata-review",
           "release-0.6-current-license-inventory-readback",
           "release-0.6-strict-license-gate-readback",
-          "release-0.6-latest-strict-license-review-evidence"
+          "release-0.6-latest-strict-license-review-evidence",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -505495,7 +505959,7 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -505510,6 +505974,16 @@
             "Full CI 42709841616 at exact fa7d7416, job 129476154963, failed Check shipped component licenses after the earlier image steps succeeded.",
             "All four image inventories match the 42d2c407 comparison across 594 package/scope/license/status tuples. 170 still require exact dispositions, 424 are allowed, and GeoLite2 is absent.",
             "The policy and approvals file are unchanged. Owner or legal dispositions, verification of applicable conditions and strict acceptance of the immutable release images remain required."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         },
         "exact_license_report": {
@@ -505722,7 +506196,8 @@
         "batches": [
           "release-0.6-container-runtime-hardening",
           "release-0.6-runtime-node-options",
-          "release-0.6-private-clamav-signature-mirror"
+          "release-0.6-private-clamav-signature-mirror",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-node-options-and-isolated-runtime",
@@ -505730,7 +506205,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "Dockerfile.web",
@@ -505766,6 +506241,16 @@
             "A disposable private Linux network reused the previously verified app, web and PostgreSQL content. The app and web image variants applied only the exact ENV instructions from the changed Dockerfiles. Native packaged migration, non-root/read-only readiness, shared API/worker image, inspector denial, strict HTTP parsing, dependency loss and recovery, clean SIGTERM, and test-resource cleanup all passed.",
             "The probe verifies this runtime configuration delta. The derived images were not deployed or distributed. Candidate registry digests and exact staging and production-equivalent evidence are separate gates.",
             "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -505974,7 +506459,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -505982,7 +506468,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "Dockerfile.web",
@@ -505998,7 +506484,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -506013,6 +506499,17 @@
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base",
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -506038,7 +506535,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-container-runtime-hardening"
+          "release-0.6-container-runtime-hardening",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "packaged-runtime-and-compose-hardening",
@@ -506054,7 +506552,7 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "Dockerfile.web",
@@ -506078,6 +506576,16 @@
             "A synthetic hybrid Compose environment previously overrode Node flags in API, worker, AI inference and migrator. With the fixed heap option the manifest refuses that override in all four services. Local overlay and hybrid Compose checks passed. The production rollout remains separate.",
             "The persistent isolated smoke test uses real packaged migrations, waits for PostgreSQL TCP readiness, and mirrors production read-only and tmpfs settings. Exact fixture images pass non-root UID/GID, no inspector listener, strict HTTP parsing, readiness loss and recovery, same app image for API and worker, and clean API, web and worker shutdown. A standalone Node 24 control returns 200 with the insecure parser and 400 with the strict parser.",
             "The fixture reused recorded image IDs and created no production resources. The test removed its disposable containers and private network. Verify the final immutable release images and actual production ingress separately."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -507257,7 +507765,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -507317,7 +507826,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -507329,6 +507838,16 @@
             "Exact fa7d7416 full test job passed all 17,055 tests, including the three Vitest base config assertions, and uploaded the coverage artifact. Runner configuration and lockfile match current source. The separate merged browser/coverage result is pending.",
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       },
@@ -507356,7 +507875,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -507368,7 +507888,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -507407,6 +507927,14 @@
                 "apps/api/src/admin/admin.service.test.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -507435,7 +507963,8 @@
         "batches": [
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -507447,7 +507976,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -507482,6 +508011,14 @@
                 "apps/api/src/invoice/vat-calculation.integration.test.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -511798,7 +512335,8 @@
         "batches": [
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -511810,7 +512348,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -511845,6 +512383,16 @@
             "Ordinary CI uses Chromium for production-browser checks, including its explicit Mobile Chrome performance gate. The scheduled browser workflow uses Chromium, Firefox, WebKit and both mobile profiles. It can be dispatched against the same immutable release candidate as full CI, which verifies Chromium source coverage and strict release policy separately.",
             "The configured scheduled run reported all 40 expected shards and failed its strict aggregate with 127 unexpected and 18 flaky outcomes. The five local selector, flake-gate and result handling checks passed. The CI runbook records the exact candidate pairing and complete shard receipt requirement. Current source matches the observed scheduled workflow and result handling.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -512238,7 +512786,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -512254,7 +512803,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -512317,6 +512866,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -512712,7 +513269,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-transaction-provider-static-guard",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -512720,7 +513278,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -512744,6 +513302,16 @@
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -512780,7 +513348,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-transaction-provider-static-guard",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -512788,7 +513357,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -512817,6 +513386,16 @@
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Pinned Trivy converted all four exact hosted inventory reports without rescanning. The new verifier accepted four exact SBOMs and rejected mismatched, empty or unbound SBOMs and a report with a high finding.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -513364,7 +513943,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "exact-hosted-mobile-performance-gate",
@@ -513379,7 +513959,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".size-limit.json",
@@ -513448,6 +514028,16 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -514101,7 +514691,8 @@
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -514114,7 +514705,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -514173,6 +514764,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -514202,7 +514801,8 @@
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -514214,7 +514814,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -514273,6 +514873,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -514302,7 +514910,8 @@
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -514316,7 +514925,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -514375,6 +514984,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -514404,7 +515021,8 @@
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -514415,7 +515033,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -514474,6 +515092,14 @@
                 "apps/api/src/electricity/electricity-calculation.service.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -514553,7 +515179,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-native-credential-and-migration-acceptance",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-clean-and-upgrade-migrations",
@@ -514565,7 +515192,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -514590,6 +515217,16 @@
             {
               "path": "packages/db/src/migrate.ts",
               "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -514620,7 +515257,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "reconciled-existing",
@@ -514631,7 +515269,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/api/openapi.json",
@@ -514671,6 +515309,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "Only generated contract changes for the tested rate-limit administration path and post-proof registration response. Other task routes and API implementation are exact."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -514847,7 +515493,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-native-provider-fixtures-and-staff-log-assertion"
+          "release-0.6-native-provider-fixtures-and-staff-log-assertion",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-hosted-provider-contract-verification",
@@ -514856,7 +515503,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -514934,6 +515581,16 @@
           "checks": [
             "Hosted Run tests job 130003644787 executed and passed all five named provider fixture files. SMTP TLS wire fixtures passed seven, SMS.ir request and receipt fixtures six, payment adapter fixtures 41, storage SDK/runtime fixtures 20, and scoped storage HTTP fixtures three. Job 129998094069 independently passed the same 77 named cases.",
             "The overall hosted test job failed on the separate staff-log assertion. The provider tests, adapters, fixture configuration, dependency lock and CI selection are byte-identical to the tested source. Acceptance covers the CI provider fixture criterion. Live provider and delivery receipts remain separate."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -514965,7 +515622,8 @@
         "batches": [
           "release-0.6-first-launch-promotion-check",
           "release-0.6-quarantine-coverage-and-reporting",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -514983,7 +515641,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "deploy/production/README.md",
@@ -515008,6 +515666,16 @@
             {
               "path": "scripts/report-nightly-browser.py",
               "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -515291,7 +515959,8 @@
         ],
         "batches": [
           "release-0.6-quarantine-coverage-and-reporting",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -515308,7 +515977,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -515342,6 +516011,16 @@
               "path": "scripts/test_report_nightly_browser.py",
               "sha256": "8f57cfe2b989c2e385765166354e3f624bbce6f1b44552f3c2406aff50099efa"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         }
       }
@@ -515374,7 +516053,8 @@
         ],
         "batches": [
           "release-0.6-quarantine-coverage-and-reporting",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -515391,7 +516071,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -515424,6 +516104,16 @@
             {
               "path": "scripts/test_report_nightly_browser.py",
               "sha256": "8f57cfe2b989c2e385765166354e3f624bbce6f1b44552f3c2406aff50099efa"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -520119,19 +520809,57 @@
         "story": "06-security-testing-observability.md#spec-b598d0822d84"
       },
       "requirement": "| T-06.16.02.06 | Write integration test: error reported to Sentry, PII scrubbed, release tag present | S |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-sentry-build-release-envelope"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-compiled-sentry-envelope-integration-test",
+          "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+            },
+            {
+              "path": "Dockerfile.base",
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+            },
+            {
+              "path": "deploy/staging/deploy.sh",
+              "sha256": "7ba145e0c0effd228d0222a1ce06ceb03a6eb9b956e13fe28f715720925f890c"
+            },
+            {
+              "path": "deploy/staging/test_notify_release.py",
+              "sha256": "e9597fab16cc85f6ce0876576fd77f2362d03343489a2000292340c5d0d23780"
+            },
+            {
+              "path": "apps/api/src/route-errors/route-errors.controller.ts",
+              "sha256": "e49ccc0b70bc28383ce14b669219b187379df58e1655b44163a93f5b5d1bc28b"
+            },
+            {
+              "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
+              "sha256": "c094b466bb55afed29675c4e226e4a74ab3a9aa4aba626bfc41b9dfbd9782da5"
+            },
+            {
+              "path": "apps/api/src/route-errors/route-errors-http.integration.test.ts",
+              "sha256": "771d9ed957bdd3677ff930f97d044a6562c09f1b366dae01a7d8a19aff7e469b"
+            }
+          ],
+          "checks": [
+            "A compiled API on disposable PostgreSQL with 207 production migrations sent one authenticated TLS envelope to the isolated Sentry protocol receiver. Its accepted payload has the exact built release SHA and support reference and excludes the private referer. All four HTTP cases and 24 unit cases passed, including authorization, privacy, bounded receipts and the missing or invalid revision fallback.",
+            "Staging and hosted CI use the same full revision build argument for API and web images. The existing deployment stub verifies both invocations and retained acceptance, Telegram preflight, rollback and notification boundaries. All 15 release tool cases passed. TypeScript, ESLint, Prettier, actionlint, shellcheck and the whitespace check passed.",
+            "The executable route source outside the release field, the runtime image outside its build metadata, and the CI and staging scripts outside their build argument are byte-identical. This verifies the integration test criterion. The stored prior staging event and future live release correlation are separate evidence."
+          ]
+        }
       }
     },
     {
@@ -568747,7 +569475,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-dashboard-grid-after-entrance",
-          "release-0.6-browser-navigation-query-and-resting-states"
+          "release-0.6-browser-navigation-query-and-resting-states",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -568755,7 +569484,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".size-limit.json",
@@ -569550,6 +570279,14 @@
                 "apps/web/e2e/onboarding-wizard.spec.ts"
               ],
               "scope": "Wait for actual password scoring and preserve original trusted native consent, registration and profile assertions. The eight affected journeys passed."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -569678,7 +570415,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-dashboard-grid-after-entrance",
-          "release-0.6-browser-navigation-query-and-resting-states"
+          "release-0.6-browser-navigation-query-and-resting-states",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569686,7 +570424,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".size-limit.json",
@@ -570481,6 +571219,14 @@
                 "apps/web/e2e/onboarding-wizard.spec.ts"
               ],
               "scope": "Wait for actual password scoring and preserve original trusted native consent, registration and profile assertions. The eight affected journeys passed."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -571167,7 +571913,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-dashboard-grid-after-entrance",
-          "release-0.6-browser-navigation-query-and-resting-states"
+          "release-0.6-browser-navigation-query-and-resting-states",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -571175,7 +571922,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".size-limit.json",
@@ -571970,6 +572717,14 @@
                 "apps/web/e2e/onboarding-wizard.spec.ts"
               ],
               "scope": "Wait for actual password scoring and preserve original trusted native consent, registration and profile assertions. The eight affected journeys passed."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -572027,7 +572782,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -572046,7 +572802,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -572088,6 +572844,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -652235,7 +652999,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "current_route_error_boundary_and_live_sentry",
@@ -652243,15 +653008,15 @@
           "source_evidence": [
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
-              "sha256": "51c8b4a0ad538b1913bcedb8ffdd67138224445809c86a0b030123eed4d69a31"
+              "sha256": "e49ccc0b70bc28383ce14b669219b187379df58e1655b44163a93f5b5d1bc28b"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
-              "sha256": "a7b760489c96751317d07ee493eb5dfbb8adfde2efa2c6d0f096c99a667cf868"
+              "sha256": "c094b466bb55afed29675c4e226e4a74ab3a9aa4aba626bfc41b9dfbd9782da5"
             },
             {
               "path": "apps/api/src/route-errors/route-errors-http.integration.test.ts",
-              "sha256": "9d545527d6fb140dbb1b0cb352fa49677d5e83a336a76a6ea68338060dda81ad"
+              "sha256": "771d9ed957bdd3677ff930f97d044a6562c09f1b366dae01a7d8a19aff7e469b"
             },
             {
               "path": "apps/api/src/rate-limit/rate-limit.decorator.ts",
@@ -652288,6 +653053,16 @@
                 "apps/api/src/route-errors/route-errors.controller.test.ts"
               ],
               "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "apps/api/src/route-errors/route-errors.controller.ts",
+                "apps/api/src/route-errors/route-errors.controller.test.ts",
+                "apps/api/src/route-errors/route-errors-http.integration.test.ts"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         }
@@ -767535,7 +768310,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -767543,7 +768319,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "apps/api/openapi.json",
@@ -767914,6 +768690,14 @@
                 "apps/worker/src/service-targets/escalation-scanner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -768314,7 +769098,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -768322,7 +769107,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "apps/api/openapi.json",
@@ -768693,6 +769478,14 @@
                 "apps/worker/src/service-targets/escalation-scanner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -772200,17 +772993,28 @@
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "7654ae7dcc02d9502fb3704f8571df9c46b1d3256472ee47597ba68df53361da"
+              "sha256": "e9597fab16cc85f6ce0876576fd77f2362d03343489a2000292340c5d0d23780"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
               "sha256": "fd6b1c97cc5b548ab1c4bed61686d74e36a227822ddf3d7048e4cc811a821cc7"
             }
           ],
-          "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim."
+          "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
+          ]
         },
         "batches": [
-          "release-0.6-immutable-staging-acceptance"
+          "release-0.6-immutable-staging-acceptance",
+          "release-0.6-sentry-build-release-envelope"
         ]
       }
     },
@@ -781273,7 +782077,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/api/openapi.json",
@@ -783437,7 +784241,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "41d61fff9de1062443d7e4a8b693a7d05ce11e393790d06e82a824482c2b25b5"
+              "sha256": "7ba145e0c0effd228d0222a1ce06ceb03a6eb9b956e13fe28f715720925f890c"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -784996,6 +785800,15 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -785364,7 +786177,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-protected-storage-origins",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-browser-navigation-query-and-resting-states"
+          "release-0.6-browser-navigation-query-and-resting-states",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -785417,7 +786231,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": "apps/api/openapi.json",
@@ -787541,7 +788355,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "41d61fff9de1062443d7e4a8b693a7d05ce11e393790d06e82a824482c2b25b5"
+              "sha256": "7ba145e0c0effd228d0222a1ce06ceb03a6eb9b956e13fe28f715720925f890c"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -788989,6 +789803,15 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -789374,7 +790197,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-protected-storage-origins",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-browser-navigation-query-and-resting-states"
+          "release-0.6-browser-navigation-query-and-resting-states",
+          "release-0.6-sentry-build-release-envelope"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -791157,7 +791981,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
             },
             {
               "path": ".size-limit.json",
@@ -792781,7 +793605,7 @@
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
-              "sha256": "51c8b4a0ad538b1913bcedb8ffdd67138224445809c86a0b030123eed4d69a31"
+              "sha256": "e49ccc0b70bc28383ce14b669219b187379df58e1655b44163a93f5b5d1bc28b"
             },
             {
               "path": "apps/web/src/hooks/useRouteErrorReport.ts",
@@ -793204,6 +794028,15 @@
                 "apps/web/e2e/onboarding-wizard.spec.ts"
               ],
               "scope": "Wait for actual password scoring and preserve original trusted native consent, registration and profile assertions. The eight affected journeys passed."
+            },
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "apps/api/src/route-errors/route-errors.controller.ts"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
             }
           ]
         },
@@ -793347,7 +794180,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-sentry-build-release-envelope"
         ]
       }
     },
@@ -793393,7 +794227,7 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "2150fe0cf09958bf4524a5a7e2bffccb1ede9c98851baa23900feef80af6fb49"
+              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
             },
             {
               "path": "Dockerfile.web",
@@ -793423,6 +794257,16 @@
             "Five existing base-table factory unit assertions passed in an isolated Node test configuration; the normal package fixture startup was stopped after the workstation Docker daemon hung, and no integration pass is inferred.",
             "Only policy, documentation and board source changed. The four prior task bindings to the image review guide were renewed for the additive runtime decision.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-build-release-envelope",
+              "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            }
           ]
         },
         "batches": [
@@ -793432,7 +794276,8 @@
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-packaged-production-seed",
           "release-0.6-container-runtime-hardening",
-          "release-0.6-architecture-and-deployment-documentation"
+          "release-0.6-architecture-and-deployment-documentation",
+          "release-0.6-sentry-build-release-envelope"
         ]
       }
     },
@@ -908933,6 +909778,164 @@
         {
           "file": "hosted-provider-run-42865215933.json",
           "sha256": "66cbd6e86c60cf507b90214657f35a6ef90314f8ace0c37cf3a4170bfa584a33"
+        }
+      ]
+    },
+    "release-0.6-sentry-build-release-envelope": {
+      "batch": "release-0.6-sentry-build-release-envelope",
+      "base_commit": "bb8543871d5db1d7b27719f4f277a5c4aa59e62d",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-03.01.04",
+        "01-platform-infrastructure.md#T-03.01.05",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.04",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.01.01.02",
+        "06-security-testing-observability.md#T-06.01.01.03",
+        "06-security-testing-observability.md#T-06.01.04.08",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.04.04.04",
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.03.01",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.07.03.06",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.12.01.09",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.01"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml",
+        "Dockerfile.base",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/test_notify_release.py",
+        "apps/api/src/route-errors/route-errors.controller.ts",
+        "apps/api/src/route-errors/route-errors.controller.test.ts",
+        "apps/api/src/route-errors/route-errors-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "7ba145e0c0effd228d0222a1ce06ceb03a6eb9b956e13fe28f715720925f890c"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "e9597fab16cc85f6ce0876576fd77f2362d03343489a2000292340c5d0d23780"
+        },
+        {
+          "path": "apps/api/src/route-errors/route-errors.controller.ts",
+          "sha256": "e49ccc0b70bc28383ce14b669219b187379df58e1655b44163a93f5b5d1bc28b"
+        },
+        {
+          "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
+          "sha256": "c094b466bb55afed29675c4e226e4a74ab3a9aa4aba626bfc41b9dfbd9782da5"
+        },
+        {
+          "path": "apps/api/src/route-errors/route-errors-http.integration.test.ts",
+          "sha256": "771d9ed957bdd3677ff930f97d044a6562c09f1b366dae01a7d8a19aff7e469b"
+        }
+      ],
+      "checks": [
+        "A compiled API on disposable PostgreSQL with 207 production migrations sent one authenticated TLS envelope to the isolated Sentry protocol receiver. Its accepted payload has the exact built release SHA and support reference and excludes the private referer. All four HTTP cases and 24 unit cases passed, including authorization, privacy, bounded receipts and the missing or invalid revision fallback.",
+        "Staging and hosted CI use the same full revision build argument for API and web images. The existing deployment stub verifies both invocations and retained acceptance, Telegram preflight, rollback and notification boundaries. All 15 release tool cases passed. TypeScript, ESLint, Prettier, actionlint, shellcheck and the whitespace check passed.",
+        "The executable route source outside the release field, the runtime image outside its build metadata, and the CI and staging scripts outside their build argument are byte-identical. This verifies the integration test criterion. The stored prior staging event and future live release correlation are separate evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "unchanged_older_bindings": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "06-security-testing-observability.md#T-06.07.02.06"
+      ],
+      "proof_logs": [
+        {
+          "file": "sentry-release-scope.json",
+          "sha256": "d78ca1300f705ad239acd70dd2473c01c9979482a1b01bb1db1f57d2d07beff9"
+        },
+        {
+          "file": "sentry-release-unit.log",
+          "sha256": "4b835d51426569452da91133fea6cff542ce0077b514be8e488d2ed8c45a8c07"
+        },
+        {
+          "file": "sentry-release-native.log",
+          "sha256": "4cd16c9c1d34e4e0a61f170a3d137428700d6f68730909e8e36a2dcf869482c0"
+        },
+        {
+          "file": "sentry-release-native-source.sha256",
+          "sha256": "5a8c37d0436f314196037313973dc295bad5cb68150a710e1f5858b9f2b2ddec"
+        },
+        {
+          "file": "sentry-release-deploy-tooling.log",
+          "sha256": "977dee5d24d65a4f881da235d259627dc9b352917e613657f7b4059bb71141bb"
         }
       ]
     }

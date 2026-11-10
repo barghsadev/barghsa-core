@@ -258,7 +258,10 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                 if failure in {"FAIL_ACCEPTANCE", "FAIL_PREFLIGHT"}:
                     self.assertFalse(any(line.startswith('docker ') or line.startswith('ssh ') for line in calls))
                 else:
-                    self.assertTrue(any('--build-arg BARGHSA_RELEASE_SHA=' + 'a'*40 in line for line in calls))
+                    for dockerfile in ('Dockerfile.base', 'Dockerfile.web'):
+                        builds = [line for line in calls if line.startswith('docker build ') and f'-f {dockerfile} ' in line]
+                        self.assertEqual(len(builds), 1)
+                        self.assertIn('--build-arg BARGHSA_RELEASE_SHA=' + 'a'*40, builds[0])
 
 
 if __name__ == "__main__":

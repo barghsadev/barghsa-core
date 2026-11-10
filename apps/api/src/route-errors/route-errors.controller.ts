@@ -80,6 +80,7 @@ export class RouteErrorsController {
     const endpoint = sentryEndpoint(dsn);
     const { code, reference } = result.data;
     const eventId = reference.replaceAll('-', '').toLowerCase();
+    const release = process.env.BARGHSA_RELEASE_SHA;
     const event = JSON.stringify({
       event_id: eventId,
       timestamp: new Date().toISOString(),
@@ -87,6 +88,7 @@ export class RouteErrorsController {
       level: 'error',
       message: code,
       fingerprint: [code],
+      ...(/^[a-f0-9]{40}$/.test(release ?? '') ? { release } : {}),
       tags: { support_reference: reference },
     });
     const envelope = [

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T18:36:48+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T18:44:32+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1192 | Accepted with unchanged source bindings. |
-| verify | 112 | Existing work may be complete; inspect evidence before building. |
+| done | 1193 | Accepted with unchanged source bindings. |
+| verify | 111 | Existing work may be complete; inspect evidence before building. |
 | partial | 56 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1416,7 +1416,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.16.02.03` | verify | Inventory needed | Configure environment-specific sampling: 100% in dev/staging, sample rate in production |
 | `06-security-testing-observability.md#T-06.16.02.04` | verify | Inventory needed | Implement release correlation: send release marker to Sentry on each production deploy |
 | `06-security-testing-observability.md#T-06.16.02.05` | verify | Inventory needed | Configure performance monitoring integration (tracing) with Sentry |
-| `06-security-testing-observability.md#T-06.16.02.06` | verify | Inventory needed | Write integration test: error reported to Sentry, PII scrubbed, release tag present |
+| `06-security-testing-observability.md#T-06.16.02.06` | done | Recorded batch work | Write integration test: error reported to Sentry, PII scrubbed, release tag present |
 | `06-security-testing-observability.md#T-06.17.01.01` | done | Recorded batch work | Write Payment/Wallet Mismatch runbook: detection, freeze, reconciliation, correction, verification |
 | `06-security-testing-observability.md#T-06.17.01.02` | done | Recorded batch work | Write Refund Backlog runbook: identify stuck refunds, manual intervention, idempotent replay |
 | `06-security-testing-observability.md#T-06.17.01.03` | done | Recorded batch work | Write Database Failover/Restore runbook: promote replica, PITR restore, verify RPO/RTO, application reconnect |

@@ -40,7 +40,7 @@ else
   images+=("$postgres_image" "$clamav_image")
 fi
 
-docker build --platform linux/amd64 -f Dockerfile.base --target production -t "barghsa-app:$tag" .
+docker build --platform linux/amd64 --build-arg "BARGHSA_RELEASE_SHA=$commit" -f Dockerfile.base --target production -t "barghsa-app:$tag" .
 docker build --platform linux/amd64 --build-arg "BARGHSA_RELEASE_SHA=$commit" -f Dockerfile.web --target production -t "barghsa-web:$tag" .
 app_id=$(docker image inspect --format '{{.Id}}' "barghsa-app:$tag")
 web_id=$(docker image inspect --format '{{.Id}}' "barghsa-web:$tag")

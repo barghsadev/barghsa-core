@@ -76,7 +76,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build the four staging runtime images
         run: |
-          docker build -f Dockerfile.base --target production -t "barghsa-ci-app:$GITHUB_SHA" .
+          docker build -f Dockerfile.base --target production --build-arg "BARGHSA_RELEASE_SHA=$GITHUB_SHA" -t "barghsa-ci-app:$GITHUB_SHA" .
           docker build -f Dockerfile.web --target production --build-arg "BARGHSA_RELEASE_SHA=$GITHUB_SHA" -t "barghsa-ci-web:$GITHUB_SHA" .
           docker build -f deploy/clamav/Dockerfile -t "barghsa-ci-clamav:$GITHUB_SHA" .
           docker build -f packages/db/scripts/backup/Dockerfile -t "barghsa-ci-postgres:$GITHUB_SHA" .

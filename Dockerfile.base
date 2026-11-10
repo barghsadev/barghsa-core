@@ -34,4 +34,6 @@ CMD ["node", "worker/dist/main.js"]
 
 # Keep the API as the default target for existing build commands.
 FROM runtime AS production
+ARG BARGHSA_RELEASE_SHA
+ENV BARGHSA_RELEASE_SHA=$BARGHSA_RELEASE_SHA
 CMD ["node", "dist/src/main.js"]

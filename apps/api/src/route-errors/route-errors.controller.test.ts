@@ -5,6 +5,7 @@ import { RouteErrorsController } from './route-errors.controller.js';
 const dsn = 'https://fixturekey@receiver.example.test/sentry/17';
 const body = { code: 'ROUTE_RENDER_FAILED', reference: '12345678-1234-4123-8123-123456789abc' };
 const eventId = body.reference.replaceAll('-', '');
+const release = 'a1b2c3d4'.repeat(5);
 const controller = new RouteErrorsController();
 const transport = vi.fn<typeof fetch>();
 
@@ -24,6 +25,7 @@ function request(headers: Record<string, string> = {}): Request {
 beforeEach(() => {
   vi.stubEnv('APP_PUBLIC_URL', 'https://app.example.test');
   vi.stubEnv('ROUTE_ERROR_SENTRY_DSN', dsn);
+  vi.stubEnv('BARGHSA_RELEASE_SHA', release);
   vi.stubGlobal('fetch', transport);
 });
 
@@ -55,9 +57,22 @@ it('forwards only safe diagnostics and requires the same event receipt', async (
     level: 'error',
     message: body.code,
     fingerprint: [body.code],
+    release,
     tags: { support_reference: body.reference },
   });
 });
+
+it.each([undefined, 'invalid release metadata'])(
+  'omits an invalid build revision (%s)',
+  async (revision) => {
+    vi.stubEnv('BARGHSA_RELEASE_SHA', revision);
+    transport.mockResolvedValueOnce(Response.json({ id: eventId }));
+    await expect(controller.report(body, request())).resolves.toBeUndefined();
+    expect(transport).toHaveBeenCalledOnce();
+    const [, options] = transport.mock.calls[0]!;
+    expect(JSON.parse(String(options?.body).split('\n')[2]!)).not.toHaveProperty('release');
+  }
+);
 
 it.each([
   { origin: 'https://attacker.example.test' },
