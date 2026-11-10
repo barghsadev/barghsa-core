@@ -27,6 +27,7 @@ describe('wallet_chargeback_events schema (T-04.2.04.02)', () => {
       'status',
       'match_method',
       'raw',
+      'payload_sha256',
       'created_at',
     ]);
     const unique = config.indexes.find(
@@ -47,6 +48,10 @@ describe('wallet_chargeback_events schema (T-04.2.04.02)', () => {
     const byName = Object.fromEntries(config.columns.map((column) => [column.name, column]));
     expect(byName.original_transaction_id?.notNull).toBe(false);
     expect(byName.wallet_id?.notNull).toBe(false);
+    expect(byName.payload_sha256?.notNull).toBe(false);
+    expect(config.checks.map((constraint) => constraint.name)).toContain(
+      'wallet_chargeback_payload_sha256'
+    );
   });
 
   it('migration 0075 is idempotent and registered in the journal', () => {

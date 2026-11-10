@@ -16,6 +16,14 @@ import {
 } from '@barghsa/shared/finance';
 import { databaseFailureReason } from '../jobs/database-failure-reason.js';
 
+class ExpiryNoticeUnavailable extends Error {
+  constructor(
+    reason: 'Expired top-up customer unavailable' | 'Expired top-up notice data unavailable'
+  ) {
+    super(reason);
+  }
+}
+
 /**
  * Online top-up Pending TTL expiry scanner (S-04.2.02, T-04.2.02.07).
  *
@@ -240,7 +248,9 @@ export async function expireStaleOnlineTopUps(
       }
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
-      const message = `${candidate.id}: ${databaseFailureReason(error)}`;
+      const reason =
+        error instanceof ExpiryNoticeUnavailable ? error.message : databaseFailureReason(error);
+      const message = `${candidate.id}: ${reason}`;
       result.errors.push(message);
       logger.warn(`Online top-up expiry failed: ${message}`);
     } finally {
@@ -285,10 +295,11 @@ async function rejectOneExpired(
     return false;
   }
   if (row.wallet_id !== input.walletId || !profile?.user_id)
-    throw new Error('Expired top-up customer unavailable');
+    throw new ExpiryNoticeUnavailable('Expired top-up customer unavailable');
   const user = (await client.query('SELECT locale FROM users WHERE user_id=$1', [profile.user_id]))
     .rows[0];
-  if (!user || !row.amount) throw new Error('Expired top-up notice data unavailable');
+  if (!user || !row.amount)
+    throw new ExpiryNoticeUnavailable('Expired top-up notice data unavailable');
 
   const updated = await client.query(REJECT_EXPIRED_ONLINE_TOPUP_SQL, [
     row.id,

@@ -33,6 +33,7 @@ describe('wallet_topup_callback_events schema (T-04.2.02.02)', () => {
       'wallet_id',
       'status',
       'raw',
+      'payload_sha256',
       'created_at',
     ]);
     const unique = config.indexes.find(
@@ -46,6 +47,10 @@ describe('wallet_topup_callback_events schema (T-04.2.02.02)', () => {
     const walletFk = config.foreignKeys.find((fk) => fk.reference().foreignTable === wallets);
     expect(pendingFk?.onDelete).toBe('restrict');
     expect(walletFk?.onDelete).toBe('restrict');
+    expect(config.columns.find((column) => column.name === 'payload_sha256')?.notNull).toBe(false);
+    expect(config.checks.map((constraint) => constraint.name)).toContain(
+      'wallet_topup_callback_payload_sha256'
+    );
   });
 
   it('migration 0070 is idempotent and registered in the journal', () => {
