@@ -76,6 +76,11 @@ for (const locale of ['en', 'fa'] as const)
       await edit.focus();
       await edit.press('Enter');
       await title.fill('Retained draft');
+      const effectiveTitle = locale === 'fa' ? 'برند تازه' : 'Retained draft';
+      if (locale === 'fa')
+        await page
+          .getByRole('textbox', { name: brand('appTitleFa'), exact: true })
+          .fill(effectiveTitle);
       fail = true;
       const refresh = page.getByRole('button', { name: brand('refresh'), exact: true });
       await refresh.click();
@@ -126,24 +131,15 @@ for (const locale of ['en', 'fa'] as const)
       await expect(dialog).toHaveCount(0);
       expect(writes[0]).toEqual(writes[1]);
       await expect(title).toBeDisabled();
-      await page.getByRole('button', { name: word('history'), exact: true }).click();
-      await page.getByRole('button', { name: word('rollback'), exact: false }).click();
-      await expect(dialog).toContainText(
-        word('rollbackConfirm').replace('{version}', locale === 'fa' ? '۱' : '1')
-      );
-      await confirm.click();
-      await expect(dialog).toHaveCount(0);
-      expect(writes[2]).toEqual({ config: previousBrand.config, expectedVersion: 3 });
-      const preview = page.getByTestId('config-preview');
-      await expect(
-        preview.getByRole('group', { name: word('current'), exact: true })
-      ).toContainText(
-        locale === 'fa' ? publishedBrand.config.appTitleFa : publishedBrand.config.appTitle
-      );
-      await expect(preview.getByRole('group', { name: word('draft'), exact: true })).toContainText(
-        locale === 'fa' ? previousBrand.config.appTitleFa : previousBrand.config.appTitle
-      );
       const activate = page.getByRole('button', { name: brand('activate'), exact: true });
+      const version = (value: number) =>
+        new Intl.NumberFormat(locale, { useGrouping: false }).format(value);
+      const versionLabel = (value: number) => word('version').replace('{version}', version(value));
+      const activeVersion = (value: number) =>
+        page.getByText(brand('activeVersion').replace('{version}', version(value)), {
+          exact: true,
+        });
+      const initialDraftId = current.id;
       await activate.click();
       await confirm.click();
       await expect.poll(() => activations.length).toBe(1);
@@ -152,7 +148,39 @@ for (const locale of ['en', 'fa'] as const)
       await activate.click();
       await confirm.click();
       await expect(dialog).toHaveCount(0);
-      expect(activations).toEqual(Array(2).fill({ draftId: current.id, expectedVersion: 4 }));
+      expect(activations).toEqual(Array(2).fill({ draftId: initialDraftId, expectedVersion: 3 }));
+      await page.reload();
+      await expect(activeVersion(3)).toBeVisible();
+      await expect(page).toHaveTitle(effectiveTitle);
+
+      await page.getByRole('button', { name: word('history'), exact: true }).click();
+      await page
+        .getByRole('button', { name: `${word('rollback')} ${versionLabel(1)}`, exact: true })
+        .click();
+      await expect(dialog).toContainText(word('rollbackConfirm').replace('{version}', version(1)));
+      await confirm.click();
+      await expect(dialog).toHaveCount(0);
+      expect(writes[2]).toEqual({ config: previousBrand.config, expectedVersion: 3 });
+      const preview = page.getByTestId('config-preview');
+      const previousTitle =
+        locale === 'fa' ? previousBrand.config.appTitleFa : previousBrand.config.appTitle;
+      await expect(
+        preview.getByRole('group', { name: word('current'), exact: true })
+      ).toContainText(effectiveTitle);
+      await expect(preview.getByRole('group', { name: word('draft'), exact: true })).toContainText(
+        previousTitle
+      );
+      const rollbackDraftId = current.id;
+      await activate.click();
+      await confirm.click();
+      await expect(dialog).toHaveCount(0);
+      expect(activations).toEqual([
+        ...Array(2).fill({ draftId: initialDraftId, expectedVersion: 3 }),
+        { draftId: rollbackDraftId, expectedVersion: 4 },
+      ]);
+      await page.reload();
+      await expect(activeVersion(4)).toBeVisible();
+      await expect(page).toHaveTitle(previousTitle);
       expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true

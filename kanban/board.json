@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T11:23:37+00:00",
-  "source_commit": "9087649ca3f465f3bab01c4158815ca9f870462b",
+  "updated": "2026-11-10T11:26:08+00:00",
+  "source_commit": "62bd6c84bd7315643faa7dd4a21002986b2866e9",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -498904,19 +498904,67 @@
         "story": "06-security-testing-observability.md#spec-a2575d616ae6"
       },
       "requirement": "| T-06.10.03.12 | Write E2E: admin configuration change → effective version → rollback | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/web/e2e/versioned-settings.spec.ts"
+        ],
+        "batches": [
+          "release-0.6-effective-brand-rollback-browser-journey"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-effective-configuration-and-rollback-browser-journey",
+          "reviewed_sha": "62bd6c84bd7315643faa7dd4a21002986b2866e9",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/crm-shell-fixture.ts",
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
+            },
+            {
+              "path": "apps/web/e2e/versioned-settings.spec.ts",
+              "sha256": "14d0fac699fb940c5484dd120f09ffe4546aabb1aecc1ec9284a5a7fef7a0fd0"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "apps/web/src/components/VersionedSettingsCard.tsx",
+              "sha256": "ce3b9eab114f4cff0cb7bb44827165afa223f805a3454fabaebcca8dae5efe10"
+            },
+            {
+              "path": "apps/web/src/lib/branding-settings.ts",
+              "sha256": "1ea3d7d14cf017b2ef1d0a3128234931e68e064707184474afee7e654d290ea7"
+            },
+            {
+              "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+              "sha256": "b77c8cd06fabfee049e7ed41cd68310bf6b202d2fe6d913a089e3350b395a017"
+            },
+            {
+              "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+              "sha256": "8e2cb24dbab8576970cd9d4622e5f930ab9a4ca71ff222ddacb0b9da051a7abc"
+            },
+            {
+              "path": "apps/web/src/test/branding-settings-fixtures.ts",
+              "sha256": "7ece9748cce352a4cabdb0da2b0825d9fe5a8727b7fc741315a2dcc03796b9d0"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "The existing admin branding case preserves stale-read recovery, malformed save and activation receipts, exact retries, version ownership, the read-before-retry path and permission-denial cleanup. It now saves and activates the new version 3 before attempting rollback. A fresh app reload observes the exact active version and localized effective public brand.",
+            "Rollback targets the exact previous version 1 and creates a version 4 draft against current version 3. The public configuration stays on version 3 while the draft preview shows the rollback content. An exact version 4 activation followed by a fresh reload restores the previous localized public brand and shows active version 4.",
+            "All 12 unique production-build cases passed in Firefox, Mobile Chrome and Mobile Safari across Persian and English and both configured themes. The first passing Persian dark Mobile Safari receipt was reused without running the same case again. Focused formatting, lint and diff checks passed."
+          ]
+        }
       }
     },
     {
@@ -548477,7 +548525,8 @@
           "release-0.6-simple-electricity-wallet-funding-browser-journey",
           "release-0.6-advanced-electricity-bank-refund-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-contract-amendment-invoice-readback-browser-journey"
+          "release-0.6-contract-amendment-invoice-readback-browser-journey",
+          "release-0.6-effective-brand-rollback-browser-journey"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -549001,7 +549050,7 @@
             },
             {
               "path": "apps/web/e2e/versioned-settings.spec.ts",
-              "sha256": "cc4bda7c58bb2dfef46aa699c4c37434378b20c93080c00ca5ec9010705175ff"
+              "sha256": "14d0fac699fb940c5484dd120f09ffe4546aabb1aecc1ec9284a5a7fef7a0fd0"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
@@ -603706,7 +603755,8 @@
           "release-0.6-simple-electricity-wallet-funding-browser-journey",
           "release-0.6-advanced-electricity-bank-refund-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-contract-amendment-invoice-readback-browser-journey"
+          "release-0.6-contract-amendment-invoice-readback-browser-journey",
+          "release-0.6-effective-brand-rollback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -604378,7 +604428,7 @@
             },
             {
               "path": "apps/web/e2e/versioned-settings.spec.ts",
-              "sha256": "cc4bda7c58bb2dfef46aa699c4c37434378b20c93080c00ca5ec9010705175ff"
+              "sha256": "14d0fac699fb940c5484dd120f09ffe4546aabb1aecc1ec9284a5a7fef7a0fd0"
             },
             {
               "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
@@ -742310,7 +742360,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.6-effective-brand-rollback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-admin-settings-adoption",
@@ -742318,7 +742369,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/versioned-settings.spec.ts",
-              "sha256": "cc4bda7c58bb2dfef46aa699c4c37434378b20c93080c00ca5ec9010705175ff"
+              "sha256": "14d0fac699fb940c5484dd120f09ffe4546aabb1aecc1ec9284a5a7fef7a0fd0"
             },
             {
               "path": "apps/web/src/components/VersionedSettingsCard.tsx",
@@ -742432,7 +742483,8 @@
           "release-0.5-final-gates",
           "release-0.5-route-census-closure",
           "release-0.5-essential-control-contrast",
-          "release-0.5-conditional-heading-acceptance"
+          "release-0.5-conditional-heading-acceptance",
+          "release-0.6-effective-brand-rollback-browser-journey"
         ],
         "current_acceptance": {
           "kind": "verified-admin-settings-adoption",
@@ -742440,7 +742492,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/versioned-settings.spec.ts",
-              "sha256": "cc4bda7c58bb2dfef46aa699c4c37434378b20c93080c00ca5ec9010705175ff"
+              "sha256": "14d0fac699fb940c5484dd120f09ffe4546aabb1aecc1ec9284a5a7fef7a0fd0"
             },
             {
               "path": "apps/web/src/components/ConfigPreviewCard.tsx",
@@ -771360,7 +771412,8 @@
           "release-0.6-advanced-electricity-bank-refund-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
-          "release-0.6-solar-request-touch-target"
+          "release-0.6-solar-request-touch-target",
+          "release-0.6-effective-brand-rollback-browser-journey"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -879466,6 +879519,63 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/solar-touch-target",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "69f40a88164b630be3dd64a2bbd5096868ca0a9392f8d56b421fc9f8914593b6"
+    },
+    "release-0.6-effective-brand-rollback-browser-journey": {
+      "batch": "release-0.6-effective-brand-rollback-browser-journey",
+      "base_commit": "62bd6c84bd7315643faa7dd4a21002986b2866e9",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.03.12",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/versioned-settings.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
+        },
+        {
+          "path": "apps/web/e2e/versioned-settings.spec.ts",
+          "sha256": "14d0fac699fb940c5484dd120f09ffe4546aabb1aecc1ec9284a5a7fef7a0fd0"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/VersionedSettingsCard.tsx",
+          "sha256": "ce3b9eab114f4cff0cb7bb44827165afa223f805a3454fabaebcca8dae5efe10"
+        },
+        {
+          "path": "apps/web/src/lib/branding-settings.ts",
+          "sha256": "1ea3d7d14cf017b2ef1d0a3128234931e68e064707184474afee7e654d290ea7"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "b77c8cd06fabfee049e7ed41cd68310bf6b202d2fe6d913a089e3350b395a017"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "8e2cb24dbab8576970cd9d4622e5f930ab9a4ca71ff222ddacb0b9da051a7abc"
+        },
+        {
+          "path": "apps/web/src/test/branding-settings-fixtures.ts",
+          "sha256": "7ece9748cce352a4cabdb0da2b0825d9fe5a8727b7fc741315a2dcc03796b9d0"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "The existing admin branding case preserves stale-read recovery, malformed save and activation receipts, exact retries, version ownership, the read-before-retry path and permission-denial cleanup. It now saves and activates the new version 3 before attempting rollback. A fresh app reload observes the exact active version and localized effective public brand.",
+        "Rollback targets the exact previous version 1 and creates a version 4 draft against current version 3. The public configuration stays on version 3 while the draft preview shows the rollback content. An exact version 4 activation followed by a fresh reload restores the previous localized public brand and shows active version 4.",
+        "All 12 unique production-build cases passed in Firefox, Mobile Chrome and Mobile Safari across Persian and English and both configured themes. The first passing Persian dark Mobile Safari receipt was reused without running the same case again. Focused formatting, lint and diff checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/effective-brand-rollback",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "7dffe410622897167825f0c27e28073560b15d3fb117d944cbfa6e1b65673fa3"
     }
   },
   "historical_improvements": [
