@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T03:53:31+00:00",
-  "source_commit": "5940f6539daf1b4907ac98633c1d3826651b265d",
+  "updated": "2026-11-10T03:56:41+00:00",
+  "source_commit": "7caa396ae5e4eac8cf4af194eb09e94bdba84023",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -492042,7 +492042,8 @@
         "Complete review of the remaining application, worker, database and ingress error sinks. Rehearse representative token, identity and payment inputs against configured production-equivalent sinks and verify their receipts.",
         "Automatic, manual, adjustment and replacement invoice failure logs now use fixed operation text. The regression reproduces a leaked synthetic payment reference on the previous code, then verifies the exact safe message, rollback, no commit and the unchanged thrown error. Review of remaining sinks and production-equivalent receipt checks remains open.",
         "Wallet reconciliation scan failures now emit fixed operation messages, with the opaque wallet ID for per-wallet errors. Raw exception text is excluded from the scan log and background job error. The prior leak was reproduced with a synthetic reference. Remaining sink review and production-equivalent receipts are open.",
-        "Reviewed administrative mutation, geography, profile invitation and Terms error sinks now omit exception contents and untrusted team names. The Terms regression verifies the exact safe log, stable 500 response, rollback and release. Remaining service, worker, database and ingress sink review and live evidence remain open."
+        "Reviewed administrative mutation, geography, profile invitation and Terms error sinks now omit exception contents and untrusted team names. The Terms regression verifies the exact safe log, stable 500 response, rollback and release. Remaining service, worker, database and ingress sink review and live evidence remain open.",
+        "The alternate single-container proxy now omits raw paths, parameters and headers from JSON access records and keeps request failures observable through status and upstream status. The isolated proxy proof verified app and object forwarding, both upstream outage responses and no synthetic secret markers in logs. Other ingress configurations and production-equivalent receipt checks remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -492093,7 +492094,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-invoice-error-log-redaction",
           "release-0.6-wallet-reconciliation-log-redaction",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-single-proxy-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
@@ -860429,6 +860431,35 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/admin-log-redaction",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "4eb5957b90c5b8eed0337ef9ae92c20b59f83612d4c8fa02227186b7fc3a3f31"
+    },
+    "release-0.6-single-proxy-log-redaction": {
+      "batch": "release-0.6-single-proxy-log-redaction",
+      "base_commit": "7caa396ae5e4eac8cf4af194eb09e94bdba84023",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.02.06"
+      ],
+      "changed_paths": [
+        "deploy/single/README.md",
+        "deploy/single/nginx.conf"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/single/README.md",
+          "sha256": "0396e3c79e8616f1d562b4bb4f6159b923344f67ded5bab013c237dad10e9b7d"
+        },
+        {
+          "path": "deploy/single/nginx.conf",
+          "sha256": "28508149cc1fb1ab202bd2908e1273310e191b78b690cae101033b11d7e3cd10"
+        }
+      ],
+      "checks": [
+        "Reproduced default combined-format access output exposing synthetic callback authority, signed query and object key. A closed synthetic S3 upstream also exposed the signed query in the request error output.",
+        "The alternate proxy now logs only time, static scope, method, status, bytes, duration and upstream status. It suppresses raw HTTP error lines while keeping process diagnostics and preserving routing and outcome telemetry.",
+        "The local NGINX 1.29.8 probe validated config syntax, passed unchanged app and S3 paths to loopback echo upstreams, and recorded both 200 and both 502 outcomes. All synthetic credentials, paths and headers were absent from the access and error outputs. The local adapter changed only the MIME file, PID path and ports for isolation. Diff check passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/single-proxy-log-redaction",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "22de88043b5927fa66eec936a86c2343ea25455112458e76810affa95838f100"
     }
   },
   "historical_improvements": [

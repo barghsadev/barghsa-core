@@ -49,6 +49,12 @@ runs database migrations before starting the API, background worker, dedicated A
 The Docker health check checks the web, API readiness, background worker, and AI inference readiness.
 If a required process exits, the whole container exits for Liara to restart.
 
+Nginx writes JSON access records with the request time, service scope, method,
+response status, bytes sent, duration and upstream status. The proxy excludes
+request paths, query strings and headers from these records. Use response and
+upstream status to investigate proxy request failures, and check the service
+logs for upstream failures. Nginx keeps process diagnostics on stderr.
+
 This is a staging arrangement. A single app restart interrupts every service.
 Keep one replica: simultaneous containers would race on the same PostgreSQL
 directory and S3 data. Set up off-app backups before treating data as durable;
