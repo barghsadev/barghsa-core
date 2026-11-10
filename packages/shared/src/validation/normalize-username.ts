@@ -1,50 +1,26 @@
-/**
- * Normalize a username (email or Iranian mobile number) to canonical form.
- *
- * Handles these input formats:
- *   - `09xxxxxxxxx` (Iranian mobile, 11 digits starting with 09) → `+989xxxxxxxxx`
- *   - `+989xxxxxxxxx` (already E.164 Iranian mobile) → pass through
- *   - `00989xxxxxxxxx` → `+989xxxxxxxxx`
- *   - `989xxxxxxxxx` (missing `+`) → `+989xxxxxxxxx`
- *   - Email → lowercased
- *   - Other valid international numbers starting with `+` → pass through
- *
- * @returns Normalized username, or `null` when the input is not a recognisable format.
- */
+const localMobile = /^09\d{9}$/;
+const internationalIranian = /^(?:00)?(98\d{10})$/;
+const legacyEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const E164_PATTERN = /^\+[1-9]\d{6,14}$/;
+
+export function isE164(value: string): boolean {
+  return E164_PATTERN.test(value);
+}
+
+/** Preserve the public auth boundary's national mobile input and stored email compatibility. */
+export function canonicalizeAuthenticationUsername(raw: string): string {
+  const value = raw.trim().toLowerCase();
+  return localMobile.test(value) ? '+98' + value.slice(1) : value;
+}
+
+export function isAuthenticationUsername(value: string): boolean {
+  return isE164(value) || legacyEmail.test(value);
+}
+
+/** Normalize email, national mobile and the additional Iranian dial-prefix aliases. */
 export function normalizeUsername(raw: string): string | null {
-  const trimmed = raw.trim();
-  if (!trimmed) return null;
-
-  // Iranian mobile 09xxxxxxxxx (11 digits starting with 09)
-  const iranianMobileRe = /^09\d{9}$/;
-  if (iranianMobileRe.test(trimmed)) {
-    return `+98${trimmed.slice(1)}`;
-  }
-
-  // Iranian mobile 00989xxxxxxxxx (00 prefix)
-  const iranianDoubleZeroRe = /^0098(\d{10})$/;
-  const doubleZeroMatch = trimmed.match(iranianDoubleZeroRe);
-  if (doubleZeroMatch) {
-    return `+98${doubleZeroMatch[1]}`;
-  }
-
-  // Iranian mobile 989xxxxxxxxx (10 digits, no prefix)
-  const iranianPlainRe = /^98(\d{10})$/;
-  const plainMatch = trimmed.match(iranianPlainRe);
-  if (plainMatch) {
-    return `+98${plainMatch[1]}`;
-  }
-
-  // Already international (+ prefix, 7-15 digits)
-  if (trimmed.startsWith('+') && /^\+\d{7,15}$/.test(trimmed)) {
-    return trimmed;
-  }
-
-  // Email
-  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (emailRe.test(trimmed)) {
-    return trimmed.toLowerCase();
-  }
-
-  return null;
+  const value = raw.trim();
+  const alias = internationalIranian.exec(value);
+  const canonical = canonicalizeAuthenticationUsername(alias ? '+' + alias[1] : value);
+  return isAuthenticationUsername(canonical) ? canonical : null;
 }

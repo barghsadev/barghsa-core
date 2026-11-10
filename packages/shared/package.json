@@ -79,6 +79,26 @@
         "default": "./dist/cjs/validation/index.js"
       }
     },
+    "./username-normalization": {
+      "import": {
+        "types": "./dist/validation/normalize-username.d.ts",
+        "default": "./dist/validation/normalize-username.js"
+      },
+      "require": {
+        "types": "./dist/cjs/validation/normalize-username.d.ts",
+        "default": "./dist/cjs/validation/normalize-username.js"
+      }
+    },
+    "./username-validation": {
+      "import": {
+        "types": "./dist/validation/username.d.ts",
+        "default": "./dist/validation/username.js"
+      },
+      "require": {
+        "types": "./dist/cjs/validation/username.d.ts",
+        "default": "./dist/cjs/validation/username.js"
+      }
+    },
     "./agent-permissions": {
       "import": {
         "types": "./dist/agent-permissions/index.d.ts",

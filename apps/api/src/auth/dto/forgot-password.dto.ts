@@ -1,3 +1,7 @@
+import {
+  canonicalizeAuthenticationUsername,
+  isAuthenticationUsername,
+} from '@barghsa/shared/username-normalization';
 import { z } from 'zod';
 
 /**
@@ -12,11 +16,8 @@ export const ForgotPasswordSchema = z.object({
     .string()
     .min(1, { message: 'VALIDATION:INPUT:MISSING' })
     .max(255)
-    .transform((value) => {
-      const normalized = value.trim().toLowerCase();
-      return /^09\d{9}$/.test(normalized) ? `+98${normalized.slice(1)}` : normalized;
-    })
-    .refine((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\+[1-9]\d{6,14}$/.test(value)),
+    .transform(canonicalizeAuthenticationUsername)
+    .refine(isAuthenticationUsername),
 });
 
 export type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>;

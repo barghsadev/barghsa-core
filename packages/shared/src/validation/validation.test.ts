@@ -7,6 +7,11 @@ import {
 } from './index.js';
 import { passwordSchema, replacementPasswordSchema } from './password.js';
 import { meetsPasswordMinimum, meetsReplacementPasswordPolicy } from './password-policy.js';
+import {
+  canonicalizeAuthenticationUsername,
+  isAuthenticationUsername,
+} from './normalize-username.js';
+import { isE164, isEmail, parseUsername, usernameSchema } from './username.js';
 
 describe('password policy', () => {
   it('enforces length and ASCII character classes without rewriting the input', () => {
@@ -95,6 +100,43 @@ describe('normalizeUsername', () => {
   it('trims whitespace before normalizing', () => {
     expect(normalizeUsername('  09121234567  ')).toBe('+989121234567');
     expect(normalizeUsername('  User@Example.COM  ')).toBe('user@example.com');
+  });
+});
+
+describe('typed username validation', () => {
+  it('classifies email and canonicalizes supported mobile forms', () => {
+    expect(parseUsername(' Person@Example.TEST ')).toEqual({
+      type: 'email',
+      value: 'person@example.test',
+    });
+    for (const value of ['09121234567', '00989121234567', '989121234567', '+989121234567']) {
+      expect(parseUsername(value)).toEqual({ type: 'mobile', value: '+989121234567' });
+    }
+    expect(parseUsername('+447911123456')).toEqual({ type: 'mobile', value: '+447911123456' });
+  });
+
+  it('requires a valid canonical identifier at the strict schema boundary', () => {
+    expect(isEmail('person@example.test')).toBe(true);
+    expect(isE164('+1234567')).toBe(true);
+    expect(isE164('+123456789012345')).toBe(true);
+    for (const value of ['+0234567', '+123456', '+1234567890123456', 'a..b@example.test']) {
+      expect(usernameSchema.safeParse(value).success).toBe(false);
+      expect(parseUsername(value)).toBeNull();
+    }
+    expect(normalizeUsername('+0234567')).toBeNull();
+    expect(usernameSchema.safeParse('09121234567').success).toBe(false);
+    expect(usernameSchema.parse('+989121234567')).toBe('+989121234567');
+  });
+
+  it('preserves the authentication boundary for existing clients and stored identifiers', () => {
+    const legacyEmail = canonicalizeAuthenticationUsername(' A..B@EXAMPLE.TEST ');
+    expect(legacyEmail).toBe('a..b@example.test');
+    expect(isAuthenticationUsername(legacyEmail)).toBe(true);
+    expect(isEmail(legacyEmail)).toBe(false);
+    expect(canonicalizeAuthenticationUsername(' 09121234567 ')).toBe('+989121234567');
+    expect(isAuthenticationUsername(canonicalizeAuthenticationUsername('989121234567'))).toBe(
+      false
+    );
   });
 });
 

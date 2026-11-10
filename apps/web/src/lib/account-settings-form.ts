@@ -1,4 +1,4 @@
-import { normalizeUsername } from '@barghsa/shared/validation';
+import { isE164, normalizeUsername } from '@barghsa/shared/username-normalization';
 import { settingsUuid } from './settings-form.js';
 
 export type ContactType = 'email' | 'mobile';
@@ -33,9 +33,8 @@ export function accountDestination(raw: string, type?: ContactType): string | nu
   if (raw.length > 255) return null;
   const value = normalizeUsername(raw);
   if (!value || value.length > 255) return null;
-  const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-  const mobile = /^\+[1-9]\d{6,14}$/.test(value);
-  return (type === 'email' ? email : type === 'mobile' ? mobile : email || mobile) ? value : null;
+  const normalizedType = isE164(value) ? 'mobile' : 'email';
+  return type && type !== normalizedType ? null : value;
 }
 export function accountSettingsUser(value: unknown, actor: string): AccountSettingsUser | null {
   if (
