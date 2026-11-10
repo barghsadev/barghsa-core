@@ -291,6 +291,29 @@
       ],
       "title": "Outbox processing and retry rates",
       "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "description": "Verified Resend bounces as a share of accepted Resend attempts started in the trailing 24 hours. An empty cohort shows no data.",
+      "fieldConfig": {
+        "defaults": { "unit": "percentunit", "min": 0, "max": 1 },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 32 },
+      "id": 7,
+      "options": {
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "expr": "max without (instance, pod) (notifications_resend_bounced_attempts_24h) / (max without (instance, pod) (notifications_resend_accepted_attempts_24h) > 0)",
+          "legendFormat": "{{environment}} / {{database}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Resend email bounce rate (24h)",
+      "type": "timeseries"
     }
   ],
   "refresh": "30s",
@@ -314,6 +337,6 @@
   "timezone": "",
   "title": "Barghsa — Notifications & Outbox",
   "uid": "barghsa-notifications",
-  "version": 2,
+  "version": 3,
   "weekStart": ""
 }

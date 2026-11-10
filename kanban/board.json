@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T18:54:19+00:00",
+  "updated": "2026-11-10T22:26:08+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -77811,7 +77811,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -77915,7 +77916,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
@@ -78877,6 +78878,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -79143,7 +79152,8 @@
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -79255,7 +79265,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
@@ -79951,7 +79961,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "apps/worker/src/notifications/dead-letter.ts",
@@ -79987,7 +79997,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -81426,6 +81436,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts",
+                "apps/worker/src/notifications/worker-metrics.ts",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -81626,7 +81646,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -81734,7 +81755,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
@@ -82649,6 +82670,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -82805,7 +82834,8 @@
         "batches": [
           "release-0.4-delivery-identity-closure",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -82853,7 +82883,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/worker/src/notifications/delivery-identity.integration.test.ts",
@@ -82932,6 +82962,14 @@
                 "packages/shared/src/auth-delivery/smsir-client.ts"
               ],
               "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -83074,7 +83112,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -83118,7 +83157,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -84159,6 +84198,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -84325,7 +84372,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -84353,7 +84401,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -84365,7 +84413,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -84469,6 +84517,15 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "docs/operations/notification-monitoring.md",
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -84589,7 +84646,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-external-provider-metrics-reconciliation",
-          "release-0.6-worker-outbox-dashboard"
+          "release-0.6-worker-outbox-dashboard",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "unchanged-audit-bindings",
@@ -84597,19 +84655,19 @@
           "source_evidence": [
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.test.ts",
-              "sha256": "b95be39bbfec4d25ddf658fbd6da4f84550950dec01d29969dae2a1d16e8e2d1"
+              "sha256": "1a9355bb50f9b9fca514c89c20c4858e0a87c714fc27571262dd20c1a148db19"
             },
             {
               "path": "deploy/monitoring/grafana-notifications-dashboard.json",
-              "sha256": "0d2fd0f445a3adc9cffde072373572c031b73324504d4e5a261a268f29ea343c"
+              "sha256": "bfa0f2f18445e1ab83051a2b03f6adda4c0578fda389be404438165034402e43"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             }
           ],
           "checks": [
@@ -84648,6 +84706,17 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts",
+                "apps/worker/src/notifications/worker-metrics.test.ts",
+                "deploy/monitoring/grafana-notifications-dashboard.json",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         }
@@ -93151,7 +93220,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -93347,7 +93417,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -93755,6 +93825,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -94167,7 +94245,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -94363,7 +94442,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -94771,6 +94850,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -95183,7 +95270,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -95379,7 +95467,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -95787,6 +95875,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -96200,7 +96296,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -96396,7 +96493,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -96804,6 +96901,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -97216,7 +97321,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -97412,7 +97518,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -97820,6 +97926,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -98235,7 +98349,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -98371,7 +98486,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -98467,7 +98582,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "apps/worker/src/notifications/dead-letter.ts",
@@ -98622,6 +98737,15 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "docs/operations/notification-monitoring.md",
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -99032,7 +99156,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -99192,7 +99317,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -99449,6 +99574,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -99729,7 +99862,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -99925,7 +100059,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -100333,6 +100467,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -100611,7 +100753,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -100727,7 +100870,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -101012,6 +101155,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -459993,7 +460144,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460109,7 +460261,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -460392,6 +460544,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -460500,7 +460660,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460616,7 +460777,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -460899,6 +461060,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -461006,7 +461175,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -461122,7 +461292,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -461407,6 +461577,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -461515,7 +461693,8 @@
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461631,7 +461810,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -461735,7 +461914,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -461979,6 +462158,15 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -462113,7 +462301,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -462257,7 +462446,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -462612,6 +462801,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed. Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -462730,7 +462927,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462858,7 +463056,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.ts",
@@ -463065,6 +463263,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -463197,7 +463403,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463293,7 +463500,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.ts",
@@ -463353,7 +463560,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -463417,7 +463624,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -463674,6 +463881,16 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts",
+                "docs/operations/notification-monitoring.md",
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -463810,7 +464027,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463918,7 +464136,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.ts",
@@ -464140,6 +464358,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -464242,7 +464468,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464350,7 +464577,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.ts",
@@ -464572,6 +464799,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -464674,7 +464909,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464782,7 +465018,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.ts",
@@ -465004,6 +465240,14 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -514785,7 +515029,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-source-matching-native-postgresql-tests",
@@ -514821,7 +515066,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.ts",
@@ -514837,6 +515082,16 @@
             "Hosted full-test job 129476154430 passed all 20 delivery identity and 15 durable send-receipt PostgreSQL cases, including terminal channel and provider rejection dead letters and uncertain-send holds.",
             "The current compiled worker and migrated HTTP fixture passed the selected concurrent dead-letter replay case after metrics changes. Two confirmations and repeat polling produced one accepted controlled-provider delivery. The preceding exact recovery-route suite passed all 53 cases.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            }
           ]
         }
       },
@@ -518509,7 +518764,8 @@
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-matched-provider-and-redis-failure-injection",
@@ -518552,7 +518808,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.ts",
@@ -518623,6 +518879,14 @@
                 "packages/shared/src/auth-delivery/smsir-client.ts"
               ],
               "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         }
@@ -518650,7 +518914,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-worker-restart-and-duplicate-delivery",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-process-recovery-tests",
@@ -518711,7 +518976,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.ts",
@@ -518726,6 +518991,14 @@
                 "apps/api/src/admin/failed-notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         }
@@ -522455,7 +522728,8 @@
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-private-clamav-signature-mirror"
+          "release-0.6-private-clamav-signature-mirror",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -522475,7 +522749,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
@@ -522499,7 +522773,17 @@
             "Promtool validated the exact candidate configuration and both unchanged rule files. The new configuration still needs live operator readback after rollout. No live notification or alert delivery is claimed.",
             "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
-          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/private-api-monitoring-proof.json"
+          "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/private-api-monitoring-proof.json",
+          "source_renewals": [
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            }
+          ]
         }
       }
     },
@@ -522679,7 +522963,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -522687,7 +522972,7 @@
           "source_evidence": [
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -522731,7 +523016,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.test.ts",
-              "sha256": "b95be39bbfec4d25ddf658fbd6da4f84550950dec01d29969dae2a1d16e8e2d1"
+              "sha256": "1a9355bb50f9b9fca514c89c20c4858e0a87c714fc27571262dd20c1a148db19"
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
@@ -522743,6 +523028,17 @@
             "34 related worker unit cases passed. One processing observation is emitted per leased row and only a committed scheduled retry increments the retry counter. An exhausted attempt retains its existing dead-letter behavior.",
             "23 PostgreSQL receiver and provider cases passed, including exclusion of active and terminal rows from expired leases. Two selected compiled worker health/metrics cases passed, and the one selected compiled HTTP replay case still used one occurrence key and produced one controlled provider acceptance.",
             "Worker build, targeted lint and formatting passed. The source evidence covers the Worker/Outbox delivery queue and its existing channel retry boundaries."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts",
+                "apps/worker/src/notifications/worker-metrics.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            }
           ]
         }
       },
@@ -522777,7 +523073,8 @@
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-provider-attribution-and-circuit-metrics",
@@ -522825,11 +523122,11 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -522879,6 +523176,15 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "docs/operations/notification-monitoring.md",
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         }
@@ -522933,7 +523239,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -522981,7 +523288,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
@@ -523022,6 +523329,14 @@
                 "apps/worker/src/wallet/reconciliation-scanner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         }
@@ -523057,7 +523372,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -523065,7 +523381,7 @@
           "source_evidence": [
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -523109,7 +523425,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.test.ts",
-              "sha256": "b95be39bbfec4d25ddf658fbd6da4f84550950dec01d29969dae2a1d16e8e2d1"
+              "sha256": "1a9355bb50f9b9fca514c89c20c4858e0a87c714fc27571262dd20c1a148db19"
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
@@ -523121,6 +523437,17 @@
             "34 related worker unit cases passed. One processing observation is emitted per leased row and only a committed scheduled retry increments the retry counter. An exhausted attempt retains its existing dead-letter behavior.",
             "23 PostgreSQL receiver and provider cases passed, including exclusion of active and terminal rows from expired leases. Two selected compiled worker health/metrics cases passed, and the one selected compiled HTTP replay case still used one occurrence key and produced one controlled provider acceptance.",
             "Worker build, targeted lint and formatting passed. The source evidence covers the Worker/Outbox delivery queue and its existing channel retry boundaries."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts",
+                "apps/worker/src/notifications/worker-metrics.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            }
           ]
         }
       },
@@ -523447,7 +523774,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-worker-outbox-dashboard"
+          "release-0.6-worker-outbox-dashboard",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-outbox-dashboard",
@@ -523464,11 +523792,11 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "deploy/monitoring/grafana-notifications-dashboard.json",
-              "sha256": "0d2fd0f445a3adc9cffde072373572c031b73324504d4e5a261a268f29ea343c"
+              "sha256": "bfa0f2f18445e1ab83051a2b03f6adda4c0578fda389be404438165034402e43"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -523480,7 +523808,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             }
           ],
           "source_renewals": [
@@ -523491,6 +523819,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts",
+                "deploy/monitoring/grafana-notifications-dashboard.json",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         }
@@ -523611,19 +523949,102 @@
         "story": "06-security-testing-observability.md#spec-487bc630b048"
       },
       "requirement": "| T-06.14.02.09 | Create Notifications dashboard: delivery rate by channel, queue age, failure breakdown, bounce rate | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/worker/src/notifications/send-receipt.integration.test.ts",
+          "apps/worker/src/notifications/worker-metrics.test.ts",
+          "apps/worker/src/notifications/worker-metrics.ts",
+          "deploy/monitoring/grafana-notifications-dashboard.json",
+          "docs/operations/notification-monitoring.md"
+        ],
+        "batches": [
+          "release-0.6-notification-bounce-dashboard"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/email-webhook/email-webhook.service.ts",
+              "sha256": "81d3e759634e3563749a5c96667bbcf40e0ed494f774a33a94560b41c2282e75"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "3e7b7217caa80778fd6d097c01fc8f4598f3160f3976b3d63882d9e9eda3cd3f"
+            },
+            {
+              "path": "apps/worker/src/notifications/delivery-log.ts",
+              "sha256": "e5a7aa2820702c05bbba7068a0fb0cf89a8e1c00d5f4ef210832376d9334b94a"
+            },
+            {
+              "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
+            },
+            {
+              "path": "apps/worker/src/notifications/send-receipt.ts",
+              "sha256": "4c63b2247d0c93d52fed53332769ffab9b1530f473fddd5886b25632af10b421"
+            },
+            {
+              "path": "apps/worker/src/notifications/worker-metrics.test.ts",
+              "sha256": "1a9355bb50f9b9fca514c89c20c4858e0a87c714fc27571262dd20c1a148db19"
+            },
+            {
+              "path": "apps/worker/src/notifications/worker-metrics.ts",
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
+            },
+            {
+              "path": "apps/worker/vitest.config.ts",
+              "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+            },
+            {
+              "path": "deploy/monitoring/grafana-notifications-dashboard.json",
+              "sha256": "bfa0f2f18445e1ab83051a2b03f6adda4c0578fda389be404438165034402e43"
+            },
+            {
+              "path": "docs/operations/notification-monitoring.md",
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "9dbce91a0519f6081e756b4dbbb6bbfbc633ca87b11e6d74e3054ca7f52c13dd"
+            },
+            {
+              "path": "packages/db/src/schema/email-webhook-events.ts",
+              "sha256": "ad41cdd85f932c32ee78b4d7fca3645dd7f19b5f48dc7be6a3e13ae7df69ca04"
+            },
+            {
+              "path": "packages/db/src/schema/notification-delivery-log.ts",
+              "sha256": "c79efe4f1feb50ad923e1cda470d4d3de55216a288079c082dd97907a7cd5b2a"
+            },
+            {
+              "path": "packages/db/src/schema/notification-send-receipts.ts",
+              "sha256": "3a21136021026ee9f721305488e2e6cc8376870f93dc6cc47397ffb4dd2705a0"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            }
+          ],
+          "checks": [
+            "Reviewed all seven dashboard panels against T-06.14.02.09. Existing panels cover age, queue depth, delivery attempts by channel and status, failure ratio, dead letters, processing and retries. Added the missing Resend bounce panel with the existing selectable Prometheus data source.",
+            "Native Linux/PostgreSQL ran all 207 production migrations and 16 durable-receipt cases, including a new verified callback cohort case. Six prior metric cases passed in the same run. Final local metric source passed all seven cases after adding scrape replacement coverage, giving 23 distinct passing related cases. Native worker TypeScript passed. Relevant migration, test and notification sources were compared by 419 exact SHA-256 digests before execution.",
+            "The real-DB cohort case counted a pre-receipt verified bounce once across multiple callbacks and excluded another provider, legacy unverified callbacks, delivered events, SMTP and an attempt older than 24 hours. Durable send tests preserved concurrency, uncertain-outcome holds, recovered bookkeeping and immutable attempt history.",
+            "The exact dashboard PromQL passed Prometheus 3.15.0 promtool against duplicate replicas, separate staging/production databases and an empty cohort. Fractions were 0.25 and 0.5 for the two populated scopes, with no empty-cohort series.",
+            "AST scope comparison preserved every prior top-level metric and collector statement. All six existing dashboard panels are byte-equivalent as JSON values. Reviewed diff, changed-file lint, formatting and diff whitespace checks passed.",
+            "The rolling 24-hour cohort is defined by attempt start time and durable Resend acceptance. Provider feedback uses the accepted receipt message and verified provider identity. No matching feedback means no bounce has been observed yet. Empty cohorts show no data. These operator interpretation notes are in docs/operations/notification-monitoring.md."
+          ],
+          "limitations": [
+            "The milestone staging deployment, live dashboard readback and Telegram release receipts remain outstanding. Isolated native receipts use fixture send functions and do not claim external email delivery."
+          ],
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/notification-bounces.9JzRR2"
+        }
       }
     },
     {
@@ -523840,7 +524261,8 @@
           "release-0.6-external-provider-metrics-reconciliation",
           "release-0.6-latency-rehearsal-budgets",
           "release-0.6-alert-runbook-references-and-review",
-          "release-0.6-worker-outbox-dashboard"
+          "release-0.6-worker-outbox-dashboard",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -523860,7 +524282,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             }
           ],
           "checks": [
@@ -523907,6 +524329,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         }
@@ -524046,7 +524476,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-external-provider-metrics-reconciliation",
           "release-0.6-alert-runbook-references-and-review",
-          "release-0.6-worker-outbox-dashboard"
+          "release-0.6-worker-outbox-dashboard",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -524086,7 +524517,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             }
           ],
           "checks": [
@@ -524103,6 +524534,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         }
@@ -524406,7 +524845,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-refund-overdue-alert-and-native-worker",
@@ -524446,7 +524886,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -524479,6 +524919,16 @@
             "All 21 worker metrics and receiver cases plus two compiled worker process cases passed. The actual /metrics route exposes both gauges, stays separate from liveness and returns a controlled error during database outage. Worker build, typecheck, lint and formatting passed.",
             "The candidate rule, receiver and metrics proof used isolated test resources. Staging production-equivalent scrape, configured routing and real delivery remain separate operational gates.",
             "Reverified the unchanged behavior with the combined ten-rule Prometheus, isolated Alertmanager and current native worker and receiver cases. Earlier deployed configuration and receipts retain their recorded provenance."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            }
           ]
         }
       }
@@ -524530,7 +524980,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -524578,7 +525029,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
@@ -524619,6 +525070,14 @@
                 "apps/worker/src/wallet/reconciliation-scanner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         }
@@ -524672,7 +525131,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-backlog-metrics-alert-rules-and-receipts",
@@ -524680,11 +525140,11 @@
           "source_evidence": [
             {
               "path": "apps/worker/src/notifications/worker-metrics.test.ts",
-              "sha256": "b95be39bbfec4d25ddf658fbd6da4f84550950dec01d29969dae2a1d16e8e2d1"
+              "sha256": "1a9355bb50f9b9fca514c89c20c4858e0a87c714fc27571262dd20c1a148db19"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
@@ -524749,6 +525209,17 @@
             "Reverified the unchanged behavior with the combined ten-rule Prometheus, isolated Alertmanager and current native worker and receiver cases. Earlier deployed configuration and receipts retain their recorded provenance.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.test.ts",
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            }
           ]
         }
       }
@@ -524917,7 +525388,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-alert-runbook-references-and-review",
-          "release-0.6-ai-and-payment-transport-boundaries"
+          "release-0.6-ai-and-payment-transport-boundaries",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -524989,7 +525461,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -525019,6 +525491,14 @@
                 "apps/api/src/wallet/online-topup-callback.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         }
@@ -578895,7 +579375,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -579075,7 +579556,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -579783,6 +580264,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -579879,7 +580368,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -580059,7 +580549,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -580767,6 +581257,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -580863,7 +581361,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -581043,7 +581542,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -581751,6 +582250,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -581847,7 +582354,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582027,7 +582535,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -582735,6 +583243,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -582831,7 +583347,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583011,7 +583528,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -583719,6 +584236,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -583815,7 +584340,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583995,7 +584521,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -584703,6 +585229,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -584799,7 +585333,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -584979,7 +585514,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -585687,6 +586222,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -585783,7 +586326,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585963,7 +586507,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -586671,6 +587215,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -586767,7 +587319,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -586947,7 +587500,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -587655,6 +588208,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -587751,7 +588312,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587931,7 +588493,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -588639,6 +589201,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -588735,7 +589305,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -588915,7 +589486,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -589623,6 +590194,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -589719,7 +590298,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -589899,7 +590479,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -590607,6 +591187,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -590703,7 +591291,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590883,7 +591472,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -591591,6 +592180,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -591687,7 +592284,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -591867,7 +592465,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -592575,6 +593173,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -592671,7 +593277,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592851,7 +593458,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -593559,6 +594166,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -593655,7 +594270,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -593835,7 +594451,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -594543,6 +595159,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -594639,7 +595263,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -594819,7 +595444,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -595527,6 +596152,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -595623,7 +596256,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -595803,7 +596437,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -596511,6 +597145,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -596607,7 +597249,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -596787,7 +597430,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -597495,6 +598138,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -597591,7 +598242,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-public-registration-privacy",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -597771,7 +598423,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "docs/design/appearance.md",
@@ -598479,6 +599131,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ]
         },
@@ -792934,7 +793594,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.ts",
@@ -792962,11 +793622,11 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.test.ts",
-              "sha256": "b95be39bbfec4d25ddf658fbd6da4f84550950dec01d29969dae2a1d16e8e2d1"
+              "sha256": "1a9355bb50f9b9fca514c89c20c4858e0a87c714fc27571262dd20c1a148db19"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -793010,7 +793670,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-notifications-dashboard.json",
-              "sha256": "0d2fd0f445a3adc9cffde072373572c031b73324504d4e5a261a268f29ea343c"
+              "sha256": "bfa0f2f18445e1ab83051a2b03f6adda4c0578fda389be404438165034402e43"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -793070,7 +793730,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -794650,6 +795310,18 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed. Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts",
+                "apps/worker/src/notifications/worker-metrics.test.ts",
+                "apps/worker/src/notifications/worker-metrics.ts",
+                "deploy/monitoring/grafana-notifications-dashboard.json",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "presentation_renewals": [
@@ -795019,7 +795691,8 @@
           "release-0.6-protected-storage-origins",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -797100,7 +797773,7 @@
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
-              "sha256": "b8c3a9ebe38cd1b98f215c73aa831bc427a4350fd28db929d75480d22c840eda"
+              "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
             },
             {
               "path": "apps/worker/src/notifications/send-receipt.ts",
@@ -797128,11 +797801,11 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.test.ts",
-              "sha256": "b95be39bbfec4d25ddf658fbd6da4f84550950dec01d29969dae2a1d16e8e2d1"
+              "sha256": "1a9355bb50f9b9fca514c89c20c4858e0a87c714fc27571262dd20c1a148db19"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "4fa6d13a8dad7e5a4b1cb7ff1916135d314601ec42023dfdb383768ab801058e"
+              "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -797176,7 +797849,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-notifications-dashboard.json",
-              "sha256": "0d2fd0f445a3adc9cffde072373572c031b73324504d4e5a261a268f29ea343c"
+              "sha256": "bfa0f2f18445e1ab83051a2b03f6adda4c0578fda389be404438165034402e43"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -797236,7 +797909,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "60c4ae3a5611eb74552feff433209972a630f587e21c0e41d47ce9f702f863c5"
+              "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -798705,6 +799378,18 @@
                 "packages/i18n/src/providers.ts"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed. Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-notification-bounce-dashboard",
+              "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+              "paths": [
+                "apps/worker/src/notifications/send-receipt.integration.test.ts",
+                "apps/worker/src/notifications/worker-metrics.test.ts",
+                "apps/worker/src/notifications/worker-metrics.ts",
+                "deploy/monitoring/grafana-notifications-dashboard.json",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -799091,7 +799776,8 @@
           "release-0.6-protected-storage-origins",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -803404,7 +804090,8 @@
           "release-0.6-runtime-navigation-route-checks",
           "release-0.6-report-mounted-emergency-recovery",
           "release-0.6-logout-probe-auth-bootstrap",
-          "release-0.6-clean-browser-rollup-and-brand-rehearsal"
+          "release-0.6-clean-browser-rollup-and-brand-rehearsal",
+          "release-0.6-notification-bounce-dashboard"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -921599,6 +922286,141 @@
           "sha256": "dc653330ef84e63841db76861dfa9353965d2288387df95f206f89d27de3a359"
         }
       ]
+    },
+    "release-0.6-notification-bounce-dashboard": {
+      "batch": "release-0.6-notification-bounce-dashboard",
+      "base_commit": "ea7e595c08cc41d8fa5788c58df0e05a60183a5e",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.14.02.09",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/worker/src/notifications/send-receipt.integration.test.ts",
+        "apps/worker/src/notifications/worker-metrics.test.ts",
+        "apps/worker/src/notifications/worker-metrics.ts",
+        "deploy/monitoring/grafana-notifications-dashboard.json",
+        "docs/operations/notification-monitoring.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/email-webhook/email-webhook.service.ts",
+          "sha256": "81d3e759634e3563749a5c96667bbcf40e0ed494f774a33a94560b41c2282e75"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "3e7b7217caa80778fd6d097c01fc8f4598f3160f3976b3d63882d9e9eda3cd3f"
+        },
+        {
+          "path": "apps/worker/src/notifications/delivery-log.ts",
+          "sha256": "e5a7aa2820702c05bbba7068a0fb0cf89a8e1c00d5f4ef210832376d9334b94a"
+        },
+        {
+          "path": "apps/worker/src/notifications/send-receipt.integration.test.ts",
+          "sha256": "5990ffa64d5cc9e2ce3f30cfeac1016ddb90f3934ad1809946c148a10d6df612"
+        },
+        {
+          "path": "apps/worker/src/notifications/send-receipt.ts",
+          "sha256": "4c63b2247d0c93d52fed53332769ffab9b1530f473fddd5886b25632af10b421"
+        },
+        {
+          "path": "apps/worker/src/notifications/worker-metrics.test.ts",
+          "sha256": "1a9355bb50f9b9fca514c89c20c4858e0a87c714fc27571262dd20c1a148db19"
+        },
+        {
+          "path": "apps/worker/src/notifications/worker-metrics.ts",
+          "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
+        },
+        {
+          "path": "apps/worker/vitest.config.ts",
+          "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+        },
+        {
+          "path": "deploy/monitoring/grafana-notifications-dashboard.json",
+          "sha256": "bfa0f2f18445e1ab83051a2b03f6adda4c0578fda389be404438165034402e43"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "d7ea4ffa562f6088a3b2ab67cd78731e9a7ca52f63ebe27b0d30f328161073a7"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "9dbce91a0519f6081e756b4dbbb6bbfbc633ca87b11e6d74e3054ca7f52c13dd"
+        },
+        {
+          "path": "packages/db/src/schema/email-webhook-events.ts",
+          "sha256": "ad41cdd85f932c32ee78b4d7fca3645dd7f19b5f48dc7be6a3e13ae7df69ca04"
+        },
+        {
+          "path": "packages/db/src/schema/notification-delivery-log.ts",
+          "sha256": "c79efe4f1feb50ad923e1cda470d4d3de55216a288079c082dd97907a7cd5b2a"
+        },
+        {
+          "path": "packages/db/src/schema/notification-send-receipts.ts",
+          "sha256": "3a21136021026ee9f721305488e2e6cc8376870f93dc6cc47397ffb4dd2705a0"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+        }
+      ],
+      "checks": [
+        "Reviewed all seven dashboard panels against T-06.14.02.09. Existing panels cover age, queue depth, delivery attempts by channel and status, failure ratio, dead letters, processing and retries. Added the missing Resend bounce panel with the existing selectable Prometheus data source.",
+        "Native Linux/PostgreSQL ran all 207 production migrations and 16 durable-receipt cases, including a new verified callback cohort case. Six prior metric cases passed in the same run. Final local metric source passed all seven cases after adding scrape replacement coverage, giving 23 distinct passing related cases. Native worker TypeScript passed. Relevant migration, test and notification sources were compared by 419 exact SHA-256 digests before execution.",
+        "The real-DB cohort case counted a pre-receipt verified bounce once across multiple callbacks and excluded another provider, legacy unverified callbacks, delivered events, SMTP and an attempt older than 24 hours. Durable send tests preserved concurrency, uncertain-outcome holds, recovered bookkeeping and immutable attempt history.",
+        "The exact dashboard PromQL passed Prometheus 3.15.0 promtool against duplicate replicas, separate staging/production databases and an empty cohort. Fractions were 0.25 and 0.5 for the two populated scopes, with no empty-cohort series.",
+        "AST scope comparison preserved every prior top-level metric and collector statement. All six existing dashboard panels are byte-equivalent as JSON values. Reviewed diff, changed-file lint, formatting and diff whitespace checks passed.",
+        "The rolling 24-hour cohort is defined by attempt start time and durable Resend acceptance. Provider feedback uses the accepted receipt message and verified provider identity. No matching feedback means no bounce has been observed yet. Empty cohorts show no data. These operator interpretation notes are in docs/operations/notification-monitoring.md."
+      ],
+      "proof_logs": [
+        {
+          "file": "additive-scope.json",
+          "sha256": "034aed1e71d1f486a50ff34d4af86393b2dde98c8cfc1feb3a83f7a8cc44b1c2"
+        },
+        {
+          "file": "bounce-metrics-coverage.log",
+          "sha256": "20a0756304c19a7b1800475099cb013edbbe2303caf36e522d5d82b4f576c541"
+        },
+        {
+          "file": "bounce-metrics-source-check.log",
+          "sha256": "e847661f4da9cee10a97213fae22e5a7a295a1a669a3529cfe602ccbc7f77855"
+        },
+        {
+          "file": "bounce-metrics-source.sha256",
+          "sha256": "e329b49342eaf9cba2c43d0323a695f74f827072606ee1833fb05a0574ee8497"
+        },
+        {
+          "file": "bounce-promtool.json",
+          "sha256": "9006da3049d4f78de3591de46e414a40d62388d7d43970e10376a5337941d36f"
+        },
+        {
+          "file": "bounce-promtool.log",
+          "sha256": "8289a4919870ab5b28f5e90a86b4af3cdbd8c244516c02fca90d6e3f289a6711"
+        },
+        {
+          "file": "final-source.json",
+          "sha256": "a2c10372b076937e56852c3f6a77a0c4ad007369fdef29d98b358343d9726ea5"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "metrics-unit-final.log",
+          "sha256": "91e3328d77b9046c0f5f329df1c4c6809909846b4ffa06bb47836902db9b6d92"
+        },
+        {
+          "file": "reviewed-diff.patch",
+          "sha256": "3c3c38815cdbe97d17837fa4c33672c0a3e067b4096dcf63299ce7f787172139"
+        }
+      ],
+      "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/notification-bounces.9JzRR2",
+      "limitations": [
+        "The milestone staging deployment, live dashboard readback and Telegram release receipts remain outstanding. Isolated native receipts use fixture send functions and do not claim external email delivery."
+      ]
     }
   },
   "historical_improvements": [
@@ -921638,14 +922460,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-coverage-and-scheduled-receipts",
+    "id": "release-0.6-multipart-operation-claims",
     "release": "0.6.0",
     "task_keys": [
-      "06-security-testing-observability.md#T-06.12.03.01",
-      "01-platform-infrastructure.md#T-05.05.01",
+      "01-platform-infrastructure.md#T-07.05.01",
       "release-readiness#R-05.02"
     ],
-    "goal": "Reconcile exact full coverage and scheduled receipts, and continue the remaining v0.6.0 operational and security acceptance work."
+    "goal": "Move multipart provider I/O outside row-lock transactions with committed operation ownership, preserving completion/abort/cleanup concurrency and safe retries. Continue exact full-coverage and scheduled-receipt reconciliation at useful boundaries."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

@@ -28,6 +28,8 @@ function makePool(
     eligibleAge?: number;
     depth?: number;
     deadLetter?: number;
+    resendAccepted?: number;
+    resendBounced?: number;
     /** Provider health rows: [{ id, health }]. */
     providerHealth?: Array<{ id: string; health: number }>;
     smsHealth?: Array<{ id: string; health: number }>;
@@ -35,6 +37,13 @@ function makePool(
 ): any {
   return {
     async query(sql: string): Promise<{ rows: Array<Record<string, unknown>> }> {
+      if (sql.includes('email_webhook_events')) {
+        return {
+          rows: [
+            { accepted: overrides.resendAccepted ?? 0, bounced: overrides.resendBounced ?? 0 },
+          ],
+        };
+      }
       if (sql.includes('EXTRACT(EPOCH FROM (NOW() - created_at))')) {
         return { rows: [{ age: overrides.age ?? 120, eligible_age: overrides.eligibleAge ?? 0 }] };
       }
@@ -89,6 +98,15 @@ describe('worker notification metrics', () => {
     expect(text).toContain('notifications_eligible_outbox_age_seconds 180');
     expect(text).toContain('notifications_queue_depth 12');
     expect(text).toContain('notifications_dead_letter_count 5');
+  });
+
+  it('replaces the persisted Resend cohort counts on every scrape', async () => {
+    await collectNotificationGauges(makePool({ resendAccepted: 8, resendBounced: 2 }));
+    expect(await exportWorkerMetrics()).toContain('notifications_resend_accepted_attempts_24h 8');
+    expect(await exportWorkerMetrics()).toContain('notifications_resend_bounced_attempts_24h 2');
+    await collectNotificationGauges(makePool());
+    expect(await exportWorkerMetrics()).toContain('notifications_resend_accepted_attempts_24h 0');
+    expect(await exportWorkerMetrics()).toContain('notifications_resend_bounced_attempts_24h 0');
   });
 
   it('treats missing rows (empty tables) as zero-valued gauges', async () => {

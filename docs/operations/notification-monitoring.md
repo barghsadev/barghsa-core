@@ -56,6 +56,8 @@ The rules use the maximum open dead-letter count across worker replicas, rather 
 
 Compare oldest pending age with oldest eligible age when investigating backlog. The eligible series uses the same replica aggregation as the backlog alerts. The processing and retry panel shows leased outbox rows processed per second and committed channel retries scheduled per second. Prometheus calculates the rate per replica before summing by environment and database so worker restarts do not turn counter resets into spikes. [Prometheus rate](https://prometheus.io/docs/prometheus/latest/querying/functions/#rate).
 
+The Resend bounce panel follows attempts started in the trailing 24 hours that have a durable provider acceptance receipt. A verified bounce from the same provider configuration and message counts once, including when its callback arrived before the receipt. SMTP and uncertain sends are outside this cohort. A zero means there are accepted sends with no matching bounce observed so far. An empty cohort shows no data. Check Resend webhook health when interpreting the panel.
+
 - Any open failure lasting 10 minutes raises `NotificationDeadLettersPending`.
 - At least 20 open failures lasting 5 minutes raises `NotificationDeadLettersAccumulating`.
 

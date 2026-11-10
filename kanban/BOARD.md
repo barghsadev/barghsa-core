@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T18:54:19+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T22:26:08+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1209 | Accepted with unchanged source bindings. |
-| verify | 94 | Existing work may be complete; inspect evidence before building. |
+| done | 1210 | Accepted with unchanged source bindings. |
+| verify | 93 | Existing work may be complete; inspect evidence before building. |
 | partial | 57 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,10 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile exact full coverage and scheduled receipts, and continue the remaining v0.6.0 operational and security acceptance work.
+Move multipart provider I/O outside row-lock transactions with committed operation ownership, preserving completion/abort/cleanup concurrency and safe retries. Continue exact full-coverage and scheduled-receipt reconciliation at useful boundaries.
 
-- `06-security-testing-observability.md#T-06.12.03.01`: Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM
-- `01-platform-infrastructure.md#T-05.05.01`: Create nightly CI schedule
+- `01-platform-infrastructure.md#T-07.05.01`: Enforce “no external call inside a database transaction”
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -1379,7 +1378,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.14.02.06` | verify | Inventory needed | Create Authentication/Security dashboard: login rate, MFA pass/fail, OTP send/verify rate, rate-limit hits, audit events |
 | `06-security-testing-observability.md#T-06.14.02.07` | verify | Inventory needed | Create Payments/Wallet/Refunds dashboard: transaction volume, success rate, refund count/value, mismatch alerts |
 | `06-security-testing-observability.md#T-06.14.02.08` | verify | Inventory needed | Create Storage/Uploads dashboard: upload count, size distribution, scan state, malware count |
-| `06-security-testing-observability.md#T-06.14.02.09` | verify | Inventory needed | Create Notifications dashboard: delivery rate by channel, queue age, failure breakdown, bounce rate |
+| `06-security-testing-observability.md#T-06.14.02.09` | done | Recorded batch work | Create Notifications dashboard: delivery rate by channel, queue age, failure breakdown, bounce rate |
 | `06-security-testing-observability.md#T-06.14.02.10` | done | Recorded batch work | Create AI Usage/Cost dashboard: request volume, token usage, cost per model per day, error rate |
 | `06-security-testing-observability.md#T-06.14.02.11` | verify | Inventory needed | Add production release markers to all dashboards (annotation per deploy) |
 | `06-security-testing-observability.md#T-06.14.03.01` | verify | Inventory needed | Implement monthly cost tracking instrumentation: compute (per environment), PostgreSQL, object storage/egress, Redis, notification providers, observability stack, AI provider/model |

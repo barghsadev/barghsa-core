@@ -6,6 +6,7 @@ import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { DeliveryRejected } from '@barghsa/shared/notification-delivery';
 import { durableDelivery, readDeliveryReceipt, DeliveryOutcomeUnknown } from './send-receipt.js';
 import { writeDeliveryLog } from './delivery-log.js';
+import { collectNotificationGauges, exportWorkerMetrics } from './worker-metrics.js';
 
 const database = `test_receipt_${randomUUID().replaceAll('-', '')}`;
 let management: Pool, pool: Pool, profileId: string;
@@ -58,6 +59,51 @@ async function queue() {
   await pool.query("INSERT INTO notification_job(outbox_id,channel) VALUES ($1,'email')", [id]);
   return id;
 }
+
+it('counts verified Resend bounce feedback once for each accepted attempt in the cohort', async () => {
+  const resend = { ...provider, transport: 'resend' as const };
+  async function accept(
+    messageId: string,
+    identity: { id: string; transport: 'resend' | 'smtp' } = resend
+  ) {
+    const id = await queue();
+    await durableDelivery(pool, id, 'email', messageId)(identity, async () => messageId);
+    return id;
+  }
+  async function event(messageId: string, providerIds: string[], type = 'email.bounced') {
+    await pool.query(
+      `INSERT INTO email_webhook_events(id,event_token,event_type,message_id,verified_provider_ids)
+       VALUES ($1,$2,$3,$4,$5::uuid[])`,
+      [randomUUID(), randomUUID(), type, messageId, providerIds]
+    );
+  }
+  async function counts(accepted: number, bounced: number) {
+    await collectNotificationGauges(pool);
+    const text = await exportWorkerMetrics();
+    expect(text).toContain(`\nnotifications_resend_accepted_attempts_24h ${accepted}\n`);
+    expect(text).toContain(`\nnotifications_resend_bounced_attempts_24h ${bounced}\n`);
+    expect(text).not.toContain('early-provider-reference');
+  }
+  await counts(0, 0);
+  await event('early-provider-reference', [resend.id]);
+  await event('early-provider-reference', [resend.id]);
+  await accept('early-provider-reference');
+  await accept('other-provider-reference');
+  await event('other-provider-reference', [randomUUID()]);
+  await event('other-provider-reference', []);
+  await event('other-provider-reference', [resend.id], 'email.delivered');
+
+  const older = await accept('old-provider-reference');
+  await pool.query(
+    "UPDATE notification_delivery_log SET created_at=NOW()-INTERVAL '25 hours' WHERE notification_id=$1",
+    [older]
+  );
+  await event('old-provider-reference', [resend.id]);
+  await accept('smtp-provider-reference', provider);
+  await event('smtp-provider-reference', [resend.id]);
+  await counts(2, 1);
+});
+
 it('holds uncertain legacy sends without deleting their jobs or touching never-attempted messages', async () => {
   await expect(readDeliveryReceipt(pool, legacy, 'email')).rejects.toBeInstanceOf(
     DeliveryOutcomeUnknown

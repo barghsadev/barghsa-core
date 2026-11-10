@@ -86,6 +86,18 @@ export const notificationsScheduledRetries = new Counter({
   registers: [registry],
 });
 
+const resendAcceptedAttempts = new Gauge({
+  name: 'notifications_resend_accepted_attempts_24h',
+  help: 'Resend attempts started in the last 24 hours with a durable acceptance receipt',
+  registers: [registry],
+});
+
+const resendBouncedAttempts = new Gauge({
+  name: 'notifications_resend_bounced_attempts_24h',
+  help: 'Accepted Resend attempts started in the last 24 hours with a verified bounce',
+  registers: [registry],
+});
+
 export const providerEmailHealth = new Gauge({
   name: 'provider_email_health',
   help: 'Email provider circuit breaker health: 1=healthy, 0=tripped/degraded',
@@ -157,6 +169,25 @@ export async function collectNotificationGauges(
       WHERE status = 'open'`
   );
   notificationsDeadLetterCount.set(Number(dlRes.rows[0]?.count ?? 0));
+
+  // Count each accepted attempt once, even if Resend sends several bounce events.
+  // A callback can arrive before the receipt, so match the signed provider and
+  // message IDs rather than relying on the webhook's optional outbox attribution.
+  const resendRes = await pool.query(
+    `SELECT COUNT(*) AS accepted, COUNT(*) FILTER (WHERE EXISTS (
+              SELECT 1 FROM email_webhook_events e
+              WHERE e.message_id=r.provider_ref AND r.provider_id=ANY(e.verified_provider_ids)
+                AND e.event_type='email.bounced'
+            )) AS bounced
+       FROM notification_delivery_log l
+       JOIN notification_send_receipts r ON r.outbox_id=l.notification_id AND r.channel=l.channel
+         AND r.attempt_token=l.send_attempt_token AND r.provider_ref=l.provider_ref
+       WHERE l.created_at>=NOW()-INTERVAL '24 hours' AND l.created_at<=NOW()
+         AND l.channel='email' AND l.status='delivered'
+         AND r.status='accepted' AND r.transport='resend'`
+  );
+  resendAcceptedAttempts.set(Number(resendRes.rows[0]?.accepted ?? 0));
+  resendBouncedAttempts.set(Number(resendRes.rows[0]?.bounced ?? 0));
 
   // Email provider circuit-breaker health (T-05.06.06): 1=healthy, 0=tripped.
   // Recomputed from the persisted `degraded` flag on email_provider_configs
