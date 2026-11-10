@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createIsolatedTestDb, dropTestSchema, type IsolatedTestDb } from '@barghsa/db/test';
-import { JobHandlerRegistry, runOneAsyncJob } from './async-runner.js';
+import { JobHandlerRegistry, PROFILE_EXPORT_JOB_TYPE, runOneAsyncJob } from './async-runner.js';
 
 let db: IsolatedTestDb;
 beforeAll(async () => {
@@ -152,6 +152,78 @@ it('claims a job once across competing workers, records progress, and completes 
     result_url: '/account',
     lease_token: null,
   });
+});
+
+it('caps profile exports across workers without blocking other jobs or expired-lease recovery', async () => {
+  const live = randomUUID();
+  const queued = [randomUUID(), randomUUID()];
+  const other = randomUUID();
+  await db.pool.query(
+    `INSERT INTO async_jobs(id,type,payload,created_by,status,attempts,lease_token,lease_until)
+     VALUES ($1,$2,'{}','owner','processing',1,$3,now()+interval '2 minutes')`,
+    [live, PROFILE_EXPORT_JOB_TYPE, randomUUID()]
+  );
+  await db.pool.query(
+    `INSERT INTO async_jobs(id,type,payload,created_by)
+     SELECT id,$2,'{}','owner' FROM unnest($1::uuid[]) AS id`,
+    [queued, PROFILE_EXPORT_JOB_TYPE]
+  );
+  await db.pool.query(
+    `INSERT INTO async_jobs(id,type,payload,created_by) VALUES ($1,'independent','{}','owner')`,
+    [other]
+  );
+
+  let release!: () => void;
+  let entered!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const started = new Promise<void>((resolve) => {
+    entered = resolve;
+  });
+  const registry = new JobHandlerRegistry();
+  registry.register(PROFILE_EXPORT_JOB_TYPE, async () => {
+    entered();
+    await gate;
+    return { resultUrl: '/account' };
+  });
+  const claims = [runOneAsyncJob(db.pool, registry), runOneAsyncJob(db.pool, registry)];
+  try {
+    expect(await Promise.race(claims)).toBe(false);
+    await started;
+    const mixed = new JobHandlerRegistry();
+    mixed.register(PROFILE_EXPORT_JOB_TYPE, async () => {
+      throw new Error('Export unexpectedly admitted');
+    });
+    mixed.register('independent', async () => ({ resultUrl: '/account' }));
+    expect(await runOneAsyncJob(db.pool, mixed)).toBe(true);
+    expect(
+      (
+        await db.pool.query(
+          'SELECT status,attempts FROM async_jobs WHERE id=ANY($1::uuid[]) ORDER BY status',
+          [queued]
+        )
+      ).rows
+    ).toEqual([
+      { status: 'processing', attempts: 1 },
+      { status: 'queued', attempts: 0 },
+    ]);
+    expect(
+      (await db.pool.query('SELECT status FROM async_jobs WHERE id=$1', [other])).rows
+    ).toEqual([{ status: 'completed' }]);
+  } finally {
+    release();
+    await Promise.allSettled(claims);
+  }
+  expect((await Promise.all(claims)).sort()).toEqual([false, true]);
+  expect(await runOneAsyncJob(db.pool, registry)).toBe(true);
+  await db.pool.query("UPDATE async_jobs SET lease_until=now()-interval '1 second' WHERE id=$1", [
+    live,
+  ]);
+  expect(await runOneAsyncJob(db.pool, registry)).toBe(true);
+  expect(
+    (await db.pool.query('SELECT status,attempts FROM async_jobs WHERE id=$1', [live])).rows
+  ).toEqual([{ status: 'completed', attempts: 2 }]);
 });
 
 it('reclaims an expired lease and stores only a safe failure code', async () => {

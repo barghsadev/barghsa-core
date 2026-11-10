@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T08:47:14+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T08:52:59+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1147 | Accepted with unchanged source bindings. |
-| verify | 162 | Existing work may be complete; inspect evidence before building. |
+| done | 1148 | Accepted with unchanged source bindings. |
+| verify | 161 | Existing work may be complete; inspect evidence before building. |
 | partial | 51 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1315,7 +1315,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.11.03.01` | done | Recorded batch work | Establish query and route latency budgets (p50/p95/p99) before load testing |
 | `06-security-testing-observability.md#T-06.11.03.02` | verify | Inventory needed | Write performance test scenarios: electricity price preview, order submission, wallet payment, invoice lists, CRM search, file upload auth, notification fan-out |
 | `06-security-testing-observability.md#T-06.11.03.03` | verify | Inventory needed | Run load test with realistic Persian/English payloads and production-like indexes |
-| `06-security-testing-observability.md#T-06.11.03.04` | verify | Inventory needed | Configure database protection: request/statement/lock/idle-transaction timeouts, pool limits, pagination caps, export/report concurrency limits |
+| `06-security-testing-observability.md#T-06.11.03.04` | done | Recorded batch work | Configure database protection: request/statement/lock/idle-transaction timeouts, pool limits, pagination caps, export/report concurrency limits |
 | `06-security-testing-observability.md#T-06.11.03.05` | done | Recorded batch work | Set up CI performance budget: route JS size, Core Web Vitals regression check for primary mobile flows |
 | `06-security-testing-observability.md#T-06.11.03.06` | verify | Inventory needed | Schedule weekly performance regression run in staging |
 | `06-security-testing-observability.md#T-06.11.04.01` | done | Recorded batch work | Write failure-injection tests: provider timeout → circuit breaker → queue; Redis unavailable → fallback to PG |

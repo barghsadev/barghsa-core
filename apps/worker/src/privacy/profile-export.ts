@@ -6,7 +6,6 @@ import type { Pool } from 'pg';
 import yazl from 'yazl';
 import type { JobContext } from '../jobs/async-runner.js';
 
-export const PROFILE_EXPORT_JOB_TYPE = 'profile-export';
 const MAX_ROWS = 5000;
 const MAX_DOCUMENTS = 500;
 const MAX_DOCUMENT_BYTES = 1024 * 1024 * 1024;

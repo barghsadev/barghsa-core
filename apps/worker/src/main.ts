@@ -42,12 +42,12 @@ import { runAuthDelivery } from './auth-delivery/runner.js';
 import { publishAuthDeliveryNotice } from './auth-delivery/inbox-notice.js';
 import { PollerGroup } from './jobs/poller-group.js';
 import { databaseFailureReason } from './jobs/database-failure-reason.js';
-import { JobHandlerRegistry, runOneAsyncJob } from './jobs/async-runner.js';
 import {
+  JobHandlerRegistry,
   PROFILE_EXPORT_JOB_TYPE,
-  cleanupExpiredProfileExports,
-  generateProfileExport,
-} from './privacy/profile-export.js';
+  runOneAsyncJob,
+} from './jobs/async-runner.js';
+import { cleanupExpiredProfileExports, generateProfileExport } from './privacy/profile-export.js';
 import { getDbPool, createDbPool } from '@barghsa/db';
 import { createServer } from 'node:http';
 import { runOutboxPoll } from './notifications/outbox-runner.js';

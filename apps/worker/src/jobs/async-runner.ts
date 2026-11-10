@@ -2,6 +2,9 @@ import { randomUUID } from 'node:crypto';
 import type { Pool } from 'pg';
 import { relativeLinkRoute } from '@barghsa/shared/notifications';
 
+export const PROFILE_EXPORT_JOB_TYPE = 'profile-export';
+const MAX_CONCURRENT_PROFILE_EXPORTS = 2;
+
 interface LeasedJob {
   id: string;
   type: string;
@@ -40,7 +43,7 @@ export class JobHandlerRegistry {
 
 /** Claim at most one job atomically across replicas, with a renewable crash-recovery lease. */
 export async function runOneAsyncJob(
-  pool: Pick<Pool, 'query'>,
+  pool: Pick<Pool, 'connect' | 'query'>,
   registry: JobHandlerRegistry
 ): Promise<boolean> {
   const types = registry.types();
@@ -52,21 +55,51 @@ export async function runOneAsyncJob(
     [types]
   );
   const token = randomUUID();
-  const claimed = await pool.query<LeasedJob>(
-    `WITH candidate AS (
-       SELECT id FROM async_jobs
-       WHERE type=ANY($2::text[]) AND
-         (status='queued' OR (status='processing' AND lease_until < now() AND attempts < 3))
-       ORDER BY created_at,id FOR UPDATE SKIP LOCKED LIMIT 1
-     )
-     UPDATE async_jobs j SET status='processing',lease_token=$1,
-       lease_until=now()+interval '60 seconds',attempts=j.attempts+1,
-       progress_pct=0,started_at=COALESCE(j.started_at,now())
-     FROM candidate WHERE j.id=candidate.id
-     RETURNING j.id,j.type,j.payload,j.lease_token`,
-    [token, types]
-  );
-  const job = claimed.rows[0];
+  const client = await pool.connect();
+  let job: LeasedJob | undefined;
+  let discardClient = false;
+  try {
+    await client.query('BEGIN ISOLATION LEVEL READ COMMITTED');
+    // A separate statement gives the claim a fresh snapshot after acquiring the lock.
+    const mayClaimExport =
+      !types.includes(PROFILE_EXPORT_JOB_TYPE) ||
+      (
+        await client.query<{ locked: boolean }>(
+          'SELECT pg_try_advisory_xact_lock(hashtextextended($1, 0)) AS locked',
+          ['barghsa:profile-export:claim']
+        )
+      ).rows[0]?.locked === true;
+    const availableTypes = mayClaimExport
+      ? types
+      : types.filter((type) => type !== PROFILE_EXPORT_JOB_TYPE);
+    const claimed = await client.query<LeasedJob>(
+      `WITH candidate AS (
+         SELECT id FROM async_jobs
+         WHERE type=ANY($2::text[]) AND
+           (status='queued' OR (status='processing' AND lease_until < now() AND attempts < 3))
+           AND (type<>$3 OR (
+             SELECT count(*) FROM async_jobs active
+             WHERE active.type=$3 AND active.status='processing' AND active.lease_until>=now()
+           )<$4)
+         ORDER BY created_at,id FOR UPDATE SKIP LOCKED LIMIT 1
+       )
+       UPDATE async_jobs j SET status='processing',lease_token=$1,
+         lease_until=now()+interval '60 seconds',attempts=j.attempts+1,
+         progress_pct=0,started_at=COALESCE(j.started_at,now())
+       FROM candidate WHERE j.id=candidate.id
+       RETURNING j.id,j.type,j.payload,j.lease_token`,
+      [token, availableTypes, PROFILE_EXPORT_JOB_TYPE, MAX_CONCURRENT_PROFILE_EXPORTS]
+    );
+    await client.query('COMMIT');
+    job = claimed.rows[0];
+  } catch (error) {
+    await client.query('ROLLBACK').catch(() => {
+      discardClient = true;
+    });
+    throw error;
+  } finally {
+    client.release(discardClient);
+  }
   if (!job) return false;
 
   let leaseLost = false;

@@ -6,6 +6,8 @@ Each API process also reports `pg_pool_capacity`, `pg_pool_connections` by activ
 
 Application `slow_query` and `query_timeout` warnings carry the measured duration or configured timeout in milliseconds. Use the private `pg_stat_statements` query IDs for statement-level investigation.
 
+Profile exports admit up to two active job leases per database across worker replicas. A short PostgreSQL transaction serializes export claims and releases its lock before the export reads data or writes objects. Jobs above the limit stay queued until capacity opens. Expired leases remain eligible for the existing recovery path.
+
 The deadline wrapper queues each timeout setting beside its statement through `pg` 8. The driver warns that overlapping `client.query()` calls will be removed in `pg` 9. The upgrade needs a replacement for that queue behavior and a fresh run of the PostgreSQL cancellation tests.
 
 The staging Prometheus configuration scrapes the API on `barghsa-staging-api-1:4000` and the worker on `barghsa-staging-worker-1:9090` over the private network. After loading it, verify both targets are `up` on the loopback Prometheus endpoint. Check `pg_metrics_collection_success` separately to distinguish a reachable endpoint from successful database statistics collection.
