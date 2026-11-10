@@ -523140,14 +523140,16 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify the Product or engineering change template appears in the GitHub issue chooser from the protected default branch, without opening an issue."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-issue-definition-of-done-template"
+        ],
         "current_acceptance": null
       }
     },
@@ -912116,6 +912118,44 @@
         {
           "file": "quarantine.log",
           "sha256": "ffaa92b67e320c73341f4d223acc9d20508e93547e3ebe3bde9fcb9e1f0e1f85"
+        }
+      ]
+    },
+    "release-0.6-issue-definition-of-done-template": {
+      "batch": "release-0.6-issue-definition-of-done-template",
+      "base_commit": "a80fa9e082f597730967e7c0604f3c1aac527216",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.19.01.02"
+      ],
+      "changed_paths": [
+        ".github/ISSUE_TEMPLATE/change.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/ISSUE_TEMPLATE/change.md",
+          "sha256": "8ee285761b980334ff2e8f0000bcbf3673532121cba9c4283f05ee9ad3b0e2af"
+        },
+        {
+          "path": "README.md",
+          "sha256": "ea3994d7966764d9cf70d693eb3a69aded9850e39beddbeaf745cfc90022bcc3"
+        }
+      ],
+      "checks": [
+        "The Markdown template has valid name and about YAML frontmatter in the GitHub issue template directory, links the authoritative Definition of Done, and covers all five canonical checklist sections plus the non-waivable safeguards. Focused content validation and Prettier passed.",
+        "GitHub repository metadata confirms Issues are enabled and main is the default branch. The default-branch template chooser readback remains required after the protected push."
+      ],
+      "proof_logs": [
+        {
+          "file": "issue-content.log",
+          "sha256": "dfb307c65cecd6de543122b06939c102b6b40624c077929afc91a6a201f499f1"
+        },
+        {
+          "file": "issue-format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "issue-repository.json",
+          "sha256": "7664136f7934e2ea49eb382b39fb649aa78edb589f20d71175f221b08e180312"
         }
       ]
     }
