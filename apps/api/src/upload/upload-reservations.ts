@@ -1,9 +1,12 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { createDirectDbPool, getDbPool } from '@barghsa/db';
+import { storageUploadProfileScope } from '@barghsa/db/schema/storage-record';
 import { STORAGE_UPLOAD_SCAN_JOB_TYPE, type CreateRecordOptions } from '@barghsa/shared/storage';
 import { v5 as uuidv5 } from 'uuid';
+import type { PoolClient } from 'pg';
 import type { UploadContext } from './upload.types.js';
 import type { OperatingContext } from '../session/session.service.js';
+import { checkUploadCapacity, withUploadScope } from './upload-quota.js';
 
 /** Commit ownership and cleanup intent before handing an upload URL to the browser. */
 export async function reserveUpload(options: {
@@ -17,11 +20,8 @@ export async function reserveUpload(options: {
   context?: UploadContext & { operatingContext?: OperatingContext };
   independent?: boolean;
 }) {
-  const pool = options.independent
-    ? createDirectDbPool({ poolMax: 1, poolMin: 0 }, { shared: false })
-    : getDbPool();
-  try {
-    await pool.query(
+  const insert = (connection: Pick<PoolClient, 'query'>) =>
+    connection.query(
       `INSERT INTO storage_records
     (storage_key,status,file_name,content_type,file_size,category,metadata,removed_at)
     VALUES ($1,'removed',$2,$3,$4,$5,jsonb_build_object(
@@ -38,9 +38,54 @@ export async function reserveUpload(options: {
         JSON.stringify(options.context ?? {}),
       ]
     );
-  } finally {
-    if (options.independent) await pool.end();
+  if (!options.independent) {
+    const scope = { userId: options.userId, profileId: options.context?.profileId };
+    await withUploadScope(scope, async (client) => {
+      await checkUploadCapacity(client, scope, options.fileSize);
+      await insert(client);
+    });
+    return;
   }
+  // Internal document generation may run inside a larger business transaction.
+  const pool = createDirectDbPool({ poolMax: 1, poolMin: 0 }, { shared: false });
+  try {
+    await insert(pool);
+  } finally {
+    await pool.end();
+  }
+}
+
+/** Older clients may supply the authorized profile at record time instead of presign time. */
+export async function bindUploadProfile(key: string, userId: string, profileId: string) {
+  const scope = { userId, profileId };
+  await withUploadScope(scope, async (client) => {
+    const {
+      rows: [row],
+    } = await client.query<{
+      profile_id: string | null;
+      file_size: string;
+      scan_job_id: string | null;
+    }>(
+      `SELECT ${storageUploadProfileScope} AS profile_id,file_size,metadata->>'scanJobId' AS scan_job_id
+       FROM storage_records WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2
+       AND status='removed' AND signed_at IS NULL AND metadata->>'provisionalUpload'='true'
+       AND metadata->>'deletionRequested'='true'
+       AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
+       AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()
+       FOR UPDATE`,
+      [key, userId]
+    );
+    if (row?.profile_id === profileId.toLowerCase()) return;
+    if (!row || row.profile_id || row.scan_job_id)
+      throw new ConflictException('Upload changed; request a new upload');
+    await checkUploadCapacity(client, scope, Number(row.file_size), key);
+    await client.query(
+      `UPDATE storage_records SET metadata=metadata||jsonb_build_object('uploadContext',
+       COALESCE(metadata->'uploadContext','{}'::jsonb)||jsonb_build_object('profileId',$2::text)),
+       updated_at=NOW() WHERE storage_key=$1`,
+      [key, profileId]
+    );
+  });
 }
 export async function requireOwnedUpload(key: string, userId: string) {
   const row = (
@@ -110,6 +155,7 @@ export async function queueUploadScan(input: {
   const result = await getDbPool().query(
     `WITH source AS MATERIALIZED (
        SELECT storage_key FROM storage_records WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2
+         AND ${storageUploadProfileScope} IS NOT DISTINCT FROM lower($8::text)
          AND signed_at IS NULL AND metadata->>'scanJobId' IS NULL AND (status='active' OR
            (status='removed' AND metadata->>'provisionalUpload'='true'
             AND metadata->>'deletionRequested'='true'
@@ -132,6 +178,7 @@ export async function queueUploadScan(input: {
       input.operatingContext,
       JSON.stringify(input.inspection),
       JSON.stringify(input.context),
+      input.context.profileId ?? null,
     ]
   );
   if (result.rowCount === 1) return id;
@@ -155,6 +202,7 @@ export async function completeUpload(options: CreateRecordOptions, scanJobId?: s
     content_type=$3,file_size=$4,removed_at=NULL,updated_at=NOW(),
     metadata=(metadata-'provisionalUpload'-'deletionRequested'-'uploadExpiresAt')||$5::jsonb
     WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2
+    AND ${storageUploadProfileScope} IS NOT DISTINCT FROM lower($7::text)
     AND status='removed' AND signed_at IS NULL
     AND metadata->>'provisionalUpload'='true' AND metadata->>'deletionRequested'='true'
     AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
@@ -168,6 +216,7 @@ export async function completeUpload(options: CreateRecordOptions, scanJobId?: s
       options.fileSize,
       JSON.stringify(options.metadata),
       scanJobId ?? null,
+      options.metadata?.profileId ?? null,
     ]
   );
   if (result.rowCount !== 1)

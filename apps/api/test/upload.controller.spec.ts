@@ -26,12 +26,14 @@ import {
 
 const actorRequest = { session: { userId: 'user-1' } } as AuthenticatedRequest;
 const reservation = vi.hoisted(() => ({
+  bindProfile: vi.fn(),
   reserve: vi.fn(),
   owned: vi.fn(),
   complete: vi.fn(),
   inspect: vi.fn(),
 }));
 vi.mock('../src/upload/upload-reservations.js', () => ({
+  bindUploadProfile: reservation.bindProfile,
   reserveUpload: reservation.reserve,
   requireOwnedUpload: reservation.owned,
   completeUpload: reservation.complete,
@@ -631,6 +633,11 @@ describe('UploadController', () => {
         key: 'uploads/document/some-uuid.pdf',
         status: 'recorded',
       });
+      expect(reservation.bindProfile).toHaveBeenCalledWith(
+        'uploads/document/some-uuid.pdf',
+        'user-1',
+        'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa'
+      );
       expect(reservation.complete).toHaveBeenCalledWith(
         expect.objectContaining({
           storageKey: 'uploads/document/some-uuid.pdf',

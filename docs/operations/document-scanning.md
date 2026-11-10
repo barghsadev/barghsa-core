@@ -13,6 +13,19 @@ The 100 MiB ceiling applies to video uploads. The other categories keep their
 smaller deployment limits. The browser, reservation and record endpoints all
 use the effective policy, including lower active admin limits.
 
+Upload admission allows 20 requests per minute and 20 outstanding reservations
+per profile, shared across its authorized uploaders. An upload without a profile
+uses the same limits for its account. If an older client supplies the profile
+when it records a file, the profile must also have room before that reservation
+can move. A full reservation queue returns `429` with `Retry-After`.
+
+Each scope allows 10 GiB of logical uploads. Live reservations count at their
+authorized size. A retained original and its sealed copy count once. Older
+uploads linked to the profile through documents, receipts, or tickets still
+count, with a 100 MiB estimate when a retained file's size is unknown. Expired
+and aborted reservations release capacity. Quota failures return `413` without
+deleting stored evidence or altering the server-generated document workflow.
+
 Set `DOCUMENT_CLAMAV_HOST` on **both** API and worker to the same restricted,
 reachable clamd service. `DOCUMENT_CLAMAV_PORT` defaults to `3310` on the worker.
 Apply migration `0205_document_scanning` before enabling the setting. Do not

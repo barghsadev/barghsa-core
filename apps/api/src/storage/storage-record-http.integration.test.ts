@@ -301,21 +301,25 @@ it('authenticates every upload step and requires CSRF before storage access', as
 });
 
 async function issue(context: Record<string, unknown> = {}, requestHeaders = headers) {
-  const response = await fetch(`${http.base}/api/upload/presigned-url`, {
+  const response = await presignUpload(context, requestHeaders);
+  expect(response.status, await response.clone().text()).toBe(200);
+  const upload = (await response.json()) as { key: string };
+  objects.set(upload.key, Buffer.from('%PDF-1.7 test'));
+  return upload.key;
+}
+
+function presignUpload(context: Record<string, unknown>, requestHeaders = headers) {
+  return fetch(`${http.base}/api/upload/presigned-url`, {
     method: 'POST',
     headers: requestHeaders,
     body: JSON.stringify({
-      ...context,
       fileName: 'owned.pdf',
       contentType: 'application/pdf',
       fileSize: 13,
       category: 'document',
+      ...context,
     }),
   });
-  expect(response.status).toBe(200);
-  const upload = (await response.json()) as { key: string };
-  objects.set(upload.key, Buffer.from('%PDF-1.7 test'));
-  return upload.key;
 }
 
 it('keeps reserved upload URLs in the context that issued them', async () => {
@@ -712,6 +716,149 @@ it('rechecks current profile membership after storage inspection before recordin
   } finally {
     onGet = undefined;
   }
+});
+
+async function quotaProfile() {
+  const userId = randomUUID(),
+    profileId = randomUUID(),
+    session = randomUUID(),
+    csrf = randomUUID();
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES ($1,$1,'test-only')",
+    [userId]
+  );
+  await http.pool.query(
+    "INSERT INTO profiles(id,user_id,profile_type,status) VALUES ($1,$2,'LEGAL','DRAFT')",
+    [profileId, userId]
+  );
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+     VALUES ($1,$2,$3,$4,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
+    [session, userId, csrf, randomUUID()]
+  );
+  return {
+    userId,
+    profileId,
+    ownerHeaders: {
+      Cookie: `barghsa_session=${session}`,
+      'X-CSRF-Token': csrf,
+      'Content-Type': 'application/json',
+    },
+  };
+}
+
+it('serializes the final profile reservation across an owner and an authorized agent', async () => {
+  const { profileId, userId, ownerHeaders } = await quotaProfile();
+  await http.pool.query(
+    "INSERT INTO profile_agents(profile_id,user_id,role) VALUES ($1,'storage-actor','Finance')",
+    [profileId]
+  );
+  await http.pool.query(
+    `INSERT INTO storage_records(storage_key,status,file_size,metadata)
+     SELECT $1::text||'/'||n,'removed',13,jsonb_build_object(
+       'uploadedBy',$2::text,'uploadContext',jsonb_build_object('profileId',$1::text),
+       'provisionalUpload',true,'deletionRequested',true,'uploadExpiresAt',NOW()+INTERVAL '10 minutes')
+     FROM generate_series(1,19) n`,
+    [profileId, userId]
+  );
+  const responses = await Promise.all([
+    presignUpload({ profileId, purpose: 'bank_receipt' }, ownerHeaders),
+    presignUpload({ profileId: profileId.toUpperCase(), purpose: 'bank_receipt' }),
+  ]);
+  expect(responses.map(({ status }) => status).sort()).toEqual([200, 429]);
+  const denied = responses.find(({ status }) => status === 429)!;
+  expect(Number(denied.headers.get('Retry-After'))).toBeGreaterThan(60);
+  expect(await denied.json()).not.toHaveProperty('presignedUrl');
+  const records = () =>
+    http.pool.query(
+      `SELECT storage_key FROM storage_records
+       WHERE lower(metadata->'uploadContext'->>'profileId')=$1
+         AND (metadata->>'uploadExpiresAt')::timestamptz>NOW()`,
+      [profileId]
+    );
+  expect((await records()).rows).toHaveLength(20);
+  await http.pool.query(
+    "UPDATE storage_records SET metadata=metadata||jsonb_build_object('uploadExpiresAt',NOW()-INTERVAL '1 second') WHERE storage_key=$1",
+    [`${profileId}/1`]
+  );
+  expect((await presignUpload({ profileId }, ownerHeaders)).status).toBe(200);
+  expect((await records()).rows).toHaveLength(20);
+});
+
+it('counts retained legacy files and one sealed copy, including when a client binds its profile late', async () => {
+  const { profileId, userId, ownerHeaders } = await quotaProfile();
+  const source = `${profileId}/legacy`,
+    sealed = `${profileId}/sealed`,
+    retained = `${profileId}/retained`;
+  const legacyBytes = 1024 * 1024;
+  const checksum = 'a'.repeat(64);
+  await http.pool.query(
+    `INSERT INTO storage_records(storage_key,status,file_size,metadata,signed_at,category,file_name,content_type) VALUES
+       ($1,'removed',$5,jsonb_build_object('uploadedBy',$7::text,'provisionalUpload',true,
+         'uploadContext',jsonb_build_object('profileId',$4::text,'purpose','business_document')),
+         NULL,'document','legacy.pdf','application/pdf'),
+       ($2,'immutable',$5,jsonb_build_object('sourceKey',$1::text,'profileId',$4::text,
+         'uploadedBy',$7::text,'sha256',$8::text),NOW(),'document','legacy.pdf','application/pdf'),
+       ($3,'removed',$6,jsonb_build_object('profileId',$4::text),NOW(),'document','retained.pdf','application/pdf')`,
+    [
+      source,
+      sealed,
+      retained,
+      profileId,
+      legacyBytes,
+      10 * 1024 ** 3 - legacyBytes - 13,
+      userId,
+      checksum,
+    ]
+  );
+  const documentId = (
+    await http.pool.query(
+      `WITH document AS (
+         INSERT INTO documents(profile_id,business_record_type,category,upload_key,
+           original_name,size_bytes,uploaded_by,uploaded_by_type)
+         VALUES ($1,'standalone','document',$2,'legacy.pdf',$3,$4,'customer') RETURNING id
+       ) INSERT INTO document_events(document_id,revision,state,actor_id)
+         SELECT id,1,'Uploading',$4 FROM document RETURNING document_id AS id`,
+      [profileId, source, legacyBytes, userId]
+    )
+  ).rows[0].id;
+  await http.pool.query(
+    `WITH document AS (
+       UPDATE documents SET state='PendingScan',scan_state='Pending',storage_key=$2,
+         checksum=$3,detected_mime='application/pdf' WHERE id=$1 RETURNING id,revision
+     ) INSERT INTO document_events(document_id,revision,previous_state,state,actor_id)
+       SELECT id,revision,'Uploading','PendingScan',$4 FROM document`,
+    [documentId, sealed, checksum, userId]
+  );
+  // Reproduce the older storage metadata after creating a valid document lineage.
+  await http.pool.query(
+    'UPDATE storage_records SET metadata=NULL,file_size=NULL WHERE storage_key=$1',
+    [source]
+  );
+  await http.pool.query(
+    "UPDATE storage_records SET metadata=metadata-'profileId' WHERE storage_key=$1",
+    [sealed]
+  );
+  const denied = await presignUpload({ profileId, fileSize: 14 }, ownerHeaders);
+  expect(denied.status, await denied.clone().text()).toBe(413);
+  expect(await denied.json()).not.toHaveProperty('presignedUrl');
+  const exact = await issue({ profileId }, ownerHeaders);
+  const late = await issue({}, ownerHeaders);
+  const bind = () => uploadRequest(late, 'record', ownerHeaders, { profileId });
+  expect((await bind()).status).toBe(413);
+  expect(await row(late)).toMatchObject({ status: 'removed' });
+  expect((await row(late)).metadata.uploadContext).not.toHaveProperty('profileId');
+  await http.pool.query(
+    "UPDATE storage_records SET metadata=metadata||jsonb_build_object('uploadExpiresAt',NOW()-INTERVAL '1 second') WHERE storage_key=$1",
+    [exact]
+  );
+  expect((await bind()).status).toBe(200);
+  expect(await row(late)).toMatchObject({
+    status: 'active',
+    metadata: { profileId, uploadContext: { profileId }, verified: true },
+  });
+  expect((await presignUpload({ profileId }, ownerHeaders)).status).toBe(413);
+  expect(await row(retained)).toMatchObject({ status: 'removed', signed_at: expect.any(Date) });
 });
 
 it('rejects privileged upload purposes for a customer before reserving storage', async () => {

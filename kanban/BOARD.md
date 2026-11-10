@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T14:27:19+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T14:49:49+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1182 | Accepted with unchanged source bindings. |
-| verify | 126 | Existing work may be complete; inspect evidence before building. |
+| done | 1183 | Accepted with unchanged source bindings. |
+| verify | 125 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1202,7 +1202,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.06.01.01` | partial | Recorded batch work | Implement upload validation pipeline: extension allowlist → MIME detection → size check → malware scan → store |
 | `06-security-testing-observability.md#T-06.06.01.02` | done | Recorded batch work | Build extension+MIME allowlist configurable by category (docs, images, video) with admin limits |
 | `06-security-testing-observability.md#T-06.06.01.03` | done | Recorded batch work | Generate random object keys (UUID); never use original filenames in storage path |
-| `06-security-testing-observability.md#T-06.06.01.04` | verify | Recorded batch work | Implement malware scanning integration (ClamAV socket or cloud API) with Quarantine state on detection |
+| `06-security-testing-observability.md#T-06.06.01.04` | done | Recorded batch work | Implement malware scanning integration (ClamAV socket or cloud API) with Quarantine state on detection |
 | `06-security-testing-observability.md#T-06.06.01.05` | done | Recorded batch work | Implement download disposition: potentially active formats → `Content-Disposition: attachment`; safe formats → inline only after sandbox preview |
 | `06-security-testing-observability.md#T-06.06.01.06` | done | Recorded batch work | Ensure uploads are private by default; access via short-lived authorized URLs or backend streaming after auth check |
 | `06-security-testing-observability.md#T-06.06.01.07` | verify | Recorded batch work | Write tests: valid upload, invalid extension, mismatched MIME, oversized, malware detected, quarantine alert |

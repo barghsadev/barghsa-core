@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
-import { bigint, jsonb, text, timestamp } from 'drizzle-orm/pg-core';
-import { createTable } from '../base-table';
+import { bigint, index, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { baseColumns } from '../base-table';
+import { domainChecks } from '../domain-checks';
 
 /**
  * Storage record status.
@@ -16,6 +17,13 @@ import { createTable } from '../base-table';
 export const storageRecordStatus = ['active', 'immutable', 'removed'] as const;
 export type StorageRecordStatus = (typeof storageRecordStatus)[number];
 
+/** Scope a stored object even when it predates the current upload context. */
+export const storageUploadProfileScope = `lower(COALESCE(
+  metadata->'uploadContext'->>'profileId',
+  metadata->>'profileId',
+  metadata->'scanContext'->>'profileId'
+))`;
+
 /**
  * Storage records table.
  *
@@ -28,37 +36,48 @@ export type StorageRecordStatus = (typeof storageRecordStatus)[number];
  * S3 versioning ensures that even if the object is accidentally
  * overwritten, previous versions are preserved.
  */
-export const storageRecords = createTable('storage_records', {
-  /** The S3 storage key. Unique across all records. */
-  storageKey: text('storage_key').notNull().unique(),
+export const storageRecords = pgTable(
+  'storage_records',
+  {
+    ...baseColumns,
+    /** The S3 storage key. Unique across all records. */
+    storageKey: text('storage_key').notNull().unique(),
 
-  /** Original file name, if known. */
-  fileName: text('file_name'),
+    /** Original file name, if known. */
+    fileName: text('file_name'),
 
-  /** MIME content type. */
-  contentType: text('content_type'),
+    /** MIME content type. */
+    contentType: text('content_type'),
 
-  /** File size in bytes. */
-  fileSize: bigint('file_size', { mode: 'number' }),
+    /** File size in bytes. */
+    fileSize: bigint('file_size', { mode: 'number' }),
 
-  /** Upload category (e.g. 'contract', 'invoice', 'general'). */
-  category: text('category'),
+    /** Upload category (e.g. 'contract', 'invoice', 'general'). */
+    category: text('category'),
 
-  /** Current lifecycle status. */
-  status: text('status', { enum: storageRecordStatus }).notNull().default('active'),
+    /** Current lifecycle status. */
+    status: text('status', { enum: storageRecordStatus }).notNull().default('active'),
 
-  /** Arbitrary user-defined metadata stored alongside the object. */
-  metadata: jsonb('metadata'),
+    /** Arbitrary user-defined metadata stored alongside the object. */
+    metadata: jsonb('metadata'),
 
-  /** When the record was marked as immutable (signed/approved). */
-  signedAt: timestamp('signed_at', { withTimezone: true, mode: 'date' }),
+    /** When the record was marked as immutable (signed/approved). */
+    signedAt: timestamp('signed_at', { withTimezone: true, mode: 'date' }),
 
-  /** Who marked the record as immutable (user id or system). */
-  signedBy: text('signed_by'),
+    /** Who marked the record as immutable (user id or system). */
+    signedBy: text('signed_by'),
 
-  /** When the record was soft-deleted. */
-  removedAt: timestamp('removed_at', { withTimezone: true, mode: 'date' }),
-});
+    /** When the record was soft-deleted. */
+    removedAt: timestamp('removed_at', { withTimezone: true, mode: 'date' }),
+  },
+  (table) => [
+    ...domainChecks('storage_records'),
+    index('storage_records_upload_profile_idx').on(sql.raw(storageUploadProfileScope)),
+    index('storage_records_unscoped_uploader_idx')
+      .on(sql`(${table.metadata}->>'uploadedBy')`)
+      .where(sql`${sql.raw(storageUploadProfileScope)} IS NULL`),
+  ]
+);
 
 /**
  * SQL to create the storage_records table.
@@ -82,4 +101,8 @@ export const createStorageRecordsTable = sql`
 
   CREATE INDEX IF NOT EXISTS idx_storage_records_status ON storage_records (status);
   CREATE INDEX IF NOT EXISTS idx_storage_records_category ON storage_records (category);
+  CREATE INDEX IF NOT EXISTS storage_records_upload_profile_idx
+    ON storage_records (${sql.raw(storageUploadProfileScope)});
+  CREATE INDEX IF NOT EXISTS storage_records_unscoped_uploader_idx
+    ON storage_records ((metadata->>'uploadedBy')) WHERE ${sql.raw(storageUploadProfileScope)} IS NULL;
 `;

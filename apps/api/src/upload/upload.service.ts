@@ -8,6 +8,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import {
+  bindUploadProfile,
   reserveUpload,
   requireOwnedUpload,
   completeUpload,
@@ -53,6 +54,7 @@ const UPLOAD_PREFIX = 'uploads/';
 const DEFAULT_EXPIRES_IN = 900; // 15 minutes
 const MULTIPART_EXPIRES_IN = 24 * 3600;
 const MULTIPART_PART_SIZE = 5 * 1024 * 1024;
+const UPLOAD_REQUESTS_PER_MINUTE = 20;
 
 type MultipartRecord = {
   storage_key: string;
@@ -228,7 +230,7 @@ export class UploadService {
     const quotaKey = req.profileId
       ? rateLimitKey('upload:profile', req.profileId.toLowerCase())
       : rateLimitKey('upload:user', actor.session.userId);
-    await this.rateLimits.enforceSecurityRateLimit(quotaKey, 20, 60_000);
+    await this.rateLimits.enforceSecurityRateLimit(quotaKey, UPLOAD_REQUESTS_PER_MINUTE, 60_000);
 
     // Generate a unique key. The (already validated) category is bound
     // into the key — `uploads/<category>/<uuid><ext>` — so the verify
@@ -743,11 +745,18 @@ export class UploadService {
       );
     await requireUploadContext(this.profilesService, req, context.data);
 
+    if (scanRequired && !inspection.etag && !inspection.versionId)
+      throw new ServiceUnavailableException('Storage object identity is unavailable for scanning');
+    if (profileId && !reserved.profileId && !issued.metadata.profileId && !existingScan) {
+      await this.rateLimits.enforceSecurityRateLimit(
+        rateLimitKey('upload:profile', profileId.toLowerCase()),
+        UPLOAD_REQUESTS_PER_MINUTE,
+        60_000
+      );
+      await bindUploadProfile(key, req.session.userId, profileId);
+    }
+
     if (scanRequired) {
-      if (!inspection.etag && !inspection.versionId)
-        throw new ServiceUnavailableException(
-          'Storage object identity is unavailable for scanning'
-        );
       if (!scanJobId) {
         const jobId = await queueUploadScan({
           key,
