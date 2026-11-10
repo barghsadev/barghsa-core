@@ -201,7 +201,7 @@ export class DualApprovalService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Failed to create approval request: ${String(error)}`);
+      this.logger.error('Failed to create approval request');
       throw new HttpException(
         {
           statusCode: 500,
@@ -421,7 +421,7 @@ export class DualApprovalService {
         // Already rolled back, or the test client is not a thenable.
       }
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Failed to resolve approval request: ${String(error)}`);
+      this.logger.error('Failed to resolve approval request');
       throw new HttpException(
         {
           statusCode: 500,

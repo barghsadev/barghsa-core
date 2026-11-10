@@ -475,7 +475,7 @@ export class FailedNotificationsService {
       if (committed) throw error;
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Failed to transition dead-letter notification: ${String(error)}`);
+      this.logger.error('Failed to transition dead-letter notification');
       throw new HttpException(
         {
           statusCode: 500,

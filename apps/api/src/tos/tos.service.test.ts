@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { TosService } from './tos.service.js';
-import { HttpException } from '@nestjs/common';
+import { HttpException, Logger } from '@nestjs/common';
 
 // Shared mock pool
 const mockPool = {
@@ -189,17 +189,25 @@ describe('TosService', () => {
       expect(mockClient.release).toHaveBeenCalled();
     });
 
-    it('rolls back on database error and throws 500', async () => {
+    it('rolls back on a database error without exposing its contents', async () => {
       mockClient.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
-        .mockRejectedValueOnce(new Error('DB connection lost'));
+        .mockRejectedValueOnce(new Error('User lock failed for private-identity-reference'));
 
-      const err = await service.recordAcceptance(actor, versionId, ip).catch((e) => e);
+      const log = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => {});
+      try {
+        const err = await service.recordAcceptance(actor, versionId, ip).catch((e) => e);
 
-      expect(err).toBeInstanceOf(HttpException);
-      expect(err.getStatus()).toBe(500);
-      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
-      expect(mockClient.release).toHaveBeenCalled();
+        expect(err).toBeInstanceOf(HttpException);
+        expect(err.getStatus()).toBe(500);
+        expect(err.getResponse()).toEqual({ statusCode: 500, error: 'INTERNAL:SERVER' });
+        expect(log.mock.calls).toEqual([[`Failed to record TOS acceptance for user ${userId}`]]);
+        expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+        expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT');
+        expect(mockClient.release).toHaveBeenCalled();
+      } finally {
+        log.mockRestore();
+      }
     });
 
     it('records acceptance without user_agent when not provided', async () => {

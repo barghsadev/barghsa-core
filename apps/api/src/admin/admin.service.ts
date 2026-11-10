@@ -754,7 +754,7 @@ export class AdminService {
 
       if (error instanceof HttpException) throw error;
 
-      this.logger.error(`Failed to create staff user: ${String(error)}`);
+      this.logger.error('Failed to create staff user');
       throw new HttpException(
         {
           statusCode: 500,
@@ -916,7 +916,7 @@ export class AdminService {
         // Non-critical
       });
 
-      this.logger.error(`Failed to update roles for user ${targetUserId}: ${String(error)}`);
+      this.logger.error(`Failed to update roles for user ${targetUserId}`);
       if (error instanceof HttpException) throw error;
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update staff roles' },
@@ -1177,7 +1177,7 @@ export class AdminService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Failed to set delivery window config: ${String(error)}`);
+      this.logger.error('Failed to set delivery window config');
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
         500
@@ -1341,7 +1341,7 @@ export class AdminService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Failed to set dual-approval threshold config: ${String(error)}`);
+      this.logger.error('Failed to set dual-approval threshold config');
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
         500
@@ -1551,7 +1551,7 @@ export class AdminService {
       if (error instanceof HttpException) {
         throw error;
       }
-      this.logger.error(`Failed to set online wallet top-up limit config: ${String(error)}`);
+      this.logger.error('Failed to set online wallet top-up limit config');
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
         500
@@ -1886,7 +1886,7 @@ export class AdminService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Failed to set green electricity config: ${String(error)}`);
+      this.logger.error('Failed to set green electricity config');
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
         500
@@ -2205,7 +2205,7 @@ export class AdminService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Failed to set service response targets config: ${String(error)}`);
+      this.logger.error('Failed to set service response targets config');
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
         500
@@ -2362,7 +2362,7 @@ export class AdminService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Failed to set escalation policy config: ${String(error)}`);
+      this.logger.error('Failed to set escalation policy config');
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
         500
@@ -2548,7 +2548,7 @@ export class AdminService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Failed to set staff assignment rules config: ${String(error)}`);
+      this.logger.error('Failed to set staff assignment rules config');
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
         500
@@ -2736,7 +2736,7 @@ export class AdminService {
           409
         );
       }
-      this.logger.error(`Failed to create staff team '${team.name}': ${String(error)}`);
+      this.logger.error('Failed to create staff team');
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to create staff team' },
         500
@@ -2925,7 +2925,7 @@ export class AdminService {
           409
         );
       }
-      this.logger.error(`Failed to update staff team ${teamId}: ${String(error)}`);
+      this.logger.error(`Failed to update staff team ${teamId}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update staff team' },
         500
@@ -2992,7 +2992,7 @@ export class AdminService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Failed to delete staff team ${teamId}: ${String(error)}`);
+      this.logger.error(`Failed to delete staff team ${teamId}`);
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to delete staff team' },
         500

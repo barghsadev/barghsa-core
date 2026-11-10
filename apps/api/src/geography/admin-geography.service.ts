@@ -218,7 +218,7 @@ export class AdminGeographyService {
             409
           );
         }
-        this.logger.error(`Failed to create province: ${String(error)}`);
+        this.logger.error('Failed to create province');
         throw new HttpException(
           { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to create province' },
           500
@@ -292,7 +292,7 @@ export class AdminGeographyService {
             409
           );
         }
-        this.logger.error(`Failed to update province ${id}: ${String(error)}`);
+        this.logger.error(`Failed to update province ${id}`);
         throw new HttpException(
           { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update province' },
           500
@@ -486,7 +486,7 @@ export class AdminGeographyService {
           409
         );
       }
-      this.logger.error(`Failed to create city: ${String(error)}`);
+      this.logger.error('Failed to create city');
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to create city' },
         500
@@ -561,7 +561,7 @@ export class AdminGeographyService {
             409
           );
         }
-        this.logger.error(`Failed to update city ${id}: ${String(error)}`);
+        this.logger.error(`Failed to update city ${id}`);
         throw new HttpException(
           { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update city' },
           500

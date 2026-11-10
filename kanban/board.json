@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T03:51:04+00:00",
-  "source_commit": "35dafc49806c3577dc5f1664208f7d0d76c1d2ae",
+  "updated": "2026-11-10T03:53:31+00:00",
+  "source_commit": "5940f6539daf1b4907ac98633c1d3826651b265d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -11072,7 +11072,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -11100,7 +11101,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
@@ -11227,7 +11228,8 @@
         "batches": [
           "release-0.6-versioned-config-cache-and-diagnostic-privacy",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-security-http-regressions-and-provider-tester-wiring"
+          "release-0.6-security-http-regressions-and-provider-tester-wiring",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-postgresql-cache-and-wallet-proof",
@@ -11235,7 +11237,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/config-cache/config-cache.integration.test.ts",
@@ -29388,7 +29390,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -29396,7 +29399,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -34337,7 +34340,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -34345,7 +34349,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -37037,7 +37041,8 @@
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-session-credential-transport-and-authority"
+          "release-0.6-session-credential-transport-and-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -37045,7 +37050,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/context-http.integration.test.ts",
@@ -43189,7 +43194,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -43249,7 +43255,7 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -44566,7 +44572,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -44626,7 +44633,7 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -45951,7 +45958,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -46011,7 +46019,7 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -54313,7 +54321,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -54329,7 +54338,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -55061,7 +55070,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-security-http-regressions-and-provider-tester-wiring"
+          "release-0.6-security-http-regressions-and-provider-tester-wiring",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -55077,7 +55087,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -55432,7 +55442,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -55460,7 +55471,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -56221,7 +56232,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -56249,7 +56261,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-notifications.ts",
@@ -57189,7 +57201,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -57209,7 +57222,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -57990,7 +58003,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-additive-agent-permissions-across-current-business-consumers",
@@ -57998,7 +58012,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -59295,7 +59309,8 @@
           "release-0.5-ownership-transfer-receipt",
           "release-0.5-review-preview-deadlines",
           "release-0.6-session-credential-transport-and-authority",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -59311,7 +59326,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -61049,7 +61064,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -61061,7 +61077,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -62164,7 +62180,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -62176,7 +62193,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -63279,7 +63296,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -63291,7 +63309,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -64332,7 +64350,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-manual-verification-mode-and-unavailable-api",
@@ -64352,7 +64371,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/web/src/pages/AdminVerificationConfig.tsx",
@@ -68643,7 +68662,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -68687,7 +68707,7 @@
             },
             {
               "path": "apps/api/src/geography/admin-geography.service.ts",
-              "sha256": "ec316fc4d53289f762f661167d3f03c9842b159aa92c7e2c7fcb018e613970f9"
+              "sha256": "bf836e26dbb30317a2c01f9b8988d627a3626faa3a4dfb77b0440d7bea758618"
             },
             {
               "path": "apps/api/src/geography/geography-etag-http.integration.test.ts",
@@ -68743,11 +68763,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -69323,7 +69343,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -69367,7 +69388,7 @@
             },
             {
               "path": "apps/api/src/geography/admin-geography.service.ts",
-              "sha256": "ec316fc4d53289f762f661167d3f03c9842b159aa92c7e2c7fcb018e613970f9"
+              "sha256": "bf836e26dbb30317a2c01f9b8988d627a3626faa3a4dfb77b0440d7bea758618"
             },
             {
               "path": "apps/api/src/geography/geography-etag-http.integration.test.ts",
@@ -69423,11 +69444,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -70003,7 +70024,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70047,7 +70069,7 @@
             },
             {
               "path": "apps/api/src/geography/admin-geography.service.ts",
-              "sha256": "ec316fc4d53289f762f661167d3f03c9842b159aa92c7e2c7fcb018e613970f9"
+              "sha256": "bf836e26dbb30317a2c01f9b8988d627a3626faa3a4dfb77b0440d7bea758618"
             },
             {
               "path": "apps/api/src/geography/geography-etag-http.integration.test.ts",
@@ -70103,11 +70125,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -70682,7 +70704,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70726,7 +70749,7 @@
             },
             {
               "path": "apps/api/src/geography/admin-geography.service.ts",
-              "sha256": "ec316fc4d53289f762f661167d3f03c9842b159aa92c7e2c7fcb018e613970f9"
+              "sha256": "bf836e26dbb30317a2c01f9b8988d627a3626faa3a4dfb77b0440d7bea758618"
             },
             {
               "path": "apps/api/src/geography/geography-etag-http.integration.test.ts",
@@ -70782,11 +70805,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -71944,7 +71967,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-security-http-regressions-and-provider-tester-wiring"
+          "release-0.6-security-http-regressions-and-provider-tester-wiring",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -71964,7 +71988,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -73565,7 +73589,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -74097,7 +74122,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
@@ -77403,7 +77428,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -77427,7 +77453,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "f8a5cbeb1b1d8abb39763e6db111d18ea051c1ae7b120593fa36614cc55cb9b9"
+              "sha256": "5c40604a2525113cde4c520a1c448f358337da89878a3ff1982b2410cd8864cd"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
@@ -78635,7 +78661,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-external-provider-metrics-reconciliation"
+          "release-0.6-external-provider-metrics-reconciliation",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "status": "done",
@@ -78647,7 +78674,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "f8a5cbeb1b1d8abb39763e6db111d18ea051c1ae7b120593fa36614cc55cb9b9"
+              "sha256": "5c40604a2525113cde4c520a1c448f358337da89878a3ff1982b2410cd8864cd"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -80949,7 +80976,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -80965,7 +80993,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -81377,7 +81405,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -81393,7 +81422,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -81827,7 +81856,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -81843,7 +81873,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -94689,7 +94719,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -94705,7 +94736,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -95190,7 +95221,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -95206,7 +95238,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -95258,7 +95290,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -96610,7 +96642,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -96626,7 +96659,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -96678,7 +96711,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -97993,7 +98026,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -98005,7 +98039,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -99040,7 +99074,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -99052,7 +99087,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -100093,7 +100128,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-confirmed-outbox-date-range-replay"
+          "release-0.6-confirmed-outbox-date-range-replay",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -100105,7 +100141,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -101198,7 +101234,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -101258,7 +101295,7 @@
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.service.ts",
-              "sha256": "a558ffc4227495b10a2c84f79abc0313a5c8eb7361af7e922d9bd126dc2f9366"
+              "sha256": "0720943c00109ea65dfdf4e95c59191812cbc8b1c018d0fa31c99a37ae05d9a7"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -103185,7 +103222,8 @@
           "release-0.5-operational-queue-touch",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-reusable-pagination-and-request-validation-tests"
+          "release-0.6-reusable-pagination-and-request-validation-tests",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -103225,7 +103263,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "f8a5cbeb1b1d8abb39763e6db111d18ea051c1ae7b120593fa36614cc55cb9b9"
+              "sha256": "5c40604a2525113cde4c520a1c448f358337da89878a3ff1982b2410cd8864cd"
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
@@ -103587,7 +103625,8 @@
           "release-0.5-operational-queue-touch",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-reusable-pagination-and-request-validation-tests"
+          "release-0.6-reusable-pagination-and-request-validation-tests",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -103627,7 +103666,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "f8a5cbeb1b1d8abb39763e6db111d18ea051c1ae7b120593fa36614cc55cb9b9"
+              "sha256": "5c40604a2525113cde4c520a1c448f358337da89878a3ff1982b2410cd8864cd"
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
@@ -103983,7 +104022,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -103999,7 +104039,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/approval-notifications.ts",
@@ -104051,7 +104091,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -105360,7 +105400,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -105372,7 +105413,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
@@ -106214,7 +106255,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -106226,7 +106268,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
@@ -112414,7 +112456,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-promotion-policy-and-partial-financial-reconciliation",
@@ -112470,7 +112513,7 @@
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.service.ts",
-              "sha256": "a558ffc4227495b10a2c84f79abc0313a5c8eb7361af7e922d9bd126dc2f9366"
+              "sha256": "0720943c00109ea65dfdf4e95c59191812cbc8b1c018d0fa31c99a37ae05d9a7"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -113432,7 +113475,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -113444,7 +113488,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
@@ -114906,7 +114950,8 @@
         "batches": [
           "2026-10-03-limit-settings-forms",
           "release-0.3-owner-approved-financial-closure",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -114930,7 +114975,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
@@ -115218,7 +115263,8 @@
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -115234,7 +115280,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -115925,7 +115971,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-security-http-regressions-and-provider-tester-wiring"
+          "release-0.6-security-http-regressions-and-provider-tester-wiring",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-staff-administration-and-dashboard-verification",
@@ -115941,7 +115988,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/staff-http.integration.test.ts",
@@ -130703,7 +130750,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -130747,7 +130795,7 @@
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
-              "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+              "sha256": "0fc1c82428e58005a7a9835a9bcf201df88a1e09a487ef48924f150c248959d7"
             },
             {
               "path": "apps/api/src/admin/service-due-period-http.integration.test.ts",
@@ -131719,7 +131767,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -131763,7 +131812,7 @@
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
-              "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+              "sha256": "0fc1c82428e58005a7a9835a9bcf201df88a1e09a487ef48924f150c248959d7"
             },
             {
               "path": "apps/api/src/admin/service-due-period-http.integration.test.ts",
@@ -132735,7 +132784,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -132779,7 +132829,7 @@
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
-              "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+              "sha256": "0fc1c82428e58005a7a9835a9bcf201df88a1e09a487ef48924f150c248959d7"
             },
             {
               "path": "apps/api/src/admin/service-due-period-http.integration.test.ts",
@@ -133751,7 +133801,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -133795,7 +133846,7 @@
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
-              "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+              "sha256": "0fc1c82428e58005a7a9835a9bcf201df88a1e09a487ef48924f150c248959d7"
             },
             {
               "path": "apps/api/src/admin/service-due-period-http.integration.test.ts",
@@ -134767,7 +134818,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -134811,7 +134863,7 @@
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
-              "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+              "sha256": "0fc1c82428e58005a7a9835a9bcf201df88a1e09a487ef48924f150c248959d7"
             },
             {
               "path": "apps/api/src/admin/service-due-period-http.integration.test.ts",
@@ -135783,7 +135835,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -135827,7 +135880,7 @@
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
-              "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+              "sha256": "0fc1c82428e58005a7a9835a9bcf201df88a1e09a487ef48924f150c248959d7"
             },
             {
               "path": "apps/api/src/admin/service-due-period-http.integration.test.ts",
@@ -136885,7 +136938,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -136929,7 +136983,7 @@
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
-              "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+              "sha256": "0fc1c82428e58005a7a9835a9bcf201df88a1e09a487ef48924f150c248959d7"
             },
             {
               "path": "apps/api/src/admin/service-due-period-http.integration.test.ts",
@@ -138031,7 +138085,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -138075,7 +138130,7 @@
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
-              "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+              "sha256": "0fc1c82428e58005a7a9835a9bcf201df88a1e09a487ef48924f150c248959d7"
             },
             {
               "path": "apps/api/src/admin/service-due-period-http.integration.test.ts",
@@ -139133,7 +139188,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -139177,7 +139233,7 @@
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
-              "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+              "sha256": "0fc1c82428e58005a7a9835a9bcf201df88a1e09a487ef48924f150c248959d7"
             },
             {
               "path": "apps/api/src/admin/service-due-period-http.integration.test.ts",
@@ -140279,7 +140335,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -140323,7 +140380,7 @@
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
-              "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+              "sha256": "0fc1c82428e58005a7a9835a9bcf201df88a1e09a487ef48924f150c248959d7"
             },
             {
               "path": "apps/api/src/admin/service-due-period-http.integration.test.ts",
@@ -142074,7 +142131,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -142082,7 +142140,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
             },
             {
               "path": "apps/api/src/admin/due-at-override.controller.test.ts",
@@ -147099,7 +147157,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -147127,7 +147186,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -147659,7 +147718,8 @@
           "release-0.6-native-integration-acceptance",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -147687,7 +147747,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -148029,7 +148089,8 @@
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -148041,7 +148102,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/wallet/online-topup.integration.test.ts",
@@ -153340,7 +153401,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -153364,7 +153426,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
@@ -153988,7 +154050,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -154012,7 +154075,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
@@ -154734,7 +154797,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -154758,7 +154822,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
@@ -187647,7 +187711,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -187675,7 +187740,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -188823,7 +188888,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -188855,7 +188921,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/contract/contract-cancellation-request-notifications.ts",
@@ -190355,7 +190421,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -190383,7 +190450,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -191497,7 +191564,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -191525,7 +191593,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -192639,7 +192707,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-quantity-increase-scoped-verification",
@@ -192667,7 +192736,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -193419,7 +193488,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -193447,7 +193517,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -198914,7 +198984,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-upload-abuse-review"
+          "release-0.6-upload-abuse-review",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -199042,7 +199113,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -199843,7 +199914,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-upload-abuse-review"
+          "release-0.6-upload-abuse-review",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -199971,7 +200043,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -200774,7 +200846,8 @@
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-upload-abuse-review"
+          "release-0.6-upload-abuse-review",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-profile-closure-preview-expiry-ownership-retention-and-support",
@@ -200786,7 +200859,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -201851,7 +201924,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-upload-abuse-review"
+          "release-0.6-upload-abuse-review",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -201863,7 +201937,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -203815,7 +203889,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-upload-abuse-review"
+          "release-0.6-upload-abuse-review",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -203827,7 +203902,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -205756,7 +205831,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-upload-abuse-review"
+          "release-0.6-upload-abuse-review",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-profile-request-export-and-staff-creation-with-explicit-partial-boundaries",
@@ -205884,7 +205960,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -278585,7 +278661,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -278597,7 +278674,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -278617,7 +278694,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -279558,7 +279635,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -279570,7 +279648,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -279590,7 +279668,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -280531,7 +280609,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -280543,7 +280622,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -280563,7 +280642,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -281504,7 +281583,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -281516,7 +281596,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -281536,7 +281616,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -282477,7 +282557,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -282489,7 +282570,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -282509,7 +282590,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -283450,7 +283531,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -283462,7 +283544,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -283482,7 +283564,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -284423,7 +284505,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -284435,7 +284518,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -284455,7 +284538,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -285396,7 +285479,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -285408,7 +285492,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -285428,7 +285512,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -286369,7 +286453,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -286381,7 +286466,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -286401,7 +286486,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -287342,7 +287427,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -287354,7 +287440,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -287374,7 +287460,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -288315,7 +288401,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -288327,7 +288414,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -288347,7 +288434,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -289288,7 +289375,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -289300,7 +289388,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -289320,7 +289408,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -290262,7 +290350,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -290274,7 +290363,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -290294,7 +290383,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -291235,7 +291324,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -291247,7 +291337,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -291267,7 +291357,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -292208,7 +292298,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -292220,7 +292311,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -292240,7 +292331,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -293181,7 +293272,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -293193,7 +293285,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -293213,7 +293305,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -294154,7 +294246,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -294166,7 +294259,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits-http.integration.test.ts",
@@ -294186,7 +294279,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -345316,7 +345409,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -345344,7 +345438,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -346459,7 +346553,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-quantity-increase-scoped-verification",
@@ -346487,7 +346582,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -347239,7 +347334,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -347267,7 +347363,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -348382,7 +348478,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-quantity-increase-scoped-verification",
@@ -348410,7 +348507,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -349163,7 +349260,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -349191,7 +349289,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -350305,7 +350403,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -350333,7 +350432,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -351449,7 +351548,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -351477,7 +351577,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -352592,7 +352692,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -352620,7 +352721,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -476198,7 +476299,8 @@
           "release-0.6-password-hash-calibration",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -476206,7 +476308,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
@@ -476333,7 +476435,8 @@
           "release-0.6-password-hash-calibration",
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -476349,7 +476452,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/auth/auth.service.ts",
@@ -478635,7 +478738,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-session-authority",
@@ -478679,7 +478783,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/ownership-http.integration.test.ts",
@@ -478815,7 +478919,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-api-and-private-cutover-proof",
@@ -478827,7 +478932,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/auth/auth.controller.test.ts",
@@ -483251,7 +483356,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -483279,7 +483385,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
@@ -483717,7 +483823,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -483745,7 +483852,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
@@ -491934,7 +492041,8 @@
       "remaining": [
         "Complete review of the remaining application, worker, database and ingress error sinks. Rehearse representative token, identity and payment inputs against configured production-equivalent sinks and verify their receipts.",
         "Automatic, manual, adjustment and replacement invoice failure logs now use fixed operation text. The regression reproduces a leaked synthetic payment reference on the previous code, then verifies the exact safe message, rollback, no commit and the unchanged thrown error. Review of remaining sinks and production-equivalent receipt checks remains open.",
-        "Wallet reconciliation scan failures now emit fixed operation messages, with the opaque wallet ID for per-wallet errors. Raw exception text is excluded from the scan log and background job error. The prior leak was reproduced with a synthetic reference. Remaining sink review and production-equivalent receipts are open."
+        "Wallet reconciliation scan failures now emit fixed operation messages, with the opaque wallet ID for per-wallet errors. Raw exception text is excluded from the scan log and background job error. The prior leak was reproduced with a synthetic reference. Remaining sink review and production-equivalent receipts are open.",
+        "Reviewed administrative mutation, geography, profile invitation and Terms error sinks now omit exception contents and untrusted team names. The Terms regression verifies the exact safe log, stable 500 response, rollback and release. Remaining service, worker, database and ingress sink review and live evidence remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -491984,7 +492092,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
@@ -494321,7 +494430,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-confirmed-date-range-replay-and-provider-idempotency",
@@ -494337,7 +494447,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "f8a5cbeb1b1d8abb39763e6db111d18ea051c1ae7b120593fa36614cc55cb9b9"
+              "sha256": "5c40604a2525113cde4c520a1c448f358337da89878a3ff1982b2410cd8864cd"
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
@@ -494416,7 +494526,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-confirmed-date-range-replay-and-provider-idempotency",
@@ -494432,7 +494543,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "f8a5cbeb1b1d8abb39763e6db111d18ea051c1ae7b120593fa36614cc55cb9b9"
+              "sha256": "5c40604a2525113cde4c520a1c448f358337da89878a3ff1982b2410cd8864cd"
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
@@ -592623,7 +592734,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-customer-draft-and-contract-history-browser",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592639,7 +592751,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/web/build.mjs",
@@ -635515,7 +635627,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -635707,11 +635820,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -636371,7 +636484,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -636563,11 +636677,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -637227,7 +637341,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -637419,11 +637534,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -638083,7 +638198,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -638275,11 +638391,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -638939,7 +639055,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -639131,11 +639248,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -652047,7 +652164,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -652239,11 +652357,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -652903,7 +653021,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -653095,11 +653214,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -653759,7 +653878,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -653951,11 +654071,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -654615,7 +654735,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -654807,11 +654928,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -655471,7 +655592,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -655663,11 +655785,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -656327,7 +656449,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -656519,11 +656642,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -657183,7 +657306,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -657375,11 +657499,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -658039,7 +658163,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -658231,11 +658356,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -658895,7 +659020,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -659087,11 +659213,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -659751,7 +659877,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -659943,11 +660070,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -660607,7 +660734,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -660799,11 +660927,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -661463,7 +661591,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-strict-otp-caller-preflight"
+          "release-0.6-strict-otp-caller-preflight",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -661655,11 +661784,11 @@
             },
             {
               "path": "apps/api/src/tos/tos.service.test.ts",
-              "sha256": "161d644627d8deba1d9cb434a88e4c20d9188700f0da859431a61da4fea010b6"
+              "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
             },
             {
               "path": "apps/api/src/tos/tos.service.ts",
-              "sha256": "eca80c4348068d55642d632ebde81041b252399126cc21999af0efba6dd0f7e6"
+              "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -695942,7 +696071,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -695958,7 +696088,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -696626,7 +696756,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -696642,7 +696773,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -697309,7 +697440,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -697325,7 +697457,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -697994,7 +698126,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -698010,7 +698143,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -698679,7 +698812,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -698695,7 +698829,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -699361,7 +699495,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -699377,7 +699512,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -700043,7 +700178,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -700059,7 +700195,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -700726,7 +700862,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -700742,7 +700879,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -701408,7 +701545,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -701424,7 +701562,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -702091,7 +702229,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -702107,7 +702246,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/common/wizard-draft-retention.ts",
@@ -723519,7 +723658,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -723563,7 +723703,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -724166,7 +724306,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -724210,7 +724351,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -724813,7 +724954,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -724857,7 +724999,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -725461,7 +725603,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -725505,7 +725648,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -726108,7 +726251,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -726152,7 +726296,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -726755,7 +726899,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -726799,7 +726944,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -727402,7 +727547,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -727446,7 +727592,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -728050,7 +728196,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -728094,7 +728241,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -728697,7 +728844,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -728741,7 +728889,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -729344,7 +729492,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -729388,7 +729537,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -733147,7 +733296,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-verification-settings",
@@ -733171,7 +733321,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/staff-creation-http.integration.test.ts",
@@ -733660,7 +733810,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -733684,7 +733835,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/service-targets-http.integration.test.ts",
@@ -734384,7 +734535,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -734408,7 +734560,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/service-targets-http.integration.test.ts",
@@ -738505,7 +738657,7 @@
             },
             {
               "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
-              "sha256": "8f6228f8f7fad7453d971514e804dcdd6ea947d4741bab1f9e27eed7966018c4"
+              "sha256": "0fc1c82428e58005a7a9835a9bcf201df88a1e09a487ef48924f150c248959d7"
             },
             {
               "path": "apps/api/src/admin/service-due-period-http.integration.test.ts",
@@ -738889,7 +739041,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "8faefcd4714aefdec4681361c0ccbf2b5ebdfca7d0a8a6435bff67e0d326577f"
+              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
             },
             {
               "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
@@ -739157,7 +739309,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
@@ -740213,7 +740365,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/electricity/electricity-increase-forms.controller.test.ts",
@@ -742334,7 +742486,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ]
       }
     },
@@ -742366,7 +742519,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/escalation-policy-config.controller.test.ts",
@@ -742830,7 +742983,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
@@ -743290,7 +743443,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
-              "sha256": "7d5442ef919e3d9e63ddbb1237698e665ff702fde6a42e6ed1f2353e92fa58c6"
+              "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
             },
             {
               "path": "apps/api/src/admin/green-electricity-config.controller.test.ts",
@@ -747003,7 +747156,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-invoice-error-log-redaction",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ]
       }
     },
@@ -747051,7 +747205,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -747083,7 +747237,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "f8a5cbeb1b1d8abb39763e6db111d18ea051c1ae7b120593fa36614cc55cb9b9"
+              "sha256": "5c40604a2525113cde4c520a1c448f358337da89878a3ff1982b2410cd8864cd"
             },
             {
               "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
@@ -747715,7 +747869,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -750981,7 +751135,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -751054,7 +751209,7 @@
             },
             {
               "path": "apps/api/src/admin/admin.service.ts",
-              "sha256": "b1e4419d1a6f4d3432cc48d95c193fe4bce033ce961ab2f3a98cd8c99c6618a7"
+              "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -751086,7 +751241,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "f8a5cbeb1b1d8abb39763e6db111d18ea051c1ae7b120593fa36614cc55cb9b9"
+              "sha256": "5c40604a2525113cde4c520a1c448f358337da89878a3ff1982b2410cd8864cd"
             },
             {
               "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
@@ -751702,7 +751857,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
@@ -754850,7 +755005,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-wallet-reconciliation-log-redaction"
+          "release-0.6-wallet-reconciliation-log-redaction",
+          "release-0.6-administrative-mutation-log-redaction"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -758376,7 +758532,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
-              "sha256": "e584a7cb0e3d6a6afdf61382c945f6127a91d5d5c30dad01aaf006a719d5e22d"
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
             },
             {
               "path": "packages/i18n/src/addresses.ts",
@@ -758714,7 +758870,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-administrative-mutation-log-redaction"
         ]
       }
     },
@@ -860171,6 +860328,107 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/wallet-log-redaction",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "71eab3e07ef1489009d44b6bedb53413465509606c78524787636b9feda9a8d0"
+    },
+    "release-0.6-administrative-mutation-log-redaction": {
+      "batch": "release-0.6-administrative-mutation-log-redaction",
+      "base_commit": "5940f6539daf1b4907ac98633c1d3826651b265d",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.02.06"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/admin.service.ts",
+        "apps/api/src/admin/contract-electricity-limits.service.ts",
+        "apps/api/src/admin/dual-approval.service.ts",
+        "apps/api/src/admin/failed-notifications.service.ts",
+        "apps/api/src/admin/reconciliation-exceptions.service.ts",
+        "apps/api/src/admin/reminder-offset-toggle.service.ts",
+        "apps/api/src/geography/admin-geography.service.ts",
+        "apps/api/src/profiles/agents.service.ts",
+        "apps/api/src/tos/tos.service.test.ts",
+        "apps/api/src/tos/tos.service.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.service.test.ts",
+          "sha256": "3892aa181ab722f906b25e26eea9ee4b136523053df88c7d812fa67ffa8f1aff"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "a1e6ee5876242f122a268320ee569e7b2c060bacb85588c92b4b0d4c888dea7c"
+        },
+        {
+          "path": "apps/api/src/admin/contract-electricity-limits.service.ts",
+          "sha256": "40529b7a3726b6855edb4df0e18c4fbd363fbb05534bde8c0a42faa1af62b84d"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.test.ts",
+          "sha256": "ce91967760c6319d1e296055e3f5df711db7d59fa8236df59434118772dddd72"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
+        },
+        {
+          "path": "apps/api/src/admin/failed-notifications.service.ts",
+          "sha256": "5c40604a2525113cde4c520a1c448f358337da89878a3ff1982b2410cd8864cd"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions.service.ts",
+          "sha256": "0720943c00109ea65dfdf4e95c59191812cbc8b1c018d0fa31c99a37ae05d9a7"
+        },
+        {
+          "path": "apps/api/src/admin/reminder-offset-toggle.service.ts",
+          "sha256": "0fc1c82428e58005a7a9835a9bcf201df88a1e09a487ef48924f150c248959d7"
+        },
+        {
+          "path": "apps/api/src/admin/staff-teams-config.service.test.ts",
+          "sha256": "3d3d43ce5954c68754243891310163fbd29e53f2d715be8fdbf37519b4a4a762"
+        },
+        {
+          "path": "apps/api/src/common/correlation-logger.test.ts",
+          "sha256": "30a92c68318ec0edbe94b1d685adf15e9b0c5561205dde97f75e776be85f7d91"
+        },
+        {
+          "path": "apps/api/src/common/correlation-logger.ts",
+          "sha256": "d751f6cfb30907eb95ea9a281326a6ac51399e185f9957c38d70f18438e7d561"
+        },
+        {
+          "path": "apps/api/src/geography/admin-geography.service.test.ts",
+          "sha256": "82609cd3d3fb2af3e0a7c74da2518e46646b6156ae8b5c2eea3d711475e79237"
+        },
+        {
+          "path": "apps/api/src/geography/admin-geography.service.ts",
+          "sha256": "bf836e26dbb30317a2c01f9b8988d627a3626faa3a4dfb77b0440d7bea758618"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.test.ts",
+          "sha256": "90b36b2963fa65e0f789f66f8eb4e71d69386347fe0fbd12561dbe31b591d1eb"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
+        },
+        {
+          "path": "apps/api/src/tos/tos.service.test.ts",
+          "sha256": "7c168ccec1bdfc3e44297c746032a397c722df809b83428ab301216c46ca4815"
+        },
+        {
+          "path": "apps/api/src/tos/tos.service.ts",
+          "sha256": "504b811ff5bd99cd407e8135e00c99c2edf458c0370048eb0cce7f9e7aed25f9"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Reviewed the database error catches and removed only exception interpolation and the caller-supplied team name. Existing domain error classification, rollback, committed mutation handling, authorization and opaque identifier context are unchanged.",
+        "The Terms acceptance regression supplies a synthetic private identity reference and asserts the exact safe logger call and stable response, one rollback path, no commit and client release.",
+        "The 279 cases in 17 local mock suites passed using the API unit configuration with no HTTP/database initialization. Related API typecheck, lint, format and diff checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/admin-log-redaction",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "4eb5957b90c5b8eed0337ef9ae92c20b59f83612d4c8fa02227186b7fc3a3f31"
     }
   },
   "historical_improvements": [

@@ -242,7 +242,7 @@ export class TosService {
     } catch (err) {
       await client.query('ROLLBACK').catch(() => {});
       if (err instanceof HttpException) throw err;
-      this.logger.error(`Failed to record TOS acceptance for user ${userId}: ${String(err)}`);
+      this.logger.error(`Failed to record TOS acceptance for user ${userId}`);
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();

@@ -201,7 +201,7 @@ export class ContractElectricityLimitsService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Failed to set contract electricity limits: ${String(error)}`);
+      this.logger.error('Failed to set contract electricity limits');
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update config' },
         500

@@ -202,7 +202,7 @@ export class ReminderOffsetToggleService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Failed to set reminder offset toggle: ${String(error)}`);
+      this.logger.error('Failed to set reminder offset toggle');
       throw new HttpException(
         {
           statusCode: 500,

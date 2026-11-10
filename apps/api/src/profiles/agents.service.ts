@@ -751,7 +751,7 @@ export class AgentsService {
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Invitation acceptance failed: ${String(error)}`);
+      this.logger.error('Invitation acceptance failed');
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();

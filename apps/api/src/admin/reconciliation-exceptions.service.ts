@@ -361,7 +361,7 @@ export class ReconciliationExceptionsService {
       if (committed) throw error;
       await client.query('ROLLBACK').catch(() => {});
       if (error instanceof HttpException) throw error;
-      this.logger.error(`Failed to resolve reconciliation exception: ${String(error)}`);
+      this.logger.error('Failed to resolve reconciliation exception');
       throw new HttpException(
         {
           statusCode: 500,
