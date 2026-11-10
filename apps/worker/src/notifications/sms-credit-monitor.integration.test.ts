@@ -32,6 +32,17 @@ beforeAll(async () => {
       created_at timestamptz, scheduled_for timestamptz, lease_token text, locked_until timestamptz, status text
     );
     CREATE TABLE notification_dead_letter (status text);
+    CREATE TABLE notification_delivery_log (
+      notification_id uuid, channel text, status text, created_at timestamptz,
+      send_attempt_token uuid, provider_ref text
+    );
+    CREATE TABLE notification_send_receipts (
+      outbox_id uuid, channel text, status text, transport text,
+      attempt_token uuid, provider_ref text, provider_id uuid
+    );
+    CREATE TABLE email_webhook_events (
+      message_id text, verified_provider_ids uuid[], event_type text
+    );
     CREATE TABLE email_provider_configs (id uuid, degraded boolean, status text NOT NULL DEFAULT 'active', degraded_reason text)`);
 }, 40_000);
 

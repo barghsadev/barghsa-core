@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T22:26:08+00:00",
+  "updated": "2026-11-10T23:01:34+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4072,7 +4072,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4100,7 +4101,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             }
           ],
           "checks": [
@@ -4115,6 +4116,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -4478,7 +4487,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4494,7 +4504,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4521,6 +4531,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -4698,7 +4716,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -4722,7 +4741,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             }
           ],
           "checks": [
@@ -4755,6 +4774,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -5037,7 +5064,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -5045,7 +5073,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".size-limit.json",
@@ -5080,6 +5108,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -5273,7 +5309,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-quarantine-coverage-and-reporting",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5313,7 +5350,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5339,6 +5376,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -5404,7 +5449,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-quarantine-coverage-and-reporting",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5444,7 +5490,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5470,6 +5516,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -5756,7 +5810,8 @@
           "release-0.6-native-csp-fixture-teardown",
           "release-0.6-report-mounted-emergency-recovery",
           "release-0.6-logout-probe-auth-bootstrap",
-          "release-0.6-clean-browser-rollup-and-brand-rehearsal"
+          "release-0.6-clean-browser-rollup-and-brand-rehearsal",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -5768,7 +5823,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -5859,6 +5914,16 @@
             "Run 42894685607 completed all 40 shards on f0f9434c with 14,593 expected, zero unexpected, zero flaky and zero runner errors. The 22 declared skips are Chromium-only forced textarea fallback variants on other projects and coarse-pointer cases on desktop. All eight shards passed for Chromium, Firefox, WebKit, Mobile Chrome and Mobile Safari.",
             "The registered suite includes registration, sign-in/OTP, legal onboarding, electricity and wallet funding/payment, saving, solar construction, consultation and versioned staff settings. The fixture accepts only loopback application URLs, proxies external browser requests to a deny server, and uses deterministic accounts, mock providers and disposable databases. Failure traces and custom local application URLs are configured.",
             "The bound workflow, harness and representative flow sources retain their tested bytes. Current provider changes have separate targeted evidence. The final immutable milestone still requires its own release gate."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            }
           ]
         }
       }
@@ -5973,7 +6038,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-quarantine-coverage-and-reporting",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -6013,7 +6079,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6039,6 +6105,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -6148,7 +6222,8 @@
           "release-0.6-native-csp-fixture-teardown",
           "release-0.6-report-mounted-emergency-recovery",
           "release-0.6-logout-probe-auth-bootstrap",
-          "release-0.6-clean-browser-rollup-and-brand-rehearsal"
+          "release-0.6-clean-browser-rollup-and-brand-rehearsal",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -6160,7 +6235,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -6215,6 +6290,16 @@
             "Run 42894685607 completed all 40 shards on f0f9434c with 14,593 expected, zero unexpected, zero flaky and zero runner errors. The 22 declared skips are Chromium-only forced textarea fallback variants on other projects and coarse-pointer cases on desktop. All eight shards passed for Chromium, Firefox, WebKit, Mobile Chrome and Mobile Safari.",
             "Quarantine metadata requires an owner, issue link and valid expiry. The actual retry fixture rejected a first-failed retry. Strict promotion mode rejects active or expired critical entries, and the current strict registry readback found zero of either.",
             "The hosted rollup queried all seven scheduled runs. One has full outcome artifacts and six historical details are reported unavailable. The current run has a complete rollup. The final-candidate promotion package and the successful scheduled receiver receipt remain separate release gates."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            }
           ]
         }
       }
@@ -8906,7 +8991,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "current-migration-source-and-native-postgresql-receipts",
@@ -8926,7 +9012,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             }
           ],
           "checks": [
@@ -8948,6 +9034,14 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "Document and enforce an additive candidate defect severity gate. Existing task requirements, workflows, release worker behavior, and prior gate rules are preserved. Board integrity and promotion checker tests passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -13954,7 +14048,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13962,7 +14057,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "docs/development/ci.md",
@@ -14002,6 +14097,14 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "Document and enforce an additive candidate defect severity gate. Existing task requirements, workflows, release worker behavior, and prior gate rules are preserved. Board integrity and promotion checker tests passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -14061,7 +14164,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -14069,7 +14173,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -14110,6 +14214,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -14174,7 +14286,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -14182,7 +14295,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "package.json",
@@ -14234,6 +14347,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -14300,7 +14421,9 @@
           "release-0.6-package-metadata-review",
           "release-0.6-current-license-inventory-readback",
           "release-0.6-strict-license-gate-readback",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-license-review-roles",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -14308,7 +14431,7 @@
           "source_evidence": [
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "a00456f52f852ae69799b4dc2d36b82e672001c8c05dafdf86cc514340dad8b1"
+              "sha256": "df1248432540ed09b411b8c459835d7a7616defc584d635cd3ed3a5158f9536c"
             },
             {
               "path": "deploy/licenses/release-approvals.json",
@@ -14328,7 +14451,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             }
           ],
           "checks": [
@@ -14344,6 +14467,22 @@
                 "Dockerfile.base"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-license-review-roles",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "Reviewer-role guidance appended. Existing exact package inventory, prior owner-approved GeoLite2 removal and legal review requirements retain their scope."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         },
@@ -14427,7 +14566,8 @@
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -14435,7 +14575,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -14469,6 +14609,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -18114,7 +18262,8 @@
           "packages/ui/src/styles.css"
         ],
         "batches": [
-          "release-0.6-shared-catalogue-wcag22"
+          "release-0.6-shared-catalogue-wcag22",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -18128,7 +18277,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -18581,6 +18730,14 @@
                 "apps/web/e2e/customer-service-history-views.spec.ts"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -20071,7 +20228,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -20084,7 +20242,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "docs/development/ci.md",
@@ -20123,6 +20281,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -20179,7 +20345,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -20195,7 +20362,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".prettierignore",
@@ -20222,6 +20389,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -20282,7 +20457,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -20300,7 +20476,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".husky/commit-msg",
@@ -20367,6 +20543,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -20985,7 +21169,8 @@
         "batches": [
           "release-0.6-transaction-provider-static-guard",
           "release-0.6-upload-preflight-reservation-assertions",
-          "release-0.6-provider-restore-as-draft"
+          "release-0.6-provider-restore-as-draft",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -20999,7 +21184,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -21028,6 +21213,16 @@
             {
               "path": "scripts/test_check_sast.py",
               "sha256": "d1677e994a2e46763efdeac4f414a6b2c91def515283e88ed8e285af76529d57"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -21087,7 +21282,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -21102,7 +21298,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".prettierignore",
@@ -21187,6 +21383,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -31242,7 +31446,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-license-review-roles"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -31398,7 +31603,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "949964011eb461ee934756225097459e3fd3cbf67375384dfb8b6cea39a2b84e"
+              "sha256": "df1248432540ed09b411b8c459835d7a7616defc584d635cd3ed3a5158f9536c"
             }
           ],
           "checks": [
@@ -31745,6 +31950,14 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-license-review-roles",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "Reviewer-role guidance appended. Existing exact package inventory, prior owner-approved GeoLite2 removal and legal review requirements retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -100754,7 +100967,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-notification-metric-caller-fixture"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -100858,7 +101072,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+              "sha256": "1103d3a2b0e265a989709ea6a6bfb9b4f77b768ca2d5c9eea0eb95b822e98929"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -101163,6 +101377,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-metric-caller-fixture",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts"
+              ],
+              "scope": "Only the isolated fixture table setup changed to support the new metric query. All original assertions and SMS-credit execution retain their bytes. Four native SMS-credit cases and seven metric cases passed."
             }
           ],
           "presentation_renewals": [
@@ -460145,7 +460367,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-notification-metric-caller-fixture"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460249,7 +460472,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+              "sha256": "1103d3a2b0e265a989709ea6a6bfb9b4f77b768ca2d5c9eea0eb95b822e98929"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -460552,6 +460775,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-metric-caller-fixture",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts"
+              ],
+              "scope": "Only the isolated fixture table setup changed to support the new metric query. All original assertions and SMS-credit execution retain their bytes. Four native SMS-credit cases and seven metric cases passed."
             }
           ],
           "presentation_renewals": [
@@ -460661,7 +460892,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-notification-metric-caller-fixture"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460765,7 +460997,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+              "sha256": "1103d3a2b0e265a989709ea6a6bfb9b4f77b768ca2d5c9eea0eb95b822e98929"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -461068,6 +461300,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-metric-caller-fixture",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts"
+              ],
+              "scope": "Only the isolated fixture table setup changed to support the new metric query. All original assertions and SMS-credit execution retain their bytes. Four native SMS-credit cases and seven metric cases passed."
             }
           ],
           "presentation_renewals": [
@@ -461176,7 +461416,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-notification-metric-caller-fixture"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -461280,7 +461521,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+              "sha256": "1103d3a2b0e265a989709ea6a6bfb9b4f77b768ca2d5c9eea0eb95b822e98929"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -461585,6 +461826,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-metric-caller-fixture",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts"
+              ],
+              "scope": "Only the isolated fixture table setup changed to support the new metric query. All original assertions and SMS-credit execution retain their bytes. Four native SMS-credit cases and seven metric cases passed."
             }
           ],
           "presentation_renewals": [
@@ -461694,7 +461943,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-notification-metric-caller-fixture"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461798,7 +462048,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+              "sha256": "1103d3a2b0e265a989709ea6a6bfb9b4f77b768ca2d5c9eea0eb95b822e98929"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -462167,6 +462417,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-metric-caller-fixture",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts"
+              ],
+              "scope": "Only the isolated fixture table setup changed to support the new metric query. All original assertions and SMS-credit execution retain their bytes. Four native SMS-credit cases and seven metric cases passed."
             }
           ],
           "presentation_renewals": [
@@ -462302,7 +462560,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-notification-metric-caller-fixture"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -462434,7 +462693,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+              "sha256": "1103d3a2b0e265a989709ea6a6bfb9b4f77b768ca2d5c9eea0eb95b822e98929"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -462809,6 +463068,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-metric-caller-fixture",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts"
+              ],
+              "scope": "Only the isolated fixture table setup changed to support the new metric query. All original assertions and SMS-credit execution retain their bytes. Four native SMS-credit cases and seven metric cases passed."
             }
           ],
           "presentation_renewals": [
@@ -462928,7 +463195,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462936,7 +463204,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -463271,6 +463539,14 @@
                 "apps/worker/src/notifications/send-receipt.integration.test.ts"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -463404,7 +463680,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463412,7 +463689,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -463891,6 +464168,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -464028,7 +464313,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464036,7 +464322,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -464366,6 +464652,14 @@
                 "apps/worker/src/notifications/send-receipt.integration.test.ts"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -464469,7 +464763,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464477,7 +464772,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -464807,6 +465102,14 @@
                 "apps/worker/src/notifications/send-receipt.integration.test.ts"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -464910,7 +465213,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464918,7 +465222,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -465248,6 +465552,14 @@
                 "apps/worker/src/notifications/send-receipt.integration.test.ts"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -499501,7 +499813,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -499509,7 +499822,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "Dockerfile.web",
@@ -499560,6 +499873,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -499733,7 +500054,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -499777,7 +500099,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -499814,6 +500136,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -499858,7 +500188,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -499866,7 +500197,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "Dockerfile.web",
@@ -499917,6 +500248,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -500189,7 +500528,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -500217,7 +500557,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             }
           ],
           "checks": [
@@ -500235,6 +500575,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -504205,7 +504553,8 @@
           "release-0.6-transaction-provider-static-guard",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -504213,7 +504562,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -504246,6 +504595,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -508219,7 +508576,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-isolated-live-scanner-and-safari-recovery",
           "release-0.6-hosted-upload-admission-and-scanner-tests",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "hosted-native-upload-regression-test-verification",
@@ -508228,7 +508586,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -508328,6 +508686,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -509262,7 +509628,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-protected-storage-origins",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -509274,7 +509641,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".gitignore",
@@ -509331,6 +509698,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -509371,7 +509746,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-protected-storage-origins",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -509383,7 +509759,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".gitignore",
@@ -509427,6 +509803,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         },
@@ -509535,7 +509919,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -509543,7 +509928,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -509569,6 +509954,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         },
@@ -509661,7 +510054,8 @@
           "release-0.6-transaction-provider-static-guard",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -509669,7 +510063,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -509702,6 +510096,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -509745,7 +510147,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -509753,7 +510156,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "Dockerfile.base",
@@ -509800,6 +510203,14 @@
                 "Dockerfile.base"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -509840,7 +510251,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-protected-storage-origins",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -509852,7 +510264,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".gitignore",
@@ -509896,6 +510308,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         },
@@ -509986,7 +510406,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -509998,7 +510419,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -510018,6 +510439,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -510056,7 +510485,9 @@
           "release-0.6-current-license-inventory-readback",
           "release-0.6-strict-license-gate-readback",
           "release-0.6-latest-strict-license-review-evidence",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-license-review-roles",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -510064,7 +510495,7 @@
           "source_evidence": [
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "a00456f52f852ae69799b4dc2d36b82e672001c8c05dafdf86cc514340dad8b1"
+              "sha256": "df1248432540ed09b411b8c459835d7a7616defc584d635cd3ed3a5158f9536c"
             },
             {
               "path": "deploy/licenses/release-approvals.json",
@@ -510084,7 +510515,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "44815beb3052dcfeecda739674276e4d4c42d88768f675f9fb970e9b9fa89ffe"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             }
           ],
           "checks": [
@@ -510100,6 +510531,22 @@
                 "Dockerfile.base"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-license-review-roles",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "Reviewer-role guidance appended. Existing exact package inventory, prior owner-approved GeoLite2 removal and legal review requirements retain their scope."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         },
@@ -510577,7 +511024,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -510601,7 +511049,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -510626,6 +511074,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -511902,7 +512358,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -511962,7 +512419,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -511983,6 +512440,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -512012,7 +512477,8 @@
         "batches": [
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -512024,7 +512490,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -512071,6 +512537,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -512100,7 +512574,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-electricity-quote-vat-batch",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -512112,7 +512587,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -512155,6 +512630,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -516696,7 +517179,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -516708,7 +517192,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -516768,6 +517252,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Run the same pinned scanner from main CI in the independent nightly contracts job. The browser matrix, strict rollup, quarantine behavior and existing artifact identity are preserved. The pinned scan and workflow checks passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -517137,7 +517629,8 @@
         "batches": [
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-shared-catalogue-wcag22"
+          "release-0.6-shared-catalogue-wcag22",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -517151,7 +517644,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -517244,6 +517737,14 @@
                 "apps/web/e2e/customer-service-history-views.spec.ts"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -517280,7 +517781,8 @@
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-dashboard-grid-after-entrance",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -517296,7 +517798,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -517375,6 +517877,14 @@
                 "apps/web/e2e/customer-service-history-views.spec.ts"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -517771,7 +518281,8 @@
           "release-0.6-transaction-provider-static-guard",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -517779,7 +518290,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -517812,6 +518323,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -517850,7 +518369,8 @@
           "release-0.6-transaction-provider-static-guard",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -517858,7 +518378,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -517896,6 +518416,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -518469,7 +518997,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "exact-hosted-mobile-performance-gate",
@@ -518484,7 +519013,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".size-limit.json",
@@ -518579,6 +519108,14 @@
                 "apps/web/src/router.tsx"
               ],
               "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -519261,7 +519798,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-electricity-quote-vat-batch",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -519274,7 +519812,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -519341,6 +519879,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -519371,7 +519917,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-electricity-quote-vat-batch",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -519383,7 +519930,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -519450,6 +519997,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -519480,7 +520035,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-electricity-quote-vat-batch",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -519494,7 +520050,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -519561,6 +520117,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -519591,7 +520155,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-electricity-quote-vat-batch",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -519602,7 +520167,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -519669,6 +520234,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -519749,7 +520322,8 @@
         "batches": [
           "release-0.6-native-credential-and-migration-acceptance",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-clean-and-upgrade-migrations",
@@ -519761,7 +520335,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -519796,6 +520370,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -519827,7 +520409,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "reconciled-existing",
@@ -519838,7 +520421,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/api/openapi.json",
@@ -519895,6 +520478,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -519979,7 +520570,8 @@
           "release-0.6-private-api-monitoring",
           "release-0.6-browser-story-build-prerequisite",
           "release-0.6-workspace-test-and-coverage-configuration",
-          "release-0.6-clean-browser-rollup-and-brand-rehearsal"
+          "release-0.6-clean-browser-rollup-and-brand-rehearsal",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -520046,7 +520638,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-critical-defect-candidate-gate"
+          "release-0.6-critical-defect-candidate-gate",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -520064,7 +520657,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -520127,6 +520720,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Run the same pinned scanner from main CI in the independent nightly contracts job. The browser matrix, strict rollup, quarantine behavior and existing artifact identity are preserved. The pinned scan and workflow checks passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -520154,7 +520755,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-native-provider-fixtures-and-staff-log-assertion",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-hosted-provider-contract-verification",
@@ -520163,7 +520765,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -520250,6 +520852,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -520283,7 +520893,8 @@
           "release-0.6-first-launch-promotion-check",
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -520301,7 +520912,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "deploy/production/README.md",
@@ -520360,6 +520971,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Run the same pinned scanner from main CI in the independent nightly contracts job. The browser matrix, strict rollup, quarantine behavior and existing artifact identity are preserved. The pinned scan and workflow checks passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -520706,7 +521325,8 @@
         "batches": [
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -520723,7 +521343,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -520782,6 +521402,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Run the same pinned scanner from main CI in the independent nightly contracts job. The browser matrix, strict rollup, quarantine behavior and existing artifact identity are preserved. The pinned scan and workflow checks passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -520816,7 +521444,8 @@
         "batches": [
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -520833,7 +521462,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -520892,6 +521521,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Run the same pinned scanner from main CI in the independent nightly contracts job. The browser matrix, strict rollup, quarantine behavior and existing artifact identity are preserved. The pinned scan and workflow checks passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -522964,7 +523601,8 @@
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-database-protection-export-leases",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-notification-metric-caller-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -522984,7 +523622,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+              "sha256": "1103d3a2b0e265a989709ea6a6bfb9b4f77b768ca2d5c9eea0eb95b822e98929"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
@@ -523038,6 +523676,14 @@
                 "apps/worker/src/notifications/worker-metrics.test.ts"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-metric-caller-fixture",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts"
+              ],
+              "scope": "Only the isolated fixture table setup changed to support the new metric query. All original assertions and SMS-credit execution retain their bytes. Four native SMS-credit cases and seven metric cases passed."
             }
           ]
         }
@@ -523074,7 +523720,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-notification-metric-caller-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-provider-attribution-and-circuit-metrics",
@@ -523130,7 +523777,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+              "sha256": "1103d3a2b0e265a989709ea6a6bfb9b4f77b768ca2d5c9eea0eb95b822e98929"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
@@ -523185,6 +523832,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-metric-caller-fixture",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts"
+              ],
+              "scope": "Only the isolated fixture table setup changed to support the new metric query. All original assertions and SMS-credit execution retain their bytes. Four native SMS-credit cases and seven metric cases passed."
             }
           ]
         }
@@ -523373,7 +524028,8 @@
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-database-protection-export-leases",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-notification-metric-caller-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -523393,7 +524049,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+              "sha256": "1103d3a2b0e265a989709ea6a6bfb9b4f77b768ca2d5c9eea0eb95b822e98929"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
@@ -523447,6 +524103,14 @@
                 "apps/worker/src/notifications/worker-metrics.test.ts"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-metric-caller-fixture",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts"
+              ],
+              "scope": "Only the isolated fixture table setup changed to support the new metric query. All original assertions and SMS-credit execution retain their bytes. Four native SMS-credit cases and seven metric cases passed."
             }
           ]
         }
@@ -523965,7 +524629,8 @@
           "docs/operations/notification-monitoring.md"
         ],
         "batches": [
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-notification-metric-caller-fixture"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -524030,6 +524695,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            },
+            {
+              "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
+              "sha256": "1103d3a2b0e265a989709ea6a6bfb9b4f77b768ca2d5c9eea0eb95b822e98929"
             }
           ],
           "checks": [
@@ -524038,7 +524707,12 @@
             "The real-DB cohort case counted a pre-receipt verified bounce once across multiple callbacks and excluded another provider, legacy unverified callbacks, delivered events, SMTP and an attempt older than 24 hours. Durable send tests preserved concurrency, uncertain-outcome holds, recovered bookkeeping and immutable attempt history.",
             "The exact dashboard PromQL passed Prometheus 3.15.0 promtool against duplicate replicas, separate staging/production databases and an empty cohort. Fractions were 0.25 and 0.5 for the two populated scopes, with no empty-cohort series.",
             "AST scope comparison preserved every prior top-level metric and collector statement. All six existing dashboard panels are byte-equivalent as JSON values. Reviewed diff, changed-file lint, formatting and diff whitespace checks passed.",
-            "The rolling 24-hour cohort is defined by attempt start time and durable Resend acceptance. Provider feedback uses the accepted receipt message and verified provider identity. No matching feedback means no bounce has been observed yet. Empty cohorts show no data. These operator interpretation notes are in docs/operations/notification-monitoring.md."
+            "The rolling 24-hour cohort is defined by attempt start time and durable Resend acceptance. Provider feedback uses the accepted receipt message and verified provider identity. No matching feedback means no bounce has been observed yet. Empty cohorts show no data. These operator interpretation notes are in docs/operations/notification-monitoring.md.",
+            "Diagnosed the exact hosted preflight run 42914738580: the required integrity job passed, but worker tests were 912 passed and two failed because the SMS-credit fixture lacks notification_delivery_log and the other receipt/webhook tables read by the added metric. The aggregate coverage job also failed its upstream test gate. No hosted whole-run pass is claimed.",
+            "Added the three required table projections to the existing isolated SMS-credit fixture. Production code, SMS-credit behavior and every existing assertion retain their original bytes.",
+            "After the fixture correction, native Linux/PostgreSQL ran all four SMS-credit integration cases and seven metric cases, with 11 passed. Worker TypeScript passed. The corrected fixture and 418 other relevant source files were compared by exact SHA-256 before execution.",
+            "Read all collector call sites. The durable receipt suite has separate full-migration evidence and the operations caller passed in the hosted worker run. Reused unchanged product, migration and send-receipt evidence from release-0.6-notification-bounce-dashboard. The 16 receipt cases plus seven metric cases plus four SMS-credit cases give 27 distinct passing related cases.",
+            "Reviewed the fixture diff and passed changed-file formatting, lint and whitespace checks. Full candidate CI and coverage remain separate release gates."
           ],
           "limitations": [
             "The milestone staging deployment, live dashboard readback and Telegram release receipts remain outstanding. Isolated native receipts use fixture send functions and do not claim external email delivery."
@@ -525389,7 +526063,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-ai-and-payment-transport-boundaries",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-notification-metric-caller-fixture"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -525425,7 +526100,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+              "sha256": "1103d3a2b0e265a989709ea6a6bfb9b4f77b768ca2d5c9eea0eb95b822e98929"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -525499,6 +526174,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-metric-caller-fixture",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts"
+              ],
+              "scope": "Only the isolated fixture table setup changed to support the new metric query. All original assertions and SMS-credit execution retain their bytes. Four native SMS-credit cases and seven metric cases passed."
             }
           ]
         }
@@ -526034,7 +526717,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -526042,7 +526726,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "Dockerfile.base",
@@ -526073,6 +526757,16 @@
             "A compiled API on disposable PostgreSQL with 207 production migrations sent one authenticated TLS envelope to the isolated Sentry protocol receiver. Its accepted payload has the exact built release SHA and support reference and excludes the private referer. All four HTTP cases and 24 unit cases passed, including authorization, privacy, bounded receipts and the missing or invalid revision fallback.",
             "Staging and hosted CI use the same full revision build argument for API and web images. The existing deployment stub verifies both invocations and retained acceptance, Telegram preflight, rollback and notification boundaries. All 15 release tool cases passed. TypeScript, ESLint, Prettier, actionlint, shellcheck and the whitespace check passed.",
             "The executable route source outside the release field, the runtime image outside its build metadata, and the CI and staging scripts outside their build argument are byte-identical. This verifies the integration test criterion. The stored prior staging event and future live release correlation are separate evidence."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            }
           ]
         }
       }
@@ -575837,7 +576531,8 @@
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-dashboard-grid-after-entrance",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -575845,7 +576540,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".size-limit.json",
@@ -576664,6 +577359,14 @@
                 "apps/web/e2e/customer-service-history-views.spec.ts"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -576793,7 +577496,8 @@
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-dashboard-grid-after-entrance",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -576801,7 +577505,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".size-limit.json",
@@ -577620,6 +578324,14 @@
                 "apps/web/e2e/customer-service-history-views.spec.ts"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -578323,7 +579035,8 @@
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-dashboard-grid-after-entrance",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -578331,7 +579044,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".size-limit.json",
@@ -579150,6 +579863,14 @@
                 "apps/web/e2e/customer-service-history-views.spec.ts"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -579208,7 +579929,8 @@
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-dashboard-grid-after-entrance",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -579227,7 +579949,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -579285,6 +580007,14 @@
                 "apps/web/e2e/customer-service-history-views.spec.ts"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         }
@@ -791526,7 +792256,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/api/openapi.json",
@@ -793602,7 +794332,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+              "sha256": "1103d3a2b0e265a989709ea6a6bfb9b4f77b768ca2d5c9eea0eb95b822e98929"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -795322,6 +796052,22 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-metric-caller-fixture",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts"
+              ],
+              "scope": "Only the isolated fixture table setup changed to support the new metric query. All original assertions and SMS-credit execution retain their bytes. Four native SMS-credit cases and seven metric cases passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -795692,7 +796438,9 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-notification-metric-caller-fixture",
+          "release-0.6-integrity-requires-tests"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -795745,7 +796493,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": "apps/api/openapi.json",
@@ -797781,7 +798529,7 @@
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
-              "sha256": "916e375667f739f7dc1a0d0b6a3e4e7243cf19ff698c3901f9aaba4f2fe3a0f2"
+              "sha256": "1103d3a2b0e265a989709ea6a6bfb9b4f77b768ca2d5c9eea0eb95b822e98929"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -799390,6 +800138,22 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Additive metrics, an additive durable-receipt test, an additional metric test and operator notes. Exact AST proof preserves all previous collector statements and metrics. Existing delivery execution and financial/authorization paths retain their prior source evidence. All related receipt and metric checks passed."
+            },
+            {
+              "batch": "release-0.6-notification-metric-caller-fixture",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts"
+              ],
+              "scope": "Only the isolated fixture table setup changed to support the new metric query. All original assertions and SMS-credit execution retain their bytes. Four native SMS-credit cases and seven metric cases passed."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -799777,7 +800541,9 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-notification-metric-caller-fixture",
+          "release-0.6-integrity-requires-tests"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -801572,7 +802338,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
             },
             {
               "path": ".size-limit.json",
@@ -803656,6 +804422,14 @@
                 "packages/i18n/src/provider-forms.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-integrity-requires-tests",
+              "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
             }
           ]
         },
@@ -803800,7 +804574,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-dashboard-grid-after-entrance",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-integrity-requires-tests"
         ]
       }
     },
@@ -804091,7 +804866,9 @@
           "release-0.6-report-mounted-emergency-recovery",
           "release-0.6-logout-probe-auth-bootstrap",
           "release-0.6-clean-browser-rollup-and-brand-rehearsal",
-          "release-0.6-notification-bounce-dashboard"
+          "release-0.6-notification-bounce-dashboard",
+          "release-0.6-notification-metric-caller-fixture",
+          "release-0.6-integrity-requires-tests"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -922420,6 +923197,141 @@
       "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/notification-bounces.9JzRR2",
       "limitations": [
         "The milestone staging deployment, live dashboard readback and Telegram release receipts remain outstanding. Isolated native receipts use fixture send functions and do not claim external email delivery."
+      ],
+      "push_receipt": {
+        "observed_main_sha": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+        "integrity_run": 42914738580,
+        "integrity": "success",
+        "worker_tests": "failure; two isolated caller-fixture failures diagnosed and corrected in release-0.6-notification-metric-caller-fixture",
+        "whole_run": "failure"
+      }
+    },
+    "release-0.6-license-review-roles": {
+      "batch": "release-0.6-license-review-roles",
+      "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06"
+      ],
+      "changed_paths": [
+        "docs/security/release-license-review.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "df1248432540ed09b411b8c459835d7a7616defc584d635cd3ed3a5158f9536c"
+        }
+      ],
+      "checks": [
+        "Answered the owner's reviewer question and documented that the existing gate accepts named owner or legal-reviewer approval of exact exceptions after their obligations are verified. Recommended open-source licensing counsel for GPL/LGPL source and replacement questions, with an internal compliance lead able to coordinate.",
+        "Recorded the required dated package/version/image-scope disposition and applicable notices/source/replacement conditions. Reviewer assignment and exception approvals remain pending.",
+        "Documentation formatting and diff whitespace checks passed. Application sources are unchanged.",
+        "Downloaded the completed strict image job 130131117350 from run 42902282297 at f0f9434c. The report has 594 package/scope entries and 170 pending reviews. Comparison with the previous strict inventory finds 169 unchanged review entries, updated PostgreSQL libxslt 1.1.43-r4 under reported X-11, and allowed MIT krb5-libs 1.22.3-r0. The updated version is documented for original-notice review. The image job failed its license gate, and no approval or whole-run success is claimed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/notification-bounces.9JzRR2",
+      "proof_logs": [
+        {
+          "file": "latest-license-comparison.json",
+          "sha256": "b6c6cf9dff98e7107a9121e22522579ff78bf4ea575a9be3ac5dfeb771c25b4d"
+        },
+        {
+          "file": "latest-strict-images/release-licenses.json",
+          "sha256": "05b0d2394fe14dae9d1c52ebfaf1e413bda20b608ad7011bb15b5c233357c411"
+        },
+        {
+          "file": "latest-strict-images/4-sbom.cdx.json",
+          "sha256": "e945f0fbe32fecd00d05a39286cd7726631fc3dbc0e7eb17f79bcbfd37715052"
+        },
+        {
+          "file": "latest-strict-images/4-vulnerabilities.json",
+          "sha256": "e25ae72cd8520cd5d69822a850af13fd2ba41ed5689433b306bd2e0b595da36f"
+        }
+      ]
+    },
+    "release-0.6-notification-metric-caller-fixture": {
+      "batch": "release-0.6-notification-metric-caller-fixture",
+      "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.14.02.09",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
+          "sha256": "1103d3a2b0e265a989709ea6a6bfb9b4f77b768ca2d5c9eea0eb95b822e98929"
+        },
+        {
+          "path": "apps/worker/src/notifications/worker-metrics.ts",
+          "sha256": "a6d074287af227a7554816f08bca78ee7db2a82efda08bb33e60ee8570e4096b"
+        },
+        {
+          "path": "apps/worker/src/notifications/worker-metrics.test.ts",
+          "sha256": "1a9355bb50f9b9fca514c89c20c4858e0a87c714fc27571262dd20c1a148db19"
+        },
+        {
+          "path": "packages/db/drizzle/production/0203_sms_credit_monitoring.sql",
+          "sha256": "d98852e7420ed96b0e70af16bf918bb164b07f084d750727c7e6536d2a9059c3"
+        }
+      ],
+      "checks": [
+        "Diagnosed the exact hosted preflight run 42914738580: the required integrity job passed, but worker tests were 912 passed and two failed because the SMS-credit fixture lacks notification_delivery_log and the other receipt/webhook tables read by the added metric. The aggregate coverage job also failed its upstream test gate. No hosted whole-run pass is claimed.",
+        "Added the three required table projections to the existing isolated SMS-credit fixture. Production code, SMS-credit behavior and every existing assertion retain their original bytes.",
+        "After the fixture correction, native Linux/PostgreSQL ran all four SMS-credit integration cases and seven metric cases, with 11 passed. Worker TypeScript passed. The corrected fixture and 418 other relevant source files were compared by exact SHA-256 before execution.",
+        "Read all collector call sites. The durable receipt suite has separate full-migration evidence and the operations caller passed in the hosted worker run. Reused unchanged product, migration and send-receipt evidence from release-0.6-notification-bounce-dashboard. The 16 receipt cases plus seven metric cases plus four SMS-credit cases give 27 distinct passing related cases.",
+        "Reviewed the fixture diff and passed changed-file formatting, lint and whitespace checks. Full candidate CI and coverage remain separate release gates."
+      ],
+      "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/notification-bounces.9JzRR2",
+      "proof_logs": [
+        {
+          "file": "hosted-42914738580-failed.log",
+          "sha256": "09a06cd7d4d372ed25ca4127352f17f2598dc738866b4e727df2723610a2f45a"
+        },
+        {
+          "file": "caller-fixture/bounce-callers-coverage.log",
+          "sha256": "012a5bcb4fbbbef912c0f14b720fe8ca95eb51e2ed49ee332a74db12443f4dd2"
+        },
+        {
+          "file": "caller-fixture/bounce-callers-source.sha256",
+          "sha256": "89cba9ed9b7b4bd6c7220c3b423f90ba01628653fe1b1c8db7daba8d87594b54"
+        },
+        {
+          "file": "caller-fixture/bounce-callers-source-check.log",
+          "sha256": "e847661f4da9cee10a97213fae22e5a7a295a1a669a3529cfe602ccbc7f77855"
+        }
+      ]
+    },
+    "release-0.6-integrity-requires-tests": {
+      "batch": "release-0.6-integrity-requires-tests",
+      "base_commit": "7c38d527ea09ed63df183adb84ff875d1b8173e5",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+        }
+      ],
+      "checks": [
+        "Read back active GitHub ruleset 26844024, whose sole required check is Verify monorepo integrity from GitHub Actions app 15368. Run 42914738580 demonstrated that this context passed while worker tests and the combined gate failed.",
+        "Added the independent test job to the integrity prerequisites, bound its result and required success. This retains the existing required context while making failed, cancelled or skipped tests reject it.",
+        "The actual integrity shell passed 16 focused cases: all five prerequisites successful, then each prerequisite failed, cancelled or skipped. An exact scope comparison confirms only these three workflow lines changed. Actionlint, workflow formatting and diff whitespace checks passed.",
+        "Preserved the source-bound full browser and gate evidence where the test sources and nightly workflow remain unchanged. The source-bound fixture correction has native checks in release-0.6-notification-metric-caller-fixture. A new exact hosted preflight and full candidate gate remain separate receipts."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/notification-bounces.9JzRR2",
+      "proof_logs": [
+        {
+          "file": "integrity-gate-cases.json",
+          "sha256": "139309d18ce699d7a38535b1e4423545e1e900dc010824aaaf8309d85a0b09ae"
+        }
       ]
     }
   },

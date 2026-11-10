@@ -266,7 +266,7 @@ jobs:
 
   integrity:
     name: Verify monorepo integrity
-    needs: [sast, secrets, images, quality]
+    needs: [sast, secrets, images, quality, test]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     permissions:
@@ -278,11 +278,13 @@ jobs:
           SECRET_SCAN_RESULT: ${{ needs.secrets.result }}
           IMAGE_SCAN_RESULT: ${{ needs.images.result }}
           QUALITY_RESULT: ${{ needs.quality.result }}
+          TEST_RESULT: ${{ needs.test.result }}
         run: |
           test "$SAST_RESULT" = success
           test "$SECRET_SCAN_RESULT" = success
           test "$IMAGE_SCAN_RESULT" = success
           test "$QUALITY_RESULT" = success
+          test "$TEST_RESULT" = success
 
   test:
     name: Run tests
