@@ -40,6 +40,12 @@ other theme as unmeasured. Reveal clipped text in its scroll container and
 check it again. Run page landmark assertions before opening a modal, then
 measure the dialog while it owns focus.
 
+Axe 4.13 can omit some Persian text when its matcher treats joined characters
+as icon ligatures. The verification settings test scrolls every navigation
+label into view and explicitly includes each visible label in Axe's existing
+contrast rule. It checks that every label received a result and keeps the
+standard contrast thresholds. [Axe issue #5507](https://github.com/dequelabs/axe-core/issues/5507)
+
 Use `BARGHSA_ROUTE_THEME_CENSUS=1` with the production browser runner to
 exercise both themes in a populated route fixture that allows a theme choice.
 The probe uses the application preference, records the actual theme at each

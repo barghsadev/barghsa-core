@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T03:13:30+00:00",
-  "source_commit": "59b67d1def804abc160966f4b8946881b517aec2",
+  "updated": "2026-11-10T03:23:42+00:00",
+  "source_commit": "8290157c800b5b9baa666e8e8e00eb897ec8f7c8",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -27004,7 +27004,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -27060,7 +27061,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/session-cookies.spec.ts",
@@ -27694,7 +27695,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -27754,7 +27756,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security.tsx",
@@ -29374,7 +29376,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -29638,7 +29641,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/trusted-devices.spec.ts",
@@ -35062,7 +35065,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35114,7 +35118,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -35961,7 +35965,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35981,7 +35986,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -36228,7 +36233,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -36252,7 +36258,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -37683,7 +37689,8 @@
           "release-0.5-native-staff-touch-and-electricity-recovery",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -37703,7 +37710,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -37925,7 +37932,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -37949,7 +37957,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -38526,7 +38534,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -38542,7 +38551,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -39820,7 +39829,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -39844,7 +39854,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -68593,7 +68603,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -68717,7 +68728,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -69269,7 +69280,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -69393,7 +69405,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -69945,7 +69957,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70069,7 +70082,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -70620,7 +70633,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70744,7 +70758,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -80881,7 +80895,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -80921,7 +80936,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -81305,7 +81320,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -81345,7 +81361,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -81751,7 +81767,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -81791,7 +81808,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -94608,7 +94625,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -94648,7 +94666,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -535739,7 +535757,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -535927,7 +535946,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
+              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -536181,7 +536200,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -536317,7 +536337,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
+              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -536629,7 +536649,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -536765,7 +536786,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
+              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -537070,7 +537091,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -537258,7 +537280,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
+              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -537527,7 +537549,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -537751,7 +537774,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -538831,7 +538854,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
+              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -539062,7 +539085,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539118,7 +539142,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -539278,7 +539302,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
+              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -539910,7 +539934,8 @@
           "release-0.5-reveal-clipped-text",
           "release-0.5-remaining-contrast",
           "release-0.5-order-notice-placement",
-          "release-0.5-conditional-control-contrast"
+          "release-0.5-conditional-control-contrast",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -539974,7 +539999,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
+              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -540083,7 +540108,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540219,7 +540245,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
+              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -540532,7 +540558,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540588,7 +540615,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -540748,7 +540775,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
+              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -541077,7 +541104,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -541205,7 +541233,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -541489,7 +541517,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
+              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -541927,7 +541955,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542055,7 +542084,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -542339,7 +542368,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
+              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -542750,7 +542779,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542806,7 +542836,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -542966,7 +542996,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
+              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -543295,7 +543325,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543423,7 +543454,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -543707,7 +543738,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "a8087c24ce2f00dd4ebf373f108f069cb1ecfe76da58ba1cd6d81b73b6d69592"
+              "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -592168,7 +592199,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592476,7 +592508,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -747686,7 +747718,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -750434,7 +750466,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-document-template-malware-gate",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -751663,7 +751696,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "fe324cd011696420f698e93b98922085db0999eb57a351a89452a6577f1a3d0c"
+              "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -754297,7 +754330,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-document-template-malware-gate",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-preference-and-verification-browser"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -758270,7 +758304,8 @@
         "Protected preflight 42742923993 failed three OTP cases at 0d12a1df after strict validation rejected obsolete caller fields. Updated assertions prove the invalid requests cannot reach resend or consume the contact challenge, and the valid requests preserve route purpose and concurrent single use. The exact cumulative hosted preflight remains required.",
         "Eight targeted Chromium and mobile Safari cases verify address deletion recovery, focus and profile-scoped creation in English and Persian. The remaining production browser cohorts and final matrix still require a passing receipt.",
         "The session revocation and trusted-device denial cohort passed, with all related device and location browser cases passing in both locales and browser projects. The full browser gate remains open.",
-        "The contract-limit, invoice due-period and VAT recovery cohort passed all 28 targeted cases in Chromium and mobile Safari. The full production browser gate remains open."
+        "The contract-limit, invoice due-period and VAT recovery cohort passed all 28 targeted cases in Chromium and mobile Safari. The full production browser gate remains open.",
+        "Sixteen targeted preference recovery and verification contrast cases passed in both languages and browser projects. Remaining cohorts and the full release browser matrix still require their own receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -758371,7 +758406,8 @@
           "release-0.6-strict-otp-caller-preflight",
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-preference-and-verification-browser"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -859131,6 +859167,61 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-finance-command-recovery",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "728e2727fa1c95c749af1531093aba7f4ab4b76b1fbb82e5bdae55335bacb0a3"
+    },
+    "release-0.6-preference-and-verification-browser": {
+      "batch": "release-0.6-preference-and-verification-browser",
+      "base_commit": "8290157c800b5b9baa666e8e8e00eb897ec8f7c8",
+      "task_keys": [
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/form-accessibility.spec.ts",
+        "docs/design/accessibility.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/clipped-contrast.ts",
+          "sha256": "d71c70178d37424d4a68f617d532b0267480b8a3a72cb548ccd50f841d289015"
+        },
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "872e01bf9cf2f1559ff30efc09a5bb6a6501f1ca0e795dd68c72e6628da15059"
+        },
+        {
+          "path": "apps/web/src/components/AdminSettingsLayout.tsx",
+          "sha256": "6af1deb3af8919eae290051251018bf6eb53694c804b5ce19fa69bcffbf1a6d4"
+        },
+        {
+          "path": "apps/web/src/components/PreferenceSettingsStatus.tsx",
+          "sha256": "60ff89836dc2fff28c0a153848ee34706908d17c75829e43c0dd925ff3bc38f0"
+        },
+        {
+          "path": "apps/web/src/hooks/usePreferenceSettingsForm.ts",
+          "sha256": "84646eef89d8e80845dcfab092a8cb22113e79b64a6d35bfeb3b3f9060d2cff4"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "c159b5da4140a7aa5ae951a7d3c3c050af2c3b73cd51169668531221d3e976a6"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Notification and marketing preferences reject an invalid initial read and block another write after ambiguous responses. The tests verify exact read-only recovery, retained choices, exact outbound payloads and confirmed receipt display.",
+        "Verification settings use current staff and policy fixtures and confirm that mode drafts remain blocked after an uncertain write until a fresh read and deliberate reset. All request, theme and contrast checks remain active.",
+        "Desktop settings navigation covers every label through scrolling and verifies exact Axe result counts. The scoped Persian matcher covers labels missed by Axe issue 5507 while retaining the existing evaluator and threshold. Other content resolves only measured scroll clipping through the existing helper.",
+        "Sixteen distinct cases passed across Chromium and mobile Safari. Reused independently passing exact cases where the subsequent change was scoped elsewhere. Local ENOSPC aborted a contrast run at screenshot output; the subsequent contrast checks used a separate scratch volume with local trace collection off. The screenshots, assertions and normal CI configuration were retained.",
+        "Affected ESLint, Prettier and diff checks passed. Only browser tests and the accessibility note changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-verification-contrast-persian",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "dd1ea2aa9153464a659d3b9730a965df6dd8fe51cc06ee42473134f0134e5c79"
     }
   },
   "historical_improvements": [

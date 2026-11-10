@@ -1,9 +1,12 @@
+import { createRequire } from 'node:module';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { verifyClippedContrast } from './clipped-contrast';
 import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
 import { DEFAULT_VERIFICATION_POLICY } from '@barghsa/shared/verification';
 import { brandingText } from '@barghsa/i18n/branding';
 import { t as settingsText } from '@barghsa/i18n/admin-ui';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
+import { tPreferenceSettingsForms } from '@barghsa/i18n/preference-settings-forms';
 import { publishedBrand } from '../src/test/branding-settings-fixtures';
 import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { fullNavigation } from './navigation-fixture';
@@ -18,6 +21,18 @@ import { formatBrowserDate } from './browser-date';
 import { mockOppositeNumerals } from './number-preference-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
+
+const requireForTest = createRequire(import.meta.url);
+const requireAxe = createRequire(requireForTest.resolve('@axe-core/playwright'));
+const { source: axeSource } = requireAxe('axe-core') as { source: string };
+// Axe can mistake Persian text for icon ligatures. Include every marked text label
+// in this scoped scan and keep its normal contrast calculation and thresholds.
+// https://github.com/dequelabs/axe-core/issues/5507
+const persianNavigationAxeSource = `${axeSource}
+window.axe.configure({
+  rules: [{ id: 'color-contrast', matches: (node) => node.hasAttribute('data-contrast-visible') }]
+});
+`;
 
 for (const locale of ['en', 'fa']) {
   test(`ordering address save freezes its draft and rejects malformed success (${locale})`, async ({
@@ -1786,18 +1801,29 @@ for (const locale of ['en', 'fa']) {
       await expect(email).toHaveAttribute('aria-checked', 'false');
       await email.press('Space');
       await expect(email).toHaveAttribute('aria-checked', 'true');
+      const copy = (key: string) => tPreferenceSettingsForms(key, locale === 'fa' ? 'fa' : 'en');
+      const alert = card.getByRole('alert');
+      const resumeAfterRead = async () => {
+        await expect(alert.getByText(copy('uncertain'), { exact: true })).toBeVisible();
+        await expect(card.getByRole('status')).toHaveCount(0);
+        await expect(email).toHaveAttribute('aria-checked', 'true');
+        await expect(save).toBeDisabled();
+        const sent = writes;
+        await card.getByRole('button', { name: copy('confirm'), exact: true }).click();
+        await expect(alert.getByText(copy('mismatch'), { exact: true })).toBeVisible();
+        expect(writes).toBe(sent);
+        await card.getByRole('button', { name: copy('restart'), exact: true }).click();
+        await expect(email).toHaveAttribute('aria-checked', 'true');
+        await expect(save).toBeEnabled();
+      };
       await save.click();
       await expect.poll(() => writes).toBe(1);
       await expect(email).toBeDisabled();
       finish!();
-      await expect(card.getByRole('alert')).toBeVisible();
-      await expect(email).toHaveAttribute('aria-checked', 'true');
-      await expect(save).toBeEnabled();
+      await resumeAfterRead();
       await save.click();
       await expect.poll(() => writes).toBe(2);
-      await expect(card.getByRole('alert')).toBeVisible();
-      await expect(card.getByRole('status')).toHaveCount(0);
-      await expect(email).toHaveAttribute('aria-checked', 'true');
+      await resumeAfterRead();
       await save.click();
       await expect(card.getByRole('status')).toBeVisible();
       await expect(card.getByRole('alert')).toHaveCount(0);
@@ -1815,7 +1841,7 @@ for (const locale of ['en', 'fa']) {
           )
         );
       expect(writes).toBe(3);
-      expect(reads).toBe(2);
+      expect(reads).toBe(4);
     });
   }
 }
@@ -1957,18 +1983,21 @@ for (const locale of ['en', 'fa']) {
     test(`verification settings retain readable text through theme and save outcomes (${locale}, dark=${darkMode})`, async ({
       page,
     }, testInfo) => {
-      await shell(page, locale);
+      await crmShell(page, locale);
+      await page.route('**/api/admin/config/otp', (route) =>
+        route.fulfill({ json: { ttlSeconds: 300, version: 0 } })
+      );
+      await page.route('**/api/admin/config/profile-verification-policy', (route) =>
+        route.fulfill({ json: { active: DEFAULT_VERIFICATION_POLICY, draft: null, version: 0 } })
+      );
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
           json: {
+            ...publishedBrand.config,
             appTitle: 'Contrast test',
-            slogan: '',
             primaryColor: '#2563eb',
-            secondaryColor: '#64748b',
-            accentColor: '#f59e0b',
-            logoUrl: null,
-            faviconUrl: null,
             darkMode,
+            themeMode: darkMode ? 'dark' : 'light',
           },
         })
       );
@@ -1977,6 +2006,11 @@ for (const locale of ['en', 'fa']) {
         if (route.request().method() === 'GET')
           return route.fulfill({ json: { mode: 'MANUAL', draft: null, version: 0 } });
         writes++;
+        expect(route.request().postDataJSON()).toEqual({
+          mode: 'DISABLED',
+          expectedVersion: 0,
+          action: 'draft',
+        });
         return route.fulfill(
           writes === 1
             ? { status: 503, json: {} }
@@ -1993,13 +2027,16 @@ for (const locale of ['en', 'fa']) {
           page.evaluate(() => document.documentElement.style.getPropertyValue('--primary'))
         )
         .toBe('#2563eb');
+      const settingsNavSelector = '[data-testid="admin-settings-layout"] > nav';
       const checkContrast = async (scrollToEnd = false) => {
         const content = await new AxeBuilder({ page })
           .include('main[data-area=admin]')
+          .exclude(settingsNavSelector)
           .withRules(['color-contrast'])
           .analyze();
         expect(content.violations).toEqual([]);
-        expect(content.incomplete).toEqual([]);
+        // Hovering a control can scroll an unrelated label behind the sticky shell.
+        await verifyClippedContrast(page, content);
         const menu = page.locator('button[aria-controls="admin-navigation"]');
         const mobile = await menu.isVisible();
         if (mobile) await menu.click();
@@ -2042,20 +2079,71 @@ for (const locale of ['en', 'fa']) {
           await expect(page.locator('#admin-navigation')).toBeHidden();
         }
       };
+      const settingsNav = page.locator(settingsNavSelector);
+      if (await settingsNav.isVisible()) {
+        const labels = settingsNav.locator('a, p');
+        const labelCount = await labels.count();
+        const checked = new Set<number>();
+        for (let index = 0; index < labelCount; index++) {
+          if (checked.has(index)) continue;
+          await labels
+            .nth(index)
+            .evaluate((label) =>
+              label.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' })
+            );
+          const visible = await settingsNav.evaluate((nav) => {
+            const bounds = nav.getBoundingClientRect();
+            const pixel = (value: number) => Math.round(value * devicePixelRatio);
+            return Array.from(nav.querySelectorAll('a, p')).flatMap((label, index) => {
+              const rect = label.getBoundingClientRect();
+              const inView =
+                pixel(rect.top) >= pixel(Math.max(0, bounds.top)) &&
+                pixel(rect.bottom) <= pixel(Math.min(innerHeight, bounds.bottom));
+              label.toggleAttribute('data-contrast-visible', inView);
+              return inView ? [index] : [];
+            });
+          });
+          expect(visible).toContain(index);
+          const navigation = await new AxeBuilder({
+            page,
+            ...(locale === 'fa' ? { axeSource: persianNavigationAxeSource } : {}),
+          })
+            .include(`${settingsNavSelector} [data-contrast-visible]`)
+            .withRules(['color-contrast'])
+            .analyze();
+          expect(navigation.violations).toEqual([]);
+          expect(navigation.incomplete).toEqual([]);
+          expect(navigation.passes.flatMap(({ nodes }) => nodes)).toHaveLength(visible.length);
+          for (const label of visible) checked.add(label);
+        }
+        expect(checked.size).toBe(labelCount);
+        await settingsNav.evaluate((nav) => {
+          nav.scrollTop = 0;
+        });
+      }
       await checkContrast();
       await checkContrast(true);
-      await page.locator('#verification-mode-DISABLED').check();
-      const save = page.getByRole('button', {
+      const copy = (key: Parameters<typeof verificationConfigText>[0]) =>
+        verificationConfigText(key, locale === 'fa' ? 'fa' : 'en');
+      const modeForm = page.getByRole('form', { name: copy('title'), exact: true });
+      const disabledMode = modeForm.locator('#verification-mode-DISABLED');
+      await disabledMode.check();
+      const save = modeForm.getByRole('button', {
         name: locale === 'fa' ? 'ذخیره پیش‌نویس' : 'Save draft',
         exact: true,
       });
       await save.hover();
       await checkContrast();
       await save.click();
-      await expect(page.getByRole('alert')).toBeVisible();
+      await expect(page.getByRole('alert').filter({ hasText: copy('saveFailed') })).toBeVisible();
+      await expect(save).toBeDisabled();
+      await expect(disabledMode).toBeChecked();
       await checkContrast();
+      await page.getByRole('button', { name: copy('resetSaved'), exact: true }).click();
+      await disabledMode.check();
       await save.click();
-      await expect(page.locator('main[data-area=admin]').getByRole('status')).toBeVisible();
+      await expect(page.getByRole('status').filter({ hasText: copy('saved') })).toBeVisible();
+      await expect(disabledMode).toBeChecked();
       await checkContrast();
       await page
         .locator('main[data-area=admin]')
