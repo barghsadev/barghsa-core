@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T09:03:29+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T09:06:17+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1150 | Accepted with unchanged source bindings. |
-| verify | 158 | Existing work may be complete; inspect evidence before building. |
+| done | 1151 | Accepted with unchanged source bindings. |
+| verify | 157 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1374,7 +1374,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.14.01.08` | done | Recorded batch work | Instrument AI metrics: request count, token usage, latency, cost per model, concurrency |
 | `06-security-testing-observability.md#T-06.14.02.01` | verify | Inventory needed | Create Executive SLO dashboard: availability, latency (p95/p99), error budget, burn rate |
 | `06-security-testing-observability.md#T-06.14.02.02` | verify | Inventory needed | Create API Health dashboard: RED metrics, top slow routes, error breakdown by status, correlation with deploys |
-| `06-security-testing-observability.md#T-06.14.02.03` | verify | Inventory needed | Create PostgreSQL/Pool dashboard: connection pool, query throughput, slow queries, replication lag, cache hit ratio |
+| `06-security-testing-observability.md#T-06.14.02.03` | done | Recorded batch work | Create PostgreSQL/Pool dashboard: connection pool, query throughput, slow queries, replication lag, cache hit ratio |
 | `06-security-testing-observability.md#T-06.14.02.04` | done | Recorded batch work | Create Worker/Outbox dashboard: queue depth, oldest age, processing rate, retries, dead-letter count |
 | `06-security-testing-observability.md#T-06.14.02.05` | verify | Inventory needed | Create External Providers dashboard: latency, error rate, circuit-breaker state, quota usage |
 | `06-security-testing-observability.md#T-06.14.02.06` | verify | Inventory needed | Create Authentication/Security dashboard: login rate, MFA pass/fail, OTP send/verify rate, rate-limit hits, audit events |

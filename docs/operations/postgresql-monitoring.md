@@ -12,6 +12,8 @@ The deadline wrapper queues each timeout setting beside its statement through `p
 
 The staging Prometheus configuration scrapes the API on `barghsa-staging-api-1:4000` and the worker on `barghsa-staging-worker-1:9090` over the private network. After loading it, verify both targets are `up` on the loopback Prometheus endpoint. Check `pg_metrics_collection_success` separately to distinguish a reachable endpoint from successful database statistics collection.
 
+Import [`grafana-postgresql-dashboard.json`](../../deploy/monitoring/grafana-postgresql-dashboard.json) into private Grafana and select the intended Prometheus data source. Give each database a distinct `environment` and `database` label pair and give API replicas distinct scrape targets. Pool connections and waiters are shown per API instance. Database-wide panels aggregate duplicate observations across those instances and show unavailable replication lag as a gap. The query-duration panel uses private query IDs for the statements selected by total execution time and displays their mean execution time.
+
 To compare database behavior with API traffic, use `barghsa_http_request_duration_seconds_count` for completed responses and `barghsa_http_request_duration_seconds_bucket` for latency. Apply `rate(...[5m])` to the count and filter `status=~"[45].."` for errors by route and status. Estimate p50, p95 and p99 by using `histogram_quantile` with `0.50`, `0.95` or `0.99` over `sum by (le, route) (rate(barghsa_http_request_duration_seconds_bucket[5m]))`. Scope dashboard queries to the intended environment and database.
 
 The API labels requests with the registered route template, HTTP method and response status. Early rejections and unknown routes use `unmatched`. The histogram excludes the health probes and only counts responses the API finished writing. Monitor ingress separately for client disconnects and proxy errors.
@@ -47,7 +49,7 @@ The collector distinguishes an absent extension from an empty query list. It rea
 
 After setup, confirm `pg_metrics_view_available{view="statements"}` is `1` and the private scrape reports `pg_top_query_duration_seconds` after ordinary queries run. Preloading alone does not install the extension in the monitored database.
 
-`postgres-config/alert-rules.json` defines collection-failure, lag, slow-query, saturation, lock and deadlock rules. Load these into your monitoring stack and exercise delivery before claiming operational readiness. Query throughput in Prometheus can use `rate(pg_query_calls_total[5m])`. Statistics resets and pg_stat_statements entry eviction affect these counters. Scan counts are available as `pg_sequential_scans_total` and `pg_index_scans_total`.
+`postgres-config/alert-rules.json` defines collection-failure, lag, slow-query, saturation, lock and deadlock rules. Load these into your monitoring stack and exercise delivery before claiming operational readiness. The dashboard estimates query throughput from the five-minute slope of `pg_query_calls_total`, a gauge of calls retained by `pg_stat_statements`. Resets and entry eviction can reduce the gauge, so the panel omits negative slopes. Scan counts are available as `pg_sequential_scans_total` and `pg_index_scans_total`. [Prometheus gauge slope](https://prometheus.io/docs/prometheus/latest/querying/functions/#deriv).
 
 ## Verification scope
 

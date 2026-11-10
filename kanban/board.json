@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T09:03:29+00:00",
-  "source_commit": "90e274b43e2c1dd001cc7fcf787d475013fd4d74",
+  "updated": "2026-11-10T09:06:17+00:00",
+  "source_commit": "69e43e1b5f4c26807c536c13067deee68343a38c",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -6413,7 +6413,8 @@
           "release-0.6-database-pool-deadlines-and-log-privacy",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-postgresql-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-source-and-targeted-database-receipts",
@@ -6429,7 +6430,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "49a706d779adfa2731c7084a36ead631bbba20814d31a24757da92b62327d73d"
+              "sha256": "5d2628b9279dd71ca15c79e548f58c919eaf015a361cc82d64fdf689c2eda5ab"
             },
             {
               "path": "packages/db/src/query-timeout-policy.integration.test.ts",
@@ -497357,7 +497358,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-latency-rehearsal-budgets",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-postgresql-dashboard"
         ],
         "current_acceptance": {
           "kind": "documented-performance-rehearsal-budget",
@@ -497374,7 +497376,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "49a706d779adfa2731c7084a36ead631bbba20814d31a24757da92b62327d73d"
+              "sha256": "5d2628b9279dd71ca15c79e548f58c919eaf015a361cc82d64fdf689c2eda5ab"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -497461,7 +497463,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-postgresql-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-matched-database-protection-and-export-lease-cap",
@@ -497551,7 +497554,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "49a706d779adfa2731c7084a36ead631bbba20814d31a24757da92b62327d73d"
+              "sha256": "5d2628b9279dd71ca15c79e548f58c919eaf015a361cc82d64fdf689c2eda5ab"
             },
             {
               "path": "packages/db/drizzle/production/0221_async_jobs.sql",
@@ -499824,7 +499827,8 @@
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-suppress-api-framework-header",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-postgresql-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -499852,7 +499856,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "49a706d779adfa2731c7084a36ead631bbba20814d31a24757da92b62327d73d"
+              "sha256": "5d2628b9279dd71ca15c79e548f58c919eaf015a361cc82d64fdf689c2eda5ab"
             }
           ],
           "checks": [
@@ -499890,7 +499894,8 @@
           "release-0.6-private-session-cutover-and-health-probes",
           "release-0.6-ai-inference-metrics",
           "release-0.6-runtime-failure-log-redaction",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-postgresql-dashboard"
         ],
         "current_acceptance": {
           "kind": "native-database-client-pool-and-query-metrics",
@@ -499910,7 +499915,7 @@
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
-              "sha256": "49a706d779adfa2731c7084a36ead631bbba20814d31a24757da92b62327d73d"
+              "sha256": "5d2628b9279dd71ca15c79e548f58c919eaf015a361cc82d64fdf689c2eda5ab"
             },
             {
               "path": "packages/db/src/metrics.ts",
@@ -500543,19 +500548,49 @@
         "story": "06-security-testing-observability.md#spec-487bc630b048"
       },
       "requirement": "| T-06.14.02.03 | Create PostgreSQL/Pool dashboard: connection pool, query throughput, slow queries, replication lag, cache hit ratio | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-postgresql-dashboard"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-postgresql-pool-dashboard",
+          "reviewed_sha": "69e43e1b5f4c26807c536c13067deee68343a38c",
+          "checks": [
+            "The Grafana dashboard covers per-instance connection pool state and waiters, estimated query throughput, statement mean durations, replication lag, cache hit ratio and database collection health using existing API metrics.",
+            "An isolated pinned Prometheus 3.5.0 promtool fixture passed all eight exact panel queries with two API scrapers and two separate production databases. It verifies no double counting of shared database metrics, preservation of instance-local pool state, omission of unavailable lag, negative throughput suppression and failed collector visibility. The first invocation could not read the temporary fixture directory; a directory mode correction allowed the same fixture to execute.",
+            "JSON data source and layout validation, formatting and diff checks passed. This evidence covers repository dashboard creation and synthetic query execution. Live Grafana import, private source readback and operator alert links remain separate operational work."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/metrics/metrics.service.ts",
+              "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
+            },
+            {
+              "path": "deploy/monitoring/grafana-postgresql-dashboard.json",
+              "sha256": "ff7c8f642d136b3389c175e562bd312bb0ceb1abe89d90673e7deb5b86ece1a1"
+            },
+            {
+              "path": "deploy/monitoring/staging-prometheus.yml",
+              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+            },
+            {
+              "path": "docs/operations/postgresql-monitoring.md",
+              "sha256": "5d2628b9279dd71ca15c79e548f58c919eaf015a361cc82d64fdf689c2eda5ab"
+            },
+            {
+              "path": "packages/db/src/metrics.ts",
+              "sha256": "870175f55d81aa7508a410702158561147cf730c148b6b90d3826a5331b34780"
+            }
+          ]
+        }
       }
     },
     {
@@ -874563,6 +874598,47 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/worker-outbox-dashboard",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "af4c387c423dcd50de59fb92f4492d20c3c4ca4a10763525d249919b48a3856d"
+    },
+    "release-0.6-postgresql-dashboard": {
+      "batch": "release-0.6-postgresql-dashboard",
+      "base_commit": "69e43e1b5f4c26807c536c13067deee68343a38c",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.14.02.03"
+      ],
+      "changed_paths": [
+        "deploy/monitoring/grafana-postgresql-dashboard.json",
+        "docs/operations/postgresql-monitoring.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/metrics/metrics.service.ts",
+          "sha256": "31c6050300f08b4742aa2b4ccdef10f441a8a08a476f5c418c0a809ee7433232"
+        },
+        {
+          "path": "deploy/monitoring/grafana-postgresql-dashboard.json",
+          "sha256": "ff7c8f642d136b3389c175e562bd312bb0ceb1abe89d90673e7deb5b86ece1a1"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+        },
+        {
+          "path": "docs/operations/postgresql-monitoring.md",
+          "sha256": "5d2628b9279dd71ca15c79e548f58c919eaf015a361cc82d64fdf689c2eda5ab"
+        },
+        {
+          "path": "packages/db/src/metrics.ts",
+          "sha256": "870175f55d81aa7508a410702158561147cf730c148b6b90d3826a5331b34780"
+        }
+      ],
+      "checks": [
+        "The Grafana dashboard covers per-instance connection pool state and waiters, estimated query throughput, statement mean durations, replication lag, cache hit ratio and database collection health using existing API metrics.",
+        "An isolated pinned Prometheus 3.5.0 promtool fixture passed all eight exact panel queries with two API scrapers and two separate production databases. It verifies no double counting of shared database metrics, preservation of instance-local pool state, omission of unavailable lag, negative throughput suppression and failed collector visibility. The first invocation could not read the temporary fixture directory; a directory mode correction allowed the same fixture to execute.",
+        "JSON data source and layout validation, formatting and diff checks passed. This evidence covers repository dashboard creation and synthetic query execution. Live Grafana import, private source readback and operator alert links remain separate operational work."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/postgresql-dashboard",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "7b204fb44ae52f9863676e2106a0e47730504da00cbc8a4a8d27b77bf937a39a"
     }
   },
   "historical_improvements": [
