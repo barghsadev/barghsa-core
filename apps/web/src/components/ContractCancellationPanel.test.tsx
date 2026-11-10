@@ -2,6 +2,7 @@ import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
+import { cleanup, fireEvent, render as renderWithTestingLibrary } from '@testing-library/react';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { en, fa } from '@barghsa/i18n/contracts';
 import type * as Documents from '../lib/documents.js';
@@ -123,24 +124,24 @@ beforeEach(() => {
   root = createRoot(container);
 });
 afterEach(async () => {
+  cleanup();
   await act(async () => root.unmount());
   container.remove();
 });
-async function render(staff = true) {
-  await act(async () =>
-    root.render(
-      <QueryComponentProvider>
-        {
-          <ContractCancellationPanel
-            id="contract"
-            versionId="version"
-            staff={staff}
-            onChanged={changed}
-          />
-        }
-      </QueryComponentProvider>
-    )
+function cancellationPanel(staff: boolean) {
+  return (
+    <QueryComponentProvider>
+      <ContractCancellationPanel
+        id="contract"
+        versionId="version"
+        staff={staff}
+        onChanged={changed}
+      />
+    </QueryComponentProvider>
   );
+}
+async function render(staff = true) {
+  await act(async () => root.render(cancellationPanel(staff)));
 }
 async function click(label: string) {
   const button = Array.from(container.querySelectorAll('button')).find(
@@ -292,18 +293,31 @@ it('shows failed customer returns separately from cancelled service', async () =
 });
 it('keeps read-only staff from opening cancellation', async () => {
   h.status!.canCancel = false;
-  await render();
-  expect(container.textContent).toContain(en.cancellationNoAction);
-  expect(container.textContent).not.toContain(en.cancellationReview);
+  const view = renderWithTestingLibrary(cancellationPanel(true));
+  expect(await view.findByText(en.cancellationNoAction)).toBeTruthy();
+  expect(view.queryByRole('button', { name: en.cancellationReview })).toBeNull();
+  expect(view.container.textContent).not.toContain(en.cancellationReview);
 });
-it('keeps discretionary financial decisions disabled without finance permission', async () => {
-  h.preview!.serviceType = 'solar';
-  h.status!.canChooseRefund = false;
-  await render();
-  await click(en.cancellationReview);
-  expect(container.querySelector('input[type="checkbox"]')).toBeNull();
-  expect(container.querySelector<HTMLButtonElement>('button[type="submit"]')!.disabled).toBe(true);
-});
+it.each([false, true])(
+  'only offers discretionary financial decisions with finance permission (granted=%s)',
+  async (canChooseRefund) => {
+    h.preview!.serviceType = 'solar';
+    h.status!.canChooseRefund = canChooseRefund;
+    const view = renderWithTestingLibrary(cancellationPanel(true));
+    fireEvent.click(await view.findByRole('button', { name: en.cancellationReview }));
+    const reason = await view.findByRole('textbox', { name: en.cancellationReason });
+    fireEvent.change(reason, { target: { value: 'End service' } });
+    expect(reason).toHaveProperty('value', 'End service');
+    const customRefund = view.queryByRole('checkbox', { name: en.cancellationCustom });
+    expect(customRefund !== null).toBe(canChooseRefund);
+    expect(view.container.querySelector('input[type="checkbox"]') !== null).toBe(canChooseRefund);
+    expect(view.getByRole('button', { name: en.cancellationSave })).toHaveProperty(
+      'disabled',
+      !canChooseRefund
+    );
+    expect(h.action).toBeNull();
+  }
+);
 it('recovers a failed read through refresh', async () => {
   h.fail = true;
   await render();

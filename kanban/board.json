@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T18:45:38+00:00",
-  "source_commit": "9a9cac7ed785829043b07b7f7c1c01004b9ba5f7",
+  "updated": "2026-11-10T18:49:34+00:00",
+  "source_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5657,12 +5657,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the remaining hosted shards and strict rollup for run 42864645557 at 820405f4. After reconciling all observed flakes, require one clean replacement exact run across all five browser projects and all 40 shards, and retain the seven-day history.",
-        "Chromium shard 5 of run 42864645557 failed the strict gate on a Persian consent-click flake. The focused fix has eight passing cases. Reconcile the other hosted shards before dispatching the next exact full matrix.",
-        "Mobile Chrome shard 1 of 42864645557 flaked on reverse-arrow navigation before the Home selection committed. Twelve focused checks passed after waiting for the current selection. Read back remaining hosted outcomes before the next exact run.",
-        "Firefox shard 1 of 42864645557 flaked on protected-navigation event timing after logout. Five focused checks passed with the committed navigation and explicit denied-auth proof. Reconcile remaining hosted shards before the next exact matrix.",
-        "Chromium shard 1 and Mobile Chrome shard 6 failed while password strength changed during registration consent. All 36 focused cases passed after waiting for the committed strength meter. The exact replacement hosted matrix and full release gates remain open.",
-        "WebKit shard 7 of 42864645557 exposed a virtual-clock collision with automatic saving URL canonicalization. All 12 focused checks passed from the canonical entry URL. Read back the final hosted matrix and require a clean exact replacement."
+        "Read back exact hosted run 42878628863 at a51b8b74, require a clean strict rollup for all five browser projects and 40 shards, and retain the seven-day quarantine history."
       ],
       "owner": null,
       "depends_on": [],
@@ -5750,7 +5745,8 @@
           "release-0.6-catalogue-committed-keyboard-selection",
           "release-0.6-account-logout-committed-probe",
           "release-0.6-registration-pointer-after-strength",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": null
       }
@@ -5951,13 +5947,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the remaining hosted shards and strict rollup for run 42864645557 at 820405f4. After reconciling all observed flakes, require one clean replacement exact run across all five browser projects and all 40 shards, and retain the seven-day history.",
-        "Record the strict promotion report from the accepted candidate in the production approval package.",
-        "Chromium shard 5 of run 42864645557 failed the strict gate on a Persian consent-click flake. The focused fix has eight passing cases. Reconcile the other hosted shards before dispatching the next exact full matrix.",
-        "Mobile Chrome shard 1 of 42864645557 flaked on reverse-arrow navigation before the Home selection committed. Twelve focused checks passed after waiting for the current selection. Read back remaining hosted outcomes before the next exact run.",
-        "Firefox shard 1 of 42864645557 flaked on protected-navigation event timing after logout. Five focused checks passed with the committed navigation and explicit denied-auth proof. Reconcile remaining hosted shards before the next exact matrix.",
-        "Chromium shard 1 and Mobile Chrome shard 6 failed while password strength changed during registration consent. All 36 focused cases passed after waiting for the committed strength meter. The exact replacement hosted matrix and full release gates remain open.",
-        "WebKit shard 7 of 42864645557 exposed a virtual-clock collision with automatic saving URL canonicalization. All 12 focused checks passed from the canonical entry URL. Read back the final hosted matrix and require a clean exact replacement."
+        "Read back exact hosted run 42878628863 at a51b8b74, require a clean strict rollup for all five browser projects and 40 shards, and retain the seven-day quarantine history.",
+        "Record the strict promotion report from the accepted candidate in the production approval package."
       ],
       "owner": null,
       "depends_on": [],
@@ -6043,7 +6034,8 @@
           "release-0.6-catalogue-committed-keyboard-selection",
           "release-0.6-account-logout-committed-probe",
           "release-0.6-registration-pointer-after-strength",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": null
       }
@@ -14479,10 +14471,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the remaining hosted shards and strict rollup for run 42864645557 at 820405f4. After reconciling all observed flakes, require one clean replacement exact run across all five browser projects and all 40 shards, and retain the seven-day history.",
-        "Verify runtime-generated navigation destinations against complete journey evidence and configure the authorized dedicated results receiver.",
-        "Chromium shard 1 and Mobile Chrome shard 6 failed while password strength changed during registration consent. All 36 focused cases passed after waiting for the committed strength meter. The exact replacement hosted matrix and full release gates remain open.",
-        "WebKit shard 7 of 42864645557 exposed a virtual-clock collision with automatic saving URL canonicalization. All 12 focused checks passed from the canonical entry URL. Read back the final hosted matrix and require a clean exact replacement."
+        "Read back exact hosted run 42878628863 at a51b8b74, require a clean strict rollup for all five browser projects and 40 shards, and retain the seven-day quarantine history.",
+        "Verify runtime-generated navigation destinations against complete journey evidence and configure the authorized dedicated results receiver."
       ],
       "owner": null,
       "depends_on": [],
@@ -14543,7 +14533,8 @@
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-registration-proof-callers-and-browser-readback",
           "release-0.6-registration-pointer-after-strength",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": null
       }
@@ -164760,7 +164751,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -164860,7 +164852,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -165688,6 +165680,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -165820,7 +165820,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -165920,7 +165921,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -166748,6 +166749,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -168030,7 +168039,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -168130,7 +168140,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -168958,6 +168968,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -169091,7 +169109,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -169191,7 +169210,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -170019,6 +170038,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -170149,7 +170176,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -170249,7 +170277,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -171077,6 +171105,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -171207,7 +171243,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -171307,7 +171344,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -172135,6 +172172,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -172838,7 +172883,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -172938,7 +172984,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -173766,6 +173812,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -173895,7 +173949,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -173995,7 +174050,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -174823,6 +174878,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -174952,7 +175015,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-refund-and-financial-closure-verification",
@@ -175052,7 +175116,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -175880,6 +175944,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -345557,7 +345629,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-electricity-mandatory-refund-and-closure-acceptance",
@@ -345621,7 +345694,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -346519,6 +346592,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -346645,7 +346726,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-electricity-mandatory-refund-and-closure-acceptance",
@@ -346709,7 +346791,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -347607,6 +347689,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -347733,7 +347823,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-electricity-mandatory-refund-and-closure-acceptance",
@@ -347797,7 +347888,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -348695,6 +348786,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -348821,7 +348920,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-electricity-mandatory-refund-and-closure-acceptance",
@@ -348885,7 +348985,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -349783,6 +349883,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -349909,7 +350017,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-electricity-mandatory-refund-and-closure-acceptance",
@@ -349973,7 +350082,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -350871,6 +350980,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -350997,7 +351114,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-electricity-mandatory-refund-and-closure-acceptance",
@@ -351061,7 +351179,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -351959,6 +352077,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -352085,7 +352211,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-electricity-mandatory-refund-and-closure-acceptance",
@@ -352149,7 +352276,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -353047,6 +353174,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -389885,7 +390020,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -390121,7 +390257,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -391055,6 +391191,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -391211,7 +391355,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -391447,7 +391592,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -392381,6 +392526,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -392537,7 +392690,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -392773,7 +392927,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -393707,6 +393861,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -393863,7 +394025,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -394099,7 +394262,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -395033,6 +395196,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -395190,7 +395361,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -395426,7 +395598,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -396360,6 +396532,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -509726,19 +509906,56 @@
         "story": "06-security-testing-observability.md#spec-f7421d6dc1ea"
       },
       "requirement": "| T-06.09.03.10 | Write RTL tests for permission-dependent UI: elements hidden/disabled per role | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-react-testing-library-permission-verification",
+          "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+          "source_evidence": [
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+              "sha256": "9d487f30156cd287b808e6c8b8f07f95d75d6ac8115a595b0af7a0937356ec7b"
+            },
+            {
+              "path": "apps/web/src/components/ContractCancellationEditor.tsx",
+              "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
+            },
+            {
+              "path": "apps/web/src/test/query-provider.tsx",
+              "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "ee1028396c08b722b5b9b1862c626e445de1f10e296b9622117863109ed29f64"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            }
+          ],
+          "checks": [
+            "React Testing Library uses accessible names to verify that a read-only staff member sees the no-action message and has no cancellation control. The cancellation editor omits the refund choice and disables submission for a paid discretionary refund without finance authority, even with a reason entered. The granted case exposes the choice and enables the decision. Existing text and DOM protections are retained and no product code changed.",
+            "All 40 cancellation panel cases passed, including the new granted/denied contrast. Web TypeScript, ESLint, Prettier and whitespace checks passed."
+          ]
+        }
       }
     },
     {
@@ -565751,7 +565968,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-protected-storage-origins",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-browser-navigation-query-and-resting-states"
+          "release-0.6-browser-navigation-query-and-resting-states",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -566335,7 +566553,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -567270,6 +567488,14 @@
                 "apps/web/e2e/onboarding-wizard.spec.ts"
               ],
               "scope": "Wait for actual password scoring and preserve original trusted native consent, registration and profile assertions. The eight affected journeys passed."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -597672,7 +597898,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -597748,7 +597975,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -599410,6 +599637,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -599598,7 +599833,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -599674,7 +599910,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -601336,6 +601572,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -601525,7 +601769,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -601601,7 +601846,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -603263,6 +603508,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -603421,7 +603674,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -603497,7 +603751,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -605159,6 +605413,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -605343,7 +605605,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -605419,7 +605682,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -607081,6 +607344,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -607274,7 +607545,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -607350,7 +607622,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -609012,6 +609284,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -609178,7 +609458,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -609254,7 +609535,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -610916,6 +611197,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -611046,7 +611335,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -611122,7 +611412,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -612784,6 +613074,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -612914,7 +613212,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -612990,7 +613289,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -614652,6 +614951,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -614783,7 +615090,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -614859,7 +615167,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -616521,6 +616829,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -616651,7 +616967,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -616727,7 +617044,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -618389,6 +618706,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -618514,7 +618839,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -618594,7 +618920,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -620365,6 +620691,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -620484,7 +620818,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -620564,7 +620899,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -622335,6 +622670,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -622503,7 +622846,8 @@
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-dashboard-grid-after-entrance",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -623243,7 +623587,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -625380,6 +625724,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -625499,7 +625851,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -625587,7 +625940,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -627363,6 +627716,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -627482,7 +627843,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -627562,7 +627924,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -629333,6 +629695,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -629452,7 +629822,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -629532,7 +629903,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -631303,6 +631674,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -631422,7 +631801,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -631502,7 +631882,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -633273,6 +633653,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -633392,7 +633780,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -633472,7 +633861,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -635243,6 +635632,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -635362,7 +635759,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -635442,7 +635840,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -637213,6 +637611,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -637332,7 +637738,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -637412,7 +637819,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -639183,6 +639590,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -639302,7 +639717,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -639382,7 +639798,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -641153,6 +641569,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -641272,7 +641696,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -641352,7 +641777,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -643123,6 +643548,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -643242,7 +643675,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -643322,7 +643756,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -645093,6 +645527,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -645212,7 +645654,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -645292,7 +645735,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -647063,6 +647506,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -647949,7 +648400,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -648029,7 +648481,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -649800,6 +650252,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -649919,7 +650379,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -649999,7 +650460,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -651770,6 +652231,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         }
@@ -653355,7 +653824,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -653431,7 +653901,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -655093,6 +655563,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -655219,7 +655697,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -655295,7 +655774,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -656957,6 +657436,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -657083,7 +657570,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -657159,7 +657647,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -658821,6 +659309,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -658947,7 +659443,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -659023,7 +659520,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -660685,6 +661182,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -660811,7 +661316,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -660887,7 +661393,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -662549,6 +663055,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -662675,7 +663189,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -662751,7 +663266,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -664413,6 +664928,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -664539,7 +665062,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -664615,7 +665139,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
@@ -666277,6 +666801,14 @@
                 "apps/web/e2e/service-wizard-navigation.spec.ts"
               ],
               "scope": "Start the address timeout case on its canonical URL. Keep all asserted saving, security and financial behavior."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ]
         },
@@ -774810,7 +775342,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -777276,6 +777808,14 @@
                 "apps/api/src/invoice/vat-calculation.repository.ts"
               ],
               "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -777588,7 +778128,8 @@
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-electricity-quote-vat-batch"
+          "release-0.6-electricity-quote-vat-batch",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ]
       }
     },
@@ -779292,7 +779833,7 @@
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
-              "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+              "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
             },
             {
               "path": "apps/web/src/components/ContractCancellationPanel.tsx",
@@ -781956,6 +782497,14 @@
                 "apps/api/src/admin/admin-permission-boundaries.test.ts"
               ],
               "scope": "Correct the single operator-log assertion while preserving authorization and all authorized creation fields."
+            },
+            {
+              "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+              "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+              "paths": [
+                "apps/web/src/components/ContractCancellationPanel.test.tsx"
+              ],
+              "scope": "Use role queries for the existing permission cases and add the positive finance grant. Preserve all prior cancellation, refund, isolation and recovery assertions."
             }
           ],
           "presentation_renewals": [
@@ -782388,7 +782937,8 @@
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-electricity-quote-vat-batch",
-          "release-0.6-native-provider-fixtures-and-staff-log-assertion"
+          "release-0.6-native-provider-fixtures-and-staff-log-assertion",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ]
       }
     },
@@ -794635,15 +795185,10 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
+        "Read back exact hosted run 42878628863 at a51b8b74, require a clean strict rollup for all five browser projects and 40 shards, and retain the seven-day quarantine history.",
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
-        "Verify hosted run 42864645557 at 820405f4 across all five browser projects and all 40 shards, retain the current clean strict rollup and seven-day history, and reconcile any source changes before final promotion.",
         "Read back full hosted native and combined coverage on the revised auth and financial fixtures. Earlier run 42857945735 failed these older callers; targeted fixes have passing receipts.",
-        "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
-        "Chromium shard 5 of run 42864645557 failed the strict gate on a Persian consent-click flake. The focused fix has eight passing cases. Reconcile the other hosted shards before dispatching the next exact full matrix.",
-        "Mobile Chrome shard 1 of 42864645557 flaked on reverse-arrow navigation before the Home selection committed. Twelve focused checks passed after waiting for the current selection. Read back remaining hosted outcomes before the next exact run.",
-        "Firefox shard 1 of 42864645557 flaked on protected-navigation event timing after logout. Five focused checks passed with the committed navigation and explicit denied-auth proof. Reconcile remaining hosted shards before the next exact matrix.",
-        "Chromium shard 1 and Mobile Chrome shard 6 failed while password strength changed during registration consent. All 36 focused cases passed after waiting for the committed strength meter. The exact replacement hosted matrix and full release gates remain open.",
-        "WebKit shard 7 of 42864645557 exposed a virtual-clock collision with automatic saving URL canonicalization. All 12 focused checks passed from the canonical entry URL. Read back the final hosted matrix and require a clean exact replacement."
+        "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
       "depends_on": [],
@@ -794809,7 +795354,8 @@
           "release-0.6-catalogue-committed-keyboard-selection",
           "release-0.6-account-logout-committed-probe",
           "release-0.6-registration-pointer-after-strength",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -910357,6 +910903,167 @@
         {
           "file": "hosted-browser-42864645557-webkit-7.log",
           "sha256": "5db8e86da296ce5c790c9b00a648fc50ec4b3f3b687e30fb9c38681851df6026"
+        }
+      ]
+    },
+    "release-0.6-cancellation-permission-testing-library-and-browser-rollup": {
+      "batch": "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+      "base_commit": "a51b8b74d763752ed97819149a0911e441d7133c",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.03.10",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02",
+        "04-invoices-wallet-contracts.md#T-04.4.01.01",
+        "04-invoices-wallet-contracts.md#T-04.4.01.02",
+        "04-invoices-wallet-contracts.md#T-04.4.01.05",
+        "04-invoices-wallet-contracts.md#T-04.4.01.06",
+        "04-invoices-wallet-contracts.md#T-04.4.01.07",
+        "04-invoices-wallet-contracts.md#T-04.4.02.01",
+        "04-invoices-wallet-contracts.md#T-04.4.02.03",
+        "04-invoices-wallet-contracts.md#T-04.4.02.04",
+        "04-invoices-wallet-contracts.md#T-04.4.02.05",
+        "03-core-business.md#T-03.07.03.01",
+        "03-core-business.md#T-03.07.03.02",
+        "03-core-business.md#T-03.07.03.03",
+        "03-core-business.md#T-03.07.03.04",
+        "03-core-business.md#T-03.07.03.05",
+        "03-core-business.md#T-03.07.03.06",
+        "03-core-business.md#T-03.07.03.07",
+        "03-core-business.md#T-03.09.05.01",
+        "03-core-business.md#T-03.09.05.02",
+        "03-core-business.md#T-03.09.05.03",
+        "03-core-business.md#T-03.09.05.04",
+        "03-core-business.md#T-03.09.05.05",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/components/ContractCancellationPanel.test.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+          "sha256": "b396c56cb4684c1b732dbcab592f3db353a0b7ad2be13896bfc1ebf7aa796850"
+        },
+        {
+          "path": "apps/web/src/components/ContractCancellationPanel.tsx",
+          "sha256": "9d487f30156cd287b808e6c8b8f07f95d75d6ac8115a595b0af7a0937356ec7b"
+        },
+        {
+          "path": "apps/web/src/components/ContractCancellationEditor.tsx",
+          "sha256": "2cc1e6224f540c21724c098969abf984aafcf425650ff9ae31643425d881e321"
+        },
+        {
+          "path": "apps/web/src/test/query-provider.tsx",
+          "sha256": "ac44623d5e62f2bf5f2e8a6e57e79cfaf42539ff065d7b076e66de27a5b7f947"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "ee1028396c08b722b5b9b1862c626e445de1f10e296b9622117863109ed29f64"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+        }
+      ],
+      "checks": [
+        "React Testing Library uses accessible names to verify that a read-only staff member sees the no-action message and has no cancellation control. The cancellation editor omits the refund choice and disables submission for a paid discretionary refund without finance authority, even with a reason entered. The granted case exposes the choice and enables the decision. Existing text and DOM protections are retained and no product code changed.",
+        "All 40 cancellation panel cases passed, including the new granted/denied contrast. Web TypeScript, ESLint, Prettier and whitespace checks passed.",
+        "The strict hosted run 42864645557 is terminal at 820405f4. The rollup has all 40 reports, 14,587 expected cases, zero unexpected failures, six flakes, 22 skips and zero runner errors. The six failures have focused source-bound receipts. One replacement run, 42878628863, is queued on the verified a51b8b74 candidate. Its strict result is pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "closed_hosted_browser": {
+        "run": "https://github.com/barghsadev/barghsa-core/actions/runs/42864645557",
+        "source": "820405f4a44efb5f795efd5c5144723fde29d9c7",
+        "result": {
+          "schema_version": 1,
+          "status": "failed",
+          "expected_shards": 40,
+          "reported_shards": 40,
+          "missing_or_invalid_shards": [],
+          "failed_shards": [
+            "browser-outcome-chromium-1",
+            "browser-outcome-chromium-5",
+            "browser-outcome-firefox-1",
+            "browser-outcome-webkit-7",
+            "browser-outcome-mobile-chrome-1",
+            "browser-outcome-mobile-chrome-6"
+          ],
+          "counts": {
+            "expected": 14587,
+            "unexpected": 0,
+            "flaky": 6,
+            "skipped": 22,
+            "runner_errors": 0
+          }
+        }
+      },
+      "replacement_browser": {
+        "run": "https://github.com/barghsadev/barghsa-core/actions/runs/42878628863",
+        "source": "a51b8b74d763752ed97819149a0911e441d7133c",
+        "observed": "queued"
+      },
+      "proof_logs": [
+        {
+          "file": "hosted-browser-42864645557-rollup/nightly-browser-summary.json",
+          "sha256": "fc7d3e4cce76633f73dec3e40989cd5eff1449dc201af3bd4b44412e00cdd331"
+        },
+        {
+          "file": "hosted-browser-42864645557-rollup/nightly-quarantine.json",
+          "sha256": "4255bd8d37adcb1c68e7f1c59b1732b585b94520a5b3f4503f38e704dd3cc563"
+        },
+        {
+          "file": "hosted-browser-42864645557-rollup/github-run.json",
+          "sha256": "4749e9d55891288a3fde775a299f944ed817652fb82a021101b8b23d1e48c6b8"
+        },
+        {
+          "file": "hosted-browser-replacement-42878628863.json",
+          "sha256": "a021a68b57b644fd5c9c195a30edfcd63b39d32f24b816460181c21d00699cde"
+        },
+        {
+          "file": "cancellation-permission-rtl.log",
+          "sha256": "1a351f13a0b0d1193371471de68cd2a672e230a7407c8aea8afec79f564600d2"
         }
       ]
     }
