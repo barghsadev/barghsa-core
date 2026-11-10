@@ -813,8 +813,11 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
         if (url.includes('/verify') && method === 'POST') {
           return { ok: true, status: 200, json: async () => ({ status: 'confirmed' }) };
         }
-        if (url.includes('/record') && method === 'POST') {
-          return { ok: true, status: 200, json: async () => ({ status: 'recorded' }) };
+        if (
+          url === `/api/upload/${encodeURIComponent(attachmentKey)}/record` &&
+          method === 'POST'
+        ) {
+          return Response.json({ key: attachmentKey, status: 'recorded' });
         }
         if (
           url.endsWith(`/api/invoices/${REPLACEMENT_ID}/bank-receipts/review`) &&

@@ -118,7 +118,7 @@ for (const locale of ['en', 'fa'] as const)
             postalApproved: false,
             canActivate: false,
             missing: [],
-            state: 'Draft',
+            state: ended ? 'Rejected' : 'Draft',
           },
         });
       if (path === `/api/admin/contracts/${id}`)
@@ -143,6 +143,9 @@ for (const locale of ['en', 'fa'] as const)
       })
       .click();
     const panel = page.getByRole('region', { name: w('cancellationTitle'), exact: true });
+    await expect(
+      page.getByRole('button', { name: w('uploadOriginal'), exact: true })
+    ).toBeVisible();
     await panel.getByRole('button', { name: w('rejectionTitle'), exact: true }).click();
     await panel.getByLabel(w('rejectionReason'), { exact: true }).fill('Discard incomplete order');
     await panel.getByRole('button', { name: w('rejectionSave'), exact: true }).click();
@@ -176,4 +179,14 @@ for (const locale of ['en', 'fa'] as const)
     await expect(dialog).toHaveCount(0);
     expect(commands).toHaveLength(2);
     await expect(panel).toContainText(w('rejectionServiceEnded'));
+    await expect(panel.getByRole('button', { name: w('rejectionTitle'), exact: true })).toHaveCount(
+      0
+    );
+    for (const action of [
+      'uploadOriginal',
+      'uploadSigned',
+      'uploadAmendment',
+      'generateContractPdf',
+    ])
+      await expect(page.getByRole('button', { name: w(action), exact: true })).toHaveCount(0);
   });

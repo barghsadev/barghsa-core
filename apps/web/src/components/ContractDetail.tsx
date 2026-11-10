@@ -1305,14 +1305,15 @@ function ContractDocuments({
     [contract.profileId, contract.id, version.id]
   );
   const canUpload =
-    (isPendingAmendment &&
+    contract.state !== 'Rejected' &&
+    ((isPendingAmendment &&
       (staff ? contract.pendingAmendment?.state : contract.amendment?.state) ===
         'AwaitingSignature') ||
-    (staff && isPendingAmendment && contract.pendingAmendment?.state !== 'AwaitingSignature') ||
-    (isCurrent &&
-      (staff
-        ? !['Signed', 'Active', 'Completed', 'Cancelled'].includes(contract.state)
-        : ['Accepted', 'AwaitingSignature'].includes(contract.state)));
+      (staff && isPendingAmendment && contract.pendingAmendment?.state !== 'AwaitingSignature') ||
+      (isCurrent &&
+        (staff
+          ? !['Signed', 'Active', 'Completed', 'Cancelled'].includes(contract.state)
+          : ['Accepted', 'AwaitingSignature'].includes(contract.state))));
   const template = version.content?.template;
   const hasSavedTemplate =
     template !== null &&

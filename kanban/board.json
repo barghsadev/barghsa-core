@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T03:30:06+00:00",
-  "source_commit": "e18526492a5403f1a218d8dd1baf9b2860c2d72e",
+  "updated": "2026-11-10T03:36:42+00:00",
+  "source_commit": "c7643b5d657bbd8d5c19eb4388b0820cb4d652db",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -130659,7 +130659,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -130823,7 +130824,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -131672,7 +131673,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -131836,7 +131838,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -132685,7 +132687,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -132849,7 +132852,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -133698,7 +133701,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -133862,7 +133866,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -134711,7 +134715,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -134875,7 +134880,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -135724,7 +135729,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -135888,7 +135894,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -136823,7 +136829,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -137011,7 +137018,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -137966,7 +137973,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -138130,7 +138138,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -139065,7 +139073,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -139253,7 +139262,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -140208,7 +140217,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -140372,7 +140382,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -141216,7 +141226,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -141356,7 +141367,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/worker/src/invoices/reminder-canceller.integration.test.ts",
@@ -141997,7 +142008,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -142153,7 +142165,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/worker/src/invoices/reminder-canceller.integration.test.ts",
@@ -142797,7 +142809,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -142913,7 +142926,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -143528,7 +143541,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -143580,7 +143594,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -143820,7 +143834,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -143872,7 +143887,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -144112,7 +144127,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -144164,7 +144180,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -144403,7 +144419,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -144455,7 +144472,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -144694,7 +144711,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -144746,7 +144764,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -144984,7 +145002,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -145036,7 +145055,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -145274,7 +145293,8 @@
           "release-0.5-query-and-command-completion",
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
-          "release-0.5-final-rehearsal"
+          "release-0.5-final-rehearsal",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -145326,7 +145346,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -145563,7 +145583,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -145591,7 +145612,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -146022,7 +146043,8 @@
           "release-0.5-final-rehearsal",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-security-http-regressions-and-provider-tester-wiring"
+          "release-0.6-security-http-regressions-and-provider-tester-wiring",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -146086,7 +146108,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -146588,7 +146610,8 @@
           "release-0.5-exact-coverage",
           "release-0.5-final-rehearsal",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -146660,7 +146683,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -147007,7 +147030,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -147095,7 +147119,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -147566,7 +147590,8 @@
           "release-0.5-final-rehearsal",
           "release-0.6-native-integration-acceptance",
           "release-0.6-http-and-wallet-diagnostic-privacy",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -147638,7 +147663,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -147935,7 +147960,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-http-and-wallet-diagnostic-privacy",
           "release-0.6-confirmed-outbox-date-range-replay",
-          "release-0.6-payment-idempotency-conflict-alert"
+          "release-0.6-payment-idempotency-conflict-alert",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -147987,7 +148013,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -148327,7 +148353,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -148367,7 +148394,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -169160,7 +169187,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -169324,7 +169352,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -169380,7 +169408,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -170176,7 +170204,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -170340,7 +170369,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -170396,7 +170425,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -171195,7 +171224,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -171359,7 +171389,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -171415,7 +171445,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -172212,7 +172242,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -172376,7 +172407,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -172432,7 +172463,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -173228,7 +173259,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -173392,7 +173424,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -173448,7 +173480,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -174244,7 +174276,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -174408,7 +174441,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -174464,7 +174497,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -175259,7 +175292,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -175423,7 +175457,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -175479,7 +175513,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -176277,7 +176311,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -176441,7 +176476,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -176497,7 +176532,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -177293,7 +177328,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -177457,7 +177493,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -177513,7 +177549,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -178309,7 +178345,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -178473,7 +178510,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -178529,7 +178566,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -179326,7 +179363,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -179490,7 +179528,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -179546,7 +179584,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -180342,7 +180380,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -180506,7 +180545,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -180562,7 +180601,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -181357,7 +181396,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -181521,7 +181561,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -181577,7 +181617,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -182373,7 +182413,8 @@
           "release-0.6-solar-replay-lock-order",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -182537,7 +182578,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -182593,7 +182634,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -183392,7 +183433,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -183472,7 +183514,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -184216,7 +184258,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -184296,7 +184339,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -185037,7 +185080,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -185117,7 +185161,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -185857,7 +185901,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -185937,7 +185982,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -186679,7 +186724,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -186759,7 +186805,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -187501,7 +187547,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -187589,7 +187636,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -188676,7 +188723,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -188796,7 +188844,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -190207,7 +190255,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -190295,7 +190344,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -191348,7 +191397,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -191436,7 +191486,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -192489,7 +192539,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-quantity-increase-scoped-verification",
@@ -192557,7 +192608,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -193268,7 +193319,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -193356,7 +193408,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -345148,7 +345200,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -345236,7 +345289,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -346290,7 +346343,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-quantity-increase-scoped-verification",
@@ -346358,7 +346412,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -347069,7 +347123,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -347157,7 +347212,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -348211,7 +348266,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-quantity-increase-scoped-verification",
@@ -348279,7 +348335,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -348991,7 +349047,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -349079,7 +349136,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -350132,7 +350189,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -350220,7 +350278,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -351275,7 +351333,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -351363,7 +351422,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -352417,7 +352476,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -352505,7 +352565,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -421304,7 +421364,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -421644,7 +421705,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -425344,7 +425405,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -425684,7 +425746,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -426661,7 +426723,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -427001,7 +427064,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -427978,7 +428041,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -428318,7 +428382,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -450379,7 +450443,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -450459,7 +450524,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.test.tsx",
@@ -503225,7 +503290,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -503257,7 +503323,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -503818,7 +503884,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -503850,7 +503917,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -504411,7 +504478,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -504443,7 +504511,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -505004,7 +505072,8 @@
           "release-0.5-conditional-native-choices",
           "release-0.5-essential-control-contrast",
           "release-0.5-component-direction-matrix",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -505036,7 +505105,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -512823,7 +512892,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -512875,7 +512945,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
@@ -514237,7 +514307,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514317,7 +514388,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.test.tsx",
@@ -515141,7 +515212,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -515221,7 +515293,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.test.tsx",
@@ -515986,7 +516058,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -516066,7 +516139,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ConversationIdentityDialog.test.tsx",
@@ -516881,7 +516954,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -517205,7 +517279,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -517742,7 +517816,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -517794,7 +517869,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractRefundQueue.tsx",
@@ -532684,7 +532759,8 @@
           "release-0.5-signature-target-and-fields",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -532748,7 +532824,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -537640,7 +537716,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -538236,7 +538313,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -588450,7 +588527,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -588542,7 +588620,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -588898,7 +588976,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -589062,7 +589140,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -589106,7 +589184,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -590377,7 +590455,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590469,7 +590548,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -590825,7 +590904,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -590989,7 +591068,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -591033,7 +591112,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -592328,7 +592407,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -593092,7 +593172,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -593992,7 +594072,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/crm-correction-query.ts",
@@ -594532,7 +594612,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -594588,7 +594668,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -595232,7 +595312,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -595324,7 +595405,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -595680,7 +595761,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -595844,7 +595925,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -595888,7 +595969,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -597159,7 +597240,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -597251,7 +597333,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -597607,7 +597689,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -597771,7 +597853,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -597815,7 +597897,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -599086,7 +599168,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -599178,7 +599261,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -599534,7 +599617,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -599698,7 +599781,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -599742,7 +599825,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -601013,7 +601096,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -601105,7 +601189,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -601461,7 +601545,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -601625,7 +601709,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -601669,7 +601753,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -602940,7 +603024,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -603032,7 +603117,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -603388,7 +603473,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -603552,7 +603637,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -603596,7 +603681,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -604867,7 +604952,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -604959,7 +605045,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -605315,7 +605401,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -605479,7 +605565,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -605523,7 +605609,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -606794,7 +606880,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -606886,7 +606973,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -607242,7 +607329,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -607406,7 +607493,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -607450,7 +607537,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -608721,7 +608808,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -608813,7 +608901,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -609169,7 +609257,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -609333,7 +609421,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -609377,7 +609465,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -610648,7 +610736,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -610740,7 +610829,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -611096,7 +611185,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -611260,7 +611349,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -611304,7 +611393,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -612575,7 +612664,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -612667,7 +612757,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -613023,7 +613113,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -613187,7 +613277,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -613231,7 +613321,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -614502,7 +614592,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -614594,7 +614685,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -614950,7 +615041,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -615114,7 +615205,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -615158,7 +615249,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -616398,7 +616489,8 @@
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -616722,7 +616814,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -617176,7 +617268,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -617268,7 +617361,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -617624,7 +617717,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -617788,7 +617881,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -617832,7 +617925,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -619103,7 +619196,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -619195,7 +619289,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftEditor.test.tsx",
@@ -619551,7 +619645,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/notification-date-groups.test.ts",
@@ -619715,7 +619809,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/NotificationCenterPage.tsx",
@@ -619759,7 +619853,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -662025,7 +662119,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -662101,7 +662196,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -663168,7 +663263,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -663244,7 +663340,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -664311,7 +664407,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -664387,7 +664484,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -665457,7 +665554,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -665533,7 +665631,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -666603,7 +666701,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -666679,7 +666778,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -667776,7 +667875,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -667852,7 +667952,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -668918,7 +669018,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -668994,7 +669095,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -670060,7 +670161,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -670136,7 +670238,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -671203,7 +671305,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -671279,7 +671382,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -672364,7 +672467,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -672440,7 +672544,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -673508,7 +673612,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -673584,7 +673689,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -674647,7 +674752,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -674827,7 +674933,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -674991,7 +675097,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -675055,7 +675161,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -675492,7 +675598,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -675672,7 +675779,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -675836,7 +675943,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -675900,7 +676007,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -676345,7 +676452,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -676525,7 +676633,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -676689,7 +676797,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -676753,7 +676861,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -677182,7 +677290,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -677362,7 +677471,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -677526,7 +677635,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -677590,7 +677699,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -678018,7 +678127,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -678198,7 +678308,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -678362,7 +678472,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.test.ts",
@@ -678426,7 +678536,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -705731,7 +705841,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -705807,7 +705918,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -706872,7 +706983,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -706948,7 +707060,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -708013,7 +708125,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -708089,7 +708202,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -709154,7 +709267,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -709230,7 +709344,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDetailLoader.tsx",
@@ -738268,7 +738382,7 @@
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-              "sha256": "ec8066be7c1afdd367e0a96cf52765c8af6c98f1439da36ceac6da2355d3cea2"
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
             },
             {
               "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
@@ -738604,7 +738718,7 @@
             },
             {
               "path": "apps/web/src/pages/WalletPage.test.tsx",
-              "sha256": "cb26f0462d92f4a22190e3f8b5cc236e376cfd4206ad0752c00572d05a01659e"
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
             },
             {
               "path": "apps/web/src/pages/WalletPage.tsx",
@@ -739508,7 +739622,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftChoices.tsx",
@@ -739564,7 +739678,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/worker/src/contracts/activation-runner.test.ts",
@@ -741976,7 +742090,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ]
       }
     },
@@ -743192,7 +743307,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractQuantityIncreasePanel.tsx",
@@ -746641,7 +746756,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ]
       }
     },
@@ -754729,7 +754845,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractSignaturePanel.tsx",
@@ -756211,7 +756327,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ]
       }
     },
@@ -756395,7 +756512,7 @@
             },
             {
               "path": "apps/web/src/components/ContractDetail.tsx",
-              "sha256": "fee999ba71c5fafe3c89f7f16bd3f781785f40ee3956369b76d5620db73ba300"
+              "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
             },
             {
               "path": "apps/web/src/components/ContractDraftForm.tsx",
@@ -757011,7 +757128,7 @@
             },
             {
               "path": "apps/web/src/lib/contracts.ts",
-              "sha256": "49d1fd116578561b1bf5828f75bbdae00d7f610dd1943b0bd9a1ff1e6ac46e13"
+              "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
             },
             {
               "path": "apps/web/src/lib/customer-invoices.ts",
@@ -758344,7 +758461,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-finance-browser-and-caller-verification"
         ]
       }
     },
@@ -758458,7 +758576,8 @@
         "The contract-limit, invoice due-period and VAT recovery cohort passed all 28 targeted cases in Chromium and mobile Safari. The full production browser gate remains open.",
         "Sixteen targeted preference recovery and verification contrast cases passed in both languages and browser projects. Remaining cohorts and the full release browser matrix still require their own receipts.",
         "Twelve targeted notification editor, delivery-window, history and test receipt cases passed in English and Persian across Chromium and mobile Safari. Remaining cohorts and the exact production browser gate still require their own receipts.",
-        "The electricity catalogue and order confirmation cohort passed twelve cases across Chromium and mobile Safari. The remaining electricity draft, finance history and staff browser cases still require verification."
+        "The electricity catalogue and order confirmation cohort passed twelve cases across Chromium and mobile Safari. The remaining electricity draft, finance history and staff browser cases still require verification.",
+        "Rejected electricity contracts remain readable and document mutations stay unavailable. Four linked-intake browser cases passed. Preflight 42747135644 failed five receipt tests because mock record responses lacked the Fetch clone method. All 96 affected page and shared caller tests pass locally. The exact cumulative preflight and remaining release browser cases are still required."
       ],
       "owner": null,
       "depends_on": [],
@@ -758562,7 +758681,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-finance-browser-and-caller-verification"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -859472,6 +859592,78 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-electricity-review-reviewed",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "404cdf4192ffa0a0856a31a15b207b222b88e1d70d48c3df959e12ff03d7dd7f"
+    },
+    "release-0.6-finance-browser-and-caller-verification": {
+      "batch": "release-0.6-finance-browser-and-caller-verification",
+      "base_commit": "c7643b5d657bbd8d5c19eb4388b0820cb4d652db",
+      "task_keys": [
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/electricity-linked-intake.spec.ts",
+        "apps/web/src/components/ContractDetail.tsx",
+        "apps/web/src/lib/contracts.ts",
+        "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
+        "apps/web/src/pages/WalletPage.test.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/upload/upload.service.ts",
+          "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+        },
+        {
+          "path": "apps/web/e2e/electricity-linked-intake.spec.ts",
+          "sha256": "dfe5b60e719d8893c192adc77cf245dec004f9076a462e6be2e6445138aad0dc"
+        },
+        {
+          "path": "apps/web/src/components/ContractDetail.tsx",
+          "sha256": "a54a36ea00ec4a873c840beedff74063dc21578d9005ad0e7d5ce08beee9d8ed"
+        },
+        {
+          "path": "apps/web/src/lib/contracts.ts",
+          "sha256": "790432f266a49ad0757c99b41660f2da57d8bae3a3f2411c8a01ff18d2d1fbc4"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.test.ts",
+          "sha256": "aa5d6436d60f26bb4dc5ba9ac4325287715175c91ce1bc12c452ba0c6d60ba60"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+          "sha256": "82f7e976c80863dd27f3a05a9310239c2f429a7569d69cdc5da76aec99b419c8"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-receipt-response.test.ts",
+          "sha256": "d9e3857d5705965c29f6beed2d5f7712e8e0ccde0e0a0b5c5ce82d7ac3c55338"
+        },
+        {
+          "path": "apps/web/src/lib/record-verified-upload.ts",
+          "sha256": "521b7eef3e13d26fd412e6e9ac2f374e3c573a208cac183a27a3ecbfb85bf172"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
+          "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.test.tsx",
+          "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
+        },
+        {
+          "path": "packages/db/src/schema/contracts.ts",
+          "sha256": "f44608836bc9e8629dea6b380ef0186d78bc76b2cbf00c59bda601e773f0935b"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Reproduced that both contract read validators rejected the server Rejected state. The detail retains its refund status and historical access while suppressing original, signed and amendment uploads and PDF generation. Existing exact rejection and financial confirmation checks remain.",
+        "Four linked-intake Chromium and mobile Safari cases in English and Persian passed on fresh production assets. All 122 related unit tests and 102 route budgets passed, with affected type, lint, formatting and diff checks.",
+        "Exact hosted preflight 42747135644 at 2eac4433 passed the required integrity check but failed three invoice and two wallet receipt cases. Those fixtures now return a real Fetch Response at the exact encoded record endpoint. Finance and refresh assertions are unchanged. Shared scan progression, exact resubmission and deadline tests ran alongside both affected pages."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-contract-rejected",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "0082d6c71d982e70109c2014c90f32ebf627c592ad1e4141196435f2854570dd"
     }
   },
   "historical_improvements": [

@@ -569,8 +569,11 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
         if (url.includes('/verify') && method === 'POST') {
           return jsonResponse({ key: attachmentKey, exists: true, status: 'confirmed' });
         }
-        if (url.includes('/record') && method === 'POST') {
-          return jsonResponse({ key: attachmentKey, status: 'recorded' });
+        if (
+          url === `/api/upload/${encodeURIComponent(attachmentKey)}/record` &&
+          method === 'POST'
+        ) {
+          return Response.json({ key: attachmentKey, status: 'recorded' });
         }
         return jsonResponse({}, 404);
       });

@@ -8,6 +8,7 @@ export const contractStates = [
   'Signed',
   'Active',
   'Completed',
+  'Rejected',
   'Cancelled',
 ] as const;
 export interface ContractVersion {
