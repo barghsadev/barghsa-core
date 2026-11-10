@@ -5657,7 +5657,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the terminal 40-shard outcome and every failure from run 42878628863. The Mobile Chrome native CSP teardown flake has passing scoped repair evidence. Require a clean final-source rollup for all five browser projects and retain seven days of quarantine history."
+        "Reconcile the terminal 40-shard outcome of run 42878628863. Targeted repairs passed for the Mobile Chrome native CSP teardown and Firefox duplicate emergency report. Require a clean final-source rollup for all five projects and retain seven days of quarantine history."
       ],
       "owner": null,
       "depends_on": [],
@@ -5747,7 +5747,8 @@
           "release-0.6-registration-pointer-after-strength",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-native-csp-fixture-teardown"
+          "release-0.6-native-csp-fixture-teardown",
+          "release-0.6-report-mounted-emergency-recovery"
         ],
         "current_acceptance": null
       }
@@ -5948,7 +5949,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the terminal 40-shard outcome and every failure from run 42878628863. The Mobile Chrome native CSP teardown flake has passing scoped repair evidence. Require a clean final-source rollup for all five browser projects and retain seven days of quarantine history.",
+        "Reconcile the terminal 40-shard outcome of run 42878628863. Targeted repairs passed for the Mobile Chrome native CSP teardown and Firefox duplicate emergency report. Require a clean final-source rollup for all five projects and retain seven days of quarantine history.",
         "Record the strict promotion report from the accepted candidate in the production approval package."
       ],
       "owner": null,
@@ -6037,7 +6038,8 @@
           "release-0.6-registration-pointer-after-strength",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-native-csp-fixture-teardown"
+          "release-0.6-native-csp-fixture-teardown",
+          "release-0.6-report-mounted-emergency-recovery"
         ],
         "current_acceptance": null
       }
@@ -14497,7 +14499,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the terminal 40-shard outcome and every failure from run 42878628863. The Mobile Chrome native CSP teardown flake has passing scoped repair evidence. Require a clean final-source rollup for all five browser projects and retain seven days of quarantine history.",
+        "Reconcile the terminal 40-shard outcome of run 42878628863. Targeted repairs passed for the Mobile Chrome native CSP teardown and Firefox duplicate emergency report. Require a clean final-source rollup for all five projects and retain seven days of quarantine history.",
         "Read back the hosted navigation checks and complete journey coverage on final source. Verify delivery of the scheduled results to the authorized dedicated receiver."
       ],
       "owner": null,
@@ -14563,7 +14565,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-native-csp-fixture-teardown",
           "release-0.6-runtime-navigation-route-checks",
-          "release-0.6-nightly-source-security-scan"
+          "release-0.6-nightly-source-security-scan",
+          "release-0.6-report-mounted-emergency-recovery"
         ],
         "current_acceptance": null
       }
@@ -18977,7 +18980,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "packages/ui/src/components/ui/empty.tsx",
@@ -19012,6 +19015,16 @@
             "07-ui-ux-design.md#T-07.01.03.19",
             "07-ui-ux-design.md#T-07.12.01.04",
             "07-ui-ux-design.md#T-07.12.01.09"
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
+            }
           ]
         }
       }
@@ -516569,7 +516582,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
@@ -516604,6 +516617,14 @@
                 "apps/web/e2e/customer-service-history-views.spec.ts"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -518544,7 +518565,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the terminal 40-shard result of run 42878628863 at a51b8b74. Verify a clean exact candidate run with all five browsers, no unexpected, flaky or runner errors and seven days of quarantine history.",
+        "Reconcile the terminal 40-shard outcome of run 42878628863 at a51b8b74. Targeted repairs passed for the Mobile Chrome and Firefox failures. Verify a clean exact candidate run with all five browsers, no unexpected, flaky or runner errors and seven days of quarantine history.",
         "Read back the final hosted dependency, expanded navigation, schema drift and source-security reports. The exact local Semgrep gate scanned 2,124 files with zero findings or errors, and the selected navigation scope passed 26 browser cases."
       ],
       "owner": null,
@@ -518563,7 +518584,8 @@
           "release-0.6-native-safari-saving-shell-staff-team",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-runtime-navigation-route-checks",
-          "release-0.6-nightly-source-security-scan"
+          "release-0.6-nightly-source-security-scan",
+          "release-0.6-report-mounted-emergency-recovery"
         ],
         "current_acceptance": null
       }
@@ -559739,7 +559761,7 @@
             },
             {
               "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
-              "sha256": "92f2454ab22bf6803f53fe5d7efb7d757c2b1fa6606046b9a3a8a257af3eaaa9"
+              "sha256": "be13d2694aa0b09b78b0f6484770d3e8c85f0a0fd74fae2e4629b002f0b2cfda"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -559899,7 +559921,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
@@ -559979,6 +560001,15 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/components/RouteFallbackLandmark.tsx",
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -564090,7 +564121,7 @@
             },
             {
               "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
-              "sha256": "92f2454ab22bf6803f53fe5d7efb7d757c2b1fa6606046b9a3a8a257af3eaaa9"
+              "sha256": "be13d2694aa0b09b78b0f6484770d3e8c85f0a0fd74fae2e4629b002f0b2cfda"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -564382,7 +564413,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/login.tsx",
@@ -564491,6 +564522,15 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/components/RouteFallbackLandmark.tsx",
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -567370,7 +567410,7 @@
             },
             {
               "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
-              "sha256": "92f2454ab22bf6803f53fe5d7efb7d757c2b1fa6606046b9a3a8a257af3eaaa9"
+              "sha256": "be13d2694aa0b09b78b0f6484770d3e8c85f0a0fd74fae2e4629b002f0b2cfda"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -567422,7 +567462,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -567671,6 +567711,15 @@
                 "apps/web/e2e/customer-service-history-views.spec.ts"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/components/RouteFallbackLandmark.tsx",
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -568833,7 +568882,7 @@
             },
             {
               "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
-              "sha256": "92f2454ab22bf6803f53fe5d7efb7d757c2b1fa6606046b9a3a8a257af3eaaa9"
+              "sha256": "be13d2694aa0b09b78b0f6484770d3e8c85f0a0fd74fae2e4629b002f0b2cfda"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -568885,7 +568934,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -569134,6 +569183,15 @@
                 "apps/web/e2e/customer-service-history-views.spec.ts"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/components/RouteFallbackLandmark.tsx",
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -571477,7 +571535,7 @@
             },
             {
               "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
-              "sha256": "92f2454ab22bf6803f53fe5d7efb7d757c2b1fa6606046b9a3a8a257af3eaaa9"
+              "sha256": "be13d2694aa0b09b78b0f6484770d3e8c85f0a0fd74fae2e4629b002f0b2cfda"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -571653,7 +571711,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
@@ -571733,6 +571791,15 @@
                 "apps/web/e2e/ladle-components.spec.ts"
               ],
               "scope": "Extend each catalogue axe scan to the existing critical-page A/AA rule tags through WCAG 2.2. All previous assertions and production sources are preserved. The complete 306-case catalogue passed with no retries or skips."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/components/RouteFallbackLandmark.tsx",
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -623617,7 +623684,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -624498,6 +624565,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -625607,7 +625682,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -626488,6 +626563,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -629294,7 +629377,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -629561,6 +629644,14 @@
                 "apps/web/e2e/account-recovery-closure.spec.ts"
               ],
               "scope": "Close loopback HTTP sockets after native CSP assertions. The remaining test cases, product paths and assertions are byte-identical. Thirty scoped runs passed with retries disabled."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -630690,7 +630781,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -631564,6 +631655,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -632673,7 +632772,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -633554,6 +633653,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -634663,7 +634770,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -635544,6 +635651,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -636653,7 +636768,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -637534,6 +637649,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -638643,7 +638766,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -639524,6 +639647,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -640633,7 +640764,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -641514,6 +641645,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -642623,7 +642762,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -643504,6 +643643,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -644613,7 +644760,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -645494,6 +645641,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -646603,7 +646758,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -647484,6 +647639,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -648593,7 +648756,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -649474,6 +649637,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -650583,7 +650754,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -651464,6 +651635,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -653350,7 +653529,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -654231,6 +654410,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -655340,7 +655527,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -656221,6 +656408,14 @@
                 "apps/web/src/pages/staff-directory-recovery.test.tsx"
               ],
               "scope": "Use Testing Library mounts and accessible action queries for admin tests, retain existing assertions, and add an archive receipt case. Application, permission and money code are unchanged."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         }
@@ -797807,7 +798002,7 @@
             },
             {
               "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
-              "sha256": "92f2454ab22bf6803f53fe5d7efb7d757c2b1fa6606046b9a3a8a257af3eaaa9"
+              "sha256": "be13d2694aa0b09b78b0f6484770d3e8c85f0a0fd74fae2e4629b002f0b2cfda"
             },
             {
               "path": "apps/web/src/components/RouteSkeleton.tsx",
@@ -798523,7 +798718,7 @@
             },
             {
               "path": "apps/web/src/router.tsx",
-              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+              "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -799423,6 +799618,15 @@
                 "apps/web/e2e/customer-service-history-views.spec.ts"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-report-mounted-emergency-recovery",
+              "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+              "paths": [
+                "apps/web/src/components/RouteFallbackLandmark.tsx",
+                "apps/web/src/router.tsx"
+              ],
+              "scope": "Move emergency reporting to a mounted fallback. Preserve router configuration, route shells, navigation, locale, landmarks and recovery controls. All 75 compiled feedback browser cases and 20 repeated Firefox cases passed with unchanged assertions."
             }
           ]
         },
@@ -799682,7 +799886,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the terminal 40-shard outcome and every failure from run 42878628863. The Mobile Chrome native CSP teardown flake has passing scoped repair evidence. Require a clean final-source rollup for all five browser projects and retain seven days of quarantine history.",
+        "Reconcile the terminal 40-shard outcome of run 42878628863. Targeted repairs passed for the Mobile Chrome native CSP teardown and Firefox duplicate emergency report. Require a clean final-source rollup for all five projects and retain seven days of quarantine history.",
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
         "Read back full hosted native and combined coverage on the revised auth and financial fixtures. Earlier run 42857945735 failed these older callers; targeted fixes have passing receipts.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
@@ -799854,7 +800058,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-native-csp-fixture-teardown",
-          "release-0.6-runtime-navigation-route-checks"
+          "release-0.6-runtime-navigation-route-checks",
+          "release-0.6-report-mounted-emergency-recovery"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -917350,6 +917555,111 @@
         {
           "file": "reviewed-diff.patch",
           "sha256": "b23d2ae0d9fdbfc0e157355b763d5917df7ae3c084fcc05a03e51c54759718fb"
+        }
+      ]
+    },
+    "release-0.6-report-mounted-emergency-recovery": {
+      "batch": "release-0.6-report-mounted-emergency-recovery",
+      "base_commit": "2395d49a8d1e2a57340847c11633ad7e344772ec",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "06-security-testing-observability.md#T-06.12.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/components/RouteFallbackLandmark.tsx",
+        "apps/web/src/router.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/feedback.spec.ts",
+          "sha256": "ab6d9df3611e658b73445618dabaebf8b8d8ac3337f5319e0cc884feec07623c"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "3b484e904f53a2d21d1b2dd54ae3c87ed68ca500b76565ba3fc762dc1ecc5cf5"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
+        },
+        {
+          "path": "apps/web/src/components/RouteFallbackLandmark.tsx",
+          "sha256": "be13d2694aa0b09b78b0f6484770d3e8c85f0a0fd74fae2e4629b002f0b2cfda"
+        },
+        {
+          "path": "apps/web/src/components/route-states.test.tsx",
+          "sha256": "f256bcfca2c9e97b8c4c49f896eb92585f559d7e5a9427118b6fdf63ea2af6a4"
+        },
+        {
+          "path": "apps/web/src/hooks/useRouteErrorReport.test.tsx",
+          "sha256": "fedde4ed49241ae5690199ce91030ab29dd2f674b97a5a7ed5bb900b3cb80f89"
+        },
+        {
+          "path": "apps/web/src/hooks/useRouteErrorReport.ts",
+          "sha256": "b64d5f6932d0a07a373d8cde4ef3a6fb455ce748b8de277ed7cf2fcd0ec40fb0"
+        },
+        {
+          "path": "apps/web/src/router.tsx",
+          "sha256": "e5c231ac2cfe159fe99a0c2503fdf35170868683c6a91ac05e767375511c8fee"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Hosted Firefox job 130048590605 at a51b8b74 recorded 403 expected cases and one flake. Its trace shows two document GETs from a single page.goto and two CHUNK_LOAD_FAILED posts with different references. TanStack starts an automatic reload on the missing route module. The first post was recorded after the second document request began, while recovery loading from the old document was still underway.",
+        "Move emergency reporting out of the lazy recovery import and into the committed recovery component effect. Keep the reporter lazy, skip it if the component unmounts before the import resolves, and preserve the current CSRF, same-origin, UUID, safe localized recovery, explicit reload and route error boundary behavior.",
+        "The production build passed 75 feedback cases across all five Playwright projects, plus 20 repeated Firefox stale-page recovery cases in Persian and English. Firefox used pinned runtime revision 1575. Retries were disabled and the exact one-report assertion was retained. Thirteen focused unit tests, web TypeScript, changed-file ESLint, Prettier, whitespace and all 102 production route and interaction gzip budgets passed.",
+        "This is a targeted repair of the observed Firefox failure. The strict five-project candidate rollup, quarantine history and remaining scheduled and operational release evidence are still required."
+      ],
+      "proof_logs": [
+        {
+          "file": "firefox-targeted.log",
+          "sha256": "87709265a37185823961059e6ea63decb83c000d71af9e0768bb0ef5ebd24183"
+        },
+        {
+          "file": "firefox-repeat.log",
+          "sha256": "32aef694f25a974c75bdc8e76c20610d19917392eeafb4bb4b43fb2b34c303a8"
+        },
+        {
+          "file": "webkit-targeted.log",
+          "sha256": "8f5ef9b128a0cf0191ece1f7c5e0ea5b54c9faf22f7c40bf64397199cc13fd7c"
+        },
+        {
+          "file": "chromium-targeted.log",
+          "sha256": "072d4aeeb866a9758cfc71fb43ea2fdba0ba74829029c0fa6d6da6899cc11c2b"
+        },
+        {
+          "file": "route-recovery-unit.log",
+          "sha256": "198170cc0de72b3c9ba48698412c0c198be4b8927800e7d4526a7f8e22282b7d"
+        },
+        {
+          "file": "route-recovery-bundle.log",
+          "sha256": "c54e5f8f71ef5cc027661a3d9831c49bbccf5e21d85ad9929316655536e58d65"
+        },
+        {
+          "file": "firefox-3.log",
+          "sha256": "c285700c3228372a08f3bb858f54a368c5113003fbbd0140e5e90e1521b891af"
+        },
+        {
+          "file": "route-recovery-build.log",
+          "sha256": "62763ef6dd9a0dc5e954d9f372bfdb8811512746d842cb68a56ba03f257f5e23"
+        },
+        {
+          "file": "route-recovery-reviewed.patch",
+          "sha256": "33ea0ff1b9c36673ab77de5f35adfd14305b45dc95b7bdb7bbb67ffe5314863f"
+        },
+        {
+          "file": "firefox-3/feedback-a-missing-route-a-cabc9-a-localized-reload-path-fa--firefox/trace.zip",
+          "sha256": "f47311b32c642777669f92b4e091077799c172ed5dda73d8b7b44298333a77da"
         }
       ]
     }

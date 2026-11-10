@@ -1,4 +1,4 @@
-import { createContext, useContext, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, type ReactNode } from 'react';
 import { feedbackText } from '@barghsa/i18n/feedback';
 import { reloadText } from '@barghsa/i18n/loading-feedback';
 import { useLocale } from '../hooks/useLocale.js';
@@ -20,6 +20,19 @@ export function RouteFallbackLandmark({ children }: { children: ReactNode }) {
 /** This recovery action is available even when the lazy error UI cannot load. */
 export function RouteEmergencyReload() {
   const locale = useLocale();
+  useEffect(() => {
+    // A preload can fail while the router is already reloading the document.
+    let mounted = true;
+    void import('../hooks/useRouteErrorReport.js').then(
+      ({ default: report }) => {
+        if (mounted) report();
+      },
+      () => {}
+    );
+    return () => {
+      mounted = false;
+    };
+  }, []);
   return (
     <RouteFallbackLandmark>
       <section role="alert" className="mx-auto max-w-lg space-y-4 p-6">
