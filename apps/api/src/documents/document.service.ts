@@ -36,6 +36,7 @@ import { DocumentStorageService } from './document-storage.service.js';
 import type { DocumentCommand, DocumentCreate, DocumentListSchema } from './document-validation.js';
 import type { z } from 'zod';
 import { notifyDocumentReview, notifyDocumentUpload } from './document-notifications.js';
+import { documentActionTarget, type DocumentAction } from './document-action-state.js';
 
 type LinkedDocument = {
   document: Document;
@@ -856,7 +857,7 @@ export class DocumentService {
 
   async act(
     id: string,
-    action: 'submit' | 'approve' | 'reject' | 'request-changes' | 'quarantine' | 'remove',
+    action: DocumentAction,
     input: DocumentCommand,
     actor: DocumentActor,
     staff: boolean,
@@ -952,52 +953,21 @@ export class DocumentService {
             const row = await load(client, id, profileId, staff, true);
             if (row.document.revision !== input.expectedRevision)
               throw new ConflictException('Document changed; refresh before continuing');
-            const target: Record<typeof action, Document['state']> = {
-              submit: 'SubmittedForReview',
-              approve: 'Approved',
-              reject: 'Rejected',
-              'request-changes': 'Available',
-              quarantine: 'Quarantined',
-              remove: 'Removed',
-            };
-            const allowed =
-              action === 'submit'
-                ? ['Available']
-                : action === 'remove'
-                  ? (savingDocument || solarDocument) && !staff
-                    ? solarDocument
-                      ? [
-                          'Uploading',
-                          'PendingScan',
-                          'Available',
-                          'SubmittedForReview',
-                          'Approved',
-                          'Rejected',
-                        ]
-                      : ['Uploading', 'PendingScan', 'Available']
-                    : ['Uploading', 'PendingScan', 'Superseded', 'Quarantined']
-                  : action === 'quarantine'
-                    ? [
-                        'Uploading',
-                        'PendingScan',
-                        'Available',
-                        'SubmittedForReview',
-                        'Approved',
-                        'Rejected',
-                        'Superseded',
-                      ]
-                    : solarDocument &&
-                        staff &&
-                        ['approve', 'reject', 'request-changes'].includes(action)
-                      ? ['SubmittedForReview', 'Available']
-                      : ['SubmittedForReview'];
-            if (!allowed.includes(row.document.state))
+            const scope = solarDocument
+              ? staff
+                ? 'solar-staff'
+                : 'solar-customer'
+              : savingDocument && !staff
+                ? 'saving-customer'
+                : 'standard';
+            const target = documentActionTarget(action, row.document.state, scope);
+            if (!target)
               throw new ConflictException('Action is not permitted in this document state');
             const changed = (
               await createDbClient(client)
                 .update(documents)
                 .set({
-                  state: target[action],
+                  state: target,
                   ...(action === 'quarantine' ? { scanState: 'Quarantined' as const } : {}),
                   rejectionReason: action === 'reject' ? input.reason! : null,
                   reviewComment: input.reason ?? null,

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T07:09:37+00:00",
-  "source_commit": "2b9f027b9ec747b1a6dbe8fbab1ccbdbf04f1dad",
+  "updated": "2026-11-10T07:16:01+00:00",
+  "source_commit": "e195e28de328f766079d0acd2ee2e2eeaf828f1f",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -56173,7 +56173,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -56197,7 +56198,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.test.ts",
-              "sha256": "90b36b2963fa65e0f789f66f8eb4e71d69386347fe0fbd12561dbe31b591d1eb"
+              "sha256": "6b21aa09028e37a4025d81b451b14e23a91da30c473815477bda83cf7687f560"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -58751,7 +58752,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-additive-agent-permissions-across-current-business-consumers",
@@ -58879,7 +58881,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
@@ -74415,7 +74417,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -74931,7 +74934,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
@@ -185099,7 +185102,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -185143,7 +185147,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
@@ -185930,7 +185934,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -185974,7 +185979,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
@@ -186758,7 +186763,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -186802,7 +186808,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
@@ -187585,7 +187591,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -187629,7 +187636,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
@@ -188414,7 +188421,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -188458,7 +188466,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
@@ -392063,7 +392071,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -392079,7 +392088,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/orders/order-comments-authority.test.ts",
@@ -393048,7 +393057,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -393064,7 +393074,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/orders/order-comments-authority.test.ts",
@@ -394032,7 +394042,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -394048,7 +394059,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/orders/order-comments-authority.test.ts",
@@ -409095,7 +409106,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -409115,7 +409127,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -409680,7 +409692,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -409700,7 +409713,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -410265,7 +410278,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -410285,7 +410299,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -410851,7 +410865,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -410871,7 +410886,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -411440,7 +411455,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -411460,7 +411476,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -412025,7 +412041,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -412045,7 +412062,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -412611,7 +412628,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -412631,7 +412649,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -413198,7 +413216,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -413218,7 +413237,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -413783,7 +413802,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -413803,7 +413823,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -414368,7 +414388,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-solar-document-review-and-compatible-staff-routes-acceptance",
@@ -414388,7 +414409,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -424547,7 +424568,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -424735,7 +424757,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
@@ -428610,7 +428632,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -428798,7 +428821,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
@@ -429936,7 +429959,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -430124,7 +430148,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
@@ -431262,7 +431286,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-solar-financial-profile-scope",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -431450,7 +431475,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
@@ -434752,7 +434777,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "accepted-all-core-business-audit-event-families-and-append-only-history",
@@ -435020,7 +435046,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
@@ -453892,7 +453918,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -453936,7 +453963,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
@@ -454718,7 +454745,8 @@
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -454734,7 +454762,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -455228,7 +455256,8 @@
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455244,7 +455273,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -455719,7 +455748,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455779,7 +455809,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
@@ -456031,7 +456061,8 @@
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456047,7 +456078,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -456537,7 +456568,8 @@
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -456577,7 +456609,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -457075,7 +457107,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457135,7 +457168,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
@@ -457385,7 +457418,8 @@
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457401,7 +457435,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -457889,7 +457923,8 @@
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -457905,7 +457940,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -458417,7 +458452,8 @@
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -458433,7 +458469,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -458945,7 +458981,8 @@
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -458961,7 +458998,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -459473,7 +459510,8 @@
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -459489,7 +459527,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -460000,7 +460038,8 @@
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460016,7 +460055,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -460491,7 +460530,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -460551,7 +460591,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
@@ -485101,7 +485141,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-high-risk-staff-step-up",
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -485150,7 +485191,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -489515,7 +489556,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -489559,7 +489601,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/upload/file-policy.test.ts",
@@ -489710,7 +489752,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-upload-key-and-scanner-tests",
@@ -489722,7 +489765,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
@@ -490004,7 +490047,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -490048,7 +490092,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/upload/file-policy.test.ts",
@@ -490135,7 +490179,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-upload-profile-request-admission"
+          "release-0.6-upload-profile-request-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-upload-key-and-scanner-tests",
@@ -490155,7 +490200,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -493423,19 +493468,195 @@
         "story": "06-security-testing-observability.md#spec-5b8a34999cf1"
       },
       "requirement": "| T-06.09.02.01 | Author unit tests for all state machines: Orders, Contracts, Invoices, Payments, Refunds, Documents, Wallet transactions, Invitations, Verification cases | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-business-state-machine-unit-evidence"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-domain-state-machine-tests",
+          "reviewed_sha": "e195e28de328f766079d0acd2ee2e2eeaf828f1f",
+          "checks": [
+            "The state unit suites exercise the legal and denied commercial pairs for electricity, saving, solar and consultation, invoice transitions and exact refund guards, contract review and cancellation guards, and payment and wallet credit, reversal, idempotent and rejection states.",
+            "The existing document action policy moved into a directly testable function after the same ownership, staff authority, record, revision and contract guards. All 324 previous action/state/domain/actor combinations matched. New unit tests cover every standard action source, solar review exceptions and scoped removal. Database lifecycle constraints and append-only events still apply.",
+            "New verification-case tests cover all twelve decisions across Open, Under Review, Approved and Rejected, with no state or audit write on invalid pairs and evidence required for the only identity write. Invitation unit tests cover all terminal states and a pending deadline failure, with no membership, state or audit writes.",
+            "The 331 targeted domain unit cases passed, and 39 document and solar cases passed in a related run that includes the same document action unit suite. API typecheck, ESLint, Prettier and diff checks passed.",
+            "The earlier exact hosted run 42759736897 job 129642496352 provides 207 selected unchanged native contract, invitation, verification and migrated document cases. The earlier mounted document HTTP run is excluded from the current-source count. These receipts complement the unit criterion and do not substitute for mounted candidate verification."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/common/business-state-matrices.test.ts",
+              "sha256": "f0d01207e91c64c160d9c1b328571e3ad2dbedffe35287b14f65661932fa19b0"
+            },
+            {
+              "path": "apps/api/src/consultation/consultation-state.ts",
+              "sha256": "ff346d1d1dbed8433f3b5d4510d238951c9c2ce17cdf6cb1ad3520f38bf8e086"
+            },
+            {
+              "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
+              "sha256": "c16581dc6df65cf3dc4b6c7f30d4f46a1cbb0a5e3c994d15d03bce7d2d51da81"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+              "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+              "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+              "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+            },
+            {
+              "path": "apps/api/src/contract/contract-cancellation.service.ts",
+              "sha256": "35a15ed616c718c55797f7997ec566a03c27c5244f11194748e6b8ddd32c2821"
+            },
+            {
+              "path": "apps/api/src/contract/contract-journey-authority.test.ts",
+              "sha256": "a6cbde1c9a26ec9dcfc3dbf50a6c25dff9e9eca05620954a180427b82de003de"
+            },
+            {
+              "path": "apps/api/src/contract/contract-review-http.integration.test.ts",
+              "sha256": "743fed37c805090a2876d6ec9181f147a60ccb4360935b436dd7a34b9286a79a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-review.service.ts",
+              "sha256": "ab8124ab8eefc0ad39053e459ef9f5993a7d61ff5a1897202cb17c2e8fd3e34a"
+            },
+            {
+              "path": "apps/api/src/contract/contract-signature-http.integration.test.ts",
+              "sha256": "ea9b76f85e3cccda84b074a88897a2322d06519529dd164633261e0570189304"
+            },
+            {
+              "path": "apps/api/src/contract/contract-signature.service.ts",
+              "sha256": "3c17f16591f60cab8cbbf32bfc043f9f8286c33081a76fb8832d59909cbc337b"
+            },
+            {
+              "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+              "sha256": "13f1dfdab981a1ac041b666b6ecb22896f7a96c85cc3120eefdc064b8ae2fccd"
+            },
+            {
+              "path": "apps/api/src/crm/verification-case.service.test.ts",
+              "sha256": "af30976ecccf8bbcfc7d663f31bfe4aef520462d60c4ad2e4649ffe14d91f406"
+            },
+            {
+              "path": "apps/api/src/crm/verification-case.service.ts",
+              "sha256": "319132938cc59fe27fb88a3b4a54b67e1a038bb9bf99bf87036ab0fb279874a8"
+            },
+            {
+              "path": "apps/api/src/documents/document-action-state.test.ts",
+              "sha256": "d1342cd2e1ebc7e983650553c45d342d963b39a9fc600d8f13ecc3abc5964216"
+            },
+            {
+              "path": "apps/api/src/documents/document-action-state.ts",
+              "sha256": "2da29d5d6c32c17a08baeb177edf718ca0317ac8e973ba5ef200b6101b31105b"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order-status.ts",
+              "sha256": "bcb8520565e30d24642802e57bd3ab9e5fc8c429fc8bdf10e2778221296bcc7e"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
+              "sha256": "346ddd012b068bbc325221f932c59579efa0c979cbe3862e687ff2304cd89af8"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+              "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state.model.test.ts",
+              "sha256": "b21e5f5b939d7792cbbf77f838f184024f4e596290098547136ae02146ea4ccb"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-state.model.ts",
+              "sha256": "0ca8d4c57161abf296539ab012fdbd868d6750c87a69a7f4828360d8e4f7fee0"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.service.test.ts",
+              "sha256": "6b21aa09028e37a4025d81b451b14e23a91da30c473815477bda83cf7687f560"
+            },
+            {
+              "path": "apps/api/src/profiles/agents.service.ts",
+              "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
+            },
+            {
+              "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
+              "sha256": "d9e7fbffd81f39711b90fe0064fc1bdbaa6c91226cb0bd39bdd6048a04066db3"
+            },
+            {
+              "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
+              "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.test.ts",
+              "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+            },
+            {
+              "path": "apps/api/src/refund/refund-state.model.ts",
+              "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+            },
+            {
+              "path": "apps/api/src/saving/saving-state.ts",
+              "sha256": "4631507f9ee43aa975fdc66c61f7a5cfd4a634bc01d6a52298f0a3fed06df013"
+            },
+            {
+              "path": "apps/api/src/solar/solar-state.ts",
+              "sha256": "b6665ff11c3b8639e8adb4912c0c75e1b402c27aca78d48da0c49e0bd78b991b"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.service.test.ts",
+              "sha256": "9c1b2e8aa5cbc4b5fcdf7fa9de0439277acc90ebe758cfaac91a0ae61b7d3f4c"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+              "sha256": "fb502f00bb64c8a334231bf86aba40c3c1346d924abde96b7713a49aa7539ff9"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
+              "sha256": "b719b655ba9ed817f5e490a27eee75b17dcc69cdb21940d7de210dd7b6b63df5"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+              "sha256": "20fee196398310157afd7bc3f4e5e0d05bd2320019a3f8ebe9c58b50613be93f"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.test.ts",
+              "sha256": "8435d9818045e0de6d25ff983800b470b7c6b89c1ddaca65b48d19596598d088"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.service.ts",
+              "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+            },
+            {
+              "path": "packages/db/drizzle/production/0140_document_lifecycle.sql",
+              "sha256": "7334c8337f4dce799029dd1fc9a1f00c20063022cfe0dd549f1035b3560a848d"
+            },
+            {
+              "path": "packages/db/src/documents.migrated.test.ts",
+              "sha256": "26656eb7de8af7c95817ac114e7fcf3b242a6eda5c0d2a8f180512fe3dc0062f"
+            },
+            {
+              "path": "packages/db/src/schema/documents.ts",
+              "sha256": "4328349824236f20d5f0b67abe7941a5a1ea6985cd7e805f258e5a14dd8c5d15"
+            },
+            {
+              "path": "packages/db/src/schema/profile-invitations.ts",
+              "sha256": "24e64b1ff73e5b443adfe84dd107602427b1d45b1a7ced48be92cc52fe8f4935"
+            }
+          ]
+        }
       }
     },
     {
@@ -717525,7 +717746,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -717601,7 +717823,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -718119,7 +718341,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -718195,7 +718418,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -718712,7 +718935,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -718788,7 +719012,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -719307,7 +719531,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -719383,7 +719608,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -719900,7 +720125,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -719976,7 +720202,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -720493,7 +720719,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -720569,7 +720796,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -730483,7 +730710,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -730523,7 +730751,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.test.ts",
-              "sha256": "90b36b2963fa65e0f789f66f8eb4e71d69386347fe0fbd12561dbe31b591d1eb"
+              "sha256": "6b21aa09028e37a4025d81b451b14e23a91da30c473815477bda83cf7687f560"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -731137,7 +731365,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -731177,7 +731406,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.test.ts",
-              "sha256": "90b36b2963fa65e0f789f66f8eb4e71d69386347fe0fbd12561dbe31b591d1eb"
+              "sha256": "6b21aa09028e37a4025d81b451b14e23a91da30c473815477bda83cf7687f560"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -731791,7 +732020,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -731831,7 +732061,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.test.ts",
-              "sha256": "90b36b2963fa65e0f789f66f8eb4e71d69386347fe0fbd12561dbe31b591d1eb"
+              "sha256": "6b21aa09028e37a4025d81b451b14e23a91da30c473815477bda83cf7687f560"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -732446,7 +732676,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -732486,7 +732717,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.test.ts",
-              "sha256": "90b36b2963fa65e0f789f66f8eb4e71d69386347fe0fbd12561dbe31b591d1eb"
+              "sha256": "6b21aa09028e37a4025d81b451b14e23a91da30c473815477bda83cf7687f560"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -733100,7 +733331,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -733140,7 +733372,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.test.ts",
-              "sha256": "90b36b2963fa65e0f789f66f8eb4e71d69386347fe0fbd12561dbe31b591d1eb"
+              "sha256": "6b21aa09028e37a4025d81b451b14e23a91da30c473815477bda83cf7687f560"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -733754,7 +733986,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -733794,7 +734027,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.test.ts",
-              "sha256": "90b36b2963fa65e0f789f66f8eb4e71d69386347fe0fbd12561dbe31b591d1eb"
+              "sha256": "6b21aa09028e37a4025d81b451b14e23a91da30c473815477bda83cf7687f560"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -734408,7 +734641,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -734448,7 +734682,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.test.ts",
-              "sha256": "90b36b2963fa65e0f789f66f8eb4e71d69386347fe0fbd12561dbe31b591d1eb"
+              "sha256": "6b21aa09028e37a4025d81b451b14e23a91da30c473815477bda83cf7687f560"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -735063,7 +735297,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -735103,7 +735338,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.test.ts",
-              "sha256": "90b36b2963fa65e0f789f66f8eb4e71d69386347fe0fbd12561dbe31b591d1eb"
+              "sha256": "6b21aa09028e37a4025d81b451b14e23a91da30c473815477bda83cf7687f560"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -735717,7 +735952,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -735757,7 +735993,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.test.ts",
-              "sha256": "90b36b2963fa65e0f789f66f8eb4e71d69386347fe0fbd12561dbe31b591d1eb"
+              "sha256": "6b21aa09028e37a4025d81b451b14e23a91da30c473815477bda83cf7687f560"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -736371,7 +736607,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
-          "release-0.6-transactional-sensitive-audit-and-ownership-history"
+          "release-0.6-transactional-sensitive-audit-and-ownership-history",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -736411,7 +736648,7 @@
             },
             {
               "path": "apps/api/src/profiles/agents.service.test.ts",
-              "sha256": "90b36b2963fa65e0f789f66f8eb4e71d69386347fe0fbd12561dbe31b591d1eb"
+              "sha256": "6b21aa09028e37a4025d81b451b14e23a91da30c473815477bda83cf7687f560"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -747149,7 +747386,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
@@ -749440,7 +749677,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ]
       }
     },
@@ -750048,7 +750286,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
@@ -754125,7 +754363,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ]
       }
     },
@@ -754633,7 +754872,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
@@ -758129,7 +758368,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -758646,7 +758886,7 @@
             },
             {
               "path": "apps/api/src/documents/document.service.ts",
-              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+              "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
             },
             {
               "path": "apps/api/src/electricity/electricity-contract-template.integration.test.ts",
@@ -762024,7 +762264,8 @@
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-business-state-machine-unit-evidence"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -871252,6 +871493,196 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/profile-payment-refund-admission",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "8c37b8aa6734d4c97761ae744998c1dd92686131225a2dd047dc51a5968a8cb0"
+    },
+    "release-0.6-business-state-machine-unit-evidence": {
+      "batch": "release-0.6-business-state-machine-unit-evidence",
+      "base_commit": "e195e28de328f766079d0acd2ee2e2eeaf828f1f",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.02.01"
+      ],
+      "changed_paths": [
+        "apps/api/src/crm/verification-case.service.test.ts",
+        "apps/api/src/documents/document-action-state.test.ts",
+        "apps/api/src/documents/document-action-state.ts",
+        "apps/api/src/documents/document.service.ts",
+        "apps/api/src/profiles/agents.service.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/common/business-state-matrices.test.ts",
+          "sha256": "f0d01207e91c64c160d9c1b328571e3ad2dbedffe35287b14f65661932fa19b0"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-state.ts",
+          "sha256": "ff346d1d1dbed8433f3b5d4510d238951c9c2ce17cdf6cb1ad3520f38bf8e086"
+        },
+        {
+          "path": "apps/api/src/contract/contract-activation-http.integration.test.ts",
+          "sha256": "c16581dc6df65cf3dc4b6c7f30d4f46a1cbb0a5e3c994d15d03bce7d2d51da81"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+          "sha256": "8afde09e446119e9394b1a06d06e34c960c678a646590a41c7fa7173080d497f"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation-snapshot.test.ts",
+          "sha256": "c9720dc4cdefb75acd6e925fde76d4f06d500a6ff91af2ddc9b64e026a7a3cc0"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation-snapshot.ts",
+          "sha256": "83458935cdb847cf2bf81e7178258d504bd9e40a964dd124cb3fd2b0e1871a5e"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation.service.ts",
+          "sha256": "35a15ed616c718c55797f7997ec566a03c27c5244f11194748e6b8ddd32c2821"
+        },
+        {
+          "path": "apps/api/src/contract/contract-journey-authority.test.ts",
+          "sha256": "a6cbde1c9a26ec9dcfc3dbf50a6c25dff9e9eca05620954a180427b82de003de"
+        },
+        {
+          "path": "apps/api/src/contract/contract-review-http.integration.test.ts",
+          "sha256": "743fed37c805090a2876d6ec9181f147a60ccb4360935b436dd7a34b9286a79a"
+        },
+        {
+          "path": "apps/api/src/contract/contract-review.service.ts",
+          "sha256": "ab8124ab8eefc0ad39053e459ef9f5993a7d61ff5a1897202cb17c2e8fd3e34a"
+        },
+        {
+          "path": "apps/api/src/contract/contract-signature-http.integration.test.ts",
+          "sha256": "ea9b76f85e3cccda84b074a88897a2322d06519529dd164633261e0570189304"
+        },
+        {
+          "path": "apps/api/src/contract/contract-signature.service.ts",
+          "sha256": "3c17f16591f60cab8cbbf32bfc043f9f8286c33081a76fb8832d59909cbc337b"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "13f1dfdab981a1ac041b666b6ecb22896f7a96c85cc3120eefdc064b8ae2fccd"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.service.test.ts",
+          "sha256": "af30976ecccf8bbcfc7d663f31bfe4aef520462d60c4ad2e4649ffe14d91f406"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.service.ts",
+          "sha256": "319132938cc59fe27fb88a3b4a54b67e1a038bb9bf99bf87036ab0fb279874a8"
+        },
+        {
+          "path": "apps/api/src/documents/document-action-state.test.ts",
+          "sha256": "d1342cd2e1ebc7e983650553c45d342d963b39a9fc600d8f13ecc3abc5964216"
+        },
+        {
+          "path": "apps/api/src/documents/document-action-state.ts",
+          "sha256": "2da29d5d6c32c17a08baeb177edf718ca0317ac8e973ba5ef200b6101b31105b"
+        },
+        {
+          "path": "apps/api/src/documents/document.service.ts",
+          "sha256": "5e80fd87bc467a6c834211c9ce7009f727bad315f3101c6ad3ee003d979800e0"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order-status.ts",
+          "sha256": "bcb8520565e30d24642802e57bd3ab9e5fc8c429fc8bdf10e2778221296bcc7e"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
+          "sha256": "346ddd012b068bbc325221f932c59579efa0c979cbe3862e687ff2304cd89af8"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
+          "sha256": "a93e582c0005ad88b9eed68f6c1f5b17662dfdcbfcee4b10dafc7fedb644a8d1"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.test.ts",
+          "sha256": "b21e5f5b939d7792cbbf77f838f184024f4e596290098547136ae02146ea4ccb"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state.model.ts",
+          "sha256": "0ca8d4c57161abf296539ab012fdbd868d6750c87a69a7f4828360d8e4f7fee0"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.test.ts",
+          "sha256": "6b21aa09028e37a4025d81b451b14e23a91da30c473815477bda83cf7687f560"
+        },
+        {
+          "path": "apps/api/src/profiles/agents.service.ts",
+          "sha256": "e6fd9fbab61649da75c4f1ca655bd0f1a824b49be875734c5c54613de9565675"
+        },
+        {
+          "path": "apps/api/src/profiles/invitation-acceptance-http.integration.test.ts",
+          "sha256": "d9e7fbffd81f39711b90fe0064fc1bdbaa6c91226cb0bd39bdd6048a04066db3"
+        },
+        {
+          "path": "apps/api/src/profiles/invitation-mutation-http.integration.test.ts",
+          "sha256": "883a4f897268497108acadebacf664c4b6eaf78df66cbd6d0b8364ab35493799"
+        },
+        {
+          "path": "apps/api/src/refund/refund-state.model.test.ts",
+          "sha256": "c013022c1bccacddca19fabd07c3dab35f0f543b6f9916f3e2bfdb6a28d3cd2b"
+        },
+        {
+          "path": "apps/api/src/refund/refund-state.model.ts",
+          "sha256": "08631ac089091fe808fcc5e8ab2339de3ce92ef872d97e760b7f494c3b2703cb"
+        },
+        {
+          "path": "apps/api/src/saving/saving-state.ts",
+          "sha256": "4631507f9ee43aa975fdc66c61f7a5cfd4a634bc01d6a52298f0a3fed06df013"
+        },
+        {
+          "path": "apps/api/src/solar/solar-state.ts",
+          "sha256": "b6665ff11c3b8639e8adb4912c0c75e1b402c27aca78d48da0c49e0bd78b991b"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.test.ts",
+          "sha256": "9c1b2e8aa5cbc4b5fcdf7fa9de0439277acc90ebe758cfaac91a0ae61b7d3f4c"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "fb502f00bb64c8a334231bf86aba40c3c1346d924abde96b7713a49aa7539ff9"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
+          "sha256": "b719b655ba9ed817f5e490a27eee75b17dcc69cdb21940d7de210dd7b6b63df5"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "20fee196398310157afd7bc3f4e5e0d05bd2320019a3f8ebe9c58b50613be93f"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.test.ts",
+          "sha256": "8435d9818045e0de6d25ff983800b470b7c6b89c1ddaca65b48d19596598d088"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+        },
+        {
+          "path": "packages/db/drizzle/production/0140_document_lifecycle.sql",
+          "sha256": "7334c8337f4dce799029dd1fc9a1f00c20063022cfe0dd549f1035b3560a848d"
+        },
+        {
+          "path": "packages/db/src/documents.migrated.test.ts",
+          "sha256": "26656eb7de8af7c95817ac114e7fcf3b242a6eda5c0d2a8f180512fe3dc0062f"
+        },
+        {
+          "path": "packages/db/src/schema/documents.ts",
+          "sha256": "4328349824236f20d5f0b67abe7941a5a1ea6985cd7e805f258e5a14dd8c5d15"
+        },
+        {
+          "path": "packages/db/src/schema/profile-invitations.ts",
+          "sha256": "24e64b1ff73e5b443adfe84dd107602427b1d45b1a7ced48be92cc52fe8f4935"
+        }
+      ],
+      "checks": [
+        "The state unit suites exercise the legal and denied commercial pairs for electricity, saving, solar and consultation, invoice transitions and exact refund guards, contract review and cancellation guards, and payment and wallet credit, reversal, idempotent and rejection states.",
+        "The existing document action policy moved into a directly testable function after the same ownership, staff authority, record, revision and contract guards. All 324 previous action/state/domain/actor combinations matched. New unit tests cover every standard action source, solar review exceptions and scoped removal. Database lifecycle constraints and append-only events still apply.",
+        "New verification-case tests cover all twelve decisions across Open, Under Review, Approved and Rejected, with no state or audit write on invalid pairs and evidence required for the only identity write. Invitation unit tests cover all terminal states and a pending deadline failure, with no membership, state or audit writes.",
+        "The 331 targeted domain unit cases passed, and 39 document and solar cases passed in a related run that includes the same document action unit suite. API typecheck, ESLint, Prettier and diff checks passed.",
+        "The earlier exact hosted run 42759736897 job 129642496352 provides 207 selected unchanged native contract, invitation, verification and migrated document cases. The earlier mounted document HTTP run is excluded from the current-source count. These receipts complement the unit criterion and do not substitute for mounted candidate verification."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/business-state-machine-unit-evidence",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "88e74465bac22b070d91e575361a08491e08730d2f5dd71c55f5e8e9e46c5984"
     }
   },
   "historical_improvements": [

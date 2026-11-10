@@ -229,7 +229,60 @@ describe('AgentsService', () => {
     });
   });
 
-  // Acceptance transaction behavior is covered by invitation-acceptance-http.integration.test.ts.
+  describe('acceptInvitation', () => {
+    it.each(['Accepted', 'Declined', 'Withdrawn', 'Expired', 'Pending'])(
+      'denies a past-deadline %s invitation without writing',
+      async (status) => {
+        const profileId = 'prof-1';
+        const actor = { userId: 'invitee', sessionId: 'session-1', csrfToken: 'csrf-1' };
+        const past = new Date('2026-01-01T00:00:00Z');
+        mockPool.query.mockResolvedValue({ rows: [{ profile_id: profileId }] });
+        mockClient.query.mockImplementation(async (sql: string) => {
+          if (sql.includes('FROM profiles')) {
+            return { rows: [{ user_id: 'owner', profile_type: 'LEGAL', archived: false }] };
+          }
+          if (sql.includes('FROM users')) {
+            return { rows: [{ username: 'invitee@example.test', disabled_at: null }] };
+          }
+          if (sql.includes('FROM sessions')) {
+            return { rows: [{ csrf_token: actor.csrfToken, revoked_at: null }] };
+          }
+          if (sql.includes('FROM profile_invitations')) {
+            return {
+              rows: [
+                {
+                  profile_id: profileId,
+                  username: 'invitee@example.test',
+                  role: 'Legal',
+                  status,
+                  expires_at: past,
+                },
+              ],
+            };
+          }
+          if (sql.includes('FROM account_login_identifiers')) return { rows: [{ found: 1 }] };
+          if (sql.includes('AS invited')) return { rows: [{ active: true, invited: false }] };
+          return { rows: [] };
+        });
+
+        await expect(service.acceptInvitation('invite-1', actor)).rejects.toMatchObject({
+          status: 400,
+        });
+        expect(
+          mockClient.query.mock.calls.some(([sql]) => String(sql).includes('AS invited'))
+        ).toBe(status === 'Pending');
+        expect(
+          mockClient.query.mock.calls.some(([sql]) =>
+            /^(UPDATE|INSERT)\b/.test(String(sql).trimStart())
+          )
+        ).toBe(false);
+        expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+        expect(mockClient.release).toHaveBeenCalledOnce();
+      }
+    );
+  });
+
+  // Successful acceptance and session rotation use the mounted invitation HTTP fixtures.
 
   // Decline authorization/decision races are covered by the invitation HTTP fixtures.
 

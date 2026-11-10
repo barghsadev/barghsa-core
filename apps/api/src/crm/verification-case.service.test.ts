@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { VerificationCaseService } from './verification-case.service.js';
+import { VerificationEvidenceService } from './verification-evidence.service.js';
 
 // ─── Helpers ──────────────────────────────────────────────────────────
 
@@ -165,6 +166,117 @@ describe('VerificationCaseService', () => {
         expect(detail.evidenceUrls).toEqual(['https://s3.example.com/doc1.pdf']);
         expect(detail.reviewedBy).toBeNull();
       }
+    });
+  });
+
+  describe('reviewCase', () => {
+    it.each([
+      ['Open', 'Under Review', true],
+      ['Open', 'Approved', false],
+      ['Open', 'Rejected', true],
+      ['Under Review', 'Under Review', false],
+      ['Under Review', 'Approved', true],
+      ['Under Review', 'Rejected', true],
+      ['Approved', 'Under Review', false],
+      ['Approved', 'Approved', false],
+      ['Approved', 'Rejected', false],
+      ['Rejected', 'Under Review', false],
+      ['Rejected', 'Approved', false],
+      ['Rejected', 'Rejected', false],
+    ] as const)('%s to %s (allowed %s)', async (status, decision, allowed) => {
+      const { pool, mockConnect } = mockPool();
+      const actor = {
+        userId: VALID_USER_ID,
+        sessionId: '00000000-0000-7000-8000-000000000030',
+        csrfToken: 'test-csrf',
+      };
+      const query = vi.fn(async (sql: string, _params?: unknown[]) => {
+        if (sql.includes('FROM users')) return { rows: [{ user_id: actor.userId }] };
+        if (sql.includes('FROM user_roles')) return { rows: [{ permissions: ['crm:verify'] }] };
+        if (sql.includes('SELECT csrf_token')) {
+          return {
+            rows: [
+              {
+                active: true,
+                fresh: true,
+                csrf_token: actor.csrfToken,
+                step_up_verified_at: new Date(),
+              },
+            ],
+          };
+        }
+        if (sql.includes('FROM profiles p')) {
+          return {
+            rows: [{ id: VALID_PROFILE_ID, profile_type: 'INDIVIDUAL', first_name: 'Old' }],
+          };
+        }
+        if (sql.includes('FROM verification_cases WHERE')) {
+          return {
+            rows: [
+              {
+                profile_id: VALID_PROFILE_ID,
+                created_by: 'other-reviewer',
+                status,
+                field_name: 'first_name',
+                current_value: 'Old',
+                requested_value: 'New',
+                evidence_urls: ['sealed.pdf'],
+              },
+            ],
+          };
+        }
+        if (sql.includes('UPDATE profiles SET')) return { rows: [{ id: VALID_PROFILE_ID }] };
+        return { rows: [] };
+      });
+      const release = vi.fn();
+      mockConnect.mockResolvedValue({ query, release });
+      vi.doMock('@barghsa/db', () => ({ getDbPool: () => pool }));
+      const { VerificationCaseService: Svc } = await import('./verification-case.service.js');
+      const evidence = new VerificationEvidenceService();
+      const validate = vi.spyOn(evidence, 'validate').mockResolvedValue(undefined);
+
+      const result = new Svc(evidence).reviewCase(
+        VALID_CASE_ID,
+        { decision, reviewerNotes: 'Review notes' },
+        actor,
+        '203.0.113.10'
+      );
+      if (allowed) {
+        await expect(result).resolves.toEqual({
+          success: true,
+          id: VALID_CASE_ID,
+          status: decision,
+          profileId: VALID_PROFILE_ID,
+        });
+        expect(query).toHaveBeenCalledWith(expect.stringContaining('UPDATE verification_cases'), [
+          decision,
+          actor.userId,
+          'Review notes',
+          VALID_CASE_ID,
+        ]);
+        expect(query).toHaveBeenCalledWith(
+          expect.stringContaining("'verification_case_reviewed'"),
+          expect.any(Array)
+        );
+        expect(query).toHaveBeenCalledWith('COMMIT');
+      } else {
+        await expect(result).rejects.toThrow('Invalid correction state transition');
+        expect(query).not.toHaveBeenCalledWith(
+          expect.stringContaining('UPDATE verification_cases'),
+          expect.any(Array)
+        );
+        expect(query).not.toHaveBeenCalledWith(
+          expect.stringContaining('INSERT INTO audit_log'),
+          expect.any(Array)
+        );
+        expect(query).toHaveBeenCalledWith('ROLLBACK');
+      }
+      const appliesCorrection = allowed && decision === 'Approved';
+      expect(validate).toHaveBeenCalledTimes(appliesCorrection ? 1 : 0);
+      expect(query.mock.calls.filter(([sql]) => sql.includes('UPDATE profiles SET'))).toHaveLength(
+        appliesCorrection ? 1 : 0
+      );
+      expect(release).toHaveBeenCalledOnce();
     });
   });
 
