@@ -11,6 +11,7 @@ import {
   reserveUpload,
   requireOwnedUpload,
   completeUpload,
+  queueUploadScan,
   recordUploadInspection,
 } from './upload-reservations.js';
 import { randomUUID } from 'node:crypto';
@@ -575,7 +576,9 @@ export class UploadService {
     key: string,
     raw: unknown,
     req: AuthenticatedRequest
-  ): Promise<{ key: string; status: string }> {
+  ): Promise<
+    { key: string; status: 'recorded' } | { key: string; status: 'pending_scan'; jobId: string }
+  > {
     this.ensureStorageReady();
     this.ensureImmutableServiceReady();
     const parsed = RecordUploadRequestSchema.safeParse(raw);
@@ -608,6 +611,25 @@ export class UploadService {
         throw new ConflictException('Upload was authorized for a different purpose or profile');
     }
     await requireUploadContext(this.profilesService, req, context.data);
+    const { purpose, profileId, ticketId } = context.data;
+    const existingScan =
+      typeof issued.metadata.scanJobId === 'string' ? issued.metadata.scanJobId : undefined;
+    if (existingScan) {
+      const bound = issued.metadata.scanContext as typeof context.data | undefined;
+      if (
+        !bound ||
+        (['purpose', 'profileId', 'ticketId'] as const).some(
+          (field) => bound[field] !== context.data[field]
+        )
+      )
+        throw new ConflictException('Upload was recorded for a different scan purpose or profile');
+    }
+    // Business documents enqueue their own scan of an immutable copy at confirmation.
+    const scanRequired =
+      Boolean(existingScan || process.env['DOCUMENT_CLAMAV_HOST']?.trim()) &&
+      purpose !== 'business_document' &&
+      purpose !== 'staff_business_document';
+    const scanJobId = scanRequired ? existingScan : undefined;
     if (issued.status === 'active') {
       if (
         (body.purpose !== undefined && body.purpose !== issued.metadata.purpose) ||
@@ -617,10 +639,28 @@ export class UploadService {
         throw new ConflictException(
           'The upload is already recorded for a different purpose or profile'
         );
-      return { key, status: 'recorded' };
+      if (!scanRequired) return { key, status: 'recorded' };
+    }
+    if (scanJobId) {
+      if (issued.metadata.scanState === 'Quarantined')
+        throw new BadRequestException('This file cannot be accepted. Please upload a replacement.');
+      if (issued.metadata.scanState === 'Pending scan')
+        return { key, status: 'pending_scan', jobId: scanJobId };
+      if (
+        issued.metadata.scanState !== 'Available' ||
+        typeof issued.metadata.scanSha256 !== 'string' ||
+        !/^[a-f0-9]{64}$/.test(issued.metadata.scanSha256)
+      )
+        throw new ConflictException('Upload scan receipt is unavailable');
+      if (issued.status === 'active') return { key, status: 'recorded' };
     }
     let detectedContentType: string;
     let actualFileSize: number;
+    let inspection: {
+      contentLength: number;
+      etag: string | undefined;
+      versionId: string | undefined;
+    };
     try {
       const inspected = await this.inspectUploadedObject(key, category);
       if (inspected.kind !== 'confirmed') {
@@ -664,12 +704,16 @@ export class UploadService {
         });
       }
       actualFileSize = trustedSize;
-      await recordUploadInspection(key, req.session.userId, {
-        contentType: detectedContentType,
+      inspection = {
         contentLength: actualFileSize,
         etag: inspected.etag,
         versionId: inspected.versionId,
-      });
+      };
+      if (!scanRequired)
+        await recordUploadInspection(key, req.session.userId, {
+          contentType: detectedContentType,
+          ...inspection,
+        });
     } catch (err) {
       if (err instanceof StorageObjectNotFound) {
         throw new BadRequestException({
@@ -680,7 +724,6 @@ export class UploadService {
       throw err;
     }
 
-    const { purpose, profileId, ticketId } = context.data;
     if (
       purpose === 'conversation_avatar' &&
       (category !== 'image' ||
@@ -692,26 +735,55 @@ export class UploadService {
       );
     await requireUploadContext(this.profilesService, req, context.data);
 
-    await completeUpload({
-      storageKey: key,
-      fileName: body.fileName,
-      contentType: detectedContentType,
-      fileSize: actualFileSize,
-      category,
-      metadata: {
-        verified: true,
-        verifiedAt: new Date().toISOString(),
-        // T-05.11.02 explicitly permits availability when no scanner is configured.
-        // The future scanner integration must replace this branch, never claim a pass on failure.
-        scanState: 'Available',
-        scanSkippedReason: 'not_configured',
-        scanResolvedAt: new Date().toISOString(),
-        uploadedBy: req.session.userId,
-        ...(profileId ? { profileId } : {}),
-        ...(purpose ? { purpose } : {}),
-        ...(ticketId ? { ticketId } : {}),
+    if (scanRequired) {
+      if (!inspection.etag && !inspection.versionId)
+        throw new ServiceUnavailableException(
+          'Storage object identity is unavailable for scanning'
+        );
+      if (!scanJobId) {
+        const jobId = await queueUploadScan({
+          key,
+          userId: req.session.userId,
+          operatingContext: req.session.operatingContext,
+          context: context.data,
+          inspection,
+        });
+        return { key, status: 'pending_scan', jobId };
+      }
+      const scanned = issued.metadata.storageInspection as typeof inspection | undefined;
+      if (
+        scanned?.contentLength !== inspection.contentLength ||
+        scanned.etag !== inspection.etag ||
+        scanned.versionId !== inspection.versionId
+      )
+        throw new ConflictException('Upload changed after scanning');
+    }
+
+    await completeUpload(
+      {
+        storageKey: key,
+        fileName: body.fileName,
+        contentType: detectedContentType,
+        fileSize: actualFileSize,
+        category,
+        metadata: {
+          verified: true,
+          verifiedAt: new Date().toISOString(),
+          ...(scanRequired
+            ? {}
+            : {
+                scanState: 'Available',
+                scanSkippedReason: 'not_configured',
+                scanResolvedAt: new Date().toISOString(),
+              }),
+          uploadedBy: req.session.userId,
+          ...(profileId ? { profileId } : {}),
+          ...(purpose ? { purpose } : {}),
+          ...(ticketId ? { ticketId } : {}),
+        },
       },
-    });
+      scanJobId
+    );
 
     return { key, status: 'recorded' };
   }

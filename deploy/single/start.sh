@@ -50,7 +50,7 @@ done
 sed -i '/^DatabaseDirectory /d' /etc/clamav/freshclam.conf
 printf '\nDatabaseDirectory /data/clamav\n' >> /etc/clamav/freshclam.conf
 sed -i '/^DatabaseDirectory /d; /^TCPSocket /d; /^TCPAddr /d; /^StreamMaxLength /d; /^AlertExceedsMax /d' /etc/clamav/clamd.conf
-printf '\nDatabaseDirectory /data/clamav\nTCPSocket 3310\nTCPAddr 127.0.0.1\nStreamMaxLength 50M\nAlertExceedsMax yes\n' >> /etc/clamav/clamd.conf
+printf '\nDatabaseDirectory /data/clamav\nTCPSocket 3310\nTCPAddr 127.0.0.1\nStreamMaxLength 100M\nAlertExceedsMax yes\n' >> /etc/clamav/clamd.conf
 if ! find /data/clamav -maxdepth 1 \( -name '*.cvd' -o -name '*.cld' \) | grep -q .; then
   freshclam --stdout || { echo 'ClamAV signature download failed' >&2; exit 1; }
 fi

@@ -1,4 +1,5 @@
 import { withCsrf } from './csrf.js';
+import { recordVerifiedUpload } from './record-verified-upload.js';
 
 export function isConversationPhoto(file: File): boolean {
   return (
@@ -40,10 +41,10 @@ export async function uploadBrandingLogo(
     fileSize: file.size,
     category: 'image',
   };
-  const post = (url: string, body?: unknown) =>
+  const post = (url: string, body?: unknown, requestSignal = signal) =>
     fetch(url, {
       method: 'POST',
-      signal,
+      signal: requestSignal,
       headers: withCsrf({ 'Content-Type': 'application/json' }),
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     });
@@ -79,7 +80,9 @@ export async function uploadBrandingLogo(
   const check: unknown = await verified.json();
   if (!check || typeof check !== 'object' || !('status' in check) || check.status !== 'confirmed')
     throw new Error('UPLOAD_FAILED');
-  const record = await post(`/api/upload/${key}/record`, { ...details, purpose });
+  const record = await recordVerifiedUpload(signal, (requestSignal) =>
+    post(`/api/upload/${key}/record`, { ...details, purpose }, requestSignal)
+  );
   if (purpose === 'conversation_avatar' && [401, 403].includes(record.status))
     throw new Error('denied');
   if (!record.ok) throw new Error('UPLOAD_FAILED');

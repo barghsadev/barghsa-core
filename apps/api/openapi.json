@@ -44554,7 +44554,56 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "enum": [
+                            "recorded"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "status"
+                      ],
+                      "type": "object"
+                    },
+                    {
+                      "properties": {
+                        "jobId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "key": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "enum": [
+                            "pending_scan"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "status",
+                        "jobId"
+                      ],
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Recorded, or pending scan with an owner-scoped job ID. Repeat recording after the job completes."
           }
         },
         "tags": [

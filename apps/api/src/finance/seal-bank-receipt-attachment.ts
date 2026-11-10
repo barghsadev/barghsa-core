@@ -1,4 +1,5 @@
 import { HttpException, ConflictException } from '@nestjs/common';
+import { createHash } from 'node:crypto';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { StorageObjectNotFound, type StorageProvider } from '@barghsa/shared/storage';
 import {
@@ -16,6 +17,7 @@ import {
   sniffContentTypes,
   SNIFF_SAMPLE_BYTES,
 } from '../upload/content-type-sniffer.js';
+import { requireCleanUpload } from '../upload/require-clean-upload.js';
 import type { WalletQueryClient } from '../wallet/wallet.service.js';
 export interface StorageLockRow {
   status: string;
@@ -94,6 +96,7 @@ export async function sealBankReceiptAttachment(
   if (!storage) {
     throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.size_unverified);
   }
+  requireCleanUpload(row.metadata, createHash('sha256').update(read.bytes).digest('hex'));
   try {
     await reserveStorageCopy(sealedKey, { sourceKey: attachmentKey, uploadedBy: actorId });
   } catch (error) {

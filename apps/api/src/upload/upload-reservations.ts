@@ -1,6 +1,7 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { createDirectDbPool, getDbPool } from '@barghsa/db';
-import type { CreateRecordOptions } from '@barghsa/shared/storage';
+import { STORAGE_UPLOAD_SCAN_JOB_TYPE, type CreateRecordOptions } from '@barghsa/shared/storage';
+import { v5 as uuidv5 } from 'uuid';
 import type { UploadContext } from './upload.types.js';
 import type { OperatingContext } from '../session/session.service.js';
 
@@ -78,7 +79,8 @@ export async function recordUploadInspection(
       'scanState','Pending scan','scanRequestedAt',COALESCE(metadata->'scanRequestedAt',to_jsonb(clock_timestamp())),
       'storageInspection',$3::jsonb),updated_at=NOW()
      WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2 AND status='removed'
-       AND signed_at IS NULL AND metadata->>'provisionalUpload'='true'
+       AND signed_at IS NULL AND metadata->>'scanJobId' IS NULL
+       AND metadata->>'provisionalUpload'='true'
        AND metadata->>'deletionRequested'='true'
        AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
        AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()`,
@@ -87,13 +89,67 @@ export async function recordUploadInspection(
   if (result.rowCount === 1) return;
   // Concurrent recording is idempotent; removed or expired records cannot be revived.
   const current = await getDbPool().query(
-    "SELECT storage_key FROM storage_records WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2 AND status='active'",
+    `SELECT storage_key FROM storage_records WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2
+     AND (status='active' OR (status='removed' AND metadata->>'scanJobId' IS NOT NULL
+       AND metadata->>'provisionalUpload'='true' AND metadata->>'deletionRequested'='true'
+       AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
+       AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()))`,
     [key, userId]
   );
   if (!current.rows.length) throw new ConflictException('Upload changed; request a new upload');
 }
+
+export async function queueUploadScan(input: {
+  key: string;
+  userId: string;
+  operatingContext: OperatingContext;
+  context: UploadContext;
+  inspection: { contentLength: number; etag: string | undefined; versionId: string | undefined };
+}): Promise<string> {
+  const id = uuidv5(`barghsa:storage-upload-scan:${input.key}`, uuidv5.URL);
+  const result = await getDbPool().query(
+    `WITH source AS MATERIALIZED (
+       SELECT storage_key FROM storage_records WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2
+         AND signed_at IS NULL AND metadata->>'scanJobId' IS NULL AND (status='active' OR
+           (status='removed' AND metadata->>'provisionalUpload'='true'
+            AND metadata->>'deletionRequested'='true'
+            AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
+            AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp())) FOR UPDATE
+     ), created AS (
+       INSERT INTO async_jobs(id,type,payload,created_by,operating_context)
+       SELECT $3::uuid,$4,jsonb_build_object('key',$1::text),$2,$5 FROM source
+       ON CONFLICT (id) DO NOTHING RETURNING id
+     )
+     UPDATE storage_records s SET metadata=(s.metadata-'scanSkippedReason'-'scanResolvedAt'-'scanSha256')
+       ||jsonb_build_object('scanJobId',created.id::text,'scanState','Pending scan',
+          'scanRequestedAt',clock_timestamp(),'storageInspection',$6::jsonb,'scanContext',$7::jsonb),updated_at=NOW()
+     FROM source,created WHERE s.storage_key=source.storage_key`,
+    [
+      input.key,
+      input.userId,
+      id,
+      STORAGE_UPLOAD_SCAN_JOB_TYPE,
+      input.operatingContext,
+      JSON.stringify(input.inspection),
+      JSON.stringify(input.context),
+    ]
+  );
+  if (result.rowCount === 1) return id;
+  const current = await requireOwnedUpload(input.key, input.userId);
+  const context = current.metadata.scanContext as UploadContext | undefined;
+  if (
+    current.metadata.scanJobId !== id ||
+    !context ||
+    (['purpose', 'profileId', 'ticketId'] as const).some(
+      (field) => context[field] !== input.context[field]
+    )
+  )
+    throw new ConflictException('Upload changed; request a new upload');
+  return id;
+}
+
 /** Conditional promotion cannot revive a removed/expired upload or one already cleaned by a worker. */
-export async function completeUpload(options: CreateRecordOptions) {
+export async function completeUpload(options: CreateRecordOptions, scanJobId?: string) {
   const result = await getDbPool().query(
     `UPDATE storage_records SET status='active',
     content_type=$3,file_size=$4,removed_at=NULL,updated_at=NOW(),
@@ -102,6 +158,8 @@ export async function completeUpload(options: CreateRecordOptions) {
     AND status='removed' AND signed_at IS NULL
     AND metadata->>'provisionalUpload'='true' AND metadata->>'deletionRequested'='true'
     AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
+    AND ($6::text IS NULL OR (metadata->>'scanJobId'=$6 AND metadata->>'scanState'='Available'
+      AND metadata->>'scanSha256' ~ '^[a-f0-9]{64}$'))
     AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()`,
     [
       options.storageKey,
@@ -109,6 +167,7 @@ export async function completeUpload(options: CreateRecordOptions) {
       options.contentType,
       options.fileSize,
       JSON.stringify(options.metadata),
+      scanJobId ?? null,
     ]
   );
   if (result.rowCount !== 1)

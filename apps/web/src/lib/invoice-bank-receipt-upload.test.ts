@@ -170,6 +170,40 @@ const reservedUpload = () =>
     expiresIn: 60,
   });
 
+it('returns the receipt key only after the scan completes and recording is confirmed', async () => {
+  const jobId = '82000000-0000-4000-8000-000000000001';
+  let finish!: (response: Response) => void;
+  const request = vi
+    .fn<typeof fetch>()
+    .mockResolvedValueOnce(reservedUpload())
+    .mockResolvedValueOnce(new Response(null, { status: 200 }))
+    .mockResolvedValueOnce(Response.json({ status: 'confirmed' }))
+    .mockResolvedValueOnce(Response.json({ status: 'pending_scan', jobId }))
+    .mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        })
+    )
+    .mockResolvedValueOnce(Response.json({ status: 'recorded' }));
+  vi.stubGlobal('fetch', request);
+  const upload = uploadInvoiceReceiptAttachment(receiptFile(), 'profile');
+  await vi.waitFor(() => expect(request).toHaveBeenCalledTimes(5));
+  expect(request.mock.calls[4]?.[0]).toBe(`/api/jobs/${jobId}`);
+  finish(
+    Response.json({
+      id: jobId,
+      type: 'storage-upload-scan',
+      status: 'completed',
+      progress_pct: 100,
+      result_url: null,
+    })
+  );
+  await expect(upload).resolves.toBe('uploads/document/receipt.pdf');
+  expect(request.mock.calls[5]?.[0]).toBe(request.mock.calls[3]?.[0]);
+  expect(request.mock.calls[5]?.[1]?.body).toBe(request.mock.calls[3]?.[1]?.body);
+});
+
 it.each([
   { step: 'reservation receipt', index: 0, milliseconds: 15_000 },
   { step: 'file transfer', index: 1, milliseconds: 60_000 },

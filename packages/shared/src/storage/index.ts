@@ -32,3 +32,5 @@ export type {
 } from './immutable-storage.js';
 export { ImmutableStorageRecordService, ImmutableRecordDeleteError } from './immutable-storage.js';
 export * from './runtime-config.js';
+
+export const STORAGE_UPLOAD_SCAN_JOB_TYPE = 'storage-upload-scan';

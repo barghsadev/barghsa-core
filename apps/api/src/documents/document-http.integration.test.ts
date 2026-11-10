@@ -12,11 +12,16 @@ import {
 import { expectDocumentAuditHistory } from '../test/core-audit.js';
 import { contractReviewConfirmation } from '../test/contract-review-confirmation.js';
 import { createHash, randomUUID } from 'node:crypto';
+import { createServer } from 'node:net';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import { afterAll, beforeAll, expect, it } from 'vitest';
-import type { StorageProvider } from '@barghsa/shared/storage';
+import {
+  S3StorageProvider,
+  STORAGE_UPLOAD_SCAN_JOB_TYPE,
+  type StorageProvider,
+} from '@barghsa/shared/storage';
 import PDFDocument from 'pdfkit';
 import sharp from 'sharp';
 import { GenericContainer, Wait, type StartedTestContainer } from 'testcontainers';
@@ -2488,6 +2493,194 @@ it('serves private bank receipt previews with current profile authorization and 
   await http.pool.query("UPDATE invoices SET state='Draft' WHERE id=$1", [invoiceId]);
   expect((await preview(f.user, receiptIds[0]!)).status).toBe(404);
 });
+
+it('holds direct uploads until an owner-scoped scan covers the exact stored bytes', async () => {
+  const { scanStoredUpload } = requireWorker(
+    './dist/documents/upload-scan-job.js'
+  ) as typeof import('../../../worker/dist/documents/upload-scan-job.js');
+  const { JobHandlerRegistry, runOneAsyncJob } = requireWorker(
+    './dist/jobs/async-runner.js'
+  ) as typeof import('../../../worker/dist/jobs/async-runner.js');
+  const previous = process.env['DOCUMENT_CLAMAV_HOST'];
+  let configured: typeof http;
+  try {
+    process.env['DOCUMENT_CLAMAV_HOST'] = '127.0.0.1';
+    configured = await startHttpFixture(process.env.TEST_DATABASE_URL!, storageEndpoint);
+  } finally {
+    if (previous === undefined) delete process.env['DOCUMENT_CLAMAV_HOST'];
+    else process.env['DOCUMENT_CLAMAV_HOST'] = previous;
+  }
+  const storage = new S3StorageProvider({
+    bucket: 'test-evidence',
+    endpoint: storageEndpoint,
+    region: 'us-east-1',
+    accessKeyId: 'test-only-key',
+    secretAccessKey: 'test-only-secret',
+    forcePathStyle: true,
+  });
+  let verdict = 'stream: OK';
+  const scanner = createServer({ allowHalfOpen: true }, (socket) => {
+    socket.resume();
+    socket.once('end', () => socket.end(`${verdict}\0`));
+  });
+  try {
+    await new Promise<void>((resolve) => scanner.listen(0, '127.0.0.1', resolve));
+    const address = scanner.address();
+    if (!address || typeof address === 'string') throw new Error('Scanner fixture has no port');
+    const jobs = new JobHandlerRegistry();
+    jobs.register(STORAGE_UPLOAD_SCAN_JOB_TYPE, (payload, context) =>
+      scanStoredUpload(
+        configured.pool,
+        storage,
+        { host: '127.0.0.1', port: address.port },
+        payload,
+        context
+      )
+    );
+    const user = await login(undefined, undefined, configured);
+    const foreign = await login(undefined, undefined, configured);
+    const bytes = await sharp({
+      create: { width: 2, height: 2, channels: 3, background: '#123456' },
+    })
+      .png()
+      .toBuffer();
+    const changed = Buffer.from(bytes);
+    changed[changed.length - 1] = changed[changed.length - 1]! ^ 1;
+    const issue = async (legacy = false) => {
+      const details = {
+        fileName: 'photo.png',
+        contentType: 'image/png',
+        fileSize: bytes.length,
+        category: 'image',
+        purpose: 'conversation_avatar',
+      };
+      const response = await send('upload/presigned-url', user, 'POST', details, configured);
+      expect(response.status, await response.clone().text()).toBe(200);
+      const upload = (await response.json()) as {
+        key: string;
+        presignedUrl: string;
+        headers: Record<string, string>;
+      };
+      expect(
+        (
+          await fetch(upload.presignedUrl, {
+            method: 'PUT',
+            headers: { ...upload.headers, 'Content-Type': 'image/png' },
+            body: new Uint8Array(bytes),
+          })
+        ).ok
+      ).toBe(true);
+      if (legacy) {
+        await configured.pool.query(
+          `UPDATE storage_records SET status='active',removed_at=NULL,
+             metadata=(metadata-'provisionalUpload'-'deletionRequested'-'uploadExpiresAt')
+             ||'{"verified":true,"purpose":"conversation_avatar","scanState":"Available","scanSkippedReason":"not_configured"}'::jsonb
+           WHERE storage_key=$1`,
+          [upload.key]
+        );
+      }
+      const record = (actor = user) =>
+        send(`upload/${encodeURIComponent(upload.key)}/record`, actor, 'POST', details, configured);
+      const pending = await record();
+      expect(pending.status, await pending.clone().text()).toBe(200);
+      const result = (await pending.json()) as { key: string; status: string; jobId: string };
+      expect(result).toEqual({
+        key: upload.key,
+        status: 'pending_scan',
+        jobId: expect.any(String),
+      });
+      return { key: upload.key, record, result };
+    };
+    const read = async (key: string) =>
+      (
+        await configured.pool.query(
+          'SELECT status,metadata FROM storage_records WHERE storage_key=$1',
+          [key]
+        )
+      ).rows[0];
+    const status = (id: string, actor = user) =>
+      send(`jobs/${id}`, actor, 'GET', undefined, configured);
+    const save = (key: string) =>
+      send(
+        'user/settings/conversation-identity',
+        user,
+        'PUT',
+        { displayName: 'Scan fixture', avatarUploadKey: key, revision: 0 },
+        configured
+      );
+    const overwrite = (key: string) =>
+      s3.send(
+        new PutObjectCommand({
+          Bucket: 'test-evidence',
+          Key: key,
+          Body: changed,
+          ContentType: 'image/png',
+        })
+      );
+
+    const clean = await issue();
+    expect(await (await clean.record()).json()).toEqual(clean.result);
+    expect((await clean.record(foreign)).status).toBe(404);
+    expect((await status(clean.result.jobId, foreign)).status).toBe(404);
+    expect(await (await status(clean.result.jobId)).json()).toMatchObject({ status: 'queued' });
+    expect(await read(clean.key)).toMatchObject({
+      status: 'removed',
+      metadata: { scanState: 'Pending scan' },
+    });
+    expect((await save(clean.key)).status).toBe(400);
+    expect(await runOneAsyncJob(configured.pool, jobs)).toBe(true);
+    expect(await (await status(clean.result.jobId)).json()).toMatchObject({ status: 'completed' });
+    expect(await (await clean.record()).json()).toEqual({ key: clean.key, status: 'recorded' });
+    expect(await read(clean.key)).toMatchObject({
+      status: 'active',
+      metadata: {
+        verified: true,
+        scanState: 'Available',
+        scanSha256: createHash('sha256').update(bytes).digest('hex'),
+      },
+    });
+    await overwrite(clean.key);
+    expect((await save(clean.key)).status).toBe(409);
+
+    verdict = 'stream: Eicar-Test-Signature FOUND';
+    const infected = await issue();
+    expect(await runOneAsyncJob(configured.pool, jobs)).toBe(true);
+    expect(await read(infected.key)).toMatchObject({
+      status: 'removed',
+      metadata: { scanState: 'Quarantined' },
+    });
+    expect((await infected.record()).status).toBe(400);
+
+    verdict = 'stream: OK';
+    const replaced = await issue();
+    await overwrite(replaced.key);
+    expect(await runOneAsyncJob(configured.pool, jobs)).toBe(true);
+    expect(await (await status(replaced.result.jobId)).json()).toMatchObject({
+      status: 'failed',
+      error_message: 'JOB_FAILED',
+    });
+    expect(await read(replaced.key)).toMatchObject({
+      status: 'removed',
+      metadata: { scanState: 'Pending scan' },
+    });
+
+    const legacy = await issue(true);
+    expect(await read(legacy.key)).toMatchObject({
+      status: 'active',
+      metadata: { scanState: 'Pending scan' },
+    });
+    expect((await save(legacy.key)).status).toBe(409);
+    expect(await runOneAsyncJob(configured.pool, jobs)).toBe(true);
+    expect(await (await legacy.record()).json()).toEqual({ key: legacy.key, status: 'recorded' });
+    const sealed = await save(legacy.key);
+    expect(sealed.status, await sealed.clone().text()).toBe(200);
+    expect(await sealed.json()).toMatchObject({ revision: 1, avatarUploadKey: legacy.key });
+  } finally {
+    storage.destroy();
+    await new Promise<void>((resolve) => scanner.close(() => resolve()));
+    await configured.close();
+  }
+}, 40_000);
 
 it('keeps staff receipt previews private and downloads both originals as attachments', async () => {
   const f = await owner();

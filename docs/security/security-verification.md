@@ -64,6 +64,15 @@ with bounded concurrency and a deadline. DOCX template and knowledge-base
 extraction cap the entry count and expanded text. Generic ZIP uploads remain
 opaque storage objects.
 
+When a scanner is configured, a direct upload stays provisional while its
+owner-scoped scan job runs. Recording the upload again after a clean verdict
+rechecks the authorized context and object identity. Receipt, verification
+evidence, branding and avatar copies compare the bytes with the scan digest.
+An unclaimed file recorded before scanning was enabled can be recorded again
+to obtain a verdict. Signed historical files remain available through their
+existing reads. Business documents scan their sealed source through the
+document queue.
+
 ## Authorization audit
 
 In the staff workspace, open **Settings → Security → Authorization audit**

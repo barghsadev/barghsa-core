@@ -16,6 +16,7 @@ import {
 } from '@barghsa/shared/finance/browser';
 import { withCsrf } from './csrf.js';
 import { readWithDeadline } from './server-query-client.js';
+import { recordVerifiedUpload } from './record-verified-upload.js';
 
 export { INVOICE_BANK_RECEIPT_FILE_ACCEPT };
 export {
@@ -165,14 +166,16 @@ async function uploadVerifiedAttachment(
   });
   if (verify?.status !== 'confirmed') return null;
 
-  const recordRes = await readWithDeadline(ownerSignal, (signal) =>
-    fetch(`/api/upload/${encodedKey}/record`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: jsonHeaders(),
-      body: JSON.stringify(fields),
-      signal,
-    })
+  const recordRes = await recordVerifiedUpload(ownerSignal, (signal) =>
+    readWithDeadline(signal, (request) =>
+      fetch(`/api/upload/${encodedKey}/record`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: jsonHeaders(),
+        body: JSON.stringify(fields),
+        signal: request,
+      })
+    )
   );
   return recordRes.ok ? key : null;
 }

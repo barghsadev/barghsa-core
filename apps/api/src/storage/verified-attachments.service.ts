@@ -15,6 +15,7 @@ import {
   sniffContentTypes,
   SNIFF_SAMPLE_BYTES,
 } from '../upload/content-type-sniffer.js';
+import { requireCleanUpload } from '../upload/require-clean-upload.js';
 import type { DualApprovalQueryClient } from '../admin/dual-approval-resolution.js';
 const MAX_BYTES = 10 * 1024 * 1024;
 const MIME = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
@@ -86,6 +87,7 @@ export class VerifiedAttachmentsService {
       );
       if (!contentType) throw new BadRequestException('Unsupported attachment file content');
       const digest = createHash('sha256').update(bytes).digest('hex');
+      requireCleanUpload(metadata, digest);
       const sealedKey = `${prefix(purpose)}${randomUUID()}/${digest}`;
       await reserveStorageCopy(sealedKey, {
         purpose,

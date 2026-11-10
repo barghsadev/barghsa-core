@@ -24,6 +24,8 @@ import {
   DOCUMENT_SCAN_JOB_TYPE,
   runDocumentScans,
 } from './documents/scan-runner.js';
+import { scanStoredUpload } from './documents/upload-scan-job.js';
+import { STORAGE_UPLOAD_SCAN_JOB_TYPE } from '@barghsa/shared/storage';
 import {
   DOCUMENT_DESTRUCTION_JOB_TYPE,
   DOCUMENT_DESTRUCTION_POLL_INTERVAL_MS,
@@ -385,6 +387,17 @@ async function main(): Promise<void> {
   if (scannerHost) {
     if (!Number.isInteger(scannerPort) || scannerPort < 1 || scannerPort > 65535)
       throw new Error('Invalid document scanner port');
+    const uploadScans = new JobHandlerRegistry();
+    uploadScans.register(STORAGE_UPLOAD_SCAN_JOB_TYPE, (payload, context) =>
+      scanStoredUpload(
+        getDbPool(),
+        cleanupProvider,
+        { host: scannerHost, port: scannerPort },
+        payload,
+        context
+      )
+    );
+    pollers.every(() => runOneAsyncJob(getDbPool(), uploadScans).then(() => undefined), 1000);
     pollers.every(async () => {
       try {
         if (!cleanupProvider) throw new Error('Document storage is unavailable');

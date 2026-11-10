@@ -1,6 +1,7 @@
 import { createServer, type Server, type Socket } from 'node:net';
+import { createHash } from 'node:crypto';
 import { afterEach, expect, it } from 'vitest';
-import { scanWithClamAv } from './clamav.js';
+import { scanUploadWithClamAv, scanWithClamAv } from './clamav.js';
 
 let server: Server | undefined;
 afterEach(async () => {
@@ -47,6 +48,28 @@ it('distinguishes malware from scanner failures', async () => {
   const fake = await fakeScanner('stream: Eicar-Test-Signature FOUND');
   await expect(scanWithClamAv(Buffer.from('infected'), fake.endpoint)).resolves.toBe('infected');
   expect(() => scanWithClamAv(Buffer.alloc(0), fake.endpoint)).toThrow('size');
+});
+
+it('binds a streamed verdict to the complete bytes across socket frames', async () => {
+  const fake = await fakeScanner('stream: OK');
+  const chunks = [Buffer.alloc(64 * 1024 + 1, 'x'), Buffer.from('last')];
+  const bytes = Buffer.concat(chunks);
+  await expect(
+    scanUploadWithClamAv(ReadableStream.from(chunks), bytes.length, fake.endpoint)
+  ).resolves.toEqual({
+    verdict: 'clean',
+    sha256: createHash('sha256').update(bytes).digest('hex'),
+  });
+  expect(fake.uploaded().readUInt32BE(10)).toBe(64 * 1024);
+  expect(fake.uploaded().readUInt32BE(10 + 4 + 64 * 1024)).toBe(1);
+});
+
+it('rejects a short stream before claiming a verdict', async () => {
+  const fake = await fakeScanner('stream: OK');
+  const bytes = Buffer.from('partial');
+  await expect(
+    scanUploadWithClamAv(ReadableStream.from([bytes]), bytes.length + 1, fake.endpoint)
+  ).rejects.toThrow('size changed');
 });
 
 it('bounds an unresponsive scanner by a wall-clock timeout', async () => {

@@ -109,6 +109,28 @@ export class UploadController {
 
   @Post(':key/record')
   @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    description:
+      'Recorded, or pending scan with an owner-scoped job ID. Repeat recording after the job completes.',
+    schema: {
+      oneOf: [
+        {
+          type: 'object',
+          required: ['key', 'status'],
+          properties: { key: { type: 'string' }, status: { type: 'string', enum: ['recorded'] } },
+        },
+        {
+          type: 'object',
+          required: ['key', 'status', 'jobId'],
+          properties: {
+            key: { type: 'string' },
+            status: { type: 'string', enum: ['pending_scan'] },
+            jobId: { type: 'string', format: 'uuid' },
+          },
+        },
+      ],
+    },
+  })
   recordUpload(
     @Param('key') key: string,
     @Body() raw: unknown,
