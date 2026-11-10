@@ -310,7 +310,7 @@ for (const locale of ['en', 'fa'] as const)
         });
       if (addresses > 2) return route.fulfill({ json: { addresses: [] } });
     });
-    await page.goto(path('saving'));
+    await page.goto(`${path('saving')}?step=1`);
     const next = button(page, 'electricity.order.next', locale);
     const alert = (key: string) =>
       page.getByRole('alert').filter({ hasText: tSaving(key, locale) });
