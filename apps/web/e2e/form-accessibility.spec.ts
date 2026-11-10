@@ -3744,21 +3744,27 @@ for (const locale of ['en', 'fa']) {
   test(`address removal warns, preserves main address and protects pending confirmation (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
-    const addresses = [true, false].map((mainAddress) => ({
-      id: mainAddress ? 'main' : 'second',
-      provinceId: 'province',
-      cityId: 'city',
-      fullAddress: mainAddress ? 'Main street' : 'Second street',
-      postalCode: '1234567890',
-      mainAddress,
-    }));
-    await page.route('**/api/profiles/profile-one/addresses', (route) =>
+    await shell(page, locale, settingsProfileId);
+    const mainId = '01900000-0000-7000-8000-000000000030';
+    const secondId = '01900000-0000-7000-8000-000000000031';
+    const addresses = settingsProfileFixture({
+      id: settingsProfileId,
+      addresses: [true, false].map((mainAddress) => ({
+        id: mainAddress ? mainId : secondId,
+        provinceId: '01900000-0000-7000-8000-000000000032',
+        cityId: '01900000-0000-7000-8000-000000000033',
+        fullAddress: mainAddress ? 'Main street' : 'Second street',
+        postalCode: '1234567890',
+        mainAddress,
+      })),
+    }).addresses;
+    await page.route(`**/api/profiles/${settingsProfileId}/addresses`, (route) =>
       route.fulfill({ json: { addresses } })
     );
     let pending: import('@playwright/test').Route | undefined;
     let writes = 0;
-    await page.route('**/api/profiles/profile-one/addresses/second', (route) => {
+    await page.route(`**/api/profiles/${settingsProfileId}/addresses/${secondId}`, (route) => {
+      expect(route.request().method()).toBe('DELETE');
       writes++;
       pending = route;
     });
@@ -3785,14 +3791,19 @@ for (const locale of ['en', 'fa']) {
     );
     const cancel = dialog.getByRole('button', { name: cancelName, exact: true });
     await expect(cancel).toBeFocused();
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
-    await expect(cancel).toBeFocused();
+    for (let index = 0; index < 5; index++) {
+      await page.keyboard.press('Tab');
+      await expect
+        .poll(() => dialog.evaluate((node) => node.contains(document.activeElement)))
+        .toBe(true);
+    }
     await cancel.click();
     await expect(remove).toBeFocused();
     expect(writes).toBe(0);
     await remove.click();
     const confirm = dialog.getByRole('button', { name: removeName, exact: true });
+    await expect(confirm).toBeDisabled();
+    await approveRiskConfirmation(page, locale === 'fa' ? 'fa' : 'en', 'destructive');
     await confirm.click();
     await expect.poll(() => writes).toBe(1);
     await expect(confirm).toBeDisabled();
@@ -3800,18 +3811,22 @@ for (const locale of ['en', 'fa']) {
     await page.keyboard.press('Escape');
     await expect(dialog).toBeVisible();
     await pending!.fulfill({ status: 503, json: { message: 'Internal English detail' } });
-    await expect(confirm).toBeEnabled();
-    await expect(
-      page.getByText(locale === 'fa' ? 'خطا در حذف آدرس' : 'Failed to delete address', {
-        exact: true,
-      })
-    ).toBeVisible();
+    const refresh = dialog.getByRole('button', {
+      name: tSettingsForms('refreshConfirmation', locale),
+      exact: true,
+    });
+    await expect(dialog.getByRole('alert')).toContainText(tSettingsForms('uncertain', locale));
+    await expect(confirm).toBeDisabled();
     await expect(page.getByText('Internal English detail')).toHaveCount(0);
-    await confirm.click();
-    await expect.poll(() => writes).toBe(2);
+    await refresh.click();
+    await expect(dialog.getByRole('alert')).toContainText(
+      tSettingsForms('confirmationMismatch', locale)
+    );
+    expect(writes).toBe(1);
     addresses.splice(1, 1);
-    await pending!.fulfill({ json: { deleted: true } });
+    await refresh.click();
     await expect(dialog).toHaveCount(0);
+    expect(writes).toBe(1);
     await expect(page.getByText('Second street', { exact: true })).toHaveCount(0);
     await expect(page.getByText('Main street', { exact: true })).toBeVisible();
     await expect(
@@ -3826,22 +3841,45 @@ for (const locale of ['en', 'fa']) {
   test(`address load failure can retry and creation stays with the displayed profile (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
+    await shell(page, locale, settingsProfileId);
+    const otherProfileId = '01900000-0000-7000-8000-000000000040';
+    const provinceId = '01900000-0000-7000-8000-000000000041';
+    const cityId = '01900000-0000-7000-8000-000000000042';
+    let addresses = settingsProfileFixture({ id: settingsProfileId }).addresses;
     let fail = true;
     let saved: unknown;
-    await page.route('**/api/profiles/profile-one/addresses', (route) => {
+    let otherWrites = 0;
+    await page.route(`**/api/profiles/${otherProfileId}/addresses`, (route) => {
+      if (route.request().method() === 'POST') otherWrites++;
+      return route.fulfill({ json: { addresses: [] } });
+    });
+    await page.route(`**/api/profiles/${settingsProfileId}/addresses`, (route) => {
       if (route.request().method() === 'POST') {
-        saved = route.request().postDataJSON();
-        return route.fulfill({ status: 201, json: { id: 'new' } });
+        const body = route.request().postDataJSON() as Record<string, unknown>;
+        saved = body;
+        addresses = settingsProfileFixture({
+          id: settingsProfileId,
+          addresses: [
+            {
+              id: '01900000-0000-7000-8000-000000000043',
+              provinceId: body.provinceId,
+              cityId: body.cityId,
+              fullAddress: body.fullAddress,
+              postalCode: body.postalCode,
+              mainAddress: true,
+            },
+          ],
+        }).addresses;
+        return route.fulfill({ status: 201, json: addresses[0] });
       }
-      return route.fulfill(fail ? { status: 503, json: {} } : { json: { addresses: [] } });
+      return route.fulfill(fail ? { status: 503, json: {} } : { json: { addresses } });
     });
     await page.route('**/api/geography/provinces', (route) =>
-      route.fulfill({ json: [{ id: 'province', nameFa: 'استان', nameEn: 'Province' }] })
+      route.fulfill({ json: [{ id: provinceId, nameFa: 'استان', nameEn: 'Province' }] })
     );
-    await page.route('**/api/geography/provinces/province/cities', (route) =>
+    await page.route(`**/api/geography/provinces/${provinceId}/cities`, (route) =>
       route.fulfill({
-        json: [{ id: 'city', provinceId: 'province', nameFa: 'شهر', nameEn: 'City' }],
+        json: [{ id: cityId, provinceId, nameFa: 'شهر', nameEn: 'City' }],
       })
     );
     await page.goto('/settings/addresses');
@@ -3862,12 +3900,20 @@ for (const locale of ['en', 'fa']) {
     await add.click();
     // A context change elsewhere must not silently retarget this already displayed form.
     await page.route('**/api/profiles', (route) =>
-      route.fulfill({ json: { activeProfileId: 'profile-two', profiles: [] } })
+      route.fulfill({
+        json: {
+          activeProfileId: otherProfileId,
+          profiles: [
+            settingsProfileFixture({ id: otherProfileId, profileType: 'LEGAL', status: 'ACTIVE' }),
+          ],
+          hasDefault: true,
+        },
+      })
     );
     const dialog = page.getByRole('dialog');
-    await dialog.locator('#addresses-field-1').selectOption('province');
-    await expect(dialog.locator('#addresses-field-2 option[value="city"]')).toHaveCount(1);
-    await dialog.locator('#addresses-field-2').selectOption('city');
+    await dialog.locator('#addresses-field-1').selectOption(provinceId);
+    await expect(dialog.locator(`#addresses-field-2 option[value="${cityId}"]`)).toHaveCount(1);
+    await dialog.locator('#addresses-field-2').selectOption(cityId);
     await dialog.locator('#addresses-field-3').fill('Displayed profile street');
     await dialog.locator('#addresses-field-4').fill('1234567890');
     await dialog
@@ -3876,11 +3922,13 @@ for (const locale of ['en', 'fa']) {
     await expect
       .poll(() => saved)
       .toEqual({
-        provinceId: 'province',
-        cityId: 'city',
+        provinceId,
+        cityId,
         fullAddress: 'Displayed profile street',
         postalCode: '1234567890',
+        idempotencyKey: expect.stringMatching(/^[\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12}$/),
       });
     await expect(dialog).toHaveCount(0);
+    expect(otherWrites).toBe(0);
   });
 }
