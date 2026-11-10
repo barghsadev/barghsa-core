@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { fetchBillProviderJson } from '../provider-config/bill-provider-transport.js';
 import { CircuitBreaker } from '../verification/circuit-breaker.js';
 
 export interface BillVerificationResult {
@@ -45,13 +46,7 @@ export class BillVerificationProvider {
       return await this.breaker.call(async () => {
         for (let attempt = 0; attempt < 2; attempt++) {
           try {
-            const response = await fetch(url, {
-              headers: { authorization: `Bearer ${token}`, accept: 'application/json' },
-              signal: AbortSignal.timeout(2_500),
-            });
-            if (response.status === 401 || response.status === 403) throw new Error('auth_error');
-            if (!response.ok) throw new Error('provider_error');
-            const payload: unknown = await response.json();
+            const payload = await fetchBillProviderJson(url, token, 2_500);
             if (
               typeof payload !== 'object' ||
               payload === null ||

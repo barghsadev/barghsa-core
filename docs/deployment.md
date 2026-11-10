@@ -56,6 +56,11 @@ files. Use the bootstrap credentials only for initial provisioning.
 | `STEP_UP_WINDOW_MS`                                                                                                     | Freshness window for step-up authorization in milliseconds.                                                                                            |
 | `ENABLE_VERIFICATION_STUB`, `TEST_SEND_ALLOWLIST`                                                                       | Explicit development and test overrides for the verification stub and authorized notification test destinations.                                       |
 
+Configure the electricity and saving bill providers with trusted HTTPS origins
+and protected tokens. Both adapters refuse redirects and reject response bodies
+larger than 2 MiB. Saving can fall back to staff review. Electricity keeps
+manual entry available when the provider fails.
+
 ## Pilot and staging
 
 1. Prepare the isolated pilot host, protected environment, valid certificate

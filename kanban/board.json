@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T04:38:36+00:00",
-  "source_commit": "4268f758d5eead0b91a83892f943deee93283459",
+  "updated": "2026-11-10T04:42:16+00:00",
+  "source_commit": "6757a7dc07f908b726fd33adcdca07d038f2e2a3",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -18297,7 +18297,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-architecture-and-deployment-documentation"
+          "release-0.6-architecture-and-deployment-documentation",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -18337,7 +18338,7 @@
             },
             {
               "path": "docs/deployment.md",
-              "sha256": "d84a297b4f61aa4a41a0f23614594821daa998d24b2a18f8833b63bc1a8d59c3"
+              "sha256": "57c962b93d7f8c4dffaadf632b178f2ea8c0f95873387643ba93fe584b66732b"
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
@@ -101942,7 +101943,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -102018,7 +102020,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -102166,7 +102168,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-address-amendments.ts",
@@ -113183,7 +113185,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-wallet-reconciliation-log-redaction",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-promotion-policy-and-partial-financial-reconciliation",
@@ -113255,7 +113258,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -113363,7 +113366,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-address-amendments.ts",
@@ -279694,7 +279697,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -279742,7 +279746,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -280670,7 +280674,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -280718,7 +280723,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -281646,7 +281651,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -281694,7 +281700,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -282622,7 +282628,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -282670,7 +282677,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -283598,7 +283605,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -283646,7 +283654,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -284574,7 +284582,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -284622,7 +284631,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -285550,7 +285559,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -285598,7 +285608,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -286526,7 +286536,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -286574,7 +286585,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -287502,7 +287513,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -287550,7 +287562,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -288478,7 +288490,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -288526,7 +288539,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -289454,7 +289467,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -289502,7 +289516,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -290430,7 +290444,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -290478,7 +290493,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -291407,7 +291422,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -291455,7 +291471,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -292383,7 +292399,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -292431,7 +292448,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -293359,7 +293376,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -293407,7 +293425,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -294335,7 +294353,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -294383,7 +294402,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -295311,7 +295330,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -295359,7 +295379,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -296281,7 +296301,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -296289,7 +296310,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -297146,7 +297167,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -297154,7 +297176,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -298011,7 +298033,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -298019,7 +298042,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -299597,7 +299620,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -299605,7 +299629,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -300463,7 +300487,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -300471,7 +300496,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -301328,7 +301353,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -301336,7 +301362,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -302193,7 +302219,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -302201,7 +302228,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -303058,7 +303085,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -303066,7 +303094,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -303924,7 +303952,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -303932,7 +303961,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -304789,7 +304818,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -304797,7 +304827,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -305654,7 +305684,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -305662,7 +305693,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -307239,7 +307270,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -307247,7 +307279,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -308104,7 +308136,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -308112,7 +308145,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -308969,7 +309002,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -308977,7 +309011,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -309834,7 +309868,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -309842,7 +309877,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -310699,7 +310734,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -310707,7 +310743,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -311564,7 +311600,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -311572,7 +311609,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -312429,7 +312466,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -312437,7 +312475,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -313294,7 +313332,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -313302,7 +313341,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -314162,7 +314201,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -314170,7 +314210,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -315027,7 +315067,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -315035,7 +315076,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -315892,7 +315933,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -315900,7 +315942,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -359371,7 +359413,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -359383,7 +359426,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -360367,7 +360410,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -360379,7 +360423,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -361365,7 +361409,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -361377,7 +361422,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -362361,7 +362406,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -362373,7 +362419,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -363357,7 +363403,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -363369,7 +363416,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -364353,7 +364400,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -364365,7 +364413,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -365350,7 +365398,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -365362,7 +365411,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -366346,7 +366395,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -366358,7 +366408,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -367342,7 +367392,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -367354,7 +367405,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -368338,7 +368389,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -368350,7 +368402,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -370066,7 +370118,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -370078,7 +370131,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -371799,7 +371852,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -371811,7 +371865,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -372795,7 +372849,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -372807,7 +372862,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -373791,7 +373846,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -373803,7 +373859,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -374789,7 +374845,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -374801,7 +374858,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -375785,7 +375842,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -375797,7 +375855,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -376786,7 +376844,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -376798,7 +376857,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -377791,7 +377850,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -377803,7 +377863,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -378796,7 +378856,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -378808,7 +378869,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -379800,7 +379861,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -379916,7 +379978,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-address-amendments.ts",
@@ -381096,7 +381158,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -381212,7 +381275,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-address-amendments.ts",
@@ -382392,7 +382455,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -382508,7 +382572,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-address-amendments.ts",
@@ -383688,7 +383752,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -383804,7 +383869,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-address-amendments.ts",
@@ -384985,7 +385050,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -385101,7 +385167,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-address-amendments.ts",
@@ -484809,7 +484875,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Inventory external provider transports and process-wide egress controls. The guarded HTTP and SMTP paths are covered here. Electricity and saving bill adapters still use direct fetch with implicit redirects."
+        "Inventory remaining external provider transports and process-wide egress controls. The electricity and saving bill adapters now use a shared bounded transport for deployment-configured origins."
       ],
       "owner": null,
       "depends_on": [],
@@ -484817,7 +484883,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": null
       }
@@ -484893,7 +484960,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "AI connection testing, completion, embedding and knowledge URL transport have a zero-redirect limit. Close implicit redirect handling in the electricity and saving bill adapters and verify the remaining provider transports."
+        "AI, web-source and bill transports refuse all redirects. Verify equivalent behavior for the remaining external providers."
       ],
       "owner": null,
       "depends_on": [],
@@ -484901,7 +484968,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": null
       }
@@ -484921,7 +484989,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "AI and web-source transports have bounded deadlines and response sizes. Verify bounds across the remaining provider transports, including the bill adapters that currently decode responses without a byte cap."
+        "AI, web-source and bill transports have bounded deadlines and response sizes. Verify the remaining providers and deploy-time constraints."
       ],
       "owner": null,
       "depends_on": [],
@@ -484929,7 +484997,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-bill-provider-network-boundaries"
         ],
         "current_acceptance": null
       }
@@ -745842,7 +745911,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
-              "sha256": "1f6fcd068082b1b22c414cdcf4d57a40b568a2950d41f59bd8ec98869d09feec"
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
@@ -746330,7 +746399,7 @@
             },
             {
               "path": "apps/api/src/saving/bill-verification.provider.ts",
-              "sha256": "6e09d398629dc15a7c6f6192b0c05dd3440ac865e97a6758eaa8e65b7a957cfe"
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
@@ -749542,7 +749611,8 @@
           "release-0.6-wallet-reconciliation-log-redaction",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-bill-provider-network-boundaries"
         ]
       }
     },
@@ -863502,6 +863572,65 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/provider-egress",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "1c502709810935be1080dddc28a609afff62ac07913a6bcd0d69d46a0c59a94c"
+    },
+    "release-0.6-bill-provider-network-boundaries": {
+      "batch": "release-0.6-bill-provider-network-boundaries",
+      "base_commit": "6757a7dc07f908b726fd33adcdca07d038f2e2a3",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.04.01",
+        "06-security-testing-observability.md#T-06.04.04.04",
+        "06-security-testing-observability.md#T-06.04.04.05"
+      ],
+      "changed_paths": [
+        "apps/api/src/electricity/electricity-bill-data.service.ts",
+        "apps/api/src/provider-config/bill-provider-transport.test.ts",
+        "apps/api/src/provider-config/bill-provider-transport.ts",
+        "apps/api/src/saving/bill-verification.provider.ts",
+        "docs/deployment.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
+          "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
+          "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+        },
+        {
+          "path": "apps/api/src/provider-config/bill-provider-transport.test.ts",
+          "sha256": "cf4d1b9273e4c45c185d0847dfdce6e318c3f4d4d486c7b7fb8dddce7c101fb8"
+        },
+        {
+          "path": "apps/api/src/provider-config/bill-provider-transport.ts",
+          "sha256": "7ca2b8743e64d6b8984637bb03e6aeabc8b18c6ca6be9cf56ff874106104e712"
+        },
+        {
+          "path": "apps/api/src/saving/bill-verification.provider.ts",
+          "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
+        },
+        {
+          "path": "apps/api/src/storage/read-capped-bytes.ts",
+          "sha256": "32d3044d546e60e501e053fefd5c8ca14be0af73ec8cdef189dbd33f726dbf22"
+        },
+        {
+          "path": "apps/api/src/verification/circuit-breaker.test.ts",
+          "sha256": "28e4794a3219b86a15aadd8aa5527bbf8cf7a95e4e9edfca7f37aa1a7491bb0a"
+        },
+        {
+          "path": "docs/deployment.md",
+          "sha256": "57c962b93d7f8c4dffaadf632b178f2ea8c0f95873387643ba93fe584b66732b"
+        }
+      ],
+      "checks": [
+        "Both bill adapters originally followed a redirect to a different controlled origin and accepted an oversized valid JSON body. The shared transport now refuses redirects and caps decoded response streams at 2 MiB.",
+        "Real loopback origin and target fixtures verified no redirect destination received a request. Saving retained its bounded retry for provider failures and did not retry oversized invalid data. A full 8,760-reading year and a valid saving verification both passed.",
+        "The 16 targeted bill transport, electricity adapter and circuit-breaker tests passed. API typecheck, lint, formatting and diff checks passed. Existing authenticated route integration and live provider execution are separate evidence.",
+        "Deployment guide records the trusted HTTPS origin, credential, cap and fallback behavior. Existing profile/session authority checks, timeout values, retry classification and financial operations are unchanged."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/bill-provider-transport",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "b1d92225cf95cf12a43d69b3f6b9d6517399cc8f1e919f58621e6af45eb2887b"
     }
   },
   "historical_improvements": [

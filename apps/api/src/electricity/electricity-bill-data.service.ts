@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import type { ValidatedSession } from '../session/session.service.js';
 import { OrdersService } from '../orders/orders.service.js';
+import { fetchBillProviderJson } from '../provider-config/bill-provider-transport.js';
 import { CircuitBreaker, CircuitOpenError } from '../verification/circuit-breaker.js';
 import { calculateDuration } from './electricity-calculation.js';
 import {
@@ -40,13 +41,7 @@ export class HttpBillDataProvider implements BillDataProvider {
       throw new Error('unconfigured');
     }
     return this.breaker.call(async () => {
-      const response = await fetch(url, {
-        headers: { authorization: `Bearer ${token}`, accept: 'application/json' },
-        signal: AbortSignal.timeout(3_000),
-      });
-      if (response.status === 401 || response.status === 403) throw new Error('auth_error');
-      if (!response.ok) throw new Error('provider_error');
-      const payload: unknown = await response.json();
+      const payload = await fetchBillProviderJson(url, token, 3_000);
       if (!Array.isArray(payload)) throw new Error('invalid_data');
       return payload
         .filter(
