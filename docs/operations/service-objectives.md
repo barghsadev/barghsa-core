@@ -60,7 +60,8 @@ fails the weekly regression check at 360 ms and 600 ms p95, respectively,
 or when any required operation fails or misses its sample count. The report
 marks any miss of the underlying 300 ms or 500 ms rehearsal target separately.
 The fixture verifies the final order, paid invoice, wallet debit, reservation
-and notification receipt counts. An isolated run establishes a regression
+and notification receipt counts when all requests complete, including when
+the latency gate fails. An isolated run establishes a regression
 baseline. Production-topology load and recovery require separate evidence.
 
 For a local smoke run, install k6 v2.3.0 and run the dedicated Vitest

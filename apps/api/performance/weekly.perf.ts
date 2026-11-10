@@ -165,10 +165,10 @@ it('measures the seven production entry points with isolated PostgreSQL fixtures
       stdio: 'inherit',
     });
     const [exitCode] = await once(child, 'exit');
-    expect(exitCode).toBe(0);
     const report = JSON.parse(await readFile(reportPath, 'utf8')) as {
       failedChecks: number;
       operations: Array<{
+        operation: string;
         completed: number;
         p50Ms: number;
         p95Ms: number;
@@ -179,7 +179,7 @@ it('measures the seven production entry points with isolated PostgreSQL fixtures
     expect(report.failedChecks).toBe(0);
     expect(report.operations).toHaveLength(7);
     for (const operation of report.operations) {
-      expect(operation).toMatchObject({ completed: samples, regression: false });
+      expect(operation.completed).toBe(samples);
       expect(operation.p50Ms).toBeGreaterThan(0);
       expect(operation.p95Ms).toBeGreaterThanOrEqual(operation.p50Ms);
       if (smoke) expect(operation.p99Ms).toBeNull();
@@ -207,6 +207,16 @@ it('measures the seven production entry points with isolated PostgreSQL fixtures
         invoice_client_addresses: new Set(actors.map((actor) => actor.clientIp)).size,
       },
     ]);
+    await writeFile(
+      reportPath,
+      `${JSON.stringify({ ...report, durableCounts: rows[0] }, null, 2)}\n`
+    );
+    expect(
+      report.operations
+        .filter((operation) => operation.regression)
+        .map(({ operation }) => operation)
+    ).toEqual([]);
+    expect(exitCode).toBe(0);
   } finally {
     try {
       if (server.listening) await new Promise<void>((resolve) => server.close(() => resolve()));

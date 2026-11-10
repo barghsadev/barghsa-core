@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T17:53:32+00:00",
-  "source_commit": "db875e74997da0f6a27d1987497ed0547a3acd6c",
+  "updated": "2026-11-10T17:58:41+00:00",
+  "source_commit": "c6378fb77154de49ee95206e00f8fe0039f5ba93",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -14412,7 +14412,8 @@
         ],
         "batches": [
           "release-0.6-weekly-isolated-load-scenarios",
-          "release-0.6-load-client-address-fixture"
+          "release-0.6-load-client-address-fixture",
+          "release-0.6-load-regression-and-durable-count-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -14428,7 +14429,7 @@
             },
             {
               "path": "apps/api/performance/weekly.perf.ts",
-              "sha256": "d11c411335ce70d7f713ed84b034327594a31e870860d1a889006eda5054bf36"
+              "sha256": "362954082d235cd4d684a4fe3519197f6d25a4c8682146c03b8132c7cc4445cb"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -14472,7 +14473,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
+              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
             }
           ],
           "checks": [
@@ -14483,7 +14484,10 @@
             "The first eight-user full attempt from d3176e98 used a shared loopback address. The invoice list applies an existing 60-per-minute IP quota because this decorator does not set scope to user. The run was intentionally interrupted after 324 HTTP 429 responses. Its partial report has no p99 and is not a passing full-load receipt.",
             "The partial eight-user report recorded p95 above the 20% regression guard for electricity preview 501 ms, order submission 1292 ms, wallet payment 788 ms, invoice list 394 ms and CRM search 2171 ms. Upload reservation and private alert fan-out passed their p95 thresholds in that partial run but lacked full sample counts. Both staging resource caps and the broad CRM match make the result specific to that disposable environment.",
             "The revised fixture passes up to 50 test-network client addresses through the disposable API’s single explicitly trusted loopback hop. The compiled smoke passed all seven operations and verified the actual PostgreSQL invoice quota keys used four distinct addresses. Product proxy policy, quota, business and latency thresholds are unchanged. No full-volume retest or production-equivalent pass is claimed.",
-            "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication."
+            "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication.",
+            "Exact 4c3552e1 performed all 1,000 attempts per operation with zero request failures on the pinned disposable PostgreSQL and compiled API. The 50-address fixture preserved the invoice quota. The regression gate failed on electricity preview at 395.893 ms p95, order submission at 922.761 ms and CRM search at 682.026 ms. Wallet payment at 588.812 ms and invoice list at 319.535 ms also missed the underlying rehearsal targets while remaining within the 20% regression tolerance.",
+            "The run used a one-CPU PostgreSQL container and two CPUs for the API and load runner. One concurrent cgroup snapshot showed 1,073 throttled PostgreSQL periods out of 1,397. This is an isolated load result. The report does not establish production-equivalent capacity or the sole cause of each latency miss.",
+            "The initial full run exited at the latency gate before the durable-count assertions. The revised harness verifies and writes financial and queue counts before failing latency when all samples completed. The genuine four-iteration native smoke verified the persisted counts. A separate injected latency-regression receipt after genuine synthetic requests retained those counts and still failed the gate. No full-load durable-count pass is claimed for the earlier run."
           ],
           "source_renewals": [
             {
@@ -14495,6 +14499,15 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
+            },
+            {
+              "batch": "release-0.6-load-regression-and-durable-count-receipt",
+              "base_commit": "c6378fb77154de49ee95206e00f8fe0039f5ba93",
+              "paths": [
+                "apps/api/performance/weekly.perf.ts",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
             }
           ]
         }
@@ -19199,7 +19212,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
+              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
@@ -19263,6 +19276,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
+            },
+            {
+              "batch": "release-0.6-load-regression-and-durable-count-receipt",
+              "base_commit": "c6378fb77154de49ee95206e00f8fe0039f5ba93",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
             }
           ]
         }
@@ -511858,7 +511879,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
+              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -511881,6 +511902,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
+            },
+            {
+              "batch": "release-0.6-load-regression-and-durable-count-receipt",
+              "base_commit": "c6378fb77154de49ee95206e00f8fe0039f5ba93",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
             }
           ]
         }
@@ -511914,7 +511943,8 @@
         ],
         "batches": [
           "release-0.6-weekly-isolated-load-scenarios",
-          "release-0.6-load-client-address-fixture"
+          "release-0.6-load-client-address-fixture",
+          "release-0.6-load-regression-and-durable-count-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -511930,7 +511960,7 @@
             },
             {
               "path": "apps/api/performance/weekly.perf.ts",
-              "sha256": "d11c411335ce70d7f713ed84b034327594a31e870860d1a889006eda5054bf36"
+              "sha256": "362954082d235cd4d684a4fe3519197f6d25a4c8682146c03b8132c7cc4445cb"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -511974,7 +512004,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
+              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
             }
           ],
           "checks": [
@@ -511985,7 +512015,10 @@
             "The first eight-user full attempt from d3176e98 used a shared loopback address. The invoice list applies an existing 60-per-minute IP quota because this decorator does not set scope to user. The run was intentionally interrupted after 324 HTTP 429 responses. Its partial report has no p99 and is not a passing full-load receipt.",
             "The partial eight-user report recorded p95 above the 20% regression guard for electricity preview 501 ms, order submission 1292 ms, wallet payment 788 ms, invoice list 394 ms and CRM search 2171 ms. Upload reservation and private alert fan-out passed their p95 thresholds in that partial run but lacked full sample counts. Both staging resource caps and the broad CRM match make the result specific to that disposable environment.",
             "The revised fixture passes up to 50 test-network client addresses through the disposable API’s single explicitly trusted loopback hop. The compiled smoke passed all seven operations and verified the actual PostgreSQL invoice quota keys used four distinct addresses. Product proxy policy, quota, business and latency thresholds are unchanged. No full-volume retest or production-equivalent pass is claimed.",
-            "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication."
+            "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication.",
+            "Exact 4c3552e1 performed all 1,000 attempts per operation with zero request failures on the pinned disposable PostgreSQL and compiled API. The 50-address fixture preserved the invoice quota. The regression gate failed on electricity preview at 395.893 ms p95, order submission at 922.761 ms and CRM search at 682.026 ms. Wallet payment at 588.812 ms and invoice list at 319.535 ms also missed the underlying rehearsal targets while remaining within the 20% regression tolerance.",
+            "The run used a one-CPU PostgreSQL container and two CPUs for the API and load runner. One concurrent cgroup snapshot showed 1,073 throttled PostgreSQL periods out of 1,397. This is an isolated load result. The report does not establish production-equivalent capacity or the sole cause of each latency miss.",
+            "The initial full run exited at the latency gate before the durable-count assertions. The revised harness verifies and writes financial and queue counts before failing latency when all samples completed. The genuine four-iteration native smoke verified the persisted counts. A separate injected latency-regression receipt after genuine synthetic requests retained those counts and still failed the gate. No full-load durable-count pass is claimed for the earlier run."
           ],
           "source_renewals": [
             {
@@ -511997,6 +512030,15 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
+            },
+            {
+              "batch": "release-0.6-load-regression-and-durable-count-receipt",
+              "base_commit": "c6378fb77154de49ee95206e00f8fe0039f5ba93",
+              "paths": [
+                "apps/api/performance/weekly.perf.ts",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
             }
           ]
         }
@@ -512017,8 +512059,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Retest the corrected eight-user workload after the verified CRM pagination improvement. Verify all 1,000 samples per operation, p50/p95/p99 and exact financial and queue counts. Diagnose any remaining p95 misses before retry.",
-        "Prove production-equivalent host topology, data/index cardinality and the declared latency budgets separately."
+        "Read back the exact full hosted workload on isolated runner resources. Investigate electricity preview, order submission and CRM search if they still exceed 360/600/360 ms p95. Retain the real database and queue counts even if latency fails.",
+        "Prove the strict rehearsal targets, declared dataset/index cardinality and capacity on the production-equivalent environment."
       ],
       "owner": null,
       "depends_on": [],
@@ -512034,7 +512076,8 @@
         "batches": [
           "release-0.6-weekly-isolated-load-scenarios",
           "release-0.6-load-client-address-fixture",
-          "release-0.6-crm-page-before-profile-summaries"
+          "release-0.6-crm-page-before-profile-summaries",
+          "release-0.6-load-regression-and-durable-count-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -512050,7 +512093,7 @@
             },
             {
               "path": "apps/api/performance/weekly.perf.ts",
-              "sha256": "d11c411335ce70d7f713ed84b034327594a31e870860d1a889006eda5054bf36"
+              "sha256": "362954082d235cd4d684a4fe3519197f6d25a4c8682146c03b8132c7cc4445cb"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -512094,7 +512137,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
+              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
             },
             {
               "path": "apps/api/src/crm/crm.service.ts",
@@ -512112,7 +512155,10 @@
             "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication.",
             "EXPLAIN ANALYZE on the migrated disposable fixture with 6,003 users showed 6,003 and 5,000 profile summaries constructed before limiting the English and Persian results. The reviewed query selects the exact bounded user page first when no aggregate controls eligibility or sort, then constructs 21 summaries including lookahead.",
             "On the resource-capped isolated PostgreSQL fixture, English query execution moved from 286.359 to 64.581 ms and Persian from 242.320 to 95.764 ms. These are single exact query-plan measurements. They do not certify mixed-load p95 or production capacity.",
-            "Profile-count order and verification conditions retain the aggregate-first query. All sort, null ordering, cursor, literal name and complete profile-summary behavior uses the existing bound inputs and fixed column map. All 19 CRM units and 62 compiled CRM HTTP cases passed across the 207 production migrations. API strict type checking, formatting and lint passed."
+            "Profile-count order and verification conditions retain the aggregate-first query. All sort, null ordering, cursor, literal name and complete profile-summary behavior uses the existing bound inputs and fixed column map. All 19 CRM units and 62 compiled CRM HTTP cases passed across the 207 production migrations. API strict type checking, formatting and lint passed.",
+            "Exact 4c3552e1 performed all 1,000 attempts per operation with zero request failures on the pinned disposable PostgreSQL and compiled API. The 50-address fixture preserved the invoice quota. The regression gate failed on electricity preview at 395.893 ms p95, order submission at 922.761 ms and CRM search at 682.026 ms. Wallet payment at 588.812 ms and invoice list at 319.535 ms also missed the underlying rehearsal targets while remaining within the 20% regression tolerance.",
+            "The run used a one-CPU PostgreSQL container and two CPUs for the API and load runner. One concurrent cgroup snapshot showed 1,073 throttled PostgreSQL periods out of 1,397. This is an isolated load result. The report does not establish production-equivalent capacity or the sole cause of each latency miss.",
+            "The initial full run exited at the latency gate before the durable-count assertions. The revised harness verifies and writes financial and queue counts before failing latency when all samples completed. The genuine four-iteration native smoke verified the persisted counts. A separate injected latency-regression receipt after genuine synthetic requests retained those counts and still failed the gate. No full-load durable-count pass is claimed for the earlier run."
           ],
           "source_renewals": [
             {
@@ -512124,6 +512170,15 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
+            },
+            {
+              "batch": "release-0.6-load-regression-and-durable-count-receipt",
+              "base_commit": "c6378fb77154de49ee95206e00f8fe0039f5ba93",
+              "paths": [
+                "apps/api/performance/weekly.perf.ts",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
             }
           ]
         }
@@ -512424,7 +512479,8 @@
         ],
         "batches": [
           "release-0.6-weekly-isolated-load-scenarios",
-          "release-0.6-load-client-address-fixture"
+          "release-0.6-load-client-address-fixture",
+          "release-0.6-load-regression-and-durable-count-receipt"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -512440,7 +512496,7 @@
             },
             {
               "path": "apps/api/performance/weekly.perf.ts",
-              "sha256": "d11c411335ce70d7f713ed84b034327594a31e870860d1a889006eda5054bf36"
+              "sha256": "362954082d235cd4d684a4fe3519197f6d25a4c8682146c03b8132c7cc4445cb"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -512484,7 +512540,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
+              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
             }
           ],
           "checks": [
@@ -512495,7 +512551,10 @@
             "The first eight-user full attempt from d3176e98 used a shared loopback address. The invoice list applies an existing 60-per-minute IP quota because this decorator does not set scope to user. The run was intentionally interrupted after 324 HTTP 429 responses. Its partial report has no p99 and is not a passing full-load receipt.",
             "The partial eight-user report recorded p95 above the 20% regression guard for electricity preview 501 ms, order submission 1292 ms, wallet payment 788 ms, invoice list 394 ms and CRM search 2171 ms. Upload reservation and private alert fan-out passed their p95 thresholds in that partial run but lacked full sample counts. Both staging resource caps and the broad CRM match make the result specific to that disposable environment.",
             "The revised fixture passes up to 50 test-network client addresses through the disposable API’s single explicitly trusted loopback hop. The compiled smoke passed all seven operations and verified the actual PostgreSQL invoice quota keys used four distinct addresses. Product proxy policy, quota, business and latency thresholds are unchanged. No full-volume retest or production-equivalent pass is claimed.",
-            "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication."
+            "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication.",
+            "Exact 4c3552e1 performed all 1,000 attempts per operation with zero request failures on the pinned disposable PostgreSQL and compiled API. The 50-address fixture preserved the invoice quota. The regression gate failed on electricity preview at 395.893 ms p95, order submission at 922.761 ms and CRM search at 682.026 ms. Wallet payment at 588.812 ms and invoice list at 319.535 ms also missed the underlying rehearsal targets while remaining within the 20% regression tolerance.",
+            "The run used a one-CPU PostgreSQL container and two CPUs for the API and load runner. One concurrent cgroup snapshot showed 1,073 throttled PostgreSQL periods out of 1,397. This is an isolated load result. The report does not establish production-equivalent capacity or the sole cause of each latency miss.",
+            "The initial full run exited at the latency gate before the durable-count assertions. The revised harness verifies and writes financial and queue counts before failing latency when all samples completed. The genuine four-iteration native smoke verified the persisted counts. A separate injected latency-regression receipt after genuine synthetic requests retained those counts and still failed the gate. No full-load durable-count pass is claimed for the earlier run."
           ],
           "source_renewals": [
             {
@@ -512507,6 +512566,15 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
+            },
+            {
+              "batch": "release-0.6-load-regression-and-durable-count-receipt",
+              "base_commit": "c6378fb77154de49ee95206e00f8fe0039f5ba93",
+              "paths": [
+                "apps/api/performance/weekly.perf.ts",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
             }
           ]
         }
@@ -513891,7 +513959,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
+              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -513914,6 +513982,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
+            },
+            {
+              "batch": "release-0.6-load-regression-and-durable-count-receipt",
+              "base_commit": "c6378fb77154de49ee95206e00f8fe0039f5ba93",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
             }
           ]
         }
@@ -517223,7 +517299,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
+              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -517258,6 +517334,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
+            },
+            {
+              "batch": "release-0.6-load-regression-and-durable-count-receipt",
+              "base_commit": "c6378fb77154de49ee95206e00f8fe0039f5ba93",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
             }
           ]
         }
@@ -517537,7 +517621,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
+              "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
             },
             {
               "path": "architecture.md",
@@ -517568,6 +517652,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Trusted loopback fixture addresses only and additive documentation. All production request limits and rehearsal budgets are unchanged."
+            },
+            {
+              "batch": "release-0.6-load-regression-and-durable-count-receipt",
+              "base_commit": "c6378fb77154de49ee95206e00f8fe0039f5ba93",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Retain original route samples, limits and p95 assertions. Verify and persist actual database postconditions before checking latency. The full prior threshold misses remain recorded."
             }
           ]
         }
@@ -906347,6 +906439,144 @@
           "sha256": "9bf86eea34f12e66a28dd309b3effba10d05587306324c8e65e742b740df3fe8"
         }
       ]
+    },
+    "release-0.6-load-regression-and-durable-count-receipt": {
+      "batch": "release-0.6-load-regression-and-durable-count-receipt",
+      "base_commit": "c6378fb77154de49ee95206e00f8fe0039f5ba93",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.02",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.11.03.03",
+        "06-security-testing-observability.md#T-06.11.03.06"
+      ],
+      "changed_paths": [
+        "apps/api/performance/weekly.perf.ts",
+        "docs/operations/service-objectives.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/performance/weekly.perf.ts",
+          "sha256": "362954082d235cd4d684a4fe3519197f6d25a4c8682146c03b8132c7cc4445cb"
+        },
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "de3d4ab0bed5e1409c612133be476092ab68904e0d3303de75e046838309ad24"
+        }
+      ],
+      "checks": [
+        "Exact 4c3552e1 performed all 1,000 attempts per operation with zero request failures on the pinned disposable PostgreSQL and compiled API. The 50-address fixture preserved the invoice quota. The regression gate failed on electricity preview at 395.893 ms p95, order submission at 922.761 ms and CRM search at 682.026 ms. Wallet payment at 588.812 ms and invoice list at 319.535 ms also missed the underlying rehearsal targets while remaining within the 20% regression tolerance.",
+        "The run used a one-CPU PostgreSQL container and two CPUs for the API and load runner. One concurrent cgroup snapshot showed 1,073 throttled PostgreSQL periods out of 1,397. This is an isolated load result. The report does not establish production-equivalent capacity or the sole cause of each latency miss.",
+        "The initial full run exited at the latency gate before the durable-count assertions. The revised harness verifies and writes financial and queue counts before failing latency when all samples completed. The genuine four-iteration native smoke verified the persisted counts. A separate injected latency-regression receipt after genuine synthetic requests retained those counts and still failed the gate. No full-load durable-count pass is claimed for the earlier run."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "proof_logs": [
+        {
+          "file": "performance-full-post-crm-native.log",
+          "sha256": "da9ecde10ec19b73502a5de6f79dfa69128ccb8c727f9ad287f1f5f4c6f3c76b"
+        },
+        {
+          "file": "performance-durable-counts-native.log",
+          "sha256": "97313a1745f9f07ea4e1100159b0172ed904274fb17c85d2b13ef61305568ba2"
+        },
+        {
+          "file": "performance-full-post-crm-resource-snapshot.txt",
+          "sha256": "3d37a2fbdf600b921a5842305ee0008289013b018e8b9b4ea0ca08f83301214e"
+        }
+      ],
+      "full_load_observation": {
+        "source": "4c3552e1509d1405464ec246d342019d0ac03add",
+        "environment": "isolated-load",
+        "concurrency": 8,
+        "requestedSamples": 1000,
+        "warmupIterations": 0,
+        "dataset": {
+          "customerAccounts": 1000,
+          "backgroundProfiles": 5000,
+          "seededInvoices": 13000,
+          "operationsRecipients": 3,
+          "clientAddresses": 50
+        },
+        "failedChecks": 0,
+        "operations": [
+          {
+            "operation": "electricity_preview",
+            "completed": 1000,
+            "budgetP95Ms": 300,
+            "regressionThresholdMs": 360,
+            "p50Ms": 282.032428,
+            "p95Ms": 395.89293345,
+            "p99Ms": 462.71513233999997,
+            "withinBudget": false,
+            "regression": true
+          },
+          {
+            "operation": "order_submission",
+            "completed": 1000,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 653.483111,
+            "p95Ms": 922.7608002999996,
+            "p99Ms": 1206.0787977399993,
+            "withinBudget": false,
+            "regression": true
+          },
+          {
+            "operation": "wallet_payment",
+            "completed": 1000,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 397.9554155,
+            "p95Ms": 588.8116950499999,
+            "p99Ms": 711.17238337,
+            "withinBudget": false,
+            "regression": false
+          },
+          {
+            "operation": "invoice_list",
+            "completed": 1000,
+            "budgetP95Ms": 300,
+            "regressionThresholdMs": 360,
+            "p50Ms": 213.897438,
+            "p95Ms": 319.53549485,
+            "p99Ms": 391.92365039,
+            "withinBudget": false,
+            "regression": false
+          },
+          {
+            "operation": "crm_search",
+            "completed": 1000,
+            "budgetP95Ms": 300,
+            "regressionThresholdMs": 360,
+            "p50Ms": 412.587508,
+            "p95Ms": 682.02558485,
+            "p99Ms": 778.10161653,
+            "withinBudget": false,
+            "regression": true
+          },
+          {
+            "operation": "upload_authorization",
+            "completed": 1000,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 233.824735,
+            "p95Ms": 384.97382035,
+            "p99Ms": 482.17191445,
+            "withinBudget": true,
+            "regression": false
+          },
+          {
+            "operation": "notification_fanout",
+            "completed": 1000,
+            "budgetP95Ms": 500,
+            "regressionThresholdMs": 600,
+            "p50Ms": 95.053454,
+            "p95Ms": 184.01260235,
+            "p99Ms": 204.27513136,
+            "withinBudget": true,
+            "regression": false
+          }
+        ]
+      }
     }
   },
   "historical_improvements": [
