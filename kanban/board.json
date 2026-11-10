@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T18:23:04+00:00",
-  "source_commit": "34feb68fa0cd74fbaf0f21ffe7ed5f10fa379c05",
+  "updated": "2026-11-10T18:26:18+00:00",
+  "source_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -18303,7 +18303,8 @@
         "batches": [
           "release-0.6-existing-config-store-and-secret-service",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "source-bound-platform-secret-service",
@@ -18322,7 +18323,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
@@ -18374,6 +18375,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -497286,7 +497295,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -497326,7 +497336,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -497382,6 +497392,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -497459,7 +497477,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -497515,7 +497534,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -497564,6 +497583,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -498456,7 +498483,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -498546,7 +498574,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             }
           ],
           "source_renewals": [
@@ -498572,6 +498600,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -498605,7 +498641,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -498695,7 +498732,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             }
           ],
           "source_renewals": [
@@ -498721,6 +498758,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -498754,7 +498799,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -498844,7 +498890,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             }
           ],
           "source_renewals": [
@@ -498870,6 +498916,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -499460,7 +499514,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-crm-page-before-profile-summaries"
+          "release-0.6-crm-page-before-profile-summaries",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "source-bound-sql-field-allowlists",
@@ -499544,7 +499599,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             }
           ],
           "checks": [
@@ -499577,6 +499632,14 @@
                 "apps/api/src/crm/crm.service.ts"
               ],
               "scope": "Preserve all current query and authority semantics. Build profile summaries after bounded user pagination where aggregate eligibility and sort do not apply."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -500583,7 +500646,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-ai-and-payment-transport-boundaries",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -500615,7 +500679,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -500653,6 +500717,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -500697,7 +500769,8 @@
           "release-0.6-provider-egress-regressions",
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-ai-and-payment-transport-boundaries",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -500729,7 +500802,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -500767,6 +500840,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -503184,7 +503265,8 @@
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-protected-storage-origins",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -503312,7 +503394,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -503372,6 +503454,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -503633,7 +503723,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -503693,7 +503784,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -503723,6 +503814,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -503768,7 +503867,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -503817,7 +503917,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -503845,6 +503945,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -504059,7 +504167,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -504140,7 +504249,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -504169,6 +504278,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -504330,7 +504447,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-native-credential-and-migration-acceptance",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "source-bound-encryption-overlap-native",
@@ -504370,7 +504488,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
@@ -504423,6 +504541,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -505998,7 +506124,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -506006,7 +506133,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "docs/threat-model.md",
@@ -506036,6 +506163,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -506107,7 +506242,8 @@
           ".github/PULL_REQUEST_TEMPLATE.md"
         ],
         "batches": [
-          "release-0.6-source-grounded-threat-model-and-review"
+          "release-0.6-source-grounded-threat-model-and-review",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -506115,7 +506251,7 @@
           "source_evidence": [
             {
               "path": ".github/PULL_REQUEST_TEMPLATE.md",
-              "sha256": "e1c538bad767ebb987aad419a669584479642ac21cb11b337f8906b7459b2ba0"
+              "sha256": "2f98802bbf0bdc41fd70a3742d21b3c38d0767b86950d1392ee855abfa97b8ce"
             },
             {
               "path": "docs/threat-model.md",
@@ -506124,6 +506260,16 @@
           ],
           "checks": [
             "The pull request template includes the required threat-model checklist item and links to the exact repository document. The checklist covers trust boundary, sensitive data, provider, permission and financial changes."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                ".github/PULL_REQUEST_TEMPLATE.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
+            }
           ]
         }
       },
@@ -506179,7 +506325,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -506187,7 +506334,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -506217,6 +506364,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -506326,7 +506481,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -506334,7 +506490,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -506364,6 +506520,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -506421,7 +506585,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -506437,7 +506602,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             }
           ],
           "checks": [
@@ -506464,6 +506629,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -506533,7 +506706,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -506593,7 +506767,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -506627,6 +506801,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -512061,7 +512243,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -512077,7 +512260,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             }
           ],
           "checks": [
@@ -512104,6 +512287,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -512164,7 +512355,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -512172,7 +512364,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -512306,6 +512498,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -515326,7 +515526,8 @@
           "packages/shared/src/log-privacy.ts"
         ],
         "batches": [
-          "release-0.6-operator-log-pseudonyms"
+          "release-0.6-operator-log-pseudonyms",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "scoped-operator-log-verification",
@@ -515618,7 +515819,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "packages/shared/package.json",
@@ -515648,6 +515849,14 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -515847,7 +516056,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-dual-approval-and-emergency-evidence",
-          "release-0.6-operator-log-pseudonyms"
+          "release-0.6-operator-log-pseudonyms",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
@@ -516219,7 +516429,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "packages/shared/package.json",
@@ -516272,6 +516482,14 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -516376,7 +516594,8 @@
           "packages/shared/src/log-privacy.ts"
         ],
         "batches": [
-          "release-0.6-operator-log-pseudonyms"
+          "release-0.6-operator-log-pseudonyms",
+          "release-0.6-definition-of-done-and-exception-templates"
         ],
         "current_acceptance": {
           "kind": "scoped-operator-log-verification",
@@ -516668,7 +516887,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "9121ad5ccfa702ec55c993aa6c6a5d1742b95f1f9d1e16507b1c48168f220238"
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
             },
             {
               "path": "packages/shared/package.json",
@@ -516698,6 +516917,14 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-and-exception-templates",
+              "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
             }
           ]
         }
@@ -521194,19 +521421,36 @@
         "story": "06-security-testing-observability.md#spec-40335dab1cff"
       },
       "requirement": "| T-06.19.01.01 | Create DoD PR checklist template (5 categories, 25+ items) with checkboxes | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-definition-of-done-and-exception-templates"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-document-template-verification",
+          "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+          "checks": [
+            "The GitHub checklist contains 26 checkboxes across the five required categories. It preserves the migration instructions and threat-model check.",
+            "Verified all four relative links and anchors in the reviewed scope, exact preservation of the existing security guide before the new section, Markdown formatting and a clean whitespace check."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/PULL_REQUEST_TEMPLATE.md",
+              "sha256": "2f98802bbf0bdc41fd70a3742d21b3c38d0767b86950d1392ee855abfa97b8ce"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+            }
+          ]
+        }
       }
     },
     {
@@ -521272,19 +521516,36 @@
         "story": "06-security-testing-observability.md#spec-40335dab1cff"
       },
       "requirement": "| T-06.19.01.04 | Create exception template: written scope, risk, compensating control, owner, approver, expiry | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-definition-of-done-and-exception-templates"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-document-template-verification",
+          "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+          "checks": [
+            "The exception template records scope, risk, compensating control, owner, approver and expiry. It excludes the five protected gate classes and requires a restricted written record.",
+            "Verified all four relative links and anchors in the reviewed scope, exact preservation of the existing security guide before the new section, Markdown formatting and a clean whitespace check."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/PULL_REQUEST_TEMPLATE.md",
+              "sha256": "2f98802bbf0bdc41fd70a3742d21b3c38d0767b86950d1392ee855abfa97b8ce"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+            }
+          ]
+        }
       }
     },
     {
@@ -521328,14 +521589,16 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "The written exception template excludes all five protected gate classes. Verify this rule in the actual issue and CI exception enforcement path before accepting enforcement."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-definition-of-done-and-exception-templates"
+        ],
         "current_acceptance": null
       }
     },
@@ -907807,6 +908070,69 @@
         {
           "file": "registration-recovery-strength-source.sha256",
           "sha256": "ba2aba8763f9cbc98c4916fef1d7462052108471bb6f137b3d590d63b59af69d"
+        }
+      ]
+    },
+    "release-0.6-definition-of-done-and-exception-templates": {
+      "batch": "release-0.6-definition-of-done-and-exception-templates",
+      "base_commit": "1ba0726b111345a9456cb65428e084dffdd46117",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.19.01.01",
+        "06-security-testing-observability.md#T-06.19.01.04",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "01-platform-infrastructure.md#T-07.02.04",
+        "06-security-testing-observability.md#T-06.03.01.09",
+        "06-security-testing-observability.md#T-06.03.01.10",
+        "06-security-testing-observability.md#T-06.03.03.02",
+        "06-security-testing-observability.md#T-06.03.03.03",
+        "06-security-testing-observability.md#T-06.03.03.04",
+        "06-security-testing-observability.md#T-06.04.02.02",
+        "06-security-testing-observability.md#T-06.04.04.04",
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.06.01.08",
+        "06-security-testing-observability.md#T-06.06.02.01",
+        "06-security-testing-observability.md#T-06.06.02.06",
+        "06-security-testing-observability.md#T-06.07.01.04",
+        "06-security-testing-observability.md#T-06.08.01.04",
+        "06-security-testing-observability.md#T-06.08.01.06",
+        "06-security-testing-observability.md#T-06.08.02.01",
+        "06-security-testing-observability.md#T-06.08.02.03",
+        "06-security-testing-observability.md#T-06.08.02.04",
+        "06-security-testing-observability.md#T-06.08.02.05",
+        "06-security-testing-observability.md#T-06.11.02.01",
+        "06-security-testing-observability.md#T-06.11.02.02",
+        "06-security-testing-observability.md#T-06.13.02.03",
+        "06-security-testing-observability.md#T-06.13.02.06",
+        "06-security-testing-observability.md#T-06.13.02.07"
+      ],
+      "changed_paths": [
+        ".github/PULL_REQUEST_TEMPLATE.md",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/PULL_REQUEST_TEMPLATE.md",
+          "sha256": "2f98802bbf0bdc41fd70a3742d21b3c38d0767b86950d1392ee855abfa97b8ce"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+        }
+      ],
+      "checks": [
+        "The GitHub checklist contains 26 checkboxes across the five required categories. It preserves the migration instructions and threat-model check.",
+        "The exception template records scope, risk, compensating control, owner, approver and expiry. It excludes the five protected gate classes and requires a restricted written record.",
+        "Verified all four relative links and anchors in the reviewed scope, exact preservation of the existing security guide before the new section, Markdown formatting and a clean whitespace check."
+      ],
+      "unchanged_older_bindings": [
+        "06-security-testing-observability.md#T-06.08.02.02"
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "proof_logs": [
+        {
+          "file": "definition-of-done-checks.json",
+          "sha256": "c3aa1407125b32b2701936d17f820dd4b5745644a301a0153139363f53f776c4"
         }
       ]
     }

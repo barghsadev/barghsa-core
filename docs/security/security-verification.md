@@ -297,3 +297,24 @@ The live edge omitted HSTS and forwarded `X-Powered-By: Express`. The API
 disables the framework header at startup. Check the header through the live
 candidate's ingress and keep HSTS activation tied to the TLS and subdomain
 review. [HSTS rule](https://www.zaproxy.org/docs/alerts/10035/), [Framework header rule](https://www.zaproxy.org/docs/alerts/10037/).
+
+## Definition of done exception
+
+Use this record for a specific unmet [checklist item](../../.github/PULL_REQUEST_TEMPLATE.md#definition-of-done)
+when the release owner or responsible reviewer has authority to approve an
+exception. Store the completed record with the restricted review evidence and
+link it from the task board. The item stays open until the designated approver
+records a decision. An expired exception requires fresh approval and evidence.
+
+| Field                | Record                                                                                                                      |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Scope                | Qualified task and checklist item, exact commit and environment, affected flow, and the reason the criterion remains unmet. |
+| Risk                 | Expected impact, likelihood, exposed users or data, and the evidence used for the assessment.                               |
+| Compensating control | Active safeguard, its limits, and the receipt showing that it works for this scope.                                         |
+| Owner                | Person accountable for the control, follow-up and retest.                                                                   |
+| Approver             | Authorized person, decision date in UTC, and written approval reference.                                                    |
+| Expiry               | Date and time in UTC, remediation or removal plan, and the retest required before renewal.                                  |
+
+Financial correctness, authorization, auditability, backup and recovery, and
+Credential Critical security findings are ineligible for exceptions. Keep those
+items open until the required controls and evidence are in place.
