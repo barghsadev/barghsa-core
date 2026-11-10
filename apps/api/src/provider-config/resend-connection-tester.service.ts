@@ -99,10 +99,19 @@ async function safeApiError(res: Response, action?: string): Promise<string> {
   return `${prefix} failed (HTTP ${res.status})${detail ? `: ${detail}` : ''}`;
 }
 
-/** Strip the API key credential material that Resend may echo back. */
-function redactApiKey(message: string, apiKey: string): string {
-  if (!apiKey) return message;
-  return message.split(apiKey).join('••••');
+/** Strip credentials and contacts that Resend may echo. */
+function sanitizeError(error: unknown, config: ResendConfig, recipient: string): string {
+  let message = error instanceof Error ? error.message : String(error);
+  for (const value of [
+    config.api_key,
+    config.webhook_secret,
+    recipient,
+    config.from_email,
+    config.reply_to,
+  ]) {
+    if (value) message = message.split(value).join('••••');
+  }
+  return message.slice(0, 1000);
 }
 
 @Injectable()
@@ -141,8 +150,8 @@ export class ResendConnectionTesterService {
     try {
       domains = await this.client.listDomains(config.api_key);
     } catch (err) {
-      const message = redactApiKey((err as Error).message, config.api_key);
-      this.logger.warn(`Resend domain lookup failed for ${domain}: ${message}`);
+      const message = sanitizeError(err, config, recipient);
+      this.logger.warn('Resend domain lookup failed');
       return {
         ok: false,
         error: `Could not verify sending domain: ${message}`,
@@ -176,15 +185,16 @@ export class ResendConnectionTesterService {
         text: 'This test email confirms the Resend email provider configuration.',
       });
       if (result.id) return { ok: true };
-      const message = redactApiKey(
+      const message = sanitizeError(
         result.message ?? 'Resend did not confirm delivery',
-        config.api_key
+        config,
+        recipient
       );
-      this.logger.warn(`Resend test-send failed: ${message}`);
+      this.logger.warn('Resend test-send failed');
       return { ok: false, error: message, transient: isTransientEmailError(result) };
     } catch (err) {
-      const message = redactApiKey((err as Error).message, config.api_key);
-      this.logger.warn(`Resend test-send failed: ${message}`);
+      const message = sanitizeError(err, config, recipient);
+      this.logger.warn('Resend test-send failed');
       return { ok: false, error: message, transient: isTransientEmailError(err) };
     }
   }

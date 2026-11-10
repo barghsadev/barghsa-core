@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import type { VerificationResult } from '@barghsa/shared/verification';
 import { VerificationProviderAdapter } from '../provider.interface.js';
 
@@ -20,8 +19,6 @@ export class StubVerificationProvider extends VerificationProviderAdapter {
   readonly providerId = 'stub';
   readonly displayName = 'Stub Provider (Development)';
 
-  private readonly logger = new Logger(StubVerificationProvider.name);
-
   private stubResult: 'success' | 'failure' = 'success';
 
   /** Override the stub result for testing. */
@@ -31,8 +28,6 @@ export class StubVerificationProvider extends VerificationProviderAdapter {
 
   async verify(input: Record<string, unknown>): Promise<VerificationResult> {
     const nationalId = String(input['nationalId'] ?? '');
-
-    this.logger.debug(`Stub verification for nationalId=${nationalId}`);
 
     // Simulate a small delay
     await new Promise((resolve) => setTimeout(resolve, 50));

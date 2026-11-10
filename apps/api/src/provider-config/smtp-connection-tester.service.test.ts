@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { Logger } from '@nestjs/common';
 import nodemailer from 'nodemailer';
 import { SmtpConnectionTesterService } from './smtp-connection-tester.service';
 import { SmtpNetworkGuard } from './smtp-network-guard';
@@ -102,19 +103,23 @@ describe('SmtpConnectionTesterService (T-05.06.02)', () => {
   it('redacts a failed send after a successful handshake and closes the connection', async () => {
     const password = 'private-fixture-password',
       close = vi.fn();
+    const recipient = 'private-recipient@example.test';
+    const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
     const service = new SmtpConnectionTesterService(
       () => ({
         verify: async () => true,
         sendMail: async () => {
-          throw new Error(`delivery rejected ${password}`);
+          throw new Error(`delivery rejected ${password} for ${recipient}`);
         },
         close,
       }),
       new SmtpNetworkGuard({ resolve: async () => ['93.184.216.34'] })
     );
-    const result = await service.test({ ...baseConfig, password }, 'staff@example.com');
+    const result = await service.test({ ...baseConfig, password }, recipient);
     expect(result.ok).toBe(false);
     expect(result.error).not.toContain(password);
+    expect(result.error).not.toContain(recipient);
+    expect(warn).toHaveBeenCalledExactlyOnceWith('SMTP connection test failed');
     expect(close).toHaveBeenCalledOnce();
   });
   it('checks authorization again after the handshake and before sending', async () => {

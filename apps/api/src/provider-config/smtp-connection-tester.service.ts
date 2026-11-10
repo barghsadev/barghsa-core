@@ -54,11 +54,14 @@ const defaultTransportFactory: SmtpTransportFactory = (config, checkedHost) => {
   });
 };
 
-/** Strip credential material that nodemailer may embed in an error message. */
-function sanitizeError(err: unknown, config: SmtpConfig): string {
+/** Strip credentials and contacts that the SMTP server may echo. */
+function sanitizeError(err: unknown, config: SmtpConfig, recipient: string): string {
   let message = err instanceof Error ? err.message : String(err);
   if (config.password) message = message.split(config.password).join('••••');
   if (config.username) message = message.split(config.username).join('***');
+  for (const address of [recipient, config.from_email, config.reply_to]) {
+    if (address) message = message.split(address).join('••••');
+  }
   const trimmed = message.slice(0, 1000);
   return trimmed || 'SMTP handshake failed';
 }
@@ -129,8 +132,8 @@ export class SmtpConnectionTesterService {
         ? { ok: true }
         : { ok: false, error: 'SMTP server did not accept the test recipient' };
     } catch (err) {
-      const message = sanitizeError(err, config);
-      this.logger.warn(`SMTP connection test failed for ${config.host}: ${message}`);
+      const message = sanitizeError(err, config, recipient);
+      this.logger.warn('SMTP connection test failed');
       return { ok: false, error: message, transient: isTransientEmailError(err) };
     } finally {
       transport.close?.();

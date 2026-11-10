@@ -185,7 +185,7 @@ export class VerificationProviderRegistry {
             DEFAULT_RETRY_CONFIG.maxDelayMs
           );
           this.logger.warn(
-            `Verification attempt ${attempt + 1} failed for provider "${providerId}": ${String(error)}. Retrying in ${delay}ms`
+            `Verification attempt ${attempt + 1} failed for provider "${providerId}". Retrying in ${delay}ms`
           );
           await new Promise((resolve) => setTimeout(resolve, delay));
         }
@@ -201,7 +201,7 @@ export class VerificationProviderRegistry {
       code: isTimeout ? 'TIMEOUT' : 'PROVIDER_ERROR',
       message: isTimeout
         ? 'Verification service did not respond in time. Please try again.'
-        : `Verification failed: ${errorMessage}`,
+        : 'Verification provider failed. Please try again.',
       durationMs: Date.now() - startTime,
       rawResponse: {
         error: isTimeout

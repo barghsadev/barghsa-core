@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { Logger } from '@nestjs/common';
 import {
   ResendConnectionTesterService,
   type ResendApiClientLike,
@@ -118,6 +119,30 @@ describe('ResendConnectionTesterService (T-05.06.03)', () => {
     expect(result.ok).toBe(false);
     expect(result.error).toContain('Could not verify sending domain');
   });
+
+  it.each(['domain lookup', 'test-send'] as const)(
+    'bounds private %s failure diagnostics',
+    async (phase) => {
+      const recipient = 'private-recipient@example.test';
+      const diagnostic = `temporary refusal for ${recipient} and ${baseConfig.api_key}`;
+      const client = fakeClient(
+        phase === 'domain lookup'
+          ? {
+              listDomains: async () => {
+                throw new Error(diagnostic);
+              },
+            }
+          : { sendEmail: async () => ({ message: diagnostic }) }
+      );
+      const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+      const result = await new ResendConnectionTesterService(client).test(baseConfig, recipient);
+      expect(result.ok).toBe(false);
+      expect(result.error).toContain('temporary refusal');
+      expect(result.error).not.toContain(recipient);
+      expect(result.error).not.toContain(baseConfig.api_key);
+      expect(warn).toHaveBeenCalledExactlyOnceWith(`Resend ${phase} failed`);
+    }
+  );
   for (const phase of ['domain', 'send'])
     for (const status of [401, 429, 503]) {
       it(`classifies actual Resend ${phase} HTTP ${status} response`, async () => {

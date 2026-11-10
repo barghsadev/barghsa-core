@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { Logger } from '@nestjs/common';
 import { DEFAULT_CIRCUIT_BREAKER, type VerificationResult } from '@barghsa/shared/verification';
 import { VerificationProviderRegistry } from './provider-registry.js';
 import { StubVerificationProvider } from './providers/stub.provider.js';
@@ -55,6 +56,44 @@ describe('VerificationProviderRegistry', () => {
   describe('verify', () => {
     beforeEach(() => {
       registry.register(new StubVerificationProvider());
+    });
+
+    it('keeps the submitted identity out of stub diagnostics', async () => {
+      const debug = vi.spyOn(Logger.prototype, 'debug').mockImplementation(() => undefined);
+      try {
+        const nationalId = '0123456789';
+        const result = await registry.verify('stub', { nationalId });
+        expect(result.verified).toBe(true);
+        expect(JSON.stringify(debug.mock.calls)).not.toContain(nationalId);
+      } finally {
+        debug.mockRestore();
+      }
+    });
+
+    it('keeps adapter exceptions out of retry diagnostics and returned failures', async () => {
+      const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+      const adapter = registry.getAdapter('stub')!;
+      const verify = vi
+        .spyOn(adapter, 'verify')
+        .mockRejectedValue(new Error('private adapter detail'));
+      try {
+        const result = await registry.verify(
+          'stub',
+          { nationalId: '0123456789' },
+          {
+            providerId: 'stub',
+            enabled: true,
+            settings: { maxRetries: '1' },
+          }
+        );
+        expect(verify).toHaveBeenCalledTimes(2);
+        expect(warn).toHaveBeenCalledExactlyOnceWith(expect.stringContaining('Retrying in'));
+        expect(JSON.stringify(warn.mock.calls)).not.toContain('private adapter detail');
+        expect(result.code).toBe('PROVIDER_ERROR');
+        expect(JSON.stringify(result)).not.toContain('private adapter detail');
+      } finally {
+        warn.mockRestore();
+      }
     });
 
     it('returns error for unknown provider', async () => {
