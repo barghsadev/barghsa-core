@@ -2,6 +2,7 @@ import { mockPublicAuthCsrf } from './public-auth-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { skipToMain } from './critical-accessibility';
+import { startPrimaryMobilePerformance } from './primary-mobile-performance';
 
 for (const locale of ['fa', 'en'])
   for (const darkMode of [false, true])
@@ -9,6 +10,7 @@ for (const locale of ['fa', 'en'])
       'login fields, normalization and generic errors (' + locale + ', dark=' + darkMode + ')',
       { tag: '@a11y-critical' },
       async ({ page }, testInfo) => {
+        const measure = await startPrimaryMobilePerformance(page, testInfo);
         await page.addInitScript((locale) => {
           localStorage.setItem('barghsa.locale', locale);
           localStorage.setItem('barghsa-locale', locale);
@@ -53,6 +55,7 @@ for (const locale of ['fa', 'en'])
           submit = page.locator('button[type=submit]');
         // The route's loading page also has a main landmark. Wait for the form.
         await expect(username).toBeVisible();
+        await measure();
         await skipToMain(page, locale);
         await page.keyboard.press('Tab');
         await expect(username).toBeFocused();

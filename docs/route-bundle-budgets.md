@@ -17,3 +17,9 @@ Size Limit and its file plugin are pinned to 12.1.0, which supports the project'
 The auth build aliases the generated route tree to `apps/web/src/routeTree.auth.ts`, which contains only paths served by the auth entry. Keep it aligned with `apps/web/entry-routes.js` when adding a public auth path. The main build still uses the generated full route tree.
 
 The regression fixture runs the actual CLI. It verifies shared dependency deduplication, admission of a small route, rejection of an oversized shared chunk and rejection of a missing asset.
+
+## Primary mobile pages
+
+CI runs the existing sign-in and populated electricity, savings, solar and consultation history journeys on a cold Chromium mobile profile in Persian and English. The profile uses 4 Mbit/s download, 1 Mbit/s upload, 100 ms network latency and 2× CPU slowdown. It requires largest contentful paint and the first visible form or history row in under 2,500 ms, cumulative layout shift at most 0.1 and startup blocking at most 200 ms. The blocking measurement sums the portions of startup long tasks above 50 ms. Field interaction latency requires real-user measurement. [Core Web Vitals](https://web.dev/articles/vitals) · [Total Blocking Time](https://developer.chrome.com/docs/lighthouse/performance/lighthouse-total-blocking-time)
+
+The production build stores smaller Brotli and gzip copies of content-hashed JavaScript and CSS. The server selects an acceptable encoding and retains the original asset for clients that request identity. The four history entry pages also receive nonce-bearing preload links to their initial JavaScript, resolved from the build manifest. Interaction chunks keep their existing lazy loading. [HTTP Accept-Encoding](https://www.rfc-editor.org/rfc/rfc9110.html#section-12.5.3)

@@ -126,6 +126,12 @@ async function proposal() {
   );
   await act(async () => vi.dynamicImportSettled());
 }
+async function waitForPriceConfirmation() {
+  await vi.waitFor(async () => {
+    await act(async () => {});
+    expect(container.querySelector('[role="dialog"]')).not.toBeNull();
+  });
+}
 function deferred() {
   let resolve!: (value: Response) => void;
   const promise = new Promise<Response>((done) => {
@@ -319,8 +325,8 @@ it('preserves price proposal drafts, confirmation and publish key through recove
     )
   );
   await proposal();
+  await waitForPriceConfirmation();
   const action = captured.action;
-  expect(container.querySelector('[role="dialog"]')).not.toBeNull();
   const input = container.querySelector('#price-reason');
   status = 503;
   await click('Refresh');
@@ -393,13 +399,14 @@ it('invalidates price confirmation and its publish key when the version changes 
     )
   );
   await proposal();
+  await waitForPriceConfirmation();
   const oldKey = (captured.action!.body as { idempotencyKey: string }).idempotencyKey;
   changed = true;
   await click('Refresh');
   expect(container.querySelector('[role="dialog"]')).toBeNull();
   expect((container.querySelector('#price-reason') as HTMLInputElement).value).toBe('Draft reason');
   await proposal();
-  expect(container.querySelector('[role="dialog"]')).not.toBeNull();
+  await waitForPriceConfirmation();
   expect((captured.action!.body as { idempotencyKey: string }).idempotencyKey).not.toBe(oldKey);
 });
 
@@ -492,6 +499,7 @@ it('an obsolete price write cannot clear new drafts after permission recovery', 
     )
   );
   await proposal();
+  await waitForPriceConfirmation();
   const oldSuccess = captured.success!;
   expect(oldSuccess).toBeTypeOf('function');
   status = 403;

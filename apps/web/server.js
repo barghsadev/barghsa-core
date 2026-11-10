@@ -77,24 +77,48 @@ function resolveDistPath(distDir, urlPath) {
  * Try to serve a static file from dist.
  * Returns the file content and MIME type, or null if not found.
  */
-async function serveFile(distDir, urlPath) {
+async function serveFile(distDir, urlPath, acceptEncoding = '') {
   const filePath = resolveDistPath(distDir, urlPath);
   if (!filePath) return null;
+  const immutable = IMMUTABLE_PATTERN.test(filePath.slice(distDir.length));
+  if (immutable && /\.(js|css)\.(gz|br)$/.test(filePath)) return null;
 
   try {
     const stats = await stat(filePath);
     if (!stats.isFile()) return null;
-    const content = await readFile(filePath);
     const ext = extname(filePath).toLowerCase();
     const contentType = MIME_TYPES[ext] ?? 'application/octet-stream';
-    return {
-      content,
-      contentType,
-      immutable: IMMUTABLE_PATTERN.test(filePath.slice(distDir.length)),
-    };
+    if (immutable && (ext === '.js' || ext === '.css')) {
+      for (const { coding, suffix } of preferredEncodings(acceptEncoding)) {
+        try {
+          const content = await readFile(`${filePath}.${suffix}`);
+          return { content, contentType, immutable, encoding: coding };
+        } catch (error) {
+          if (error.code !== 'ENOENT') throw error;
+        }
+      }
+    }
+    return { content: await readFile(filePath), contentType, immutable };
   } catch {
     return null;
   }
+}
+
+function preferredEncodings(header) {
+  const quality = new Map();
+  for (const entry of header.toLowerCase().split(',')) {
+    const [name, parameter] = entry.trim().split(';');
+    const q = parameter?.trim().match(/^q\s*=\s*(0(?:\.\d{0,3})?|1(?:\.0{0,3})?)$/);
+    quality.set(name.trim(), parameter === undefined ? 1 : Number(q?.[1] ?? 0));
+  }
+  const wildcard = quality.get('*') ?? 0;
+  const identity = quality.get('identity') ?? 0;
+  return [
+    { coding: 'br', suffix: 'br', weight: quality.get('br') ?? wildcard },
+    { coding: 'gzip', suffix: 'gz', weight: quality.get('gzip') ?? wildcard },
+  ]
+    .filter(({ weight }) => weight > 0 && weight >= identity)
+    .sort((a, b) => b.weight - a.weight);
 }
 
 /**
@@ -112,6 +136,9 @@ async function serveFile(distDir, urlPath) {
  */
 export function createStaticServer(options = {}) {
   const distDir = resolve(options.distDir ?? DEFAULT_DIST_DIR);
+  const historyPreloads = readFile(join(distDir, '.vite', 'history-preloads.json'), 'utf8')
+    .then((content) => JSON.parse(content))
+    .catch(() => ({}));
   const cspMode = process.env['WEB_CSP_MODE'] ?? 'report-only';
   if (cspMode !== 'report-only' && cspMode !== 'enforce') {
     throw new Error('WEB_CSP_MODE must be report-only or enforce');
@@ -152,10 +179,15 @@ export function createStaticServer(options = {}) {
     );
 
     // Only trusted build output is annotated. Request headers never supply the nonce.
-    const sendHtml = (content) => {
+    const sendHtml = (content, preloads = []) => {
       const nonce = randomBytes(24).toString('base64');
+      const links = preloads
+        .filter((file) => typeof file === 'string' && /^assets\/[a-zA-Z0-9_-]+\.js$/.test(file))
+        .map((file) => `<link rel="modulepreload" crossorigin href="/${file}">`)
+        .join('');
       const html = content
         .toString('utf8')
+        .replace('</head>', `${links}</head>`)
         .replace(/<(script|style|link)\b[^>]*>/gi, (tag, name) => {
           if (name.toLowerCase() === 'link' && !/\brel\s*=\s*["']modulepreload["']/i.test(tag))
             return tag;
@@ -182,7 +214,7 @@ export function createStaticServer(options = {}) {
     }
 
     // Try to serve the exact file
-    const file = await serveFile(distDir, url);
+    const file = await serveFile(distDir, url, req.headers['accept-encoding']);
 
     if (file) {
       if (file.contentType.startsWith('text/html')) {
@@ -201,6 +233,7 @@ export function createStaticServer(options = {}) {
         'Content-Type': file.contentType,
         'Content-Length': file.content.length,
         'Cache-Control': cacheControl,
+        ...(file.encoding ? { 'Content-Encoding': file.encoding } : {}),
       });
 
       if (req.method === 'GET') {
@@ -224,12 +257,12 @@ export function createStaticServer(options = {}) {
     }
 
     // SPA fallback — serve index.html for client-side routing
-    const index = await serveFile(
-      distDir,
-      isAuthEntryPath(url) ? '/auth/index.html' : '/index.html'
-    );
+    const authEntry = isAuthEntryPath(url);
+    const index = await serveFile(distDir, authEntry ? '/auth/index.html' : '/index.html');
     if (index) {
-      sendHtml(index.content);
+      const route = url.split(/[?#]/, 1)[0].replace(/\/+$/, '');
+      const files = authEntry ? [] : (await historyPreloads)?.[route];
+      sendHtml(index.content, Array.isArray(files) ? files : []);
       return;
     }
 

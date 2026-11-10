@@ -153,6 +153,23 @@ jobs:
       - run: pnpm check:db-snapshot
       - name: Install production browser check runtime
         run: pnpm --filter @barghsa/web exec playwright install --with-deps chromium
+      - name: Enforce primary mobile page performance
+        run: |
+          node scripts/run-production-browser.mjs \
+            e2e/login-ui.spec.ts e2e/customer-service-history-views.spec.ts \
+            --project=mobile-chrome --workers=1 --reporter=list,json
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_PRIMARY_MOBILE_PERF: '1'
+          PLAYWRIGHT_JSON_OUTPUT_FILE: ${{ runner.temp }}/primary-mobile-performance.json
+      - name: Upload primary mobile measurements
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: primary-mobile-performance
+          path: ${{ runner.temp }}/primary-mobile-performance.json
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Enforce critical page accessibility
         if: env.FULL_CI != 'true'
         run: |

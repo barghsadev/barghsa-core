@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { scanCriticalMain } from './critical-accessibility';
 import { checkRoutePresentation } from './route-presentation';
+import { startPrimaryMobilePerformance } from './primary-mobile-performance';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/app';
 import { tSaving } from '@barghsa/i18n/saving';
@@ -28,6 +29,7 @@ for (const locale of ['en', 'fa'] as const) {
       `${kind} views retain pages, workflow links and preferences (${locale})`,
       { tag: '@a11y-critical' },
       async ({ page }, info) => {
+        const measure = await startPrimaryMobilePerformance(page, info);
         const mobile = (page.viewportSize()?.width ?? 1280) < 768;
         const config = {
           saving: {
@@ -179,6 +181,7 @@ for (const locale of ['en', 'fa'] as const) {
         const table = page.getByRole('table', { name: config.title, exact: true });
         await page.goto(`${config.path}?sort=submitted_at%3Aasc`);
         await expect(detail(first)).toBeVisible();
+        await measure();
         await scanCriticalMain(page);
         await expect(mobile ? cardButton : tableButton).toHaveAttribute('aria-pressed', 'true');
         expect(

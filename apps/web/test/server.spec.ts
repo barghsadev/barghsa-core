@@ -5,6 +5,10 @@ import { mkdtemp, writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { request } from 'node:http';
+import { compressStaticAssets } from '../compress-static-assets.mjs';
+
+const compressibleScript = 'console.log("static");\n'.repeat(256);
+const compressibleCss = 'body { color: red; }\n'.repeat(256);
 
 /**
  * Helper: make an HTTP request and return the status, headers, and body.
@@ -53,12 +57,20 @@ describe('static server', () => {
     );
     await mkdir(join(distDir, 'assets'));
     await mkdir(join(distDir, 'auth'));
+    await mkdir(join(distDir, 'auth', 'assets'));
+    await mkdir(join(distDir, '.vite'));
+    await writeFile(
+      join(distDir, '.vite', 'history-preloads.json'),
+      JSON.stringify({ '/electricity/orders': ['assets/gzip-a1b2c3d4.js', '//invalid.test/a.js'] })
+    );
     await writeFile(
       join(distDir, 'auth', 'index.html'),
       '<html><body>Authentication<script type="module" src="/auth/assets/auth-a1b2c3d4.js"></script></body></html>'
     );
     await writeFile(join(distDir, 'assets', 'app-a1b2c3d4.js'), 'console.log("ok");');
     await writeFile(join(distDir, 'assets', 'style-XyZ78901.css'), 'body { color: red; }');
+    await writeFile(join(distDir, 'assets', 'gzip-a1b2c3d4.js'), compressibleScript);
+    await writeFile(join(distDir, 'auth', 'assets', 'gzip-a1b2c3d4.css'), compressibleCss);
     await writeFile(join(distDir, 'data.json'), JSON.stringify({ key: 'value' }));
     for (const directory of [distDir, join(distDir, 'auth')]) {
       await writeFile(
@@ -66,6 +78,7 @@ describe('static server', () => {
         JSON.stringify({ version: '0.1.0', commit: 'a'.repeat(40) })
       );
     }
+    await compressStaticAssets(distDir);
 
     server = createStaticServer({ distDir });
     return new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
@@ -223,6 +236,72 @@ describe('static server', () => {
   it('sets immutable Cache-Control for content-hashed assets', async () => {
     const res = await fetch(server, '/assets/app-a1b2c3d4.js');
     expect(res.headers['cache-control']).toBe('public, immutable, max-age=31536000');
+  });
+
+  it.each([
+    ['/assets/gzip-a1b2c3d4.js', compressibleScript],
+    ['/auth/assets/gzip-a1b2c3d4.css', compressibleCss],
+  ])('serves the negotiated gzip bytes for %s without exposing sidecars', async (path, body) => {
+    const addr = server.address();
+    if (!addr || typeof addr === 'string') throw new Error('Static fixture is unavailable');
+    const encoded = await globalThis.fetch(`http://127.0.0.1:${addr.port}${path}`, {
+      headers: { 'Accept-Encoding': 'gzip' },
+    });
+    expect(encoded.status).toBe(200);
+    expect(encoded.headers.get('content-encoding')).toBe('gzip');
+    expect(encoded.headers.get('vary')).toBe('Accept-Encoding');
+    expect(encoded.headers.get('cache-control')).toBe('public, immutable, max-age=31536000');
+    const length = Number(encoded.headers.get('content-length'));
+    expect(length).toBeGreaterThan(0);
+    expect(length).toBeLessThan(Buffer.byteLength(body));
+    expect(await encoded.text()).toBe(body);
+
+    const head = await fetch(server, path, 'HEAD', { 'Accept-Encoding': 'gzip' });
+    expect(head).toMatchObject({
+      status: 200,
+      headers: { 'content-length': String(length), 'content-encoding': 'gzip' },
+      body: '',
+    });
+    const brotli = await globalThis.fetch(`http://127.0.0.1:${addr.port}${path}`, {
+      headers: { 'Accept-Encoding': 'gzip, br' },
+    });
+    expect(brotli.headers.get('content-encoding')).toBe('br');
+    expect(await brotli.text()).toBe(body);
+    expect((await fetch(server, `${path}.br`)).status).toBe(404);
+    const weighted = await fetch(server, path, 'HEAD', {
+      'Accept-Encoding': 'br;q=0.4,gzip;q=0.8',
+    });
+    expect(weighted.headers['content-encoding']).toBe('gzip');
+
+    const identity = await fetch(server, path, 'GET', {
+      'Accept-Encoding': '*;q=1,gzip;q=0,br;q=0',
+    });
+    expect(identity).toMatchObject({ status: 200, body });
+    expect(identity.headers['content-encoding']).toBeUndefined();
+    expect((await fetch(server, `${path}.gz`)).status).toBe(404);
+  });
+
+  it('keeps HTML, metadata and old assets on their original representation', async () => {
+    for (const path of ['/login', '/release.json', '/assets/app-a1b2c3d4.js']) {
+      const result = await fetch(server, path, 'GET', { 'Accept-Encoding': 'gzip' });
+      expect(result.status).toBe(200);
+      expect(result.headers['content-encoding']).toBeUndefined();
+    }
+  });
+
+  it('preloads trusted history modules with the page nonce for the matching route', async () => {
+    const history = await fetch(server, '/electricity/orders/?q=visible');
+    expect(history.status).toBe(200);
+    const link = history.body.match(
+      /<link nonce="([^"]+)" rel="modulepreload" crossorigin href="\/assets\/gzip-a1b2c3d4\.js">/
+    );
+    expect(link).not.toBeNull();
+    expect(history.headers['content-security-policy-report-only']).toContain(`'nonce-${link![1]}'`);
+    expect(history.body).not.toContain('invalid.test');
+    expect((await fetch(server, '/electricity/orders/other')).body).not.toContain(
+      '/assets/gzip-a1b2c3d4.js'
+    );
+    expect((await fetch(server, '/login')).body).not.toContain('/assets/gzip-a1b2c3d4.js');
   });
 
   it('prevents caching nonce-bearing HTML', async () => {
