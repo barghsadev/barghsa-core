@@ -14,6 +14,11 @@ the original occurrence and provider receipt. Workers handle retry and
 dead-letter states, and reconcile unknown sends before any further attempt.
 [Notification delivery recovery](../operations/notification-delivery-recovery.md).
 
+The shared static check rejects direct network and known provider calls in
+inline transaction callbacks. For raw `BEGIN` and `COMMIT` blocks or named
+wrappers, review where the intent commits, where provider I/O occurs, and how
+the transaction reapplies the verified result. [Static check](../../scripts/check-sast.py).
+
 ## Alternatives
 
 Sending synchronously within the business transaction holds locks while an

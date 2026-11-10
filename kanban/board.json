@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T04:26:02+00:00",
-  "source_commit": "701377ab66d6190ac84de7a0277c89fe0cab8dce",
+  "updated": "2026-11-10T04:31:57+00:00",
+  "source_commit": "40a3e06d4cadccc8db5909fd2f341eeb0f91c5c5",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -18206,7 +18206,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-architecture-and-deployment-documentation"
+          "release-0.6-architecture-and-deployment-documentation",
+          "release-0.6-transaction-provider-static-guard"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -18246,7 +18247,7 @@
             },
             {
               "path": "docs/adr/006-outbox-pattern.md",
-              "sha256": "ff88dd0d2c4f9d83d6cd044a04bf77c24bd09f8746d1b492acf522db85a9c8e8"
+              "sha256": "2d0070a5aa95ac8329fe4634acd6a4e7990611f1ba6c14238546bc0283885749"
             }
           ]
         }
@@ -18481,12 +18482,10 @@
         "story": "01-platform-infrastructure.md#spec-5a483d9327c7"
       },
       "requirement": "- **T-07.05.01:** Enforce “no external call inside a database transaction”\n  - **Notes:** Add a Semgrep/custom static-analysis rule for Drizzle transaction callbacks and provider/network calls. Add representative positive/negative fixtures, run it in the PR gate, and document the persist-intent → commit → call asynchronously → apply idempotent result pattern.\n  - **Dependencies:** T-05.03.04\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -18515,8 +18514,53 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-transaction-provider-static-guard"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "40a3e06d4cadccc8db5909fd2f341eeb0f91c5c5",
+          "checks": [
+            "The Semgrep rule flags direct network and named provider calls inside inline database transaction callbacks. Fixtures catch block, expression and named-function forms, and allow provider I/O after the durable intent commits or in an argument evaluated before transaction entry.",
+            "Semgrep 1.176.1 passed all six rule fixtures and scanned 2,110 application and package files with zero findings and zero scanner errors. All four report-handling tests, formatting and diff checks passed.",
+            "The current CI static security job runs the same command with Semgrep 1.176.1 and feeds the required Verify monorepo integrity job. No check was removed.",
+            "ADR 006 documents committing the intent, applying the provider result idempotently and reviewing named wrappers and raw transaction boundaries manually. The online top-up callback was reviewed as a raw transaction example: provider verification occurs after the claim commit and before the settlement transaction."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+            },
+            {
+              "path": ".semgrep/security.tsx",
+              "sha256": "9178cea1717f6cf4652b75b293bc6f291900cb1213fdb45246f8eb58a64df01b"
+            },
+            {
+              "path": ".semgrep/security.yml",
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+              "sha256": "7607f7044224fdc8410a1cd368131198f0cf42986e4ac94de1babbd78951aa30"
+            },
+            {
+              "path": "docs/adr/006-outbox-pattern.md",
+              "sha256": "2d0070a5aa95ac8329fe4634acd6a4e7990611f1ba6c14238546bc0283885749"
+            },
+            {
+              "path": "docs/operations/notification-delivery-recovery.md",
+              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+            },
+            {
+              "path": "scripts/check-sast.py",
+              "sha256": "93fb331d8107e3ba79858d6b9fa9bd0460de11438b99f93844a75df0134a4ab9"
+            },
+            {
+              "path": "scripts/test_check_sast.py",
+              "sha256": "d1677e994a2e46763efdeac4f414a6b2c91def515283e88ed8e285af76529d57"
+            }
+          ]
+        }
       }
     },
     {
@@ -484455,7 +484499,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-transaction-provider-static-guard"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -484467,15 +484512,15 @@
             },
             {
               "path": ".semgrep/security.tsx",
-              "sha256": "ecca0563d48aa97f1c83ef062c8255857d484de29178ae37b464be6eb8539587"
+              "sha256": "9178cea1717f6cf4652b75b293bc6f291900cb1213fdb45246f8eb58a64df01b"
             },
             {
               "path": ".semgrep/security.yml",
-              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
             },
             {
               "path": "scripts/check-sast.py",
-              "sha256": "908882d6c0753db25cf839c17ec3dc8d619d2f39e2ccabb35e4dd24f5f4f9361"
+              "sha256": "93fb331d8107e3ba79858d6b9fa9bd0460de11438b99f93844a75df0134a4ab9"
             },
             {
               "path": "scripts/test_check_sast.py",
@@ -484514,7 +484559,8 @@
         "batches": [
           "release-0.6-dynamic-js-lint-and-sanitized-html-boundary",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-transaction-provider-static-guard"
         ],
         "current_acceptance": {
           "kind": "source-bound-lint-and-rich-text-proof",
@@ -484522,7 +484568,7 @@
           "source_evidence": [
             {
               "path": ".semgrep/security.yml",
-              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
             },
             {
               "path": "apps/web/package.json",
@@ -484570,7 +484616,8 @@
         "batches": [
           "release-0.6-dynamic-js-lint-and-sanitized-html-boundary",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-transaction-provider-static-guard"
         ],
         "current_acceptance": {
           "kind": "source-bound-lint-and-rich-text-proof",
@@ -484578,7 +484625,7 @@
           "source_evidence": [
             {
               "path": ".semgrep/security.yml",
-              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
             },
             {
               "path": "apps/web/package.json",
@@ -487615,7 +487662,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-transaction-provider-static-guard"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -487627,15 +487675,15 @@
             },
             {
               "path": ".semgrep/security.tsx",
-              "sha256": "ecca0563d48aa97f1c83ef062c8255857d484de29178ae37b464be6eb8539587"
+              "sha256": "9178cea1717f6cf4652b75b293bc6f291900cb1213fdb45246f8eb58a64df01b"
             },
             {
               "path": ".semgrep/security.yml",
-              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
             },
             {
               "path": "scripts/check-sast.py",
-              "sha256": "908882d6c0753db25cf839c17ec3dc8d619d2f39e2ccabb35e4dd24f5f4f9361"
+              "sha256": "93fb331d8107e3ba79858d6b9fa9bd0460de11438b99f93844a75df0134a4ab9"
             },
             {
               "path": "scripts/test_check_sast.py",
@@ -492226,7 +492274,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-transaction-provider-static-guard"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -492238,15 +492287,15 @@
             },
             {
               "path": ".semgrep/security.tsx",
-              "sha256": "ecca0563d48aa97f1c83ef062c8255857d484de29178ae37b464be6eb8539587"
+              "sha256": "9178cea1717f6cf4652b75b293bc6f291900cb1213fdb45246f8eb58a64df01b"
             },
             {
               "path": ".semgrep/security.yml",
-              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
             },
             {
               "path": "scripts/check-sast.py",
-              "sha256": "908882d6c0753db25cf839c17ec3dc8d619d2f39e2ccabb35e4dd24f5f4f9361"
+              "sha256": "93fb331d8107e3ba79858d6b9fa9bd0460de11438b99f93844a75df0134a4ab9"
             },
             {
               "path": "scripts/test_check_sast.py",
@@ -492291,7 +492340,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-transaction-provider-static-guard"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -492303,11 +492353,11 @@
             },
             {
               "path": ".semgrep/security.tsx",
-              "sha256": "ecca0563d48aa97f1c83ef062c8255857d484de29178ae37b464be6eb8539587"
+              "sha256": "9178cea1717f6cf4652b75b293bc6f291900cb1213fdb45246f8eb58a64df01b"
             },
             {
               "path": ".semgrep/security.yml",
-              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -492315,7 +492365,7 @@
             },
             {
               "path": "scripts/check-sast.py",
-              "sha256": "908882d6c0753db25cf839c17ec3dc8d619d2f39e2ccabb35e4dd24f5f4f9361"
+              "sha256": "93fb331d8107e3ba79858d6b9fa9bd0460de11438b99f93844a75df0134a4ab9"
             },
             {
               "path": "scripts/test_check_sast.py",
@@ -498204,7 +498254,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-font-source-provenance",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-transaction-provider-static-guard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -498216,7 +498267,7 @@
             },
             {
               "path": ".semgrep/security.yml",
-              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -500927,7 +500978,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-font-source-provenance",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-transaction-provider-static-guard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -500939,7 +500991,7 @@
             },
             {
               "path": ".semgrep/security.yml",
-              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -502565,7 +502617,8 @@
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-font-source-provenance",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-transaction-provider-static-guard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -502577,7 +502630,7 @@
             },
             {
               "path": ".semgrep/security.yml",
-              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -514898,7 +514951,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-transaction-provider-static-guard"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -515406,7 +515460,7 @@
             },
             {
               "path": ".semgrep/security.yml",
-              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -519832,7 +519886,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-transaction-provider-static-guard"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -520340,7 +520395,7 @@
             },
             {
               "path": ".semgrep/security.yml",
-              "sha256": "af9b672e13e3aefb76bb878b4b7eb4a528197856b82fd009907a77862370167c"
+              "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -863177,6 +863232,62 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/generated-api-client",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "319b41bdfe6407ec7234e2c32221588586b2418da78ea213747ca907f6e2e492"
+    },
+    "release-0.6-transaction-provider-static-guard": {
+      "batch": "release-0.6-transaction-provider-static-guard",
+      "base_commit": "40a3e06d4cadccc8db5909fd2f341eeb0f91c5c5",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.05.01"
+      ],
+      "changed_paths": [
+        ".semgrep/security.tsx",
+        ".semgrep/security.yml",
+        "docs/adr/006-outbox-pattern.md",
+        "scripts/check-sast.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+        },
+        {
+          "path": ".semgrep/security.tsx",
+          "sha256": "9178cea1717f6cf4652b75b293bc6f291900cb1213fdb45246f8eb58a64df01b"
+        },
+        {
+          "path": ".semgrep/security.yml",
+          "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "7607f7044224fdc8410a1cd368131198f0cf42986e4ac94de1babbd78951aa30"
+        },
+        {
+          "path": "docs/adr/006-outbox-pattern.md",
+          "sha256": "2d0070a5aa95ac8329fe4634acd6a4e7990611f1ba6c14238546bc0283885749"
+        },
+        {
+          "path": "docs/operations/notification-delivery-recovery.md",
+          "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+        },
+        {
+          "path": "scripts/check-sast.py",
+          "sha256": "93fb331d8107e3ba79858d6b9fa9bd0460de11438b99f93844a75df0134a4ab9"
+        },
+        {
+          "path": "scripts/test_check_sast.py",
+          "sha256": "d1677e994a2e46763efdeac4f414a6b2c91def515283e88ed8e285af76529d57"
+        }
+      ],
+      "checks": [
+        "The Semgrep rule flags direct network and named provider calls inside inline database transaction callbacks. Fixtures catch block, expression and named-function forms, and allow provider I/O after the durable intent commits or in an argument evaluated before transaction entry.",
+        "Semgrep 1.176.1 passed all six rule fixtures and scanned 2,110 application and package files with zero findings and zero scanner errors. All four report-handling tests, formatting and diff checks passed.",
+        "The current CI static security job runs the same command with Semgrep 1.176.1 and feeds the required Verify monorepo integrity job. No check was removed.",
+        "ADR 006 documents committing the intent, applying the provider result idempotently and reviewing named wrappers and raw transaction boundaries manually. The online top-up callback was reviewed as a raw transaction example: provider verification occurs after the claim commit and before the settlement transaction."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/transaction-static-guard",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "41f2c95db884179f189b661ca0e5f96e5eaaded4a0edb5b18964feddda992eb1"
     }
   },
   "historical_improvements": [

@@ -58,9 +58,9 @@ def main() -> int:
         ["semgrep", "--test", "--config", ".semgrep/security.yml", ".semgrep/security.tsx"],
         cwd=ROOT, env=env, capture_output=True, text=True, check=True,
     )
-    if "5/5" not in tests.stdout:
-        raise RuntimeError("Expected all five security rule fixtures to run and pass")
-    print("All five security rule fixtures passed", flush=True)
+    if "6/6" not in tests.stdout:
+        raise RuntimeError("Expected all six security rule fixtures to run and pass")
+    print("All six security rule fixtures passed", flush=True)
     with tempfile.TemporaryDirectory(prefix="barghsa-sast-") as directory:
         raw_path = Path(directory) / "raw.json"
         result = subprocess.run(

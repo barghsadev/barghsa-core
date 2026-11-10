@@ -77,3 +77,32 @@ function credentials() {
   // ok: literal-credential-assignment
   const password = '';
 }
+
+async function externalTransactionExamples(db, gateway, https) {
+  // ruleid: external-call-in-db-transaction
+  await db.transaction(async (tx) => {
+    await tx.insert('intent');
+    return gateway.verifyPayment({ merchantOrderId: 'fixture' });
+  });
+
+  // ruleid: external-call-in-db-transaction
+  await db.transaction(async function (tx) {
+    await tx.insert('intent');
+    return https.request('https://provider.example.test/status');
+  });
+
+  // ruleid: external-call-in-db-transaction
+  await db.transaction(() => globalThis.fetch('https://provider.example.test/status'));
+
+  // ok: external-call-in-db-transaction
+  const intent = await db.transaction(async (tx) => tx.insert('intent'));
+  // ok: external-call-in-db-transaction
+  const result = await gateway.verifyPayment({ merchantOrderId: intent.id });
+  // ok: external-call-in-db-transaction
+  await db.transaction(async (tx) => tx.update(intent.id, result));
+
+  // ok: external-call-in-db-transaction
+  await db.transaction(await fetch('https://provider.example.test/status'), async (tx) => {
+    return tx.insert('already fetched');
+  });
+}

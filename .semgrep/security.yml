@@ -125,3 +125,37 @@ rules:
       - metavariable-regex:
           metavariable: $VALUE
           regex: .{16,}
+
+  - id: external-call-in-db-transaction
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Commit the durable intent before calling an external provider.
+    patterns:
+      - pattern: $DB.transaction(..., $CALLBACK, ...)
+      - metavariable-pattern:
+          metavariable: $CALLBACK
+          patterns:
+            - pattern-either:
+                - pattern-inside: 'async (...) => { ... }'
+                - pattern-inside: '(...) => { ... }'
+                - pattern-inside: 'async (...) => $BODY'
+                - pattern-inside: '(...) => $BODY'
+                - pattern-inside: 'async function (...) { ... }'
+                - pattern-inside: 'function (...) { ... }'
+            - pattern-either:
+                - pattern: fetch(...)
+                - pattern: globalThis.fetch(...)
+                - pattern: axios(...)
+                - patterns:
+                    - pattern: $HTTP.$METHOD(...)
+                    - metavariable-regex:
+                        metavariable: $HTTP
+                        regex: ^(axios|http|https|undici)$
+                    - metavariable-regex:
+                        metavariable: $METHOD
+                        regex: ^(get|post|put|patch|delete|request|fetch)$
+                - patterns:
+                    - pattern: $PROVIDER.$METHOD(...)
+                    - metavariable-regex:
+                        metavariable: $METHOD
+                        regex: ^(startPayment|recoverPayment|verifyPayment|refundPayment|sendSms|sendEmail|sendMessage|sendMediaGroup|putObject|getObject|headObject|copyObject|deleteObject|listObjectVersions)$
