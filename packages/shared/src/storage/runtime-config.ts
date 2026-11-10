@@ -36,6 +36,33 @@ export const storageConfigFields = z
   })
   .strict();
 export type StorageConfigFields = z.infer<typeof storageConfigFields>;
+const endpointFields = ['endpoint', 'privateEndpointUrl', 'publicEndpointUrl'] as const;
+
+function approvedStorageOrigins(): ReadonlySet<string> {
+  const origins = new Set<string>();
+  for (const raw of [
+    process.env.S3_ENDPOINT,
+    process.env.S3_PRIVATE_ENDPOINT,
+    process.env.S3_PUBLIC_ENDPOINT,
+    ...(process.env.S3_ALLOWED_ENDPOINT_ORIGINS ?? '').split(','),
+  ]) {
+    const value = raw?.trim();
+    if (value && endpoint.safeParse(value).success) origins.add(new URL(value).origin);
+  }
+  return origins;
+}
+
+export function unapprovedStorageEndpointFields(
+  config: StorageConfigFields,
+  approved = approvedStorageOrigins()
+) {
+  return endpointFields.filter((field) => {
+    const value = config[field];
+    if (!value) return false;
+    return !endpoint.safeParse(value).success || !approved.has(new URL(value).origin);
+  });
+}
+
 export const storageConfigUpdate = storageConfigFields
   .extend({
     version: z.number().int().min(0),
@@ -80,13 +107,16 @@ export function configuredStorageProviders(
   config: StorageConfigFields & { secretAccessKey: string },
   probe = false
 ) {
+  const approved = approvedStorageOrigins();
+  if (unapprovedStorageEndpointFields(config, approved).length)
+    throw new Error('Storage endpoint is not approved');
   const create = (endpoint: string) =>
     createStorageProvider({
       bucket: config.bucket,
       region: config.region,
       forcePathStyle: config.forcePathStyle,
       ...(probe ? { requestTimeoutMs: 5000, maxRetries: 1 } : {}),
-      ...(endpoint ? { endpoint } : {}),
+      ...(endpoint ? { endpoint, approvedEndpointOrigins: approved } : {}),
       ...(config.accessKeyId ? { accessKeyId: config.accessKeyId } : {}),
       ...(config.secretAccessKey ? { secretAccessKey: config.secretAccessKey } : {}),
     });

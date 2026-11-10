@@ -51,6 +51,8 @@ import {
 export interface S3StorageProviderConfig extends StorageProviderConfig {
   /** S3 endpoint URL (for MinIO / custom endpoints). */
   endpoint?: string;
+  /** Deployment-approved origins for the final request, including virtual bucket hosts. */
+  approvedEndpointOrigins?: ReadonlySet<string>;
   /** AWS region. */
   region: string;
   /** AWS access key ID. */
@@ -117,6 +119,23 @@ export class S3StorageProvider implements IFileStorageProvider {
     }
 
     this.client = new S3Client(clientConfig);
+    const approved = config.approvedEndpointOrigins;
+    if (approved) {
+      this.client.middlewareStack.add(
+        (next) => async (args) => {
+          const { protocol, hostname, port } = args.request as {
+            protocol?: string;
+            hostname?: string;
+            port?: number;
+          };
+          const origin = URL.parse(`${protocol}//${hostname}${port ? `:${port}` : ''}`)?.origin;
+          if (!origin || !approved.has(origin))
+            throw new StorageProviderError('Storage request destination is not approved');
+          return next(args);
+        },
+        { name: 'barghsaStorageOriginGuard', step: 'build' }
+      );
+    }
   }
 
   destroy(): void {

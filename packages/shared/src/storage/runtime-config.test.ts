@@ -1,4 +1,4 @@
-import { afterEach, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { createServer } from 'node:http';
 import { S3Client } from '@aws-sdk/client-s3';
 import { S3StorageProvider } from './s3-storage-provider.js';
@@ -8,6 +8,7 @@ import {
   runtimeStorageProvider,
   storageConfigFields,
   environmentStorageConfig,
+  unapprovedStorageEndpointFields,
 } from './runtime-config.js';
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -22,6 +23,88 @@ const fields = {
   accessKeyId: 'first-key',
   forcePathStyle: true,
 };
+const approvedOrigins = [fields.endpoint, fields.privateEndpointUrl, fields.publicEndpointUrl];
+beforeEach(() => {
+  vi.stubEnv('S3_ALLOWED_ENDPOINT_ORIGINS', approvedOrigins.join(','));
+});
+
+it('only accepts exact protected storage origins or the SDK default', () => {
+  vi.stubEnv('S3_PRIVATE_ENDPOINT', 'http://objectstore:8333');
+  expect(
+    unapprovedStorageEndpointFields({
+      ...fields,
+      endpoint: '',
+      privateEndpointUrl: 'http://objectstore:8333/',
+    })
+  ).toEqual([]);
+  expect(
+    unapprovedStorageEndpointFields({
+      ...fields,
+      endpoint: 'http://169.254.169.254',
+      privateEndpointUrl: 'http://objectstore:8334',
+      publicEndpointUrl: 'http://browser.example.test',
+    })
+  ).toEqual(['endpoint', 'privateEndpointUrl', 'publicEndpointUrl']);
+});
+
+it('refuses an unapproved stored origin instead of signing for it or falling back', async () => {
+  vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY', 'test-storage-encryption-key');
+  vi.stubEnv('S3_PUBLIC_ENDPOINT', fields.publicEndpointUrl);
+  const provider = runtimeStorageProvider(async () => ({
+    ...fields,
+    publicEndpointUrl: 'http://127.0.0.1:10123',
+    encryptedSecret: encryptStorageSecret('secret'),
+  }));
+  await expect(provider.presignedGetUrl('file')).rejects.toThrow(
+    'Storage configuration is unavailable'
+  );
+});
+
+it('preserves the standard AWS endpoint when no custom origin is configured', async () => {
+  vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY', 'test-storage-encryption-key');
+  const provider = runtimeStorageProvider(async () => ({
+    ...fields,
+    endpoint: '',
+    privateEndpointUrl: '',
+    publicEndpointUrl: '',
+    encryptedSecret: encryptStorageSecret('secret'),
+  }));
+  try {
+    const signed = new URL(await provider.presignedGetUrl('file'));
+    expect(signed.origin).toBe('https://s3.us-east-1.amazonaws.com');
+    expect(signed.pathname).toBe('/test-bucket/file');
+  } finally {
+    provider.destroy!();
+  }
+});
+
+it('requires approval for the SDK-derived bucket hostname before signing or connecting', async () => {
+  vi.stubEnv('STORAGE_CONFIG_ENCRYPTION_KEY', 'test-storage-encryption-key');
+  const load = async () => ({
+    ...fields,
+    forcePathStyle: false,
+    encryptedSecret: encryptStorageSecret('secret'),
+  });
+  const blocked = runtimeStorageProvider(load);
+  try {
+    await expect(blocked.presignedGetUrl('file')).rejects.toThrow('destination is not approved');
+    await expect(blocked.checkHealth!()).rejects.toThrow('destination is not approved');
+  } finally {
+    blocked.destroy!();
+  }
+  vi.stubEnv(
+    'S3_ALLOWED_ENDPOINT_ORIGINS',
+    [...approvedOrigins, 'https://test-bucket.browser.example.test'].join(',')
+  );
+  const approved = runtimeStorageProvider(load);
+  try {
+    expect(new URL(await approved.presignedGetUrl('file')).origin).toBe(
+      'https://test-bucket.browser.example.test'
+    );
+  } finally {
+    approved.destroy!();
+  }
+});
 it.each([
   'not a URL',
   'ftp://storage.test',
@@ -156,6 +239,7 @@ it('health checks use current stored private endpoint and credentials, without r
       privateEndpointUrl: `http://127.0.0.1:${address.port}`,
       encryptedSecret: encryptStorageSecret('first-secret'),
     };
+    vi.stubEnv('S3_PRIVATE_ENDPOINT', value.privateEndpointUrl);
     const provider = runtimeStorageProvider(async () => value);
     await provider.checkHealth!();
     value = {

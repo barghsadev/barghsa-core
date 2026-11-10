@@ -18,11 +18,13 @@ import {
   encryptStorageSecret,
   decryptStorageSecret,
   configuredStorageProviders,
+  unapprovedStorageEndpointFields,
 } from '@barghsa/shared/storage';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { rejectContentFields } from '../admin/content-input-fields.js';
+import { InputFieldException } from '../common/input-field.exception.js';
 
 type MutationSession = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 const multipartCleanupPolicyKey = 'storage.multipart_orphan_hours';
@@ -137,6 +139,8 @@ export class StorageConfigService {
     if (parsed.data.version !== current.version)
       throw new ConflictException({ error: 'STORAGE:CONFIG_CHANGED' });
     const input = parsed.data;
+    const unapproved = unapprovedStorageEndpointFields(input);
+    if (unapproved.length) throw new InputFieldException(unapproved);
     const locations = [
       'endpoint',
       'privateEndpointUrl',

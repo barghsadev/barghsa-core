@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T16:28:21+00:00",
-  "source_commit": "fc9bdf44daa493ef4cbd688dbbe0a710be8585b2",
+  "updated": "2026-11-10T16:36:40+00:00",
+  "source_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -9756,7 +9756,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "source-bound-development-configuration-and-behavior",
@@ -9764,7 +9765,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
             },
             {
               "path": "docker-compose.yml",
@@ -9798,6 +9799,16 @@
           "checks": [
             "Compose validates with the tracked example. The installed dotenv CLI resolves the template from a clean shell, aligns PostgreSQL, Redis and MinIO/S3 settings, leaves authentication secrets empty for explicit local provisioning, and preserves a supplied shell override.",
             "Thirty-three current OTP unit cases passed. Registration, login and resend keep the encrypted outbox and suppress OTP output in production, staging and tests even when the flag is true. Development printing requires the explicit flag."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            }
           ]
         }
       }
@@ -10187,7 +10198,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-api-and-worker-process-verification",
@@ -10251,7 +10263,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -10265,6 +10277,16 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the changed bindings after suppressing the Express framework header. All 16 compiled navigation and authorization/config audit tests passed; permissions, caching and response contracts are preserved.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            }
           ]
         }
       }
@@ -11672,7 +11694,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -11688,15 +11711,15 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
+              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -11718,6 +11741,18 @@
           "checks": [
             "Reviewed the existing AWS SDK S3 adapter and factory against the required upload, streaming get, delete, listing and presigned PUT/GET interface. The same factory resolves internal and browser endpoints from active configuration.",
             "Reused current matching 28 adapter, 12 file-operation, 15 runtime-config and 15 immutable-storage cases from run 42681795739. Their source files, test files and dependency lock match."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            }
           ]
         }
       }
@@ -11841,7 +11876,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -11897,15 +11933,15 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
+              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -11928,6 +11964,18 @@
             "The API validates declared file constraints, business association, ownership and current authority before issuing direct browser PUT or multipart URLs. It verifies stored bytes, MIME, size and checksum before sealing or entering PendingScan with the configured scanner. The API does not proxy large transfer bodies.",
             "Reused 43 document HTTP, 24 storage-record HTTP, three storage-access HTTP and two multipart HTTP cases from run 42689595374, plus nine browser upload-component assertions. Matching tests cover real MinIO signing, mismatch rejection, download byte identity and durable configured-scanner jobs. The run's separate stale refresh assertion was corrected independently.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            }
           ]
         }
       }
@@ -12117,7 +12165,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -12125,11 +12174,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a6aca6dacbd846cf0d13a4a7f449d9000edc9fcdbf241a76f3a4288cbdb65c26"
+              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+              "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
             },
             {
               "path": "apps/web/e2e/storage-config.spec.ts",
@@ -12169,15 +12218,15 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
+              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -12199,6 +12248,20 @@
           "checks": [
             "Reused the prior source-bound admin storage acceptance under 05-notifications-documents-ai.md#T-05.09.03 and 24 matching storage-config API cases from run 42689595374. The current UI has endpoint, region, bucket, credential identifier, password-masked write-only secret, path style, private/public URLs, Test Connection, result feedback and versioned save.",
             "The active version remains in the existing encrypted configuration store as approved. AES-256-GCM protects the secret. The save probe performs a disposable upload and signed browser download with byte comparison, then preserves the prior active revision on failed authority, stale version, provider test or audit persistence. The production-equivalent storage, lifecycle, scanner and restore receipts remain separate operational gates."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            }
           ]
         }
       }
@@ -17908,7 +17971,8 @@
         ],
         "batches": [
           "release-0.6-existing-config-store-and-secret-service",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "source-bound-platform-secret-service",
@@ -17947,11 +18011,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
+              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
             }
           ],
           "source_renewals": [
@@ -17962,6 +18026,15 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/runtime-config.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ]
         }
@@ -18673,7 +18746,8 @@
           "release-0.6-immutable-staging-acceptance",
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-first-launch-promotion-check",
-          "release-0.6-private-clamav-signature-mirror"
+          "release-0.6-private-clamav-signature-mirror",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -18686,7 +18760,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
             },
             {
               "path": "deploy/pilot/README.md",
@@ -18723,6 +18797,16 @@
             {
               "path": "docs/runbooks/bad-deployment.md",
               "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ]
         }
@@ -30485,7 +30569,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -30693,11 +30778,11 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a6aca6dacbd846cf0d13a4a7f449d9000edc9fcdbf241a76f3a4288cbdb65c26"
+              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+              "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
             },
             {
               "path": "apps/api/src/storage/storage-record-admin.service.ts",
@@ -31934,6 +32019,15 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/session-lifetime/release-0.6-session-lifetimes-cookies-and-refresh.json",
               "scope": "Only the lifetime source bindings are renewed. Exact source comparison shows the old session logic and cookie attributes with a new bounded policy source for the same defaults. Native default and configured cases confirm the affected behavior."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ],
           "presentation_renewals": [
@@ -66462,7 +66556,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -66538,11 +66633,11 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a6aca6dacbd846cf0d13a4a7f449d9000edc9fcdbf241a76f3a4288cbdb65c26"
+              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+              "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
             },
             {
               "path": "apps/api/src/storage/storage-record-admin.service.ts",
@@ -67523,6 +67618,15 @@
                 "packages/shared/src/auth-delivery/smsir-client.test.ts"
               ],
               "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ],
           "presentation_renewals": [
@@ -103463,7 +103567,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -103471,7 +103576,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
             },
             {
               "path": "apps/api/openapi.json",
@@ -104300,6 +104405,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/reconciliation-fixture-document-boundary/release-0.6-reconciliation-fixture-document-boundary.json",
               "scope": "Test fixture-only renewal using thirty-one distinct native PostgreSQL cases. The production scanner, retention protection and prior evidence scopes remain unchanged."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ],
           "presentation_renewals": [
@@ -455368,7 +455481,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455376,7 +455490,7 @@
           "source_evidence": [
             {
               "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
-              "sha256": "9dae81f098fcbf880c455c46aee6e14b0e62b192ba96223efe651f4f25bd44d8"
+              "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
             },
             {
               "path": "packages/shared/src/storage/index.ts",
@@ -455384,11 +455498,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -455408,7 +455522,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
+              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
             },
             {
               "path": "packages/shared/src/storage/immutable-storage.test.ts",
@@ -455416,7 +455530,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a6aca6dacbd846cf0d13a4a7f449d9000edc9fcdbf241a76f3a4288cbdb65c26"
+              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -455522,6 +455636,18 @@
                 "packages/shared/src/storage/index.ts"
               ],
               "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "packages/shared/scripts/setup-bucket.integration.test.mjs",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "apps/api/src/storage/storage-config-http.integration.test.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ],
           "presentation_renewals": [
@@ -455580,7 +455706,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455588,7 +455715,7 @@
           "source_evidence": [
             {
               "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
-              "sha256": "9dae81f098fcbf880c455c46aee6e14b0e62b192ba96223efe651f4f25bd44d8"
+              "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
             },
             {
               "path": "packages/shared/src/storage/index.ts",
@@ -455596,11 +455723,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -455620,7 +455747,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
+              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
             },
             {
               "path": "packages/shared/src/storage/immutable-storage.test.ts",
@@ -455628,7 +455755,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a6aca6dacbd846cf0d13a4a7f449d9000edc9fcdbf241a76f3a4288cbdb65c26"
+              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -455734,6 +455861,18 @@
                 "packages/shared/src/storage/index.ts"
               ],
               "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "packages/shared/scripts/setup-bucket.integration.test.mjs",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "apps/api/src/storage/storage-config-http.integration.test.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ],
           "presentation_renewals": [
@@ -455801,7 +455940,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455821,11 +455961,11 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a6aca6dacbd846cf0d13a4a7f449d9000edc9fcdbf241a76f3a4288cbdb65c26"
+              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+              "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -455841,7 +455981,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
@@ -455853,11 +455993,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
+              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
             },
             {
               "path": "packages/shared/src/storage/immutable-storage.test.ts",
@@ -456027,6 +456167,18 @@
                 "apps/api/src/storage/read-capped-bytes.ts"
               ],
               "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/runtime-config.test.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ],
           "presentation_renewals": [
@@ -456108,7 +456260,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456128,11 +456281,11 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a6aca6dacbd846cf0d13a4a7f449d9000edc9fcdbf241a76f3a4288cbdb65c26"
+              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+              "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -456148,7 +456301,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
@@ -456160,11 +456313,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
+              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
             },
             {
               "path": "packages/shared/src/storage/immutable-storage.test.ts",
@@ -456305,6 +456458,18 @@
                 "apps/api/src/storage/read-capped-bytes.ts"
               ],
               "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/runtime-config.test.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ],
           "presentation_renewals": [
@@ -464863,7 +465028,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464919,7 +465085,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+              "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
             },
             {
               "path": "packages/db/src/schema/document-retention.ts",
@@ -464943,7 +465109,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -464951,7 +465117,7 @@
             },
             {
               "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
-              "sha256": "9dae81f098fcbf880c455c46aee6e14b0e62b192ba96223efe651f4f25bd44d8"
+              "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
             },
             {
               "path": "docker-compose.yml",
@@ -465124,6 +465290,16 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/scripts/setup-bucket.integration.test.mjs"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ],
           "presentation_renewals": [
@@ -465226,7 +465402,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "status": "done",
@@ -465282,7 +465459,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+              "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
             },
             {
               "path": "packages/db/src/schema/document-retention.ts",
@@ -465306,7 +465483,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -465314,7 +465491,7 @@
             },
             {
               "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
-              "sha256": "9dae81f098fcbf880c455c46aee6e14b0e62b192ba96223efe651f4f25bd44d8"
+              "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
             },
             {
               "path": "docker-compose.yml",
@@ -465487,6 +465664,16 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/scripts/setup-bucket.integration.test.mjs"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ],
           "presentation_renewals": [
@@ -465591,7 +465778,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -465647,7 +465835,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+              "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
             },
             {
               "path": "packages/db/src/schema/document-retention.ts",
@@ -465671,7 +465859,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -465679,7 +465867,7 @@
             },
             {
               "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
-              "sha256": "9dae81f098fcbf880c455c46aee6e14b0e62b192ba96223efe651f4f25bd44d8"
+              "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
             },
             {
               "path": "docker-compose.yml",
@@ -465873,6 +466061,16 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/scripts/setup-bucket.integration.test.mjs"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ],
           "presentation_renewals": [
@@ -465981,7 +466179,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "status": "done",
@@ -466037,7 +466236,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+              "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
             },
             {
               "path": "packages/db/src/schema/document-retention.ts",
@@ -466061,7 +466260,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -466069,7 +466268,7 @@
             },
             {
               "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
-              "sha256": "9dae81f098fcbf880c455c46aee6e14b0e62b192ba96223efe651f4f25bd44d8"
+              "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
             },
             {
               "path": "docker-compose.yml",
@@ -466242,6 +466441,16 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/scripts/setup-bucket.integration.test.mjs"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ],
           "presentation_renewals": [
@@ -466344,7 +466553,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "status": "done",
@@ -466400,7 +466610,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+              "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
             },
             {
               "path": "packages/db/src/schema/document-retention.ts",
@@ -466424,7 +466634,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -466432,7 +466642,7 @@
             },
             {
               "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
-              "sha256": "9dae81f098fcbf880c455c46aee6e14b0e62b192ba96223efe651f4f25bd44d8"
+              "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
             },
             {
               "path": "docker-compose.yml",
@@ -466605,6 +466815,16 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-service-workflows/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only; see batch source_renewal_scope and exact additive/dependency proof. Unmet criteria and release gates remain unchanged."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/scripts/setup-bucket.integration.test.mjs"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ],
           "presentation_renewals": [
@@ -485203,7 +485423,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
-          "release-0.6-authentication-and-crm-diagnostic-privacy"
+          "release-0.6-authentication-and-crm-diagnostic-privacy",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -485211,7 +485432,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -485224,6 +485445,16 @@
           ],
           "checks": [
             "Thirty-three OTP unit cases passed. The code reaches the console only under development mode and the explicit flag; registration, login and resend checks cover staging, production, test, disabled and unset flags and exclude it from API responses."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            }
           ]
         }
       }
@@ -493129,17 +493360,71 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile public HTTPS sources, configured provider origins and intentional deployment-only local exceptions across all outbound transports. The connection tester now requires HTTPS unless its exact host is explicitly allow-listed."
+        "Staff and durable storage custom origins are now limited to protected origins by scheme, host and port, including the SDK-derived virtual bucket hostname. The deployment-owned default AWS and approved internal routes remain available. Review remaining non-storage deployment egress and OTLP configuration on the accepted runtime."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [
-          "release-0.6-provider-egress-regressions"
+        "changed_paths": [
+          ".env.example",
+          "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "apps/api/src/storage/storage-config.service.ts",
+          "docs/operations/storage-configuration.md",
+          "packages/shared/scripts/setup-bucket.integration.test.mjs",
+          "packages/shared/src/storage/runtime-config.test.ts",
+          "packages/shared/src/storage/runtime-config.ts",
+          "packages/shared/src/storage/s3-storage-provider.ts"
         ],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-protected-storage-origins"
+        ],
+        "current_acceptance": {
+          "kind": "verified-scoped-storage-egress-boundary",
+          "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+          "source_evidence": [
+            {
+              "path": ".env.example",
+              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
+            },
+            {
+              "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
+            },
+            {
+              "path": "apps/api/src/storage/storage-config.service.ts",
+              "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
+            },
+            {
+              "path": "docs/operations/storage-configuration.md",
+              "sha256": "d32687baf5dc517a7b1034453a447261a66b6fc70a06816bc0110315cb935aa4"
+            },
+            {
+              "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
+              "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.test.ts",
+              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.ts",
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+            },
+            {
+              "path": "packages/shared/src/storage/s3-storage-provider.ts",
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+            }
+          ],
+          "checks": [
+            "91 shared storage cases pass, including default AWS signing, exact scheme, host and port checks, an unapproved durable configuration, and SDK-derived virtual bucket addresses before network I/O or signing. Strict shared, API and worker types, API and worker builds, 33 dual-format distribution checks, lint, formatting and diff validation pass.",
+            "Compiled Linux API with 207 production migrations: 31 HTTP cases pass for storage settings, permission and step-up, encryption, write rollback, durable restart, health, exact signed probe bytes and electricity contract rollback. The restart took 8.277 s with a 25 s invocation-only fixture timeout. Its original startup, signature and authority assertions were retained. The final negative case, with only a test variable type correction, passed with the default timeout in a one-case rerun.",
+            "An isolated exact pinned MinIO instance passed real authenticated health, multipart upload of 6 MiB plus 123 bytes, copied SHA-256, scoped signed read, immutable signed PUT, unapproved port denial and cleanup.",
+            "A read-only staging check showed the existing durable path-style config uses only the two exact deployment-approved origins. The candidate was not deployed and no protected configuration value changed. Default AWS behavior and explicit protected private HTTP storage origins are preserved."
+          ],
+          "limitations": "Exact staging deployment and process-wide DNS and egress verification remain open."
+        }
       }
     },
     {
@@ -493157,17 +493442,71 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The common IP classifier covers private, loopback, mapped, link-local, metadata and standard IPv6 translation forms. Verify remaining outbound transports and the production egress policy, including intentional internal services."
+        "Unauthorized storage origins are rejected before network and signed-URL creation, with intentional private routes allowed only by exact protected deployment settings. Broader socket-level DNS/IP controls and production network egress verification remain open."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [
-          "release-0.6-provider-egress-regressions"
+        "changed_paths": [
+          ".env.example",
+          "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "apps/api/src/storage/storage-config.service.ts",
+          "docs/operations/storage-configuration.md",
+          "packages/shared/scripts/setup-bucket.integration.test.mjs",
+          "packages/shared/src/storage/runtime-config.test.ts",
+          "packages/shared/src/storage/runtime-config.ts",
+          "packages/shared/src/storage/s3-storage-provider.ts"
         ],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-protected-storage-origins"
+        ],
+        "current_acceptance": {
+          "kind": "verified-scoped-storage-egress-boundary",
+          "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+          "source_evidence": [
+            {
+              "path": ".env.example",
+              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
+            },
+            {
+              "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
+            },
+            {
+              "path": "apps/api/src/storage/storage-config.service.ts",
+              "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
+            },
+            {
+              "path": "docs/operations/storage-configuration.md",
+              "sha256": "d32687baf5dc517a7b1034453a447261a66b6fc70a06816bc0110315cb935aa4"
+            },
+            {
+              "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
+              "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.test.ts",
+              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.ts",
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+            },
+            {
+              "path": "packages/shared/src/storage/s3-storage-provider.ts",
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+            }
+          ],
+          "checks": [
+            "91 shared storage cases pass, including default AWS signing, exact scheme, host and port checks, an unapproved durable configuration, and SDK-derived virtual bucket addresses before network I/O or signing. Strict shared, API and worker types, API and worker builds, 33 dual-format distribution checks, lint, formatting and diff validation pass.",
+            "Compiled Linux API with 207 production migrations: 31 HTTP cases pass for storage settings, permission and step-up, encryption, write rollback, durable restart, health, exact signed probe bytes and electricity contract rollback. The restart took 8.277 s with a 25 s invocation-only fixture timeout. Its original startup, signature and authority assertions were retained. The final negative case, with only a test variable type correction, passed with the default timeout in a one-case rerun.",
+            "An isolated exact pinned MinIO instance passed real authenticated health, multipart upload of 6 MiB plus 123 bytes, copied SHA-256, scoped signed read, immutable signed PUT, unapproved port denial and cleanup.",
+            "A read-only staging check showed the existing durable path-style config uses only the two exact deployment-approved origins. The candidate was not deployed and no protected configuration value changed. Default AWS behavior and explicit protected private HTTP storage origins are preserved."
+          ],
+          "limitations": "Exact staging deployment and process-wide DNS and egress verification remain open."
+        }
       }
     },
     {
@@ -495215,7 +495554,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-video-upload-policy-ceiling",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -495295,7 +495635,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
@@ -495311,6 +495651,16 @@
             "Reused 18 compiled admin policy cases, 14 resolver cases and the file-policy cases. The cases cover validation, actual URL issuance, authority loss and rollback.",
             "All 35 API and 24 web cases passed, including 100 MiB reservation and record validation, direct and multipart paths, browser picker submission, rejection above the global cap and refusal above a smaller document policy before provider access. All 24 unchanged production browser upload cases passed across Firefox and Mobile Chrome in both locales. Build, all 102 gzip budgets, types, lint, formatting and diff checks passed.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            }
           ]
         }
       },
@@ -495346,7 +495696,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "verified-upload-key-and-scanner-tests",
@@ -495370,7 +495721,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -495381,6 +495732,16 @@
             "The unchanged production reservation path on the baseline issued a nested key for a path-shaped general filename. The fixed compiled path uses a single UUID segment, preserves ordinary lowercase extension normalization and stores the original name as metadata.",
             "The targeted compiled PostgreSQL run passed the new slash, backslash and percent-encoded slash cases plus the ordinary Persian name, effective size policy and fail-closed policy read. Both the signed URL and persisted reservation key use the same controlled shape.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            }
           ]
         }
       },
@@ -495545,7 +495906,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -495677,7 +496039,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -495707,6 +496069,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ]
         }
@@ -495747,7 +496117,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -495827,7 +496198,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
@@ -495842,6 +496213,16 @@
             "Source objects are private by default. Customer and staff document operations recheck current authority and scan state before generating the owner-approved 300-second signed links. Signed URL issuance is recorded in the append-only access log. Preview and download responses retain private no-store handling.",
             "Reused the 43 compiled document cases and related template, preview and storage suites, including foreign-profile denial, explicit staff grants and quarantine denial. Final deployment and the separate original attachment disposition remain independently tracked.",
             "Renewed these bindings through the scoped quota admission, compatible additive migration, and compiled upload regression evidence in the associated batch. The prior test assertions and retained-object safeguards are preserved."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            }
           ]
         }
       },
@@ -496608,7 +496989,8 @@
         "batches": [
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-native-credential-and-migration-acceptance",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "source-bound-encryption-overlap-native",
@@ -496640,7 +497022,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a6aca6dacbd846cf0d13a4a7f449d9000edc9fcdbf241a76f3a4288cbdb65c26"
+              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.test.ts",
@@ -496668,11 +497050,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
+              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
             }
           ],
           "source_renewals": [
@@ -496683,6 +497065,16 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/runtime-config.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ]
         }
@@ -496726,7 +497118,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -496734,7 +497127,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -496778,6 +497171,16 @@
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "The existing full-history scanner now recognizes that exact historical fingerprint. Five scanner controls, the actual synthetic credential detection/redaction control and a full local scan of 3,052 commits passed. The local scan reported zero leaks. The next exact hosted integrity result is required for direct main.",
             "The exact diagnostic-branch occurrence of the verified public authentication specification digest is scoped to one historical fingerprint. The 3,060-commit local history scan reported zero leaks and the actual synthetic credential detection/redaction control passed."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            }
           ]
         }
       }
@@ -496815,7 +497218,8 @@
           "release-0.6-diagnostic-history-public-digest",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -496823,7 +497227,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -496854,6 +497258,16 @@
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "The existing full-history scanner now recognizes that exact historical fingerprint. Five scanner controls, the actual synthetic credential detection/redaction control and a full local scan of 3,052 commits passed. The local scan reported zero leaks. The next exact hosted integrity result is required for direct main.",
             "The exact diagnostic-branch occurrence of the verified public authentication specification digest is scoped to one historical fingerprint. The 3,060-commit local history scan reported zero leaks and the actual synthetic credential detection/redaction control passed."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            }
           ]
         },
         "ci_checkpoint": {
@@ -497230,7 +497644,8 @@
           "release-0.6-diagnostic-history-public-digest",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -497238,7 +497653,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -497269,6 +497684,16 @@
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "The existing full-history scanner now recognizes that exact historical fingerprint. Five scanner controls, the actual synthetic credential detection/redaction control and a full local scan of 3,052 commits passed. The local scan reported zero leaks. The next exact hosted integrity result is required for direct main.",
             "The exact diagnostic-branch occurrence of the verified public authentication specification digest is scoped to one historical fingerprint. The 3,060-commit local history scan reported zero leaks and the actual synthetic credential detection/redaction control passed."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            }
           ]
         },
         "current_scan_checkpoint": {
@@ -553913,7 +554338,8 @@
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-native-csp-and-combobox-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -555277,7 +555703,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/ui/package.json",
@@ -555397,6 +555823,16 @@
           "scope_dispositions": [
             "Form labels, field error associations and required states were accepted across shared controls and application form journeys. A field shared by decisions stays optional where a valid decision accepts omission. Help and validation identify actions that require it.",
             "GitHub accessibility enforcement, route diagnostics, loading and recovery, command feedback and full UI adoption have separate acceptance tasks."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
+            }
           ]
         }
       }
@@ -555478,7 +555914,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-conversation-identity-rtl-native-checkboxes"
+          "release-0.6-conversation-identity-rtl-native-checkboxes",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555714,7 +556151,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/ui/package.json",
@@ -555934,6 +556371,16 @@
               "batch": "release-0.5-conditional-heading-acceptance",
               "base_commit": "270eedb3bbf6fd2df6679e4a7a49b821290ecfe2",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ]
         }
@@ -557008,7 +557455,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-conversation-identity-rtl-native-checkboxes"
+          "release-0.6-conversation-identity-rtl-native-checkboxes",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557244,7 +557692,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/ui/package.json",
@@ -557464,6 +557912,16 @@
               "batch": "release-0.5-conditional-heading-acceptance",
               "base_commit": "270eedb3bbf6fd2df6679e4a7a49b821290ecfe2",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ]
         }
@@ -559332,7 +559790,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-conversation-identity-rtl-native-checkboxes"
+          "release-0.6-conversation-identity-rtl-native-checkboxes",
+          "release-0.6-protected-storage-origins"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559568,7 +560027,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/ui/package.json",
@@ -559788,6 +560247,16 @@
               "batch": "release-0.5-conditional-heading-acceptance",
               "base_commit": "270eedb3bbf6fd2df6679e4a7a49b821290ecfe2",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ]
         }
@@ -767540,11 +768009,11 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a6aca6dacbd846cf0d13a4a7f449d9000edc9fcdbf241a76f3a4288cbdb65c26"
+              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+              "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -769288,7 +769757,7 @@
             },
             {
               "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
-              "sha256": "9dae81f098fcbf880c455c46aee6e14b0e62b192ba96223efe651f4f25bd44d8"
+              "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
@@ -769484,15 +769953,15 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
+              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -770272,6 +770741,19 @@
                 "packages/shared/src/storage/index.ts"
               ],
               "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/scripts/setup-bucket.integration.test.mjs",
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ],
           "presentation_renewals": [
@@ -770637,7 +771119,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-protected-storage-origins"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -771598,11 +772081,11 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "a6aca6dacbd846cf0d13a4a7f449d9000edc9fcdbf241a76f3a4288cbdb65c26"
+              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
-              "sha256": "9c1b861ec6f60acf718ed653ed6dbaae227975dd2517db42e0867cf064440026"
+              "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -773326,7 +773809,7 @@
             },
             {
               "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
-              "sha256": "9dae81f098fcbf880c455c46aee6e14b0e62b192ba96223efe651f4f25bd44d8"
+              "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
             },
             {
               "path": "packages/shared/src/ai-models/completion.test.ts",
@@ -773518,15 +774001,15 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
-              "sha256": "49fcf19da2591d19eecb1acec8e780ae03d204dab248ab7d9e6494f55ac3bea6"
+              "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "bac28a1c7fee20ff86c68045132b32db16d999aedb8663f69da01b5bb6eff970"
+              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -774199,6 +774682,19 @@
                 "packages/shared/src/storage/index.ts"
               ],
               "scope": "Updated provider response parsing and redirects, byte-identical storage reader move and additive operating guidance. Prior task acceptance applies to the unchanged authority, payment, upload, audit and delivery boundaries."
+            },
+            {
+              "batch": "release-0.6-protected-storage-origins",
+              "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/api/src/storage/storage-config.service.ts",
+                "packages/shared/scripts/setup-bucket.integration.test.mjs",
+                "packages/shared/src/storage/runtime-config.test.ts",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Restricted custom object storage to protected origins at configuration and final SDK request boundaries. Related durable storage, authority, signed object, credential, rollback and finance callers passed; accepted task scope is preserved."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -774581,7 +775077,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-protected-storage-origins"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -891648,6 +892145,101 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
       "source_scope_proof": "provider-response-source-proof.json",
       "source_scope_proof_sha256": "cafecb77640c7159425cc9dec29803852c5de6c6539d58f0edd3e31a8f9eb093"
+    },
+    "release-0.6-protected-storage-origins": {
+      "batch": "release-0.6-protected-storage-origins",
+      "base_commit": "578c38de30ee5019249910af0e142c7f9164d9b2",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.04.02",
+        "06-security-testing-observability.md#T-06.04.04.03",
+        "01-platform-infrastructure.md#T-03.02.02",
+        "01-platform-infrastructure.md#T-03.03.02",
+        "01-platform-infrastructure.md#T-04.03.01",
+        "01-platform-infrastructure.md#T-04.03.02",
+        "01-platform-infrastructure.md#T-04.03.04",
+        "01-platform-infrastructure.md#T-07.02.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.09.01",
+        "05-notifications-documents-ai.md#T-05.09.01",
+        "05-notifications-documents-ai.md#T-05.09.02",
+        "05-notifications-documents-ai.md#T-05.09.03",
+        "05-notifications-documents-ai.md#T-05.09.04",
+        "05-notifications-documents-ai.md#T-05.14.01",
+        "05-notifications-documents-ai.md#T-05.14.02",
+        "05-notifications-documents-ai.md#T-05.14.03",
+        "05-notifications-documents-ai.md#T-05.15.01",
+        "05-notifications-documents-ai.md#T-05.15.02",
+        "06-security-testing-observability.md#T-06.01.02.08",
+        "06-security-testing-observability.md#T-06.06.01.02",
+        "06-security-testing-observability.md#T-06.06.01.03",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.06.01.06",
+        "06-security-testing-observability.md#T-06.07.01.04",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        ".env.example",
+        "apps/api/src/storage/storage-config-http.integration.test.ts",
+        "apps/api/src/storage/storage-config.service.ts",
+        "docs/operations/storage-configuration.md",
+        "packages/shared/scripts/setup-bucket.integration.test.mjs",
+        "packages/shared/src/storage/runtime-config.test.ts",
+        "packages/shared/src/storage/runtime-config.ts",
+        "packages/shared/src/storage/s3-storage-provider.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": ".env.example",
+          "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config.service.ts",
+          "sha256": "ecde9b1dee519933f06e56702e41e6251c04484396c5d87950b15e2b8fe039fa"
+        },
+        {
+          "path": "docs/operations/storage-configuration.md",
+          "sha256": "d32687baf5dc517a7b1034453a447261a66b6fc70a06816bc0110315cb935aa4"
+        },
+        {
+          "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
+          "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.test.ts",
+          "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.ts",
+          "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+        }
+      ],
+      "checks": [
+        "91 shared storage cases pass, including default AWS signing, exact scheme, host and port checks, an unapproved durable configuration, and SDK-derived virtual bucket addresses before network I/O or signing. Strict shared, API and worker types, API and worker builds, 33 dual-format distribution checks, lint, formatting and diff validation pass.",
+        "Compiled Linux API with 207 production migrations: 31 HTTP cases pass for storage settings, permission and step-up, encryption, write rollback, durable restart, health, exact signed probe bytes and electricity contract rollback. The restart took 8.277 s with a 25 s invocation-only fixture timeout. Its original startup, signature and authority assertions were retained. The final negative case, with only a test variable type correction, passed with the default timeout in a one-case rerun.",
+        "An isolated exact pinned MinIO instance passed real authenticated health, multipart upload of 6 MiB plus 123 bytes, copied SHA-256, scoped signed read, immutable signed PUT, unapproved port denial and cleanup.",
+        "A read-only staging check showed the existing durable path-style config uses only the two exact deployment-approved origins. The candidate was not deployed and no protected configuration value changed. Default AWS behavior and explicit protected private HTTP storage origins are preserved."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "source_scope_proof": "storage-origin-source-proof.json",
+      "source_scope_proof_sha256": "c0e40afb26e654086cd95bebd25040b00778a670900fc61dcc1a585aac4abcbd"
     }
   },
   "historical_improvements": [
@@ -891687,17 +892279,15 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-scheduled-browser-and-outbound-destination-review",
+    "id": "release-0.6-hosted-browser-failure-reconciliation",
     "release": "0.6.0",
     "task_keys": [
       "01-platform-infrastructure.md#T-01.04.04",
       "01-platform-infrastructure.md#T-01.04.06",
       "01-platform-infrastructure.md#T-05.05.01",
-      "06-security-testing-observability.md#T-06.04.04.02",
-      "06-security-testing-observability.md#T-06.04.04.03",
       "release-readiness#R-05.02"
     ],
-    "goal": "Verify hosted browser receipts and reconcile the demonstrated outbound storage destination gap against the approved storage design."
+    "goal": "Diagnose the exact hosted Firefox invitation dialog failures and read back remaining matrix outcomes before repeating any release check."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

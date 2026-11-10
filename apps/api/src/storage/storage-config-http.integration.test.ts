@@ -141,6 +141,39 @@ it('returns owned storage fields without echoing credentials or writing invalid 
   expect(JSON.stringify(body)).not.toContain('private-field-test-secret');
   expect(await current()).toEqual(before);
 });
+
+it('rejects unapproved origins before any probe, credential write or audit', async () => {
+  const sink = createServer((_request, response) => response.writeHead(403).end());
+  const observed = { connections: 0 };
+  sink.on('connection', () => observed.connections++);
+  await new Promise<void>((done) => sink.listen(0, '127.0.0.1', done));
+  try {
+    const origin = `http://127.0.0.1:${(sink.address() as { port: number }).port}`;
+    const before = await update('private-probe-key');
+    const candidate = { ...before, privateEndpointUrl: origin };
+    const priorCalls = authorizations.length;
+    for (const [path, method] of [
+      ['/test-connection', 'POST'],
+      ['/config', 'PUT'],
+    ] as const) {
+      const response = await request(path, method, candidate);
+      expect(response.status).toBe(400);
+      const body: unknown = await response.json();
+      expect(body).toMatchObject({
+        error: { code: 'VALIDATION:INPUT:INVALID', fields: ['privateEndpointUrl'] },
+      });
+      expect(JSON.stringify(body)).not.toContain('private-probe-key');
+    }
+    expect(observed.connections).toBe(0);
+    expect(authorizations).toHaveLength(priorCalls);
+    expect((await current()).version).toBe(before.version);
+    expect(
+      (await http.pool.query("SELECT id FROM audit_log WHERE event='storage.config.updated'")).rows
+    ).toHaveLength(0);
+  } finally {
+    await new Promise<void>((done) => sink.close(() => done()));
+  }
+});
 it('keeps cleanup policy unchanged after an owned hours error', async () => {
   const before = await (await request('/multipart-cleanup-policy')).json();
   const response = await request('/multipart-cleanup-policy', 'PUT', { hours: 169, version: 0 });
@@ -332,6 +365,7 @@ it('loads the durable configuration in another API process without S3 environmen
       S3_ENDPOINT: '',
       S3_PRIVATE_ENDPOINT: '',
       S3_PUBLIC_ENDPOINT: '',
+      S3_ALLOWED_ENDPOINT_ORIGINS: endpoint,
       S3_ACCESS_KEY_ID: '',
       S3_SECRET_ACCESS_KEY: '',
       REDIS_URL: '',

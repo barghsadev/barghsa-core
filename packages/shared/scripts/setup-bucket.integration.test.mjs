@@ -337,7 +337,9 @@ test('bucket setup against real MinIO', { timeout: 90_000 }, async (t) => {
         'complete file facade preserves exact bytes, receipts, signed headers and current runtime routing',
         async () => {
           const previous = process.env.STORAGE_CONFIG_ENCRYPTION_KEY;
+          const previousOrigins = process.env.S3_ALLOWED_ENDPOINT_ORIGINS;
           process.env.STORAGE_CONFIG_ENCRYPTION_KEY = randomUUID();
+          process.env.S3_ALLOWED_ENDPOINT_ORIGINS = endpoint;
           const runtime = runtimeStorageProvider(async () => ({
             endpoint,
             privateEndpointUrl: endpoint,
@@ -410,6 +412,8 @@ test('bucket setup against real MinIO', { timeout: 90_000 }, async (t) => {
             runtime.destroy();
             if (previous === undefined) delete process.env.STORAGE_CONFIG_ENCRYPTION_KEY;
             else process.env.STORAGE_CONFIG_ENCRYPTION_KEY = previous;
+            if (previousOrigins === undefined) delete process.env.S3_ALLOWED_ENDPOINT_ORIGINS;
+            else process.env.S3_ALLOWED_ENDPOINT_ORIGINS = previousOrigins;
           }
         }
       );
