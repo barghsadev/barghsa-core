@@ -246,6 +246,14 @@ export class CrmService {
     }
 
     const whereClause = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
+    const orderBy = `ORDER BY ${sortColumn} ${sortOrder}${sort === 'lastLogin' ? ' NULLS LAST' : ''}, u.user_id ${sortOrder}`;
+    // When no profile aggregate determines eligibility or order, select the page
+    // before joining and building its profile summaries.
+    const pageFirst = sort !== 'profileCount' && !havingClause;
+    const userSource = pageFirst
+      ? `(SELECT u.user_id, u.username, u.email, u.mobile, u.created_at, u.last_login_at
+           FROM users u ${whereClause} ${orderBy} LIMIT $1)`
+      : 'users';
 
     const query = `
       SELECT
@@ -260,13 +268,13 @@ export class CrmService {
         bool_or(p.profile_type = 'INDIVIDUAL') AS has_individual_profile,
         bool_or(p.profile_type = 'LEGAL') AS has_legal_profile,
         bool_or(p.status = 'VERIFIED') AS has_verified_profile
-      FROM users u
+      FROM ${userSource} u
       LEFT JOIN profiles p ON p.user_id = u.user_id AND p.archived = false
-      ${whereClause}
+      ${pageFirst ? '' : whereClause}
       GROUP BY u.user_id, u.username, u.email, u.mobile, u.created_at, u.last_login_at
       ${havingClause}
-      ORDER BY ${sortColumn} ${sortOrder}${sort === 'lastLogin' ? ' NULLS LAST' : ''}, u.user_id ${sortOrder}
-      LIMIT $1
+      ${orderBy}
+      ${pageFirst ? '' : 'LIMIT $1'}
     `;
 
     const result = await pool.query(query, params);

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T17:43:19+00:00",
-  "source_commit": "d3176e986c00da414dc179c858fa4c7147d43e12",
+  "updated": "2026-11-10T17:47:31+00:00",
+  "source_commit": "79c6a6dc34a684113df7f292bd2d5ac39d41956d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -49732,7 +49732,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-crm-page-before-profile-summaries"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -49764,7 +49765,7 @@
             },
             {
               "path": "apps/api/src/crm/crm.service.ts",
-              "sha256": "bc0c9e119db3fab6020d2830de1551c9bf9b7cb5ba157ad7ad9070cefc0f1680"
+              "sha256": "a840cf69d1b241d3e29c1d613e2c277c25faa1d0ad8fa500e087954af00c2d84"
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
@@ -50007,6 +50008,14 @@
                 "apps/api/src/crm/crm.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-crm-page-before-profile-summaries",
+              "base_commit": "79c6a6dc34a684113df7f292bd2d5ac39d41956d",
+              "paths": [
+                "apps/api/src/crm/crm.service.ts"
+              ],
+              "scope": "Preserve all current query and authority semantics. Build profile summaries after bounded user pagination where aggregate eligibility and sort do not apply."
             }
           ],
           "presentation_renewals": [
@@ -50168,7 +50177,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-crm-page-before-profile-summaries"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -50192,7 +50202,7 @@
             },
             {
               "path": "apps/api/src/crm/crm.service.ts",
-              "sha256": "bc0c9e119db3fab6020d2830de1551c9bf9b7cb5ba157ad7ad9070cefc0f1680"
+              "sha256": "a840cf69d1b241d3e29c1d613e2c277c25faa1d0ad8fa500e087954af00c2d84"
             },
             {
               "path": "apps/web/e2e/crm-list.spec.ts",
@@ -50312,6 +50322,14 @@
                 "apps/api/src/crm/crm.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-crm-page-before-profile-summaries",
+              "base_commit": "79c6a6dc34a684113df7f292bd2d5ac39d41956d",
+              "paths": [
+                "apps/api/src/crm/crm.service.ts"
+              ],
+              "scope": "Preserve all current query and authority semantics. Build profile summaries after bounded user pagination where aggregate eligibility and sort do not apply."
             }
           ],
           "presentation_renewals": [
@@ -492987,7 +493005,7 @@
             },
             {
               "path": "apps/api/src/crm/crm.service.ts",
-              "sha256": "bc0c9e119db3fab6020d2830de1551c9bf9b7cb5ba157ad7ad9070cefc0f1680"
+              "sha256": "a840cf69d1b241d3e29c1d613e2c277c25faa1d0ad8fa500e087954af00c2d84"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.test.ts",
@@ -493185,6 +493203,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-crm-page-before-profile-summaries",
+              "base_commit": "79c6a6dc34a684113df7f292bd2d5ac39d41956d",
+              "paths": [
+                "apps/api/src/crm/crm.service.ts"
+              ],
+              "scope": "Preserve all current query and authority semantics. Build profile summaries after bounded user pagination where aggregate eligibility and sort do not apply."
             }
           ]
         }
@@ -498712,7 +498738,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-crm-page-before-profile-summaries"
         ],
         "current_acceptance": {
           "kind": "source-bound-sql-field-allowlists",
@@ -498760,7 +498787,7 @@
             },
             {
               "path": "apps/api/src/crm/crm.service.ts",
-              "sha256": "bc0c9e119db3fab6020d2830de1551c9bf9b7cb5ba157ad7ad9070cefc0f1680"
+              "sha256": "a840cf69d1b241d3e29c1d613e2c277c25faa1d0ad8fa500e087954af00c2d84"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -498821,6 +498848,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-crm-page-before-profile-summaries",
+              "base_commit": "79c6a6dc34a684113df7f292bd2d5ac39d41956d",
+              "paths": [
+                "apps/api/src/crm/crm.service.ts"
+              ],
+              "scope": "Preserve all current query and authority semantics. Build profile summaries after bounded user pagination where aggregate eligibility and sort do not apply."
             }
           ]
         }
@@ -511856,7 +511891,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Diagnose the five observed p95 misses, starting with the broad CRM search query plan. Retest the corrected full 1,000-sample workload and retain actual p50/p95/p99 and exact financial and queue counts.",
+        "Retest the corrected eight-user workload after the verified CRM pagination improvement. Verify all 1,000 samples per operation, p50/p95/p99 and exact financial and queue counts. Diagnose any remaining p95 misses before retry.",
         "Prove production-equivalent host topology, data/index cardinality and the declared latency budgets separately."
       ],
       "owner": null,
@@ -511872,7 +511907,8 @@
         ],
         "batches": [
           "release-0.6-weekly-isolated-load-scenarios",
-          "release-0.6-load-client-address-fixture"
+          "release-0.6-load-client-address-fixture",
+          "release-0.6-crm-page-before-profile-summaries"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -511933,6 +511969,10 @@
             {
               "path": "docs/operations/service-objectives.md",
               "sha256": "18c24f00e7f3ee3c37f63d1c767f6bc15a63d8be8a791a37f6182169394fc0db"
+            },
+            {
+              "path": "apps/api/src/crm/crm.service.ts",
+              "sha256": "a840cf69d1b241d3e29c1d613e2c277c25faa1d0ad8fa500e087954af00c2d84"
             }
           ],
           "checks": [
@@ -511943,7 +511983,10 @@
             "The first eight-user full attempt from d3176e98 used a shared loopback address. The invoice list applies an existing 60-per-minute IP quota because this decorator does not set scope to user. The run was intentionally interrupted after 324 HTTP 429 responses. Its partial report has no p99 and is not a passing full-load receipt.",
             "The partial eight-user report recorded p95 above the 20% regression guard for electricity preview 501 ms, order submission 1292 ms, wallet payment 788 ms, invoice list 394 ms and CRM search 2171 ms. Upload reservation and private alert fan-out passed their p95 thresholds in that partial run but lacked full sample counts. Both staging resource caps and the broad CRM match make the result specific to that disposable environment.",
             "The revised fixture passes up to 50 test-network client addresses through the disposable API’s single explicitly trusted loopback hop. The compiled smoke passed all seven operations and verified the actual PostgreSQL invoice quota keys used four distinct addresses. Product proxy policy, quota, business and latency thresholds are unchanged. No full-volume retest or production-equivalent pass is claimed.",
-            "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication."
+            "ESLint, Prettier and changed-file diff checks passed. The superseded d3176e98 hosted preflight was cancelled before main publication.",
+            "EXPLAIN ANALYZE on the migrated disposable fixture with 6,003 users showed 6,003 and 5,000 profile summaries constructed before limiting the English and Persian results. The reviewed query selects the exact bounded user page first when no aggregate controls eligibility or sort, then constructs 21 summaries including lookahead.",
+            "On the resource-capped isolated PostgreSQL fixture, English query execution moved from 286.359 to 64.581 ms and Persian from 242.320 to 95.764 ms. These are single exact query-plan measurements. They do not certify mixed-load p95 or production capacity.",
+            "Profile-count order and verification conditions retain the aggregate-first query. All sort, null ordering, cursor, literal name and complete profile-summary behavior uses the existing bound inputs and fixed column map. All 19 CRM units and 62 compiled CRM HTTP cases passed across the 207 production migrations. API strict type checking, formatting and lint passed."
           ],
           "source_renewals": [
             {
@@ -905859,6 +905902,41 @@
           }
         ]
       }
+    },
+    "release-0.6-crm-page-before-profile-summaries": {
+      "batch": "release-0.6-crm-page-before-profile-summaries",
+      "base_commit": "79c6a6dc34a684113df7f292bd2d5ac39d41956d",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.11.03.03",
+        "02-auth-users-admin.md#T-05.01.01",
+        "02-auth-users-admin.md#T-05.01.02",
+        "06-security-testing-observability.md#T-06.04.02.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/crm/crm.service.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/crm.service.ts",
+          "sha256": "a840cf69d1b241d3e29c1d613e2c277c25faa1d0ad8fa500e087954af00c2d84"
+        }
+      ],
+      "checks": [
+        "EXPLAIN ANALYZE on the migrated disposable fixture with 6,003 users showed 6,003 and 5,000 profile summaries constructed before limiting the English and Persian results. The reviewed query selects the exact bounded user page first when no aggregate controls eligibility or sort, then constructs 21 summaries including lookahead.",
+        "On the resource-capped isolated PostgreSQL fixture, English query execution moved from 286.359 to 64.581 ms and Persian from 242.320 to 95.764 ms. These are single exact query-plan measurements. They do not certify mixed-load p95 or production capacity.",
+        "Profile-count order and verification conditions retain the aggregate-first query. All sort, null ordering, cursor, literal name and complete profile-summary behavior uses the existing bound inputs and fixed column map. All 19 CRM units and 62 compiled CRM HTTP cases passed across the 207 production migrations. API strict type checking, formatting and lint passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "plan_logs": [
+        {
+          "file": "performance-crm-query-plan.log",
+          "sha256": "5110eb1c73abd01e478fe77ef887f275468856214c00ad28941cadb2cfd6cb2d"
+        },
+        {
+          "file": "performance-crm-query-page-first.log",
+          "sha256": "57266784ba9c6e9e99e50814f8404326f27ba91e4cc59b9cdea82c14e6eacab7"
+        }
+      ]
     }
   },
   "historical_improvements": [
