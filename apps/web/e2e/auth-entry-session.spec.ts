@@ -5,6 +5,7 @@ import { sessionReference } from '../../api/src/session/session-reference';
 import { test, expect, type Page, type Route } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { cookieResponse } from './cookie-response';
+import { browserFixtureProxy } from './local-network';
 import { fullNavigation } from './navigation-fixture';
 import { mockPublicAuthCsrf } from './public-auth-fixture';
 
@@ -267,7 +268,7 @@ for (const locale of ['fa', 'en'] as const) {
       return r.fulfill({ json: { message: 'Session revoked.' } });
     });
 
-    const previous = await browser.newContext({ baseURL });
+    const previous = await browser.newContext({ baseURL, proxy: browserFixtureProxy() });
     try {
       const previousPage = await previous.newPage();
       await previous.addCookies([session(oldCookie)]);

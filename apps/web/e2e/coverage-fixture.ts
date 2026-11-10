@@ -2,6 +2,7 @@ import { test as base, type Page } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join, basename } from 'node:path';
 import { randomUUID } from 'node:crypto';
+import { browserFixtureProxy } from './local-network';
 
 export * from '@playwright/test';
 
@@ -16,6 +17,7 @@ export function checkpointBrowserCoverage(page: Page) {
 }
 
 export const test = base.extend<{ browserCoverage: void }>({
+  proxy: async ({}, use) => use(browserFixtureProxy()),
   browserCoverage: [
     async ({ page, browserName }, use) => {
       const directory = process.env['BARGHSA_BROWSER_COVERAGE_DIR'];

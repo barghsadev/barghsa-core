@@ -7,23 +7,17 @@
  */
 import type { FullConfig } from '@playwright/test';
 import { setup as buildApi } from '../../api/src/test/build-http-app';
+import startBrowserFixtureProxy, { isLoopbackUrl } from './local-network';
 
-async function globalSetup(_config: FullConfig): Promise<void> {
-  // Guard: never run against production
-  const baseURL = process.env['PLAYWRIGHT_BASE_URL'] ?? 'http://localhost:5173';
-  const hostname = new URL(baseURL).hostname;
-
-  const local = hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.local');
-  // For staging/CI environments, verify the PLAYWRIGHT_TEST_ENV marker.
-  if (!local && process.env['PLAYWRIGHT_TEST_ENV'] !== 'test') {
-    throw new Error(
-      `E2E tests would target ${baseURL} which is not localhost. ` +
-        'Set PLAYWRIGHT_TEST_ENV=test to confirm this is a safe test environment.'
-    );
+async function globalSetup(config: FullConfig) {
+  for (const { use } of config.projects) {
+    if (!use.baseURL || !isLoopbackUrl(new URL(use.baseURL)))
+      throw new Error('E2E requires a loopback HTTP application URL.');
   }
   // Compile once before workers start. Per-project fixture builds can overwrite
   // shared dist files while another browser's API process is using them.
   buildApi();
+  return startBrowserFixtureProxy();
 }
 
 export default globalSetup;

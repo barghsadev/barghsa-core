@@ -1,4 +1,5 @@
 import { test, expect } from './coverage-fixture';
+import { browserFixtureProxy } from './local-network';
 
 type LocaleCase = {
   name: string;
@@ -62,7 +63,10 @@ for (const entry of cases) {
     browser,
     baseURL,
   }) => {
-    const context = await browser.newContext({ locale: entry.browser });
+    const context = await browser.newContext({
+      locale: entry.browser,
+      proxy: browserFixtureProxy(),
+    });
     try {
       const setup: {
         stored?: string;

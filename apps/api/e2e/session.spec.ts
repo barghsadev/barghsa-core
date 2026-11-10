@@ -6,8 +6,12 @@ import { resolve } from 'node:path';
 import * as argon2 from 'argon2';
 import ts from 'typescript';
 import { startHttpFixture } from '../src/test/http-fixture';
+import { browserFixtureProxy } from '../../web/e2e/local-network';
+
+process.env.BARGHSA_BROWSER_FIXTURE_LOOPBACK = '1';
 
 const test = baseTest.extend<{ http: Awaited<ReturnType<typeof startHttpFixture>> }>({
+  proxy: async ({}, use) => use(browserFixtureProxy()),
   http: async ({}, use) => {
     const container = await new PostgreSqlContainer('postgres:17-alpine').start();
     try {

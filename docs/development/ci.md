@@ -77,6 +77,13 @@ payment sandbox test runs the real payment adapter against a disposable local
 ledger. These fixtures exercise provider responses without external delivery
 or live merchant credentials.
 
+The web Playwright suite requires a loopback application URL. It blocks
+unhandled external HTTP requests from the browser, while explicit fixtures can
+fulfill synthetic provider URLs. The real API and worker processes launched
+by browser fixtures also reject non-loopback sockets. Run staging acceptance
+probes through the deployment runbooks with authorized test recipients and
+sandbox configuration.
+
 ## Reusing local builds
 
 Build the required shared, API, worker and web outputs once before their

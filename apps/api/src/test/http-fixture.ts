@@ -25,6 +25,16 @@ export async function startHttpFixture(
   let aiWorker: ChildProcess | undefined;
   let pool: Pool | undefined;
   let output = '';
+  const network =
+    process.env.BARGHSA_BROWSER_FIXTURE_LOOPBACK === '1'
+      ? {
+          execArgv: [
+            ...process.execArgv,
+            '--require',
+            resolve(__dirname, '../../scripts/loopback-test-network.cjs'),
+          ],
+        }
+      : {};
 
   async function close() {
     if (child && child.exitCode === null && child.signalCode === null) {
@@ -102,6 +112,7 @@ export async function startHttpFixture(
     pool = new Pool({ connectionString: url.toString(), max: poolMax });
     if (rawCoverage) await mkdir(rawCoverage, { recursive: true });
     child = fork(resolve(__dirname, '../../scripts/http-test-server.cjs'), [], {
+      ...network,
       silent: true,
       env: {
         ...process.env,
@@ -165,6 +176,7 @@ export async function startHttpFixture(
     });
     if (startAiModelWorker) {
       aiWorker = fork(resolve(__dirname, '../../../worker/scripts/ai-model-http-worker.cjs'), [], {
+        ...network,
         silent: true,
         env: {
           ...process.env,

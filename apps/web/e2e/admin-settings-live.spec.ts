@@ -6,6 +6,7 @@ import { tWorkspace } from '@barghsa/i18n/workspace-admin';
 import type { APIRequestContext, APIResponse, Page, Route } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { isLoopbackUrl } from './local-network';
 import { fork, type ChildProcess } from 'node:child_process';
 import { once } from 'node:events';
 import { createRequire } from 'node:module';
@@ -75,8 +76,10 @@ async function forwardLiveRequest(
   options: Parameters<Route['fetch']>[0],
   onResponse?: (response: APIResponse) => void
 ) {
+  if (!isLoopbackUrl(new URL(options?.url ?? route.request().url())))
+    throw new Error('Browser fixture can forward only to a loopback URL.');
   const pending = (async () => {
-    const response = await route.fetch(options);
+    const response = await route.fetch({ ...options, maxRedirects: 0 });
     onResponse?.(response);
     await route.fulfill({ response });
   })();
@@ -115,7 +118,7 @@ test.beforeAll(async () => {
   child = fork(
     require.resolve('tsx/cli'),
     [fileURLToPath(new URL('../../api/scripts/admin-ui-fixture.ts', import.meta.url))],
-    { silent: true }
+    { silent: true, env: { ...process.env, BARGHSA_BROWSER_FIXTURE_LOOPBACK: '1' } }
   );
   fixtureLogs = '';
   for (const stream of [child.stdout, child.stderr])
