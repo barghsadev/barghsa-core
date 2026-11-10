@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T17:59:52+00:00",
-  "source_commit": "a4fa491e31ca51690c7cd03272e4057958d23a84",
+  "updated": "2026-11-10T18:22:29+00:00",
+  "source_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -105573,7 +105573,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-protected-storage-origins",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -105653,7 +105654,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -106444,6 +106445,14 @@
                 "apps/worker/src/wallet/reconciliation-scanner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -109854,7 +109863,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -109942,11 +109952,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -110544,6 +110554,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -110732,7 +110751,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -110820,11 +110840,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -111422,6 +111442,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -115656,7 +115685,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -115744,11 +115774,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.test.ts",
@@ -116165,6 +116195,15 @@
                 "apps/web/e2e/catalogue.spec.ts"
               ],
               "scope": "Wait for the committed catalogue selection and preserve real RTL/LTR keyboard and focus assertions. Twelve focused runs passed."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -116416,7 +116455,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -116504,11 +116544,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.test.ts",
@@ -116924,6 +116964,15 @@
                 "apps/web/e2e/catalogue.spec.ts"
               ],
               "scope": "Wait for the committed catalogue selection and preserve real RTL/LTR keyboard and focus assertions. Twelve focused runs passed."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -117162,7 +117211,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotion-policy-and-partial-financial-reconciliation",
@@ -117238,7 +117288,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -118046,6 +118096,14 @@
                 "apps/worker/src/wallet/reconciliation-scanner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -118215,7 +118273,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-reconciliation-accepted-filter-page",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -118303,11 +118362,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -118905,6 +118964,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -119092,7 +119160,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -119180,11 +119249,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.test.ts",
@@ -119600,6 +119669,15 @@
                 "apps/web/e2e/catalogue.spec.ts"
               ],
               "scope": "Wait for the committed catalogue selection and preserve real RTL/LTR keyboard and focus assertions. Twelve focused runs passed."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -124848,7 +124926,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -124940,11 +125019,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.test.ts",
@@ -125862,6 +125941,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -126149,7 +126237,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -126241,11 +126330,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.test.ts",
@@ -127164,6 +127253,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -127424,7 +127522,8 @@
           "release-0.5-invoice-response-feedback",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-invoice-error-log-redaction"
+          "release-0.6-invoice-error-log-redaction",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -127504,11 +127603,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.test.ts",
@@ -127646,6 +127745,17 @@
               "batch": "release-0.5-invoice-response-feedback",
               "base_commit": "a27bfb6aca1393b091d9e63d4ce00ad7a2eae457",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-invoice-response-feedback/invoice-response-feedback-proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ]
         },
@@ -128037,7 +128147,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -128129,11 +128240,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.test.ts",
@@ -129051,6 +129162,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -129337,7 +129457,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -129429,11 +129550,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.test.ts",
@@ -130352,6 +130473,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -130638,7 +130768,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -130730,11 +130861,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.test.ts",
@@ -131652,6 +131783,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -131938,7 +132078,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -132030,11 +132171,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.test.ts",
@@ -132952,6 +133093,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -133248,7 +133398,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -133348,11 +133499,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.test.ts",
@@ -134270,6 +134421,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -134556,7 +134716,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -134648,11 +134809,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.test.ts",
@@ -135570,6 +135731,15 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -256700,7 +256870,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -256724,7 +256895,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -257651,6 +257822,14 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -257747,7 +257926,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -257771,7 +257951,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -258698,6 +258878,14 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -258793,7 +258981,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -258817,7 +259006,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -259744,6 +259933,14 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -259839,7 +260036,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -259863,7 +260061,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -260790,6 +260988,14 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -260885,7 +261091,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -260909,7 +261116,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -261836,6 +262043,14 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -261931,7 +262146,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -261955,7 +262171,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -262882,6 +263098,14 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -262979,7 +263203,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -263011,7 +263236,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -263945,6 +264170,14 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -264041,7 +264274,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -264073,7 +264307,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -265007,6 +265241,14 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -265104,7 +265346,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -265136,7 +265379,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -266070,6 +266313,14 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -266147,7 +266398,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-route-census-closure",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -266175,7 +266427,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -266191,11 +266443,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.service.ts",
@@ -266477,6 +266729,16 @@
                 "apps/api/src/admin/vat-config.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts",
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ]
         }
@@ -266511,7 +266773,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-route-census-closure",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -266539,7 +266802,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -266555,11 +266818,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.service.ts",
@@ -266841,6 +267104,16 @@
                 "apps/api/src/admin/vat-config.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts",
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ]
         }
@@ -266875,7 +267148,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-route-census-closure",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -266903,7 +267177,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -266919,11 +267193,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.service.ts",
@@ -267205,6 +267479,16 @@
                 "apps/api/src/admin/vat-config.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts",
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ]
         }
@@ -267240,7 +267524,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-route-census-closure",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -267268,7 +267553,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -267284,11 +267569,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.service.ts",
@@ -267571,6 +267856,16 @@
                 "apps/api/src/admin/vat-config.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts",
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ]
         }
@@ -267605,7 +267900,8 @@
           "release-0.5-coverage-remaining-branches",
           "release-0.5-route-census-closure",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-browser-finance-command-recovery"
+          "release-0.6-browser-finance-command-recovery",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -267633,7 +267929,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -267649,11 +267945,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.service.ts",
@@ -267935,6 +268231,16 @@
                 "apps/api/src/admin/vat-config.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts",
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ]
         }
@@ -286675,7 +286981,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -286731,11 +287038,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -287531,6 +287838,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -287677,7 +287993,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -287733,11 +288050,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -288533,6 +288850,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -288679,7 +289005,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -288735,11 +289062,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -289535,6 +289862,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -289681,7 +290017,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -289737,11 +290074,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -290537,6 +290874,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -290683,7 +291029,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -290739,11 +291086,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -291539,6 +291886,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -291685,7 +292041,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -291741,11 +292098,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -292541,6 +292898,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -292687,7 +293053,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -292743,11 +293110,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -293543,6 +293910,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -293689,7 +294065,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -293745,11 +294122,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -294545,6 +294922,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -294691,7 +295077,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -294747,11 +295134,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -295547,6 +295934,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -295693,7 +296089,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -295749,11 +296146,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -296549,6 +296946,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -296695,7 +297101,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -296751,11 +297158,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -297551,6 +297958,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -297697,7 +298113,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -297753,11 +298170,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -298553,6 +298970,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -298700,7 +299126,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -298756,11 +299183,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -299556,6 +299983,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -299702,7 +300138,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -299758,11 +300195,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -300558,6 +300995,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -300704,7 +301150,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -300760,11 +301207,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -301560,6 +302007,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -301706,7 +302162,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -301762,11 +302219,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -302562,6 +303019,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -302708,7 +303174,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -302764,11 +303231,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -303564,6 +304031,15 @@
                 "apps/api/src/orders/orders.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -506502,7 +506978,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -506530,7 +507007,7 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
@@ -506539,6 +507016,16 @@
             {
               "path": "docs/changed-coverage.md",
               "sha256": "83f335d8ec10412de614fcdd983b13e9704163521a4654002331a09c3a7e294c"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/invoice/vat-calculation.integration.test.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ]
         }
@@ -506813,7 +507300,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "verified-calendar-package-and-source-matching-finance-tests",
@@ -506821,11 +507309,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -506874,6 +507362,17 @@
           ],
           "checks": [
             "The six source-matching hosted calculation suites passed all 86 cases. They cover product and category VAT, exact half-up IRR rounding, net discounts before per-line VAT, simple and advanced electricity composition, mandatory green rules, and validated Jalali billing periods."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            }
           ]
         }
       },
@@ -512081,7 +512580,8 @@
           "release-0.6-weekly-isolated-load-scenarios",
           "release-0.6-load-client-address-fixture",
           "release-0.6-crm-page-before-profile-summaries",
-          "release-0.6-load-regression-and-durable-count-receipt"
+          "release-0.6-load-regression-and-durable-count-receipt",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -512162,7 +512662,8 @@
             "Profile-count order and verification conditions retain the aggregate-first query. All sort, null ordering, cursor, literal name and complete profile-summary behavior uses the existing bound inputs and fixed column map. All 19 CRM units and 62 compiled CRM HTTP cases passed across the 207 production migrations. API strict type checking, formatting and lint passed.",
             "Exact 4c3552e1 performed all 1,000 attempts per operation with zero request failures on the pinned disposable PostgreSQL and compiled API. The 50-address fixture preserved the invoice quota. The regression gate failed on electricity preview at 395.893 ms p95, order submission at 922.761 ms and CRM search at 682.026 ms. Wallet payment at 588.812 ms and invoice list at 319.535 ms also missed the underlying rehearsal targets while remaining within the 20% regression tolerance.",
             "The run used a one-CPU PostgreSQL container and two CPUs for the API and load runner. One concurrent cgroup snapshot showed 1,073 throttled PostgreSQL periods out of 1,397. This is an isolated load result. The report does not establish production-equivalent capacity or the sole cause of each latency miss.",
-            "The initial full run exited at the latency gate before the durable-count assertions. The revised harness verifies and writes financial and queue counts before failing latency when all samples completed. The genuine four-iteration native smoke verified the persisted counts. A separate injected latency-regression receipt after genuine synthetic requests retained those counts and still failed the gate. No full-load durable-count pass is claimed for the earlier run."
+            "The initial full run exited at the latency gate before the durable-count assertions. The revised harness verifies and writes financial and queue counts before failing latency when all samples completed. The genuine four-iteration native smoke verified the persisted counts. A separate injected latency-regression receipt after genuine synthetic requests retained those counts and still failed the gate. No full-load durable-count pass is claimed for the earlier run.",
+            "Electricity preview and submission now resolve all priced-line VAT in one statement. Real PostgreSQL and compiled HTTP checks preserve rate precedence, financial snapshots and submission safeguards. Measure the exact changed candidate before assessing either latency miss."
           ],
           "source_renewals": [
             {
@@ -513083,7 +513584,8 @@
         "batches": [
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -513100,7 +513602,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -513145,6 +513647,16 @@
             {
               "path": "scripts/test_check_changed_coverage.py",
               "sha256": "50fcd995713ed175d1389e519aa4ae8954cdbe8a0b51058a496df0c328201d4c"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ]
         }
@@ -513173,7 +513685,8 @@
         "batches": [
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -513189,7 +513702,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -513234,6 +513747,16 @@
             {
               "path": "scripts/test_check_changed_coverage.py",
               "sha256": "50fcd995713ed175d1389e519aa4ae8954cdbe8a0b51058a496df0c328201d4c"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ]
         }
@@ -513262,7 +513785,8 @@
         "batches": [
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -513280,7 +513804,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -513326,6 +513850,16 @@
               "path": "scripts/test_check_changed_coverage.py",
               "sha256": "50fcd995713ed175d1389e519aa4ae8954cdbe8a0b51058a496df0c328201d4c"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
+            }
           ]
         }
       }
@@ -513353,7 +513887,8 @@
         "batches": [
           "release-0.6-critical-file-coverage-and-openapi",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-electricity-quote-vat-batch"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -513368,7 +513903,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.ts",
@@ -513413,6 +513948,16 @@
             {
               "path": "scripts/test_check_changed_coverage.py",
               "sha256": "50fcd995713ed175d1389e519aa4ae8954cdbe8a0b51058a496df0c328201d4c"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ]
         }
@@ -771201,11 +771746,11 @@
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
-              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+              "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.repository.ts",
-              "sha256": "b58cc2a393af6ac03d4568806180d45f32739a1f4069f215d3adb1554a778597"
+              "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
             },
             {
               "path": "apps/api/src/invoice/vat-calculation.test.ts",
@@ -774910,6 +775455,15 @@
                 "apps/worker/src/wallet/reconciliation-scanner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/invoice/vat-calculation.integration.test.ts",
+                "apps/api/src/invoice/vat-calculation.repository.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -775221,7 +775775,8 @@
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-receipt-filter-mobile-viewport",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-electricity-quote-vat-batch"
         ]
       }
     },
@@ -776201,11 +776756,11 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
-              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+              "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
-              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+              "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -779572,6 +780127,15 @@
                 "apps/worker/src/service-targets/escalation-scanner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-electricity-quote-vat-batch",
+              "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+              "paths": [
+                "apps/api/src/electricity/electricity-calculation.service.test.ts",
+                "apps/api/src/electricity/electricity-calculation.service.ts"
+              ],
+              "scope": "One VAT query per valid electricity quote. Product override, specific category, general electricity category and fallback zero retain their precedence, effective windows and snapshot provenance. The original repository methods and other calculator statements are exact."
             }
           ],
           "presentation_renewals": [
@@ -780002,7 +780566,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-browser-navigation-query-and-resting-states"
+          "release-0.6-browser-navigation-query-and-resting-states",
+          "release-0.6-electricity-quote-vat-batch"
         ]
       }
     },
@@ -906939,6 +907504,117 @@
         {
           "file": "browser-account-logout-gated-webkit.log",
           "sha256": "4d38e586b767951766ede7f6e51bb49ee0f504ab60207a11c6f92f45382271a8"
+        }
+      ]
+    },
+    "release-0.6-electricity-quote-vat-batch": {
+      "batch": "release-0.6-electricity-quote-vat-batch",
+      "base_commit": "dcf0b2a05f52bbbb62828eef4cd626a8854b6be5",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.11.03.03",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.10.02",
+        "02-auth-users-admin.md#T-09.10.03",
+        "02-auth-users-admin.md#T-09.12.01",
+        "02-auth-users-admin.md#T-09.12.02",
+        "02-auth-users-admin.md#T-09.12.03",
+        "02-auth-users-admin.md#T-09.12.04",
+        "02-auth-users-admin.md#T-09.12.05",
+        "04-invoices-wallet-contracts.md#T-04.1.02.01",
+        "04-invoices-wallet-contracts.md#T-04.1.02.02",
+        "04-invoices-wallet-contracts.md#T-04.1.02.03",
+        "04-invoices-wallet-contracts.md#T-04.1.02.04",
+        "04-invoices-wallet-contracts.md#T-04.1.02.05",
+        "04-invoices-wallet-contracts.md#T-04.1.02.06",
+        "04-invoices-wallet-contracts.md#T-04.1.02.07",
+        "04-invoices-wallet-contracts.md#T-04.1.02.08",
+        "04-invoices-wallet-contracts.md#T-04.1.02.09",
+        "03-core-business.md#T-03.02.03.01",
+        "03-core-business.md#T-03.02.03.02",
+        "03-core-business.md#T-03.02.03.03",
+        "03-core-business.md#T-03.02.03.04",
+        "03-core-business.md#T-03.02.03.05",
+        "03-core-business.md#T-03.02.03.06",
+        "03-core-business.md#T-03.02.04.01",
+        "03-core-business.md#T-03.02.04.02",
+        "03-core-business.md#T-03.02.04.03",
+        "03-core-business.md#T-03.02.05.01",
+        "03-core-business.md#T-03.02.05.02",
+        "03-core-business.md#T-03.02.05.03",
+        "03-core-business.md#T-03.02.05.04",
+        "03-core-business.md#T-03.02.05.05",
+        "03-core-business.md#T-03.04.01.01",
+        "03-core-business.md#T-03.04.01.02",
+        "03-core-business.md#T-03.04.01.03",
+        "03-core-business.md#T-03.04.01.04",
+        "03-core-business.md#T-03.04.01.05",
+        "03-core-business.md#T-03.04.02.01",
+        "03-core-business.md#T-03.04.02.02",
+        "03-core-business.md#T-03.04.02.03",
+        "03-core-business.md#T-03.04.02.04",
+        "03-core-business.md#T-03.04.03.01",
+        "03-core-business.md#T-03.04.03.02",
+        "03-core-business.md#T-03.04.03.03",
+        "03-core-business.md#T-03.04.03.04",
+        "03-core-business.md#T-03.04.04.01",
+        "03-core-business.md#T-03.04.04.02",
+        "03-core-business.md#T-03.04.04.03",
+        "03-core-business.md#T-03.04.04.04",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.09.02.02",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/electricity/electricity-calculation.service.ts",
+        "apps/api/src/electricity/electricity-calculation.service.test.ts",
+        "apps/api/src/invoice/vat-calculation.repository.ts",
+        "apps/api/src/invoice/vat-calculation.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+          "sha256": "4c81287eb868f85bbd7b78337d73ca06326819e2a23e425683aef6035784f3ac"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
+          "sha256": "9d77d57d68deaf0b8a21d92cb54b0ec354956dd6c14164ca3819abee57701cdd"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.repository.ts",
+          "sha256": "18fd6a7a99d62cd69e193cac6cbbb70e6714465d2365b012bc69b3dce960c9dc"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "7b1088f73eb350b54c6f1476c3f5c1a24ccdf728f7a58866569ebc6b6d19ae09"
+        }
+      ],
+      "checks": [
+        "The former quote needed up to three VAT statements per priced line. The exact migrated PostgreSQL mixed-line test verifies one statement for the whole batch, explicit zero overrides and category rates, line order, fallback and effective end boundaries.",
+        "All 113 tests in the real VAT repository and compiled electricity order suites passed with 207 migrations, including mixed-line discounts, invoice and contract snapshots, idempotent replays, concurrent retries and rollback. All 28 focused units, API typecheck, formatting and changed-file lint passed. The changed calculator recorded 100% lines and 88.23% branches in focused coverage.",
+        "The source comparison confirms the generic invoice resolver is byte-identical and the electricity calculator retains its catalogue lock, composition validation and final integer totals. The quote still uses the caller-owned transaction. End-to-end load and release-wide coverage gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz",
+      "proof_logs": [
+        {
+          "file": "electricity-vat-scope.json",
+          "sha256": "83f20aab7a02f77d72a9660706e49b065d26601c80fbc36ef2c73b1372b93372"
+        },
+        {
+          "file": "electricity-vat-native.log",
+          "sha256": "a57db8e728f66ff546dd2c9decb9e5ac4f56c7cb0008ec04fa26c60b85139fa2"
+        },
+        {
+          "file": "electricity-vat-unit-coverage-final.log",
+          "sha256": "39f5dc72979ea91d2edf02385ad60c368c5345c65bb761405111d08c09f86691"
+        },
+        {
+          "file": "electricity-vat-native-source.sha256",
+          "sha256": "930d8060951a328b6af2d56b09a671c9b623444546f4763f92c5b77cf1cc2f1f"
         }
       ]
     }

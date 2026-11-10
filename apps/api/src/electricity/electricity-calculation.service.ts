@@ -10,7 +10,6 @@ import {
   validateOrderComposition,
   type CompositionResult,
   type ElectricityGiftDiscount,
-  type ElectricityLine,
   type ElectricityProductInput,
   type ElectricitySystemKey,
 } from './electricity-calculation.js';
@@ -101,23 +100,24 @@ export class ElectricityCalculationService {
     }
     const composition = validateOrderComposition(input, settings, products);
     if (!composition.ok) return composition;
-    const pricedLines: ElectricityLine[] = [];
-    for (const line of composition.lines) {
-      const rate = await this.vat.resolveRate(executor, {
+    const rates = await this.vat.resolveCategorizedRates(
+      executor,
+      composition.lines.map((line) => ({
         productId: line.productId,
         category: electricityGiftCategories[line.systemKey],
-        at,
-      });
-      const fallback =
-        rate.source === 'fallback_zero'
-          ? await this.vat.resolveRate(executor, { category: 'electricity', at })
-          : rate;
-      pricedLines.push({
+      })),
+      'electricity',
+      at
+    );
+    const pricedLines = composition.lines.map((line, index) => {
+      const rate = rates[index];
+      if (!rate) throw new Error('Missing VAT resolution for electricity line');
+      return {
         ...line,
-        vatRateBasisPoints: fallback.rateBasisPoints,
-        vatSource: fallback.source,
-      });
-    }
+        vatRateBasisPoints: rate.rateBasisPoints,
+        vatSource: rate.source,
+      };
+    });
     const pricedComposition = { ...composition, lines: pricedLines };
     return {
       ok: true,

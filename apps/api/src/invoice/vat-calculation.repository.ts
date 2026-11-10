@@ -108,6 +108,52 @@ export class VatCalculationRepository {
     return resolveVatRate(null, categoryRate);
   }
 
+  /** Resolve explicit line categories and their shared fallback in one statement. */
+  async resolveCategorizedRates(
+    executor: DbExecutor,
+    lines: readonly { productId: string; category: string }[],
+    fallbackCategory: string,
+    at: Date
+  ): Promise<ResolvedVatRate[]> {
+    const result = await executor.query<{
+      override_rate: number | null;
+      category_rate: number | null;
+    }>(
+      `SELECT product_override.rate AS override_rate, category_default.rate AS category_rate
+         FROM unnest($1::uuid[], $2::text[]) WITH ORDINALITY AS requested(product_id, category, position)
+         LEFT JOIN LATERAL (
+           SELECT vc.rate
+             FROM product_vat_overrides pvo
+             JOIN vat_configurations vc ON vc.id = pvo.vat_config_id
+            WHERE pvo.product_id = requested.product_id
+              AND pvo.effective_from <= $3
+              AND (pvo.effective_until IS NULL OR pvo.effective_until > $3)
+              AND vc.effective_from <= $3
+              AND (vc.effective_until IS NULL OR vc.effective_until > $3)
+            ORDER BY pvo.effective_from DESC
+            LIMIT 1
+         ) product_override ON true
+         LEFT JOIN LATERAL (
+           SELECT vc.rate
+             FROM vat_configurations vc
+            WHERE product_override.rate IS NULL
+              AND vc.category IN (requested.category, $4)
+              AND vc.effective_from <= $3
+              AND (vc.effective_until IS NULL OR vc.effective_until > $3)
+            ORDER BY (vc.category = requested.category) DESC, vc.effective_from DESC
+            LIMIT 1
+         ) category_default ON true
+        ORDER BY requested.position`,
+      [
+        lines.map((line) => line.productId),
+        lines.map((line) => line.category),
+        at,
+        fallbackCategory,
+      ]
+    );
+    return result.rows.map((row) => resolveVatRate(row.override_rate, row.category_rate));
+  }
+
   /** Active product-override rate (bps) at `at`, or null when none. */
   private async findActiveOverrideRate(
     executor: DbExecutor,

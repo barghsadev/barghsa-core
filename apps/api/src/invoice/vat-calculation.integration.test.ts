@@ -193,6 +193,55 @@ describe('VatCalculationRepository — real PostgreSQL integration (T-04.1.02.04
     }
   });
 
+  it('resolves mixed line VAT in one transaction statement and preserves precedence and windows', async () => {
+    const client = await ctx.pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query(
+        `INSERT INTO vat_configurations (category, rate, effective_from, effective_until, created_by)
+         VALUES ('green_electricity', 0, '2026-05-01T00:00:00Z', '2026-08-01T00:00:00Z', $1)`,
+        [USER_ID]
+      );
+      await client.query(
+        `UPDATE vat_configurations SET rate = 0, effective_until = '2026-08-01T00:00:00Z'
+          WHERE id = $1`,
+        [RATE_OVERRIDE]
+      );
+      const query = vi.spyOn(client, 'query');
+      const lines = [
+        { productId: PRODUCT_B, category: 'green_electricity' },
+        { productId: PRODUCT_ID, category: 'thermal_electricity' },
+        { productId: PRODUCT_B, category: CATEGORY_ENDED_ONLY },
+      ];
+      const at = new Date('2026-07-31T23:59:59.999Z');
+      expect(await repo.resolveCategorizedRates(client, lines, CATEGORY_A, at)).toEqual([
+        { rateBasisPoints: 0, source: 'category' },
+        { rateBasisPoints: 0, source: 'product_override' },
+        { rateBasisPoints: 900, source: 'category' },
+      ]);
+      expect(query).toHaveBeenCalledTimes(1);
+      expect(
+        await repo.resolveCategorizedRates(
+          client,
+          lines,
+          CATEGORY_A,
+          new Date('2026-08-01T00:00:00Z')
+        )
+      ).toEqual(lines.map(() => ({ rateBasisPoints: 900, source: 'category' })));
+      expect(
+        await repo.resolveCategorizedRates(
+          client,
+          lines,
+          CATEGORY_A,
+          new Date('2025-12-31T23:59:59.999Z')
+        )
+      ).toEqual(lines.map(() => ({ rateBasisPoints: 0, source: 'fallback_zero' })));
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+    }
+  });
+
   it('vatAmount math is integer-only half-up to the nearest IRR', () => {
     expect(service.vatAmount(750_000n, 900)).toBe(67_500n);
     expect(service.vatAmount(55_055n, 1000)).toBe(5_506n);
