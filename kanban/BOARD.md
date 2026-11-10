@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T11:26:08+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T11:35:59+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1163 | Accepted with unchanged source bindings. |
-| verify | 145 | Existing work may be complete; inspect evidence before building. |
+| done | 1165 | Accepted with unchanged source bindings. |
+| verify | 143 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1288,8 +1288,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.02.09` | done | Recorded batch work | Mandatory concurrency tests: simultaneous wallet payments, duplicate provider callbacks, duplicate bank confirmation, concurrent refund workers, repeated order submission, ownership/role changes during requests, competing state transitions |
 | `06-security-testing-observability.md#T-06.10.02.10` | done | Recorded batch work | Write provider adapter integration tests: fake SMTP, fake SMS.ir, fake payment gateway with all error modes |
 | `06-security-testing-observability.md#T-06.10.03.01` | verify | Inventory needed | Configure Playwright: project structure, environment, auth helpers, seed data, parallel workers with isolated DB schemas |
-| `06-security-testing-observability.md#T-06.10.03.02` | verify | Inventory needed | Write E2E: registration → OTP verify → onboarding INDIVIDUAL → dashboard |
-| `06-security-testing-observability.md#T-06.10.03.03` | verify | Inventory needed | Write E2E: registration → OTP verify → onboarding LEGAL → profile verification flow |
+| `06-security-testing-observability.md#T-06.10.03.02` | done | Recorded batch work | Write E2E: registration → OTP verify → onboarding INDIVIDUAL → dashboard |
+| `06-security-testing-observability.md#T-06.10.03.03` | done | Recorded batch work | Write E2E: registration → OTP verify → onboarding LEGAL → profile verification flow |
 | `06-security-testing-observability.md#T-06.10.03.04` | verify | Inventory needed | Write E2E: login → OTP (new device) → MFA → session revocation |
 | `06-security-testing-observability.md#T-06.10.03.05` | verify | Inventory needed | Write E2E: legal-agent invitation → accept → role-permission verification |
 | `06-security-testing-observability.md#T-06.10.03.06` | done | Recorded batch work | Write E2E: simple electricity order → wallet top-up → invoice payment → contract review → approval |

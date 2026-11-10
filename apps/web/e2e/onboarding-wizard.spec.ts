@@ -1,13 +1,19 @@
 import { t } from '@barghsa/i18n/app';
+import { t as adminText } from '@barghsa/i18n/admin-ui';
+import { t as crmText } from '@barghsa/i18n/crm';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { t as draftText } from '@barghsa/i18n/onboarding-drafts';
+import { DEFAULT_VERIFICATION_POLICY } from '@barghsa/shared/verification';
 import AxeBuilder from '@axe-core/playwright';
 import { skipToMain } from './critical-accessibility';
 import { test, expect, type Page, type Route } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { dismissMessages } from './dismiss-messages';
 import { productionManifest } from './production-manifest';
+import { fulfillDashboard } from './dashboard-fixture';
+import { mockPublicAuthCsrf } from './public-auth-fixture';
+import { pdfPreviewFixture, test as uploadTest } from './upload-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const provinceId = '22222222-2222-4222-8222-222222222222';
@@ -1002,6 +1008,415 @@ for (const locale of ['en', 'fa'] as const) {
 
 const companyId = '44444444-4444-4444-8444-444444444444';
 const journeyId = '55555555-5555-4555-8555-555555555555';
+
+for (const locale of ['fa', 'en'] as const)
+  for (const type of ['INDIVIDUAL', 'LEGAL'] as const) {
+    uploadTest(
+      `registration through ${type} onboarding and account handoff (${locale})`,
+      async ({ page, uploadReceiver }) => {
+        uploadTest.setTimeout(60_000);
+        const state = await fixture(page, locale, type);
+        const isLegal = type === 'LEGAL';
+        const profileType = isLegal ? 'legal' : 'individual';
+        const name = isLegal ? legal.legalName : `${individual.firstName} ${individual.lastName}`;
+        const username = 'onboarding-registration@example.test';
+        const password = 'Registration-browser-password-123!';
+        const challengeId = '66666666-6666-4666-8666-666666666666';
+        const termsId = '77777777-7777-4777-8777-777777777777';
+        const csrf = 'registered-onboarding-session';
+        const stamp = '2026-10-04T10:00:00.000Z';
+        let registrationStarted = false;
+        let signedIn = false;
+        let created = false;
+        let finished = false;
+        let staff = false;
+        const profile = () => ({
+          id: profileId,
+          profileType: type,
+          status: state.profileStatus,
+          isDefault: finished,
+          ...(isLegal
+            ? { title: name }
+            : { firstName: individual.firstName, lastName: individual.lastName }),
+        });
+        const journey = () => ({
+          id: journeyId,
+          profiles: [profile()],
+          completed: finished,
+          selectedProfileId: finished ? profileId : null,
+          activeProfileId: finished ? profileId : null,
+        });
+        const expectPost = (route: Route, token = csrf) => {
+          expect(route.request().method()).toBe('POST');
+          expect(route.request().headers()['x-csrf-token']).toBe(token);
+        };
+        await mockPublicAuthCsrf(page);
+        await page.route('**/api/tos/current?*', (r) =>
+          r.fulfill({
+            json: {
+              id: termsId,
+              versionId: 'v1',
+              content: 'Published test terms',
+              updatedAt: stamp,
+              publishedAt: stamp,
+            },
+          })
+        );
+        await page.route('**/api/auth/user', (r) =>
+          r.fulfill(
+            signedIn
+              ? {
+                  json: {
+                    userId: staff ? 'verification-reviewer' : 'onboarding-viewer',
+                    isStaff: staff,
+                    requiresTosAcceptance: false,
+                    operatingContext: staff ? 'staff' : 'customer',
+                    navigation: staff
+                      ? fullNavigation('staff')
+                      : {
+                          ...fullNavigation('customer', type),
+                          profileId: finished ? profileId : null,
+                        },
+                  },
+                }
+              : { status: 401, json: {} }
+          )
+        );
+        await page.route('**/api/auth/register', (r) => {
+          expectPost(r, 'c'.repeat(64));
+          expect(registrationStarted).toBe(false);
+          expect(r.request().postDataJSON()).toEqual({ username, password, tosVersionId: termsId });
+          registrationStarted = true;
+          return r.fulfill({ json: { challengeId } });
+        });
+        await page.route('**/api/auth/register/verify', (r) => {
+          expectPost(r, 'c'.repeat(64));
+          expect(registrationStarted).toBe(true);
+          expect(signedIn).toBe(false);
+          expect(r.request().postDataJSON()).toEqual({ challengeId, otp: '123456' });
+          signedIn = true;
+          return r.fulfill({
+            headers: { 'set-cookie': `barghsa_csrf=${csrf}; Path=/; SameSite=Lax` },
+            json: {
+              userId: 'onboarding-viewer',
+              sessionId: 'test-session',
+              csrfToken: csrf,
+              expiresAt: '2030-01-01T00:00:00.000Z',
+            },
+          });
+        });
+        await page.route('**/api/profiles', (r) =>
+          r.fulfill({
+            json: {
+              profiles: created ? [profile()] : [],
+              activeProfileId: finished ? profileId : null,
+              hasDefault: finished,
+            },
+          })
+        );
+        await page.route('**/api/onboarding/journeys/active', (r) =>
+          r.fulfill({ json: { journey: created && !finished ? journey() : null } })
+        );
+        await page.route('**/api/onboarding/journeys', (r) => {
+          expectPost(r);
+          expect(signedIn && !created).toBe(true);
+          expect(r.request().postDataJSON()).toEqual({
+            profileTypes: [type],
+            requestId: expect.stringMatching(/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i),
+          });
+          created = true;
+          return r.fulfill({ status: 201, json: journey() });
+        });
+        await page.route(`**/api/onboarding/${profileType}/${profileId}`, (r) => {
+          expectPost(r);
+          expect(created && state.profileStatus === 'DRAFT').toBe(true);
+          const fields = isLegal
+            ? {
+                legalName: legal.legalName,
+                nationalIdentifier: legal.nationalIdentifier,
+                registrationNumber: legal.registrationNumber,
+                companyTypeId: legal.companyTypeId,
+                representativeNationalId: legal.representativeNationalId,
+                representativeRelationship: legal.representativeRelationship,
+                representativeFullAddress: legal.representativeFullAddress,
+                officialFullAddress: legal.officialFullAddress,
+                officialPostalCode: legal.officialPostalCode,
+                documents: [],
+              }
+            : {
+                firstName: individual.firstName,
+                lastName: individual.lastName,
+                nationalId: individual.nationalId,
+                provinceId,
+                cityId,
+                fullAddress: individual.fullAddress,
+                postalCode: individual.postalCode,
+              };
+          expect(r.request().postDataJSON()).toMatchObject({
+            ...fields,
+            draftVersion: state.draft.version,
+          });
+          state.submissions.push(r.request().postDataJSON());
+          state.profileStatus = 'PENDING_VERIFICATION';
+          return r.fulfill({ json: profile() });
+        });
+        await page.route(`**/api/onboarding/complete/${profileId}`, (r) => {
+          expectPost(r);
+          expect(state.profileStatus).toBe('PENDING_VERIFICATION');
+          return r.fulfill({ json: { ...profile(), journey: journey() } });
+        });
+        await page.route(`**/api/onboarding/journeys/${journeyId}`, (r) =>
+          r.fulfill({ json: journey() })
+        );
+        await page.route(`**/api/onboarding/journeys/${journeyId}/finish`, (r) => {
+          expectPost(r);
+          expect(finished).toBe(false);
+          expect(state.profileStatus).toBe('PENDING_VERIFICATION');
+          expect(r.request().postDataJSON()).toEqual({ selectedProfileId: profileId });
+          finished = true;
+          return r.fulfill({ json: journey() });
+        });
+        await page.route('**/api/profiles/verification-status', (r) =>
+          r.fulfill({
+            json: {
+              activeProfileId: finished ? profileId : null,
+              activeProfileName: name,
+              profileStatus: state.profileStatus,
+              isVerified: state.profileStatus === 'VERIFIED',
+              verificationRequired: true,
+            },
+          })
+        );
+        await page.route('**/api/dashboard{,/**}', (r) => {
+          expect(finished).toBe(true);
+          return fulfillDashboard(r, { json: { profile: { id: profileId, name } } });
+        });
+
+        await page.goto('/register');
+        await page.locator('#username').fill(username);
+        await page.locator('#username').press('Tab');
+        await page.locator('#password').fill(password);
+        await page.getByRole('checkbox').check();
+        await page.locator('main button[type=submit]').click();
+        await expect(page).toHaveURL(/\/register\/verify\?/);
+        expect(new URL(page.url()).searchParams.get('destination')).toContain('***');
+        expect(page.url()).not.toContain(username);
+        await page
+          .locator('input[inputmode=numeric]')
+          .first()
+          .fill(locale === 'fa' ? '۱۲۳۴۵۶' : '123456');
+        await expect(page).toHaveURL(/\/onboarding$/);
+        await page
+          .getByRole('checkbox', {
+            name: t(`onboarding.profile.${profileType}`, locale),
+            exact: true,
+          })
+          .check();
+        await page
+          .getByRole('button', { name: t('onboarding.type.continue', locale), exact: true })
+          .click();
+        await expect(page).toHaveURL(
+          new RegExp(`/onboarding/${profileType}/${profileId}(?:\\?step=1)?$`)
+        );
+
+        const fill = async (values: Record<string, string>) => {
+          for (const [key, value] of Object.entries(values))
+            await page.locator(`#${key}`).fill(value);
+        };
+        const address = async (prefix: '' | 'representative' | 'official', street: string) => {
+          const field = (key: string) =>
+            prefix ? `${prefix}${key[0]!.toUpperCase()}${key.slice(1)}` : key;
+          await page.locator(`#${field('provinceId')}`).selectOption(provinceId);
+          await page.locator(`#${field('cityId')}`).selectOption(cityId);
+          await fill({
+            [field('fullAddress')]: street,
+            [field('postalCode')]: individual.postalCode,
+          });
+        };
+        if (isLegal) {
+          await fill({
+            representativeFirstName: legal.representativeFirstName,
+            representativeLastName: legal.representativeLastName,
+            representativeNationalId: legal.representativeNationalId,
+            representativeTitle: legal.representativeTitle,
+            representativeRelationship: legal.representativeRelationship,
+          });
+          await address('representative', legal.representativeFullAddress);
+          await next(page, locale);
+          await fill({
+            legalName: name,
+            nationalIdentifier: legal.nationalIdentifier,
+            registrationNumber: legal.registrationNumber,
+          });
+          await page.locator('#companyTypeId').selectOption(legal.companyTypeId);
+          await next(page, locale);
+          await address('official', legal.officialFullAddress);
+          await next(page, locale);
+        } else {
+          await fill({
+            firstName: individual.firstName,
+            lastName: individual.lastName,
+            nationalId: individual.nationalId,
+          });
+          await next(page, locale);
+          await address('', individual.fullAddress);
+        }
+        await next(page, locale);
+        const reviewFields = page.locator('fieldset:not([hidden]) > section');
+        for (const value of isLegal ? [name] : [individual.firstName, individual.lastName]) {
+          await expect(reviewFields.getByText(value, { exact: true })).toBeVisible();
+        }
+        await submit(page, locale);
+        await expect(
+          page.getByRole('heading', { name: t('onboarding.complete.title', locale) })
+        ).toBeVisible();
+        await expect(page.locator('dl[aria-label]')).toContainText(
+          t('onboarding.wizard.PENDING_VERIFICATION', locale)
+        );
+        expect(state.submissions).toHaveLength(1);
+        await page
+          .getByRole('button', { name: t('onboarding.journey.done', locale), exact: true })
+          .click();
+        await expect(page).toHaveURL(/\/app$/);
+        const welcome = page.getByRole('heading', { name: new RegExp(name) });
+        await expect(welcome).toBeVisible();
+        if (!isLegal) return;
+
+        const pendingNotice = page.getByTestId('verification-notice');
+        await expect(pendingNotice).toBeVisible();
+        const policy = structuredClone(DEFAULT_VERIFICATION_POLICY);
+        policy.LEGAL.documents = ['registration_notice'];
+        const key = 'uploads/document/legal-registration-review.pdf';
+        const pdf = pdfPreviewFixture();
+        let verificationWrites = 0;
+        await page.route(`**/api/crm/profiles/${profileId}`, (r) =>
+          r.fulfill({
+            json: {
+              profile: {
+                ...profile(),
+                archived: false,
+                archivedAt: null,
+                archivedReason: null,
+                firstName: null,
+                lastName: null,
+                nationalId: null,
+                contactEmail: username,
+                contactMobile: null,
+                createdAt: stamp,
+                updatedAt: stamp,
+              },
+              user: {
+                userId: 'onboarding-viewer',
+                username,
+                email: username,
+                mobile: null,
+                lastLogin: null,
+                lastPasswordChange: null,
+                isAdmin: false,
+                createdAt: stamp,
+              },
+              viewerPermissions: {
+                canVerify: true,
+                canEdit: false,
+                canManageUser: false,
+                canOverrideVerification: false,
+              },
+              verificationPolicy: policy,
+              verificationCurrent: state.profileStatus === 'VERIFIED',
+              legalInfo: null,
+              addresses: [],
+              sessions: { count: 0, entries: [], lastActive: null },
+              siblingProfiles: [],
+              agentRelationships: { items: [], nextCursor: null },
+              verificationHistory: { items: [], nextCursor: null },
+            },
+          })
+        );
+        await page.route('**/api/upload/presigned-url', (r) => {
+          expectPost(r);
+          expect(r.request().postDataJSON()).toMatchObject({
+            profileId,
+            purpose: 'verification_evidence',
+            fileSize: pdf.length,
+          });
+          return r.fulfill({ json: { key, presignedUrl: uploadReceiver.url } });
+        });
+        await page.route(`**/api/upload/${encodeURIComponent(key)}/verify`, (r) => {
+          expectPost(r);
+          expect(uploadReceiver.uploads).toHaveLength(1);
+          expect(uploadReceiver.uploads[0]).toMatchObject({ method: 'PUT', body: pdf });
+          return r.fulfill({ json: { status: 'confirmed' } });
+        });
+        await page.route(`**/api/upload/${encodeURIComponent(key)}/record`, (r) => {
+          expectPost(r);
+          return r.fulfill({ status: 201, json: {} });
+        });
+        await page.route(`**/api/crm/profiles/${profileId}/verify`, (r) => {
+          expectPost(r);
+          expect(staff).toBe(true);
+          expect(state.profileStatus).toBe('PENDING_VERIFICATION');
+          expect(r.request().postDataJSON()).toEqual({
+            action: 'verify',
+            evidence: [{ type: 'registration_notice', key }],
+          });
+          verificationWrites++;
+          state.profileStatus = 'VERIFIED';
+          return r.fulfill({
+            json: {
+              success: true,
+              profileId,
+              previousStatus: 'PENDING_VERIFICATION',
+              newStatus: 'VERIFIED',
+              reason: null,
+            },
+          });
+        });
+        staff = true;
+        await page.goto(`/admin/crm/profiles/${profileId}`);
+        const review = page.getByRole('button', {
+          name: crmText('crm.profile.verification.review', locale),
+          exact: true,
+        });
+        const evidence = page.locator('#verification-file-registration_notice');
+        await review.click();
+        await expect(evidence).toBeFocused();
+        await expect(evidence).toHaveAttribute('aria-invalid', 'true');
+        expect(uploadReceiver.uploads).toHaveLength(0);
+        expect(verificationWrites).toBe(0);
+        await evidence.setInputFiles({
+          name: 'registration-notice.pdf',
+          mimeType: 'application/pdf',
+          buffer: pdf,
+        });
+        await review.click();
+        const confirmation = page.getByRole('dialog');
+        await expect(confirmation).toBeVisible();
+        expect(verificationWrites).toBe(0);
+        await confirmation
+          .getByRole('button', { name: adminText('team.confirm', locale), exact: true })
+          .click();
+        await expect(confirmation).toHaveCount(0);
+        expect(verificationWrites).toBe(1);
+        staff = false;
+        const verifiedStatus = page.waitForResponse(
+          (response) =>
+            new URL(response.url()).pathname === '/api/profiles/verification-status' &&
+            response.request().method() === 'GET'
+        );
+        await page.goto('/app');
+        const statusResponse = await verifiedStatus;
+        expect(statusResponse.ok()).toBe(true);
+        expect(await statusResponse.json()).toMatchObject({
+          activeProfileId: profileId,
+          profileStatus: 'VERIFIED',
+          isVerified: true,
+        });
+        await expect(welcome).toBeVisible();
+        await expect(pendingNotice).toHaveCount(0);
+      }
+    );
+  }
+
 async function combinedFixture(page: Page, locale: 'en' | 'fa') {
   const original = await fixture(page, locale, 'INDIVIDUAL', { ...individual });
   const state = {

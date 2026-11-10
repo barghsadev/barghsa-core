@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T11:26:08+00:00",
-  "source_commit": "62bd6c84bd7315643faa7dd4a21002986b2866e9",
+  "updated": "2026-11-10T11:35:59+00:00",
+  "source_commit": "53926fc8486d97c088c60ea0d2067b31c0bc2e2b",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -35137,7 +35137,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35161,7 +35162,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -35892,7 +35893,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35948,7 +35950,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/verification-banner.spec.ts",
@@ -36563,7 +36565,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -36579,7 +36582,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/src/routes/onboarding/index.tsx",
@@ -36805,7 +36808,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -36829,7 +36833,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/src/lib/profile-digits.ts",
@@ -37081,7 +37085,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -37109,7 +37114,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/src/hooks/useOnboardingDraft.ts",
@@ -37325,7 +37330,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -37341,7 +37347,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.tsx",
@@ -37555,7 +37561,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -37571,7 +37578,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -37879,7 +37886,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -37903,7 +37911,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/profile-display-name.spec.ts",
@@ -485726,7 +485734,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-first-scheduled-browser-corrections"
+          "release-0.6-first-scheduled-browser-corrections",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -485754,7 +485763,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
@@ -498283,19 +498292,79 @@
         "story": "06-security-testing-observability.md#spec-a2575d616ae6"
       },
       "requirement": "| T-06.10.03.02 | Write E2E: registration → OTP verify → onboarding INDIVIDUAL → dashboard | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/web/e2e/onboarding-wizard.spec.ts"
+        ],
+        "batches": [
+          "release-0.6-registration-and-onboarding-browser-journeys"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-registration-onboarding-browser-journey",
+          "reviewed_sha": "53926fc8486d97c088c60ea0d2067b31c0bc2e2b",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/dashboard-fixture.ts",
+              "sha256": "cf25df3a16c70539fbc65b16626b05e6008156a58811e47bc2c813cae7447cbc"
+            },
+            {
+              "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
+            },
+            {
+              "path": "apps/web/e2e/public-auth-fixture.ts",
+              "sha256": "80d98db1c5750fb377130dc173b2138ef90dba347baca8783fbdc998711b18f1"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "apps/web/src/components/OnboardingWizard.tsx",
+              "sha256": "0faa5162a685d66ed5278f8e15e353eeca6fd45725cfbc2d7c4caac4dace7aed"
+            },
+            {
+              "path": "apps/web/src/routes/_app/app.tsx",
+              "sha256": "309d24401e4059569adb6d4398b45280da3f060dbe8037ccb873e3228753e65e"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.tsx",
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/index.tsx",
+              "sha256": "ad8a7a86d564f4662ade68a5143f40575f702dc597046d32527dcb762cb86b9c"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
+              "sha256": "81c644be74e099b0b985b74182f923530b85367de783be2f862a517325b95cd9"
+            },
+            {
+              "path": "apps/web/src/routes/register/index.tsx",
+              "sha256": "32072faa2499a42d65f1811e1154193cfdc97f1d246317c6f6009ed4d4611cfc"
+            },
+            {
+              "path": "apps/web/src/routes/register/verify.tsx",
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "The browser starts at public registration, submits the exact terms and registration data with public CSRF, verifies the challenge through the OTP page and checks masked destination and normalized Persian digits. The scoped onboarding journey then uses session CSRF, exactly one chosen profile, versioned draft submission and explicit selected-profile completion.",
+            "Six exact local production-build cases for each profile type passed across Persian and English in Firefox, Mobile Chrome and Mobile Safari, with no failed, flaky or skipped results in the final targeted runs. Focused format, lint and diff checks passed. The browser uses controlled API fixtures; no live OTP or real identity change was performed.",
+            "The individual journey completes the actual identity and address forms, checks the individual review values, submits the profile once and observes the selected customer profile on the dashboard."
+          ]
+        }
       }
     },
     {
@@ -498309,19 +498378,100 @@
         "story": "06-security-testing-observability.md#spec-a2575d616ae6"
       },
       "requirement": "| T-06.10.03.03 | Write E2E: registration → OTP verify → onboarding LEGAL → profile verification flow | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/web/e2e/onboarding-wizard.spec.ts"
+        ],
+        "batches": [
+          "release-0.6-registration-and-onboarding-browser-journeys"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-registration-onboarding-browser-journey",
+          "reviewed_sha": "53926fc8486d97c088c60ea0d2067b31c0bc2e2b",
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/dashboard-fixture.ts",
+              "sha256": "cf25df3a16c70539fbc65b16626b05e6008156a58811e47bc2c813cae7447cbc"
+            },
+            {
+              "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
+            },
+            {
+              "path": "apps/web/e2e/public-auth-fixture.ts",
+              "sha256": "80d98db1c5750fb377130dc173b2138ef90dba347baca8783fbdc998711b18f1"
+            },
+            {
+              "path": "apps/web/e2e/upload-fixture.ts",
+              "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+            },
+            {
+              "path": "apps/web/playwright.config.ts",
+              "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+            },
+            {
+              "path": "apps/web/src/components/OnboardingWizard.tsx",
+              "sha256": "0faa5162a685d66ed5278f8e15e353eeca6fd45725cfbc2d7c4caac4dace7aed"
+            },
+            {
+              "path": "apps/web/src/components/ProfileVerificationReview.tsx",
+              "sha256": "7375c1469ffb553b90abf6dd06ed3d4bef6875ffb5440ef36bd76a0e3c5cfd2c"
+            },
+            {
+              "path": "apps/web/src/components/VerificationBanner.tsx",
+              "sha256": "7b138e9426501850edcaaaeecb9a17fd198d88d1280e65da906b0de67fb684f6"
+            },
+            {
+              "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+              "sha256": "82f7e976c80863dd27f3a05a9310239c2f429a7569d69cdc5da76aec99b419c8"
+            },
+            {
+              "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+              "sha256": "b75f3465ba818f07da5d42f1537b9ea8cf73b95adeaae78575d5d46281775f57"
+            },
+            {
+              "path": "apps/web/src/routes/_app/app.tsx",
+              "sha256": "309d24401e4059569adb6d4398b45280da3f060dbe8037ccb873e3228753e65e"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/complete.tsx",
+              "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/index.tsx",
+              "sha256": "ad8a7a86d564f4662ade68a5143f40575f702dc597046d32527dcb762cb86b9c"
+            },
+            {
+              "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
+              "sha256": "d7775fe6894ca50a7b293d5162e43267734a5489d23db74d4764e9d39a49bd0c"
+            },
+            {
+              "path": "apps/web/src/routes/register/index.tsx",
+              "sha256": "32072faa2499a42d65f1811e1154193cfdc97f1d246317c6f6009ed4d4611cfc"
+            },
+            {
+              "path": "apps/web/src/routes/register/verify.tsx",
+              "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
+            },
+            {
+              "path": "scripts/run-production-browser.mjs",
+              "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            }
+          ],
+          "checks": [
+            "The browser starts at public registration, submits the exact terms and registration data with public CSRF, verifies the challenge through the OTP page and checks masked destination and normalized Persian digits. The scoped onboarding journey then uses session CSRF, exactly one chosen profile, versioned draft submission and explicit selected-profile completion.",
+            "Six exact local production-build cases for each profile type passed across Persian and English in Firefox, Mobile Chrome and Mobile Safari, with no failed, flaky or skipped results in the final targeted runs. Focused format, lint and diff checks passed. The browser uses controlled API fixtures; no live OTP or real identity change was performed.",
+            "The legal journey completes representative, company and address fields, checks company review and pending status, and observes the pending verification notice on the selected customer profile.",
+            "An authorized reviewer with no override sees the required registration notice field. Without evidence there is no upload or write. The browser uploads the exact PDF bytes to a loopback receiver, verifies and records the attachment, requires explicit confirmation, and posts the exact profile-scoped verification request once. A fresh customer dashboard reads VERIFIED for the selected profile and clears the pending notice."
+          ]
+        }
       }
     },
     {
@@ -548526,7 +548676,8 @@
           "release-0.6-advanced-electricity-bank-refund-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
-          "release-0.6-effective-brand-rollback-browser-journey"
+          "release-0.6-effective-brand-rollback-browser-journey",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -548818,7 +548969,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/order-comment-form-fixture.ts",
@@ -552147,7 +552298,8 @@
           "release-0.6-mobile-request-and-owned-read-browser-replay",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
-          "release-0.6-solar-request-touch-target"
+          "release-0.6-solar-request-touch-target",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552311,7 +552463,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -553017,7 +553169,8 @@
           "release-0.6-mobile-request-and-owned-read-browser-replay",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
-          "release-0.6-solar-request-touch-target"
+          "release-0.6-solar-request-touch-target",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553181,7 +553334,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -554419,7 +554572,8 @@
           "release-0.6-mobile-request-and-owned-read-browser-replay",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
-          "release-0.6-solar-request-touch-target"
+          "release-0.6-solar-request-touch-target",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554583,7 +554737,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/order-comment-forms.spec.ts",
@@ -603756,7 +603910,8 @@
           "release-0.6-advanced-electricity-bank-refund-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
-          "release-0.6-effective-brand-rollback-browser-journey"
+          "release-0.6-effective-brand-rollback-browser-journey",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -604152,7 +604307,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -707750,7 +707905,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -707846,7 +708002,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -708443,7 +708599,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -708539,7 +708696,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -709135,7 +709292,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -709231,7 +709389,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -709829,7 +709987,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -709925,7 +710084,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -710523,7 +710682,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -710619,7 +710779,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -711214,7 +711374,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -711310,7 +711471,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -711905,7 +712066,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -712001,7 +712163,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -712597,7 +712759,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -712693,7 +712856,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -713288,7 +713451,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -713384,7 +713548,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -713980,7 +714144,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -714076,7 +714241,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -735602,7 +735767,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -735746,7 +735912,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -736262,7 +736428,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -736406,7 +736573,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -736922,7 +737089,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -737066,7 +737234,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -737583,7 +737751,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -737727,7 +737896,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -738243,7 +738412,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -738387,7 +738557,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -738903,7 +739073,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -739047,7 +739218,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -739563,7 +739734,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -739707,7 +739879,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -740224,7 +740396,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -740368,7 +740541,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -740884,7 +741057,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -741028,7 +741202,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -741544,7 +741718,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -741688,7 +741863,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/team-catalogue-recovery.spec.ts",
@@ -769113,7 +769288,7 @@
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
-              "sha256": "be87a48475dc9186ef2d5b02d83454b246e8f944df29ebeaa1aad08c3c6f49f5"
+              "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -771183,7 +771358,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-solar-request-touch-target"
+          "release-0.6-solar-request-touch-target",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ]
       }
     },
@@ -771413,7 +771589,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
           "release-0.6-solar-request-touch-target",
-          "release-0.6-effective-brand-rollback-browser-journey"
+          "release-0.6-effective-brand-rollback-browser-journey",
+          "release-0.6-registration-and-onboarding-browser-journeys"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -879576,6 +879753,102 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/effective-brand-rollback",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "7dffe410622897167825f0c27e28073560b15d3fb117d944cbfa6e1b65673fa3"
+    },
+    "release-0.6-registration-and-onboarding-browser-journeys": {
+      "batch": "release-0.6-registration-and-onboarding-browser-journeys",
+      "base_commit": "53926fc8486d97c088c60ea0d2067b31c0bc2e2b",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.10.03.02",
+        "06-security-testing-observability.md#T-06.10.03.03",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/onboarding-wizard.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/dashboard-fixture.ts",
+          "sha256": "cf25df3a16c70539fbc65b16626b05e6008156a58811e47bc2c813cae7447cbc"
+        },
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "aacd4e174ca66ff47129b9fdd6354f5faa65e2d8e8aa5e2c489b5661838b552a"
+        },
+        {
+          "path": "apps/web/e2e/public-auth-fixture.ts",
+          "sha256": "80d98db1c5750fb377130dc173b2138ef90dba347baca8783fbdc998711b18f1"
+        },
+        {
+          "path": "apps/web/e2e/upload-fixture.ts",
+          "sha256": "339937d705859718be013cc7d5823c600b1d6271aced6e935ce1603b72eb4d59"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/OnboardingWizard.tsx",
+          "sha256": "0faa5162a685d66ed5278f8e15e353eeca6fd45725cfbc2d7c4caac4dace7aed"
+        },
+        {
+          "path": "apps/web/src/components/ProfileVerificationReview.tsx",
+          "sha256": "7375c1469ffb553b90abf6dd06ed3d4bef6875ffb5440ef36bd76a0e3c5cfd2c"
+        },
+        {
+          "path": "apps/web/src/components/VerificationBanner.tsx",
+          "sha256": "7b138e9426501850edcaaaeecb9a17fd198d88d1280e65da906b0de67fb684f6"
+        },
+        {
+          "path": "apps/web/src/lib/invoice-bank-receipt-upload.ts",
+          "sha256": "82f7e976c80863dd27f3a05a9310239c2f429a7569d69cdc5da76aec99b419c8"
+        },
+        {
+          "path": "apps/web/src/pages/CrmProfileDetail.tsx",
+          "sha256": "b75f3465ba818f07da5d42f1537b9ea8cf73b95adeaae78575d5d46281775f57"
+        },
+        {
+          "path": "apps/web/src/routes/_app/app.tsx",
+          "sha256": "309d24401e4059569adb6d4398b45280da3f060dbe8037ccb873e3228753e65e"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/complete.tsx",
+          "sha256": "eb402aa280f75b712b0593d9f77b886627578a7aa4335efa6fb295c975cb2461"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/index.tsx",
+          "sha256": "ad8a7a86d564f4662ade68a5143f40575f702dc597046d32527dcb762cb86b9c"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/individual/$profileId.tsx",
+          "sha256": "81c644be74e099b0b985b74182f923530b85367de783be2f862a517325b95cd9"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding/legal/$profileId.tsx",
+          "sha256": "d7775fe6894ca50a7b293d5162e43267734a5489d23db74d4764e9d39a49bd0c"
+        },
+        {
+          "path": "apps/web/src/routes/register/index.tsx",
+          "sha256": "32072faa2499a42d65f1811e1154193cfdc97f1d246317c6f6009ed4d4611cfc"
+        },
+        {
+          "path": "apps/web/src/routes/register/verify.tsx",
+          "sha256": "84fb282ab8d5e8605306423dc8ca57c4d8aaf5a14945cdf88c29f19769c1ea8a"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "The browser starts at public registration, submits the exact terms and registration data with public CSRF, verifies the challenge through the OTP page and checks masked destination and normalized Persian digits. The scoped onboarding journey then uses session CSRF, exactly one chosen profile, versioned draft submission and explicit selected-profile completion.",
+        "Six exact local production-build cases for each profile type passed across Persian and English in Firefox, Mobile Chrome and Mobile Safari, with no failed, flaky or skipped results in the final targeted runs. Focused format, lint and diff checks passed. The browser uses controlled API fixtures; no live OTP or real identity change was performed.",
+        "The individual journey completes the actual identity and address forms, checks the individual review values, submits the profile once and observes the selected customer profile on the dashboard.",
+        "The legal journey completes representative, company and address fields, checks company review and pending status, and observes the pending verification notice on the selected customer profile.",
+        "An authorized reviewer with no override sees the required registration notice field. Without evidence there is no upload or write. The browser uploads the exact PDF bytes to a loopback receiver, verifies and records the attachment, requires explicit confirmation, and posts the exact profile-scoped verification request once. A fresh customer dashboard reads VERIFIED for the selected profile and clears the pending notice."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/registered-onboarding",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "9f87c37caa70439e85feee1742236fb89f7244fedad5004d4850c000d602391a"
     }
   },
   "historical_improvements": [
