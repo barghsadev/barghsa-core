@@ -1,5 +1,6 @@
 import { createRequire } from 'node:module';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { verifyClippedContrast } from './clipped-contrast';
 import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
 import { DEFAULT_VERIFICATION_POLICY } from '@barghsa/shared/verification';
@@ -3017,82 +3018,126 @@ for (const locale of ['en', 'fa'] as const) {
   });
 }
 
-for (const locale of ['en', 'fa']) {
+for (const locale of ['en', 'fa'] as const) {
   test(`ordering saves one captured draft and rejects mismatched success (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
-    await page.route('**/api/profiles/verification-status', (route) =>
-      route.fulfill({
-        json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
-      })
-    );
-    await page.route('**/api/products', (route) =>
-      route.fulfill({
-        json: [
-          {
-            id: 'electricity',
-            type: 'electricity',
-            status: 'active',
-            title: { en: 'Green supply', fa: 'برق سبز' },
-            price: '100',
-          },
-        ],
-      })
-    );
+    await orderAddressShell(page, locale);
+    const originalAddress = '62222222-2222-4222-8222-222222222222';
+    const reviewedAddress = '63333333-3333-4333-8333-333333333333';
+    const revision = '64444444-4444-4444-8444-444444444444';
+    const savedRevision = '65555555-5555-4555-8555-555555555555';
     const address = {
+      profileId: orderAddressProfile,
       provinceId: 'province',
       cityId: 'city',
-      fullAddress: 'Delivery address',
       postalCode: '1234567890',
     };
-    await page.route('**/api/profiles/profile-one/addresses', (route) =>
-      route.fulfill({ json: { addresses: [{ id: 'address', ...address }] } })
+    await page.route(`**/api/profiles/${orderAddressProfile}/addresses`, (route) =>
+      route.fulfill({
+        json: {
+          addresses: [
+            {
+              ...address,
+              id: originalAddress,
+              fullAddress: 'Original delivery',
+              mainAddress: true,
+            },
+            {
+              ...address,
+              id: reviewedAddress,
+              fullAddress: 'Reviewed delivery',
+              mainAddress: false,
+            },
+          ],
+        },
+      })
     );
     await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
-    const writes: unknown[] = [];
+    const input = {
+      profileId: orderAddressProfile,
+      currentStep: 4,
+      data: { period: 'next_week', totalKwh: '100', addressId: reviewedAddress },
+    };
+    const savedPacket = {
+      currentStep: input.currentStep,
+      data: input.data,
+      revision: savedRevision,
+    };
+    const draftPath = '**/api/electricity/drafts/simple/guarded';
+    const writes: Array<{ body: unknown; revision: string | undefined }> = [];
+    let reads = 0;
+    let saved = false;
+    let orders = 0;
+    await page.route('**/api/electricity/orders/simple', (route) => {
+      if (route.request().method() !== 'POST') return route.fallback();
+      orders++;
+      return route.fulfill({ status: 500, json: {} });
+    });
+    await page.route(`${draftPath}?*`, (route) => {
+      const request = route.request();
+      expect(request.method()).toBe('GET');
+      expect(new URL(request.url()).searchParams.get('profileId')).toBe(orderAddressProfile);
+      reads++;
+      return route.fulfill({
+        json: saved
+          ? savedPacket
+          : {
+              currentStep: input.currentStep,
+              data: { ...input.data, addressId: originalAddress },
+              revision,
+            },
+      });
+    });
     let release!: () => void;
     const pending = new Promise<void>((done) => {
       release = done;
     });
     const invalid = [
-      { id: '' },
-      { profileId: 'other' },
-      { productId: 'other' },
-      { status: 'PENDING' },
-      { orderType: 'solar' },
-      { snapshotProvinceId: 'other' },
-      { snapshotCityId: 'other' },
-      { snapshotFullAddress: 'other' },
-      { snapshotPostalCode: 'other' },
+      { revision: '' },
+      { revision: null },
+      { revision },
+      { profileId: originalAddress },
+      { currentStep: 3 },
+      { data: null },
+      { data: { ...input.data, period: 'next_month' } },
+      { data: { ...input.data, totalKwh: '120' } },
+      { data: { ...input.data, addressId: originalAddress } },
     ];
-    await page.route('**/api/orders', async (route) => {
-      writes.push(route.request().postDataJSON());
+    await page.route(draftPath, async (route) => {
+      const request = route.request();
+      expect(request.method()).toBe('PUT');
+      writes.push({
+        body: request.postDataJSON(),
+        revision: request.headers()['x-draft-revision'],
+      });
       if (writes.length === 1) {
         await pending;
         return route.fulfill({ status: 503, json: {} });
       }
-      return route.fulfill({
-        status: 201,
-        json: {
-          id: 'saved-order',
-          profileId: 'profile-one',
-          productId: 'electricity',
-          orderType: 'electricity',
-          status: 'DRAFT',
-          snapshotProvinceId: address.provinceId,
-          snapshotCityId: address.cityId,
-          snapshotFullAddress: address.fullAddress,
-          snapshotPostalCode: address.postalCode,
-          ...invalid[writes.length - 2],
-        },
-      });
+      const mismatch = invalid[writes.length - 2];
+      saved = !mismatch;
+      return route.fulfill({ json: { ...savedPacket, ...mismatch } });
     });
-    await page.goto('/electricity/order');
+    await page.goto('/electricity/order?step=4');
+    const selected = page.getByRole('radio', { name: /Reviewed delivery/ });
+    await expect(page.getByRole('radio', { name: /Original delivery/ })).toBeChecked();
+    await selected.click();
+    await expect(selected).toBeChecked();
     const save = page.getByRole('button', {
-      name: locale === 'fa' ? 'ذخیره پیش‌نویس' : 'Save Draft',
+      name: t('electricity.order.saveDraft', locale),
       exact: true,
     });
+    const check = page.getByRole('button', {
+      name: confirmationText('checkStatus', locale),
+      exact: true,
+    });
+    const retry = page.getByRole('button', {
+      name:
+        locale === 'fa' ? 'تلاش دوباره برای تغییر بررسی‌شده' : 'Retry the reviewed draft change',
+      exact: true,
+    });
+    const success = page.getByText(t('electricity.order.draftSaved', locale), { exact: true });
     await expect(save).toBeEnabled();
     try {
       await save.evaluate((button: HTMLButtonElement) => {
@@ -3100,6 +3145,7 @@ for (const locale of ['en', 'fa']) {
         button.click();
       });
       await expect.poll(() => writes.length).toBe(1);
+      await expect(page.getByRole('radio')).toHaveCount(2);
       for (const radio of await page.getByRole('radio').all()) await expect(radio).toBeDisabled();
       await expect(
         page.getByRole('button', {
@@ -3110,43 +3156,27 @@ for (const locale of ['en', 'fa']) {
     } finally {
       release();
     }
-    await expect(save).toBeEnabled();
-    for (let index = 0; index < invalid.length; index++) {
-      await dismissMessages(page, locale as 'en' | 'fa');
-      await save.click();
-      await expect.poll(() => writes.length).toBe(index + 2);
-      await expect(save).toBeEnabled();
-      await expect(
-        page.getByRole('heading', {
-          name: locale === 'fa' ? 'پیش‌نویس ذخیره شد' : 'Draft Saved',
-          exact: true,
-        })
-      ).toHaveCount(0);
+    for (let attempt = 1; attempt <= invalid.length + 1; attempt++) {
+      await expect(check).toBeEnabled();
+      await expect(save).toBeDisabled();
+      await expect(retry).toHaveCount(0);
+      await expect(success).toHaveCount(0);
+      await expect(selected).toBeChecked();
+      expect(writes).toHaveLength(attempt);
+      await dismissMessages(page, locale);
+      await check.click();
+      await expect(retry).toBeEnabled();
+      expect(reads).toBe(attempt + 1);
+      expect(writes).toHaveLength(attempt);
+      await retry.click();
     }
-    await dismissMessages(page, locale as 'en' | 'fa');
-    await save.click();
-    await expect(
-      page.getByRole('heading', {
-        name: locale === 'fa' ? 'پیش‌نویس ذخیره شد' : 'Draft Saved',
-        exact: true,
-      })
-    ).toBeVisible();
-    await expect(
-      page.getByText(
-        locale === 'fa'
-          ? 'پیش‌نویس سفارش برق ذخیره شد. سفارش هنوز برای پردازش ارسال نشده است.'
-          : 'Your electricity order draft is saved. It has not been submitted for processing.',
-        { exact: true }
-      )
-    ).toBeVisible();
-    expect(writes).toEqual(
-      Array(11).fill({
-        profileId: 'profile-one',
-        productId: 'electricity',
-        orderType: 'electricity',
-        address,
-      })
-    );
+    await expect(success).toBeVisible();
+    await expect(check).toHaveCount(0);
+    await expect(retry).toHaveCount(0);
+    await page.reload();
+    await expect(selected).toBeChecked();
+    expect(writes).toEqual(Array(11).fill({ body: input, revision }));
+    expect(orders).toBe(0);
   });
 }
 

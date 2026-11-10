@@ -79,7 +79,7 @@ for (const locale of ['en', 'fa'] as const) {
       versionId: first,
       versionNumber: 1,
       profileType: 'LEGAL',
-      acceptedParty: { name: 'Accepted company', profileType: 'LEGAL' },
+      acceptedParty: { profileId: first, name: 'Accepted company', profileType: 'LEGAL' },
       profileTitle: 'Changed company',
       commercialValue: { kind: 'fixed', amountIrr: amount },
       publishedAt: '2026-09-30T09:00:00Z',

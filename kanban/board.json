@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T03:36:42+00:00",
-  "source_commit": "c7643b5d657bbd8d5c19eb4388b0820cb4d652db",
+  "updated": "2026-11-10T03:41:00+00:00",
+  "source_commit": "e8a7cd99514d26d6e722ba8c221c68ad75856d5d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -27007,7 +27007,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -27063,7 +27064,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/session-cookies.spec.ts",
@@ -27700,7 +27701,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -27760,7 +27762,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security.tsx",
@@ -29384,7 +29386,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -29648,7 +29651,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/trusted-devices.spec.ts",
@@ -35076,7 +35079,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35128,7 +35132,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -35978,7 +35982,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35998,7 +36003,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -36248,7 +36253,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -36272,7 +36278,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -37706,7 +37712,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -37726,7 +37733,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -37951,7 +37958,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -37975,7 +37983,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -38555,7 +38563,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -38571,7 +38580,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -39852,7 +39861,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -39876,7 +39886,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -68630,7 +68640,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -68754,7 +68765,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -69309,7 +69320,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -69433,7 +69445,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -69988,7 +70000,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70112,7 +70125,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -70666,7 +70679,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70790,7 +70804,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -80930,7 +80944,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -80970,7 +80985,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -81357,7 +81372,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -81397,7 +81413,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -81806,7 +81822,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -81846,7 +81863,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -94666,7 +94683,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -94706,7 +94724,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -152076,7 +152094,8 @@
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -152156,7 +152175,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
@@ -152651,7 +152670,8 @@
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -152751,7 +152771,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
@@ -153268,7 +153288,8 @@
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -153376,7 +153397,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
@@ -153915,7 +153936,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -154023,7 +154045,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
@@ -154660,7 +154682,8 @@
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -154768,7 +154791,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
@@ -155195,7 +155218,8 @@
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -155275,7 +155299,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
@@ -155680,7 +155704,8 @@
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -155760,7 +155785,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
@@ -156166,7 +156191,8 @@
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -156246,7 +156272,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
@@ -156653,7 +156679,8 @@
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -156733,7 +156760,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
@@ -157148,7 +157175,8 @@
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -157228,7 +157256,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
@@ -157635,7 +157663,8 @@
           "release-0.6-exception-correlation-and-sensitive-diagnostics",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -157715,7 +157744,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
@@ -169188,7 +169217,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -169292,7 +169322,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -170205,7 +170235,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -170309,7 +170340,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -171225,7 +171256,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -171329,7 +171361,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -172243,7 +172275,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -172347,7 +172380,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -173260,7 +173293,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -173364,7 +173398,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -174277,7 +174311,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -174381,7 +174416,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -175293,7 +175328,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -175397,7 +175433,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -176312,7 +176348,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -176416,7 +176453,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -177329,7 +177366,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -177433,7 +177471,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -178346,7 +178384,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -178450,7 +178489,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -179364,7 +179403,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -179468,7 +179508,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -180381,7 +180421,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -180485,7 +180526,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -181397,7 +181438,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -181501,7 +181543,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -182414,7 +182456,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-contract-lifecycle-immutable-version-and-activation-verification",
@@ -182518,7 +182561,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -421365,7 +421408,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -421693,7 +421737,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
@@ -425406,7 +425450,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -425734,7 +425779,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
@@ -426724,7 +426769,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -427052,7 +427098,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
@@ -428042,7 +428088,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -428370,7 +428417,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/solar-contract-issue-form-fixture.ts",
@@ -537717,7 +537764,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -537941,7 +537989,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -539255,7 +539303,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539311,7 +539360,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -540731,7 +540780,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540787,7 +540837,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -541279,7 +541329,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -541407,7 +541458,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -542132,7 +542183,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542260,7 +542312,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -542958,7 +543010,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543014,7 +543067,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -543506,7 +543559,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543634,7 +543688,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -592408,7 +592462,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592540,7 +592595,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-review-signature-form-fixture.ts",
@@ -592716,7 +592771,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -674753,7 +674808,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -674881,7 +674937,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/electricity-change-query.spec.ts",
@@ -675599,7 +675655,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -675727,7 +675784,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/electricity-change-query.spec.ts",
@@ -676453,7 +676510,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -676581,7 +676639,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/electricity-change-query.spec.ts",
@@ -677291,7 +677349,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -677419,7 +677478,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/electricity-change-query.spec.ts",
@@ -678128,7 +678187,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
           "release-0.6-browser-focus-and-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -678256,7 +678316,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/electricity-change-query.spec.ts",
@@ -739142,7 +739202,7 @@
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
-              "sha256": "84f52180c4e00a5a218344d7ba4664b6b9f85c414108b4d621b468d232f2e81d"
+              "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
             },
             {
               "path": "apps/web/e2e/customer-receipt-detail.spec.ts",
@@ -739562,7 +739622,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/e2e/contract-authoring.spec.ts",
@@ -742091,7 +742151,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ]
       }
     },
@@ -744363,7 +744424,7 @@
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
-              "sha256": "6764169e8512326869017c20b3e744fc5cb60989f71bbaae774af7e1ced8fc7b"
+              "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
             },
             {
               "path": "apps/web/src/components/SolarContractForm.test.tsx",
@@ -746757,7 +746818,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ]
       }
     },
@@ -747981,7 +748043,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -750732,7 +750794,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -751961,7 +752024,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+              "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -754598,7 +754661,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
-          "release-0.6-browser-electricity-review-reviewed"
+          "release-0.6-browser-electricity-review-reviewed",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -758577,7 +758641,8 @@
         "Sixteen targeted preference recovery and verification contrast cases passed in both languages and browser projects. Remaining cohorts and the full release browser matrix still require their own receipts.",
         "Twelve targeted notification editor, delivery-window, history and test receipt cases passed in English and Persian across Chromium and mobile Safari. Remaining cohorts and the exact production browser gate still require their own receipts.",
         "The electricity catalogue and order confirmation cohort passed twelve cases across Chromium and mobile Safari. The remaining electricity draft, finance history and staff browser cases still require verification.",
-        "Rejected electricity contracts remain readable and document mutations stay unavailable. Four linked-intake browser cases passed. Preflight 42747135644 failed five receipt tests because mock record responses lacked the Fetch clone method. All 96 affected page and shared caller tests pass locally. The exact cumulative preflight and remaining release browser cases are still required."
+        "Rejected electricity contracts remain readable and document mutations stay unavailable. Four linked-intake browser cases passed. Preflight 42747135644 failed five receipt tests because mock record responses lacked the Fetch clone method. All 96 affected page and shared caller tests pass locally. The exact cumulative preflight and remaining release browser cases are still required.",
+        "Four guarded draft cases and twelve related customer financial-history and contract activation cases passed in Chromium and mobile Safari. The remaining staff, document and inbox cases still require verification, followed by the full candidate gate."
       ],
       "owner": null,
       "depends_on": [],
@@ -758682,7 +758747,8 @@
           "release-0.6-preference-and-verification-browser",
           "release-0.6-browser-notification-recovery",
           "release-0.6-browser-electricity-review-reviewed",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-customer-draft-and-contract-history-browser"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -859664,6 +859730,60 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-contract-rejected",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "0082d6c71d982e70109c2014c90f32ebf627c592ad1e4141196435f2854570dd"
+    },
+    "release-0.6-customer-draft-and-contract-history-browser": {
+      "batch": "release-0.6-customer-draft-and-contract-history-browser",
+      "base_commit": "e8a7cd99514d26d6e722ba8c221c68ad75856d5d",
+      "task_keys": [
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/contract-activation.spec.ts",
+        "apps/web/e2e/customer-financial-history-views.spec.ts",
+        "apps/web/e2e/form-accessibility.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/contract/contract-review.service.ts",
+          "sha256": "ab8124ab8eefc0ad39053e459ef9f5993a7d61ff5a1897202cb17c2e8fd3e34a"
+        },
+        {
+          "path": "apps/web/e2e/contract-activation.spec.ts",
+          "sha256": "9dbffbf81278b2249f7ca534bb42d3946130d6228a262ca54449fa207d4ed9a4"
+        },
+        {
+          "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
+          "sha256": "47b9b6b2c84d62102a34cf9b73e4428474670a8cba23e307660cb445b6af962c"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
+        },
+        {
+          "path": "apps/web/src/lib/contract-detail-records.ts",
+          "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
+        },
+        {
+          "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
+          "sha256": "092529a37d2178621babb556d9677d4f0f7497f94ba6d81210b11a45ec61ee48"
+        },
+        {
+          "path": "apps/web/src/pages/electricity-draft-persistence.tsx",
+          "sha256": "dba1114b63cf6d40e211c6e2aea8a1681241eae5a90cf0ea446f5edc63617966"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "The simple wizard test saves private progress through the current guarded endpoint. It verifies duplicate clicks issue one request, both address choices and add-address controls remain disabled during the pending save, nine mismatched success packets require an explicit fresh read and exact revision-bound retry, and the accepted address is restored after reload with no order submission.",
+        "Contract activation and financial history use the published change description and party snapshot profile identity returned by the real read API. Existing readiness, preserved exact amounts and terms, navigation, preference persistence and accessibility assertions remain.",
+        "Four draft and twelve contract browser cases passed in English and Persian on Chromium and mobile Safari with the existing validated production assets. Affected lint, formatting and diff checks passed. Local traces were disabled to fit scratch space."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-guarded-draft",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "65b8a4558047e7477cc8877c997b76f69c3fa1094d231ed700624de3e50af62f"
     }
   },
   "historical_improvements": [

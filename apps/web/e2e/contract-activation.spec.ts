@@ -201,7 +201,9 @@ for (const locale of ['en', 'fa'] as const) {
           id: version,
           versionNumber: 1,
           content: { text: 'Accepted terms' },
+          changeDescription: '',
           createdAt: '2026-09-21T00:00:00Z',
+          publishedAt: '2026-09-21T00:00:00Z',
           acceptedAt: '2026-09-21T01:00:00Z',
         },
       };
