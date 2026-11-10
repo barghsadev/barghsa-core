@@ -180,6 +180,7 @@ for (const staff of [false, true])
         name: `${documentText('preview', locale)}: proof.pdf`,
         exact: true,
       });
+      await image.scrollIntoViewIfNeeded();
       await expect
         .poll(() => image.evaluate((node) => (node as HTMLImageElement).naturalWidth))
         .toBe(640);
@@ -240,15 +241,15 @@ for (const staff of [false, true])
       await page.reload();
       // URL-selected detail is restored; a failed derivative retains its original file action.
       const recovered = page.locator('[aria-labelledby=ticket-conversation-heading]');
+      const recoveredLink = recovered.getByRole('link', { name: 'proof.pdf', exact: true });
+      await recoveredLink.scrollIntoViewIfNeeded();
       await expect(
-        recovered
-          .getByRole('img', { name: `${documentText('previewUnavailable', locale)}`, exact: true })
-          .first()
+        recoveredLink.getByRole('img', {
+          name: documentText('previewUnavailable', locale),
+          exact: true,
+        })
       ).toBeVisible();
-      await expect(recovered.getByRole('link', { name: /proof.pdf/ })).toHaveAttribute(
-        'href',
-        'https://storage.example.test/proof.pdf'
-      );
+      await expect(recoveredLink).toHaveAttribute('href', 'https://storage.example.test/proof.pdf');
       await expect(page.getByRole('link', { name: 'initial.pdf', exact: true })).toHaveAttribute(
         'href',
         'https://storage.example.test/initial.pdf'

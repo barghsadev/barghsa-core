@@ -1229,7 +1229,7 @@ function OwnedSavingsOrderPage() {
                       </h2>
                       <div
                         dir="auto"
-                        className="max-h-80 overflow-y-auto whitespace-pre-wrap rounded-md border bg-muted/30 p-4 text-sm wrap-anywhere"
+                        className="max-h-80 overflow-y-auto whitespace-break-spaces rounded-md border bg-muted/30 p-4 text-sm wrap-anywhere"
                       >
                         {selectedPlan?.agreement?.body}
                       </div>
@@ -1331,7 +1331,7 @@ function OwnedSavingsOrderPage() {
                                 <p dir="auto" className="font-medium wrap-anywhere">
                                   {quote?.agreement?.title}
                                 </p>
-                                <p dir="auto" className="whitespace-pre-wrap wrap-anywhere">
+                                <p dir="auto" className="whitespace-break-spaces wrap-anywhere">
                                   {quote?.agreement?.body}
                                 </p>
                               </div>

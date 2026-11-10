@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T10:14:09+00:00",
-  "source_commit": "c05c08d100f16fd78c1ed78c9f585d1f80e81e25",
+  "updated": "2026-11-10T10:19:49+00:00",
+  "source_commit": "7e3ee4f151fc5dd2f759b51a725d68f88f412495",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5553,7 +5553,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read all 40 exact outcomes of actual scheduled run 42789410833. Targeted catalogue, tooltip, onboarding, form, staff and WebKit input/accessibility corrections have passing local evidence. Remaining scheduled failures include ticket PDF fallback, saving agreement presentation, staff comments and wallet receipt timeline.",
+        "Read all 40 exact outcomes of actual scheduled run 42789410833. Targeted catalogue, tooltip, onboarding, form, staff, WebKit, saving agreement and ticket preview fixes passed locally. Staff comment, OTP settings and wallet receipt timeline results remain under review.",
         "Bind current critical registration, MFA, legal onboarding, electricity and wallet, saving, solar construction and admin browser journeys to the accepted release source."
       ],
       "owner": null,
@@ -5616,7 +5616,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": null
       }
@@ -5805,7 +5806,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the complete scheduled outcome and quarantine receipts. Run 42789410833 recorded deterministic failures and flakes. Targeted staff and WebKit fixes passed locally. Complete the remaining browser corrections and preserve the strict flake guard.",
+        "Verify the complete scheduled outcome and quarantine receipts. The scheduled saving and ticket failures were reproduced in Playwright 1.65.0 and have exact local corrections. Complete the remaining corrections and preserve the strict flake guard.",
         "Record the strict promotion report from the exact accepted candidate in the production approval package. The CLI and manual CI release path enforce the guard and the synthetic controls passed."
       ],
       "owner": null,
@@ -5872,7 +5873,8 @@
           "release-0.6-nightly-critical-browser-journeys",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": null
       }
@@ -14079,7 +14081,8 @@
           "release-0.6-nightly-critical-browser-journeys",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": null
       }
@@ -42690,7 +42693,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -42790,7 +42794,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -44055,7 +44059,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -44171,7 +44176,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -45439,7 +45444,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -45555,7 +45561,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -46831,7 +46837,8 @@
           "release-0.6-consultation-financial-profile-scope",
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-versioned-terms-commercial-admission-and-receipts",
@@ -46947,7 +46954,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -62054,7 +62061,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -62254,7 +62262,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/src/components/TicketCommentThread.test.tsx",
@@ -63172,7 +63180,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -63372,7 +63381,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/src/components/TicketCommentThread.test.tsx",
@@ -64290,7 +64299,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -64490,7 +64500,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/src/components/TicketCommentThread.test.tsx",
@@ -99376,7 +99386,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -99576,7 +99587,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/src/components/TicketCommentThread.test.tsx",
@@ -100426,7 +100437,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -100626,7 +100638,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/src/components/TicketCommentThread.test.tsx",
@@ -101482,7 +101494,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-staff-and-crm-identity-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-support-assignment-targets-and-escalation-episodes",
@@ -101682,7 +101695,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/src/components/TicketCommentThread.test.tsx",
@@ -209105,7 +209118,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -209185,7 +209199,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -210475,7 +210489,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -210555,7 +210570,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -211845,7 +211860,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -211925,7 +211941,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -213216,7 +213232,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -213296,7 +213313,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -214546,7 +214563,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -214626,7 +214644,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -215876,7 +215894,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -215956,7 +215975,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -217206,7 +217225,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -217286,7 +217306,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -218536,7 +218556,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -218616,7 +218637,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -219866,7 +219887,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -219946,7 +219968,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -221196,7 +221218,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -221276,7 +221299,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -222527,7 +222550,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -222607,7 +222631,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -223857,7 +223881,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -223937,7 +223962,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -225188,7 +225213,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -225268,7 +225294,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -226518,7 +226544,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -226598,7 +226625,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -227848,7 +227875,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -227928,7 +227956,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -229178,7 +229206,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -229258,7 +229287,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -230508,7 +230537,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -230588,7 +230618,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -231838,7 +231868,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -231918,7 +231949,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -233169,7 +233200,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -233249,7 +233281,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -234499,7 +234531,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -234579,7 +234612,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -235829,7 +235862,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -235909,7 +235943,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -237159,7 +237193,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -237239,7 +237274,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -238489,7 +238524,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -238569,7 +238605,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -239819,7 +239855,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -239899,7 +239936,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -241150,7 +241187,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -241230,7 +241268,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -242481,7 +242519,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -242561,7 +242600,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -243812,7 +243851,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -243892,7 +243932,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -245142,7 +245182,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -245222,7 +245263,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -246472,7 +246513,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -246552,7 +246594,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -247802,7 +247844,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-catalogue-foundations-with-owner-approved-design-and-repaired-integrity",
@@ -247882,7 +247925,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/pages/AdminCataloguePage.tsx",
@@ -361724,7 +361767,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -361780,7 +361824,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -362728,7 +362772,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -362784,7 +362829,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -363734,7 +363779,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -363790,7 +363836,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -364738,7 +364784,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -364794,7 +364841,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -365742,7 +365789,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -365798,7 +365846,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -366746,7 +366794,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -366802,7 +366851,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -367751,7 +367800,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -367807,7 +367857,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -368755,7 +368805,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -368811,7 +368862,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -369759,7 +369810,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -369815,7 +369867,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -370763,7 +370815,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -370819,7 +370872,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -371769,7 +371822,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-installation-address-selection",
@@ -371777,7 +371831,7 @@
           "source_evidence": [
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -372505,7 +372559,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -372561,7 +372616,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -373510,7 +373565,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-authoritative-final-review",
@@ -373519,7 +373575,7 @@
           "source_evidence": [
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -374252,7 +374308,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -374308,7 +374365,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -375256,7 +375313,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -375312,7 +375370,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -376260,7 +376318,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -376316,7 +376375,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -377266,7 +377325,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -377322,7 +377382,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -378270,7 +378330,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -378326,7 +378387,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -379279,7 +379340,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -379335,7 +379397,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -380292,7 +380354,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -380348,7 +380411,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -381305,7 +381368,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -381361,7 +381425,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -396133,7 +396197,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-saving-inventory-reservation-and-conservation-acceptance",
@@ -396189,7 +396254,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
@@ -397004,7 +397069,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-saving-inventory-reservation-and-conservation-acceptance",
@@ -397060,7 +397126,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
@@ -397876,7 +397942,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-saving-inventory-reservation-and-conservation-acceptance",
@@ -397932,7 +397999,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-catalogue-forms.test.tsx",
@@ -434514,7 +434581,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "accepted-all-applicable-order-review-wallet-disclosure",
@@ -434722,7 +434790,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -498174,14 +498242,16 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "The existing browser journey covers order, reviewed and accepted agreement, invoice handoff and fulfillment. Verify the payment operation and resulting funded invoice in the same saving journey. The existing invoice-link assertions do not execute payment."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
+        ],
         "current_acceptance": null
       }
     },
@@ -520926,7 +520996,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -521370,11 +521441,11 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -524121,7 +524192,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524529,7 +524601,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -525033,7 +525105,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -525441,7 +525514,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -525886,7 +525959,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526294,7 +526368,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -538821,7 +538895,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -538837,7 +538912,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
@@ -538997,11 +539072,11 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",
@@ -542795,7 +542870,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -542839,7 +542915,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -543167,11 +543243,11 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -545816,7 +545892,8 @@
           "release-0.5-crm-archive-touch-targets",
           "release-0.5-owned-read-retry-feedback",
           "release-0.5-owned-solar-and-consultation-feedback",
-          "release-0.5-saving-conditional-agreement"
+          "release-0.5-saving-conditional-agreement",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "populated-canonical-viewport-matrix",
@@ -545840,7 +545917,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -547813,7 +547890,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -548317,7 +548395,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -549013,7 +549091,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -549361,7 +549439,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549433,7 +549512,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/package.json",
@@ -549865,7 +549944,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -549893,7 +549973,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
@@ -550069,11 +550149,11 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -550863,7 +550943,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550935,7 +551016,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/package.json",
@@ -551422,7 +551503,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551770,7 +551852,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -552286,7 +552368,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552634,7 +552717,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -553122,7 +553205,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553194,7 +553278,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/package.json",
@@ -553681,7 +553765,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554029,7 +554114,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -578528,7 +578613,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -579112,7 +579198,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -580425,7 +580511,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -581009,7 +581096,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -582323,7 +582410,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582907,7 +582995,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -584190,7 +584278,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -584774,7 +584863,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -586083,7 +586172,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -586667,7 +586757,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -587985,7 +588075,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -588569,7 +588660,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -589860,7 +589951,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590444,7 +590536,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -591699,7 +591791,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592283,7 +592376,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -593538,7 +593631,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -594122,7 +594216,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -595378,7 +595472,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -595962,7 +596057,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -597217,7 +597312,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -597801,7 +597897,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -599053,7 +599149,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -599681,7 +599778,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -600987,7 +601084,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -601615,7 +601713,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -602949,7 +603047,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -603581,7 +603680,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -603645,7 +603744,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/components/AdminSettingsLayout.tsx",
@@ -605173,11 +605272,11 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -605860,7 +605959,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -606488,7 +606588,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -607794,7 +607894,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -608422,7 +608523,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -609728,7 +609829,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -610356,7 +610458,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -611662,7 +611764,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -612290,7 +612393,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -613596,7 +613699,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -614224,7 +614328,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -615530,7 +615634,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -616158,7 +616263,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -617464,7 +617569,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -618092,7 +618198,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -619398,7 +619504,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -620026,7 +620133,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -621332,7 +621439,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -621960,7 +622068,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -623266,7 +623374,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -623894,7 +624003,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -625200,7 +625309,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -625828,7 +625938,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -627889,7 +627999,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -628517,7 +628628,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -629823,7 +629934,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -630451,7 +630563,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -631848,7 +631960,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
@@ -632527,11 +632640,11 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -633182,7 +633295,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -633766,7 +633880,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -635017,7 +635131,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -635601,7 +635716,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -636852,7 +636967,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -637436,7 +637552,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -638687,7 +638803,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -639271,7 +639388,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -640522,7 +640639,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -641106,7 +641224,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -642357,7 +642475,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -642941,7 +643060,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -644192,7 +644311,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -644776,7 +644896,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -673011,7 +673131,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -673439,7 +673560,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -674162,7 +674283,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -674590,7 +674712,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -675313,7 +675435,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -675741,7 +675864,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -676467,7 +676590,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -676895,7 +677019,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -677621,7 +677745,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -678049,7 +678174,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -678802,7 +678927,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -679230,7 +679356,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -679952,7 +680078,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -680380,7 +680507,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -681102,7 +681229,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -681530,7 +681658,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -682253,7 +682381,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -682681,7 +682810,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -683422,7 +683551,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -683850,7 +683980,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -684574,7 +684704,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -685002,7 +685133,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -706857,7 +706988,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -707105,7 +707237,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -707548,7 +707680,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -707796,7 +707929,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -708238,7 +708371,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -708486,7 +708620,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -708930,7 +709064,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -709178,7 +709313,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -709622,7 +709757,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -709870,7 +710006,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -710311,7 +710447,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -710559,7 +710696,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -711000,7 +711137,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -711248,7 +711386,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -711690,7 +711828,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -711938,7 +712077,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -712379,7 +712518,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -712627,7 +712767,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -713069,7 +713209,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -713317,7 +713458,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
@@ -713742,7 +713883,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-support-ticket-journey",
@@ -713858,7 +714000,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -714287,7 +714429,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-support-ticket-journey",
@@ -714403,7 +714546,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -714836,7 +714979,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-support-ticket-journey",
@@ -714952,7 +715096,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -715382,7 +715526,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-support-ticket-journey",
@@ -715498,7 +715643,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -715927,7 +716072,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-support-ticket-journey",
@@ -716043,7 +716189,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -716474,7 +716620,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-support-ticket-journey",
@@ -716590,7 +716737,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/e2e/upload-fixture.ts",
@@ -717071,7 +717218,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -717499,7 +717647,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -718220,7 +718368,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -718648,7 +718797,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -719369,7 +719518,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -719797,7 +719947,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -720518,7 +720668,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -720946,7 +721097,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
@@ -753931,7 +754082,7 @@
             },
             {
               "path": "apps/web/e2e/tickets.spec.ts",
-              "sha256": "76e7d71acd31f72ee94f3a5dc5041118321086152b2b37bb5946ecaaff56cbec"
+              "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
             },
             {
               "path": "apps/web/src/components/TicketCommentThread.test.tsx",
@@ -755211,7 +755362,7 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/saving-order.test.tsx",
@@ -758403,7 +758554,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ]
       }
     },
@@ -767295,11 +767447,11 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -768060,7 +768212,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ]
       }
     },
@@ -768164,7 +768317,7 @@
             },
             {
               "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
-              "sha256": "5c98335eef1a8d47cd82fa39471476895cb6a377f9f4b1455c42b3bc921d1e8e"
+              "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
             },
             {
               "path": "apps/web/src/components/AdminAiSections.tsx",
@@ -769196,11 +769349,11 @@
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-              "sha256": "c3da03833f0fd218517105c76eab24f265fc91b2d97c5c2283c7b71e9fe1bd2e"
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
             },
             {
               "path": "apps/web/src/pages/SavingsPage.tsx",
-              "sha256": "49495023e6180c5ee39f00a824193fbc42b5033e51d03228127b8011f8eacb48"
+              "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
             },
             {
               "path": "apps/web/src/pages/ServiceSettingsEditor.tsx",
@@ -770210,7 +770363,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ]
       }
     },
@@ -770315,7 +770469,7 @@
       "launch_required": true,
       "remaining": [
         "Reconcile every epic-01 and epic-06 criterion with current source and operational evidence. Apply the approved direct-main workflow while preserving all production gates.",
-        "Finish the full exact candidate browser matrix, source coverage and receipt review. The focused browser, open-popup Axe, bundle and local mobile performance checks passed. Exact hosted performance and the remaining scheduled browser outcomes are open.",
+        "Finish the full exact candidate browser matrix, source coverage and receipt review. Targeted saving agreement and private ticket preview cases now pass. Exact hosted performance and remaining scheduled outcomes are open.",
         "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
@@ -770429,7 +770583,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-saving-agreement-and-ticket-browser-corrections"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -877821,6 +877976,87 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-42789410833",
       "source_scope_proof": "focus-guard-source-scope-proof.json",
       "source_scope_proof_sha256": "22d06ec7f4a611795bc1520d762c6c95a6baf85b6cc9296567bb4cf0cf2ebbc2"
+    },
+    "release-0.6-saving-agreement-and-ticket-browser-corrections": {
+      "batch": "release-0.6-saving-agreement-and-ticket-browser-corrections",
+      "base_commit": "7e3ee4f151fc5dd2f759b51a725d68f88f412495",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "06-security-testing-observability.md#T-06.10.03.08",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/tickets.spec.ts",
+        "apps/web/src/components/AcceptedSavingAgreement.tsx",
+        "apps/web/src/pages/SavingsOrderPage.tsx",
+        "apps/web/src/pages/SavingsPage.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "d8fd9f966e5488307a2e91535b326ff64960f2d8c7f433e7a100c53089dfb1c2"
+        },
+        {
+          "path": "apps/web/e2e/saving-journey.spec.ts",
+          "sha256": "256c05a8fa93cd4334a23fabe37c144b60d72dc7f02191095132f0d4f27a0691"
+        },
+        {
+          "path": "apps/web/e2e/tickets.spec.ts",
+          "sha256": "4461cdd33d3cfffc6f981650ea861ba5acd220294a4876b2380a2ea619f47df3"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/components/AcceptedSavingAgreement.test.tsx",
+          "sha256": "dd77b19dd644d1fb44f99a00343dfac18b34e645a1f4dbb5754e16e1595716cf"
+        },
+        {
+          "path": "apps/web/src/components/AcceptedSavingAgreement.tsx",
+          "sha256": "e265bfbe51d63feef6b331b2f843724c4db7e9ad208f8efe0f6c324ff1c7c85b"
+        },
+        {
+          "path": "apps/web/src/components/FilePreview.tsx",
+          "sha256": "1251b3b7afbe718a5b865b2e37b20201df4cbbc56882caf0fcc6c853c5fea295"
+        },
+        {
+          "path": "apps/web/src/components/TicketCommentThread.tsx",
+          "sha256": "e9e4a954f1508fbbfba065377cab3e2a118ed0b4d8e3b8d08bc0820b82eded33"
+        },
+        {
+          "path": "apps/web/src/lib/documents.ts",
+          "sha256": "23769141261230282f3cde5b9be17da1191e279ba4882b39b5f86c75b8bc3d3f"
+        },
+        {
+          "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+          "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
+        },
+        {
+          "path": "apps/web/src/pages/SavingsPage.tsx",
+          "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
+        },
+        {
+          "path": "apps/web/src/pages/saving-change-source-context.test.tsx",
+          "sha256": "cb5ecdd9706ef3ce04361c0ee7b8b3d50c59d941289de05fcc0ccc9635fc54d9"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "Scheduled Firefox shard 7 and Firefox shard 8 and Mobile Safari shard 8 exposed saving agreement and ticket preview failures. The same outcomes reproduced locally on Playwright 1.65.0 before source changes.",
+        "At 320 px the saving agreement body scrolled to 186 px inside a 182 px box in both directions, while the document fit. The measured break-spaces probe reduced the scroll width to 182 px while retaining all text. The catalogue, wizard review, quoted and accepted agreement bodies now use this CSS value.",
+        "Six full existing saving browser replays passed across Firefox, Mobile Chrome and Mobile Safari. The current checks retain exact approved and quoted text, direction, dimensions, captured submission and fulfillment assertions. The saving payment execution criterion remains open.",
+        "Eight ticket cases passed across Firefox and Mobile Safari after the test scrolled the lazy preview into view. Denied preview assertions now target the same attachment as the exact signed download. The original MIME, derivative width, request/index scoping, customer isolation, no-referrer and upload reservation assertions remain intact. No production ticket code changed.",
+        "The production build and all 103 route bundle checks passed. Two focused unit suites passed 12 tests. Web typecheck, lint, formatting and diff checks passed. The complete scheduled and exact candidate release evidence is pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/nightly-42789410833",
+      "source_scope_proof": "saving-ticket-source-scope-proof.json",
+      "source_scope_proof_sha256": "5e5ab0ddcac02fd6fc34e47304a3c0f21047f41e01e29f05d08070f1f8db7f4b"
     }
   },
   "historical_improvements": [

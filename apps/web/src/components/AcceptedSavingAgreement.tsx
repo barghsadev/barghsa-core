@@ -20,7 +20,7 @@ export function AcceptedSavingAgreement({
         <summary className="cursor-pointer font-medium pointer-coarse:min-h-11 pointer-coarse:py-2">
           {tSaving('acceptedAgreement', locale)}
         </summary>
-        <p dir="auto" className="mt-3 whitespace-pre-wrap wrap-anywhere text-sm">
+        <p dir="auto" className="mt-3 whitespace-break-spaces wrap-anywhere text-sm">
           {snapshot}
         </p>
       </details>

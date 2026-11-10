@@ -156,7 +156,7 @@ export function SavingsPage() {
                       <summary className="cursor-pointer font-medium wrap-anywhere pointer-coarse:min-h-11 pointer-coarse:py-2">
                         {copy('agreement')}: <bdi>{plan.agreement.title}</bdi>
                       </summary>
-                      <p dir="auto" className="mt-3 whitespace-pre-wrap wrap-anywhere text-sm">
+                      <p dir="auto" className="mt-3 whitespace-break-spaces wrap-anywhere text-sm">
                         {plan.agreement.body}
                       </p>
                     </details>
