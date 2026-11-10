@@ -35,15 +35,9 @@ the host.
 
 ## Release
 
-From a clean, committed checkout on a Docker-equipped machine with SSH key
-access to the VPS:
-
-```sh
-deploy/staging/deploy.sh
-```
-
-After a release milestone and its gates are accepted, prepare its version and
-notes. Use a `codex/preflight/<batch>` branch whose tip matches the current
+Prepare the version and notes after the release milestone and its gates are
+accepted. Use a Docker-equipped machine with SSH key access to the VPS and a
+`codex/preflight/<batch>` branch whose tip matches the current
 remote `main`, seeding a new one there if needed. Push the exact candidate to
 that branch so CI has a real base for affected tests. Once GitHub Actions reports
 **Verify monorepo integrity** as successful
@@ -56,7 +50,9 @@ python3 deploy/staging/release-queue.py enqueue --commit "$(git rev-parse HEAD)"
 ```
 
 Screenshots are optional. This command returns immediately and starts a detached
-worker. The subsequent `main` CI run and staging deployment are independent;
+worker. Queue admission and the deployment entry point read the accepted
+milestone and gate evidence from the exact pushed commit. The subsequent
+`main` CI run and staging deployment are independent;
 neither blocks work on the next authorized batch.
 The worker runs `./deploy/staging/deploy.sh` from an isolated checkout of the exact
 pushed commit, then attaches the captured screenshots. The main Persian announcement

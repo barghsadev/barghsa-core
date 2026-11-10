@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T04:57:28+00:00",
-  "source_commit": "a4c9903c92a8c4fd898df416ac2122c23259b873",
+  "updated": "2026-11-10T05:02:51+00:00",
+  "source_commit": "6e0e67f93e31962aa978ee187a77eb21eca15f3f",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -12416,7 +12416,8 @@
         "batches": [
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-browser-and-edge-privacy",
-          "release-0.6-staging-pilot-proxy-log-redaction"
+          "release-0.6-staging-pilot-proxy-log-redaction",
+          "release-0.6-immutable-staging-acceptance"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -12436,7 +12437,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
+              "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -13714,11 +13715,11 @@
         "story": "01-platform-infrastructure.md#spec-67a5e8a8c05f"
       },
       "requirement": "- **T-05.04.01:** Create staging gate CI workflow\n  - **Notes:** Trigger: `push` to `main` or `develop`. Steps in order: checkout → pnpm install → full build → full unit test → full integration test (real PostgreSQL) → critical Chromium E2E → a11y audit (axe) → container build (all Dockerfiles) → container vulnerability scan (Trivy or Grype) → SBOM generation (CycloneDX) → migration rehearsal (production-like schema + data volume) → provider contract tests → staging smoke deploy → readiness/liveness checks → P0/P1/flaky check.\n  - **Dependencies:** S-05.03, E-01, E-02, E-03\n  - **Complexity:** XL",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Keep the approved split between hosted CI and the detached worker for accepted pushed SHAs. Complete the exact v0.6.0 full tests, browser/accessibility, image/SBOM and provider evidence, production-like migration rehearsal, and verify P0/P1 and flake disposition before staging publication."
       ],
       "owner": null,
       "depends_on": [],
@@ -13749,7 +13750,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-production-quarantine-guard"
+          "release-0.6-production-quarantine-guard",
+          "release-0.6-immutable-staging-acceptance"
         ],
         "current_acceptance": null
       }
@@ -18302,7 +18304,8 @@
         ],
         "batches": [
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-bill-provider-network-boundaries"
+          "release-0.6-bill-provider-network-boundaries",
+          "release-0.6-immutable-staging-acceptance"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -18330,7 +18333,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
+              "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -110489,7 +110492,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-immutable-staging-acceptance"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -110861,7 +110865,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
+              "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -471819,7 +471823,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-immutable-staging-acceptance"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -472191,7 +472196,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
+              "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -485473,7 +485478,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
-          "release-0.6-staging-pilot-proxy-log-redaction"
+          "release-0.6-staging-pilot-proxy-log-redaction",
+          "release-0.6-immutable-staging-acceptance"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -485485,7 +485491,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
+              "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -493595,7 +493601,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-runtime-sbom-provenance",
           "release-0.6-runtime-readiness-and-staging-smoke",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-immutable-staging-acceptance"
         ],
         "current_acceptance": null
       }
@@ -741155,20 +741162,22 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "d667a127c0616c5512862554cde5ba5d99402cb7c9a42bc8691f8b6ea9e9500e"
+              "sha256": "0faf9e68f6e51e54eabd7965cf5fb60aca76476f3750215149a071c9ca23ddd3"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "7c2f87166e501d227625f3a88933c1dc9bf6f523563dc966c91abc93d129dddf"
+              "sha256": "7654ae7dcc02d9502fb3704f8571df9c46b1d3256472ee47597ba68df53361da"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "44d1660092eef8a522f16b654905d7f36827061d4d950ce7203fe4e586059ce4"
+              "sha256": "fd6b1c97cc5b548ab1c4bed61686d74e36a227822ddf3d7048e4cc811a821cc7"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim."
         },
-        "batches": []
+        "batches": [
+          "release-0.6-immutable-staging-acceptance"
+        ]
       }
     },
     {
@@ -752189,7 +752198,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
+              "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -752197,7 +752206,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "e7422e80f1254f8217fde683ba57d971f76e53dceefa8db56e6d9ccd0ce1e622"
+              "sha256": "a6cdeec31c742291f4eadedf2e64557a3ffa40c08ff30d92ce7c5c67e8b19d7f"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -752209,7 +752218,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "d667a127c0616c5512862554cde5ba5d99402cb7c9a42bc8691f8b6ea9e9500e"
+              "sha256": "0faf9e68f6e51e54eabd7965cf5fb60aca76476f3750215149a071c9ca23ddd3"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -753990,7 +753999,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-upload-preflight-reservation-assertions",
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-immutable-staging-acceptance"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -756159,7 +756169,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
+              "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -756167,7 +756177,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "e7422e80f1254f8217fde683ba57d971f76e53dceefa8db56e6d9ccd0ce1e622"
+              "sha256": "a6cdeec31c742291f4eadedf2e64557a3ffa40c08ff30d92ce7c5c67e8b19d7f"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -756179,7 +756189,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "d667a127c0616c5512862554cde5ba5d99402cb7c9a42bc8691f8b6ea9e9500e"
+              "sha256": "0faf9e68f6e51e54eabd7965cf5fb60aca76476f3750215149a071c9ca23ddd3"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -757866,7 +757876,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-provider-egress-regressions",
           "release-0.6-upload-preflight-reservation-assertions",
-          "release-0.6-shared-webhook-signature-verification"
+          "release-0.6-shared-webhook-signature-verification",
+          "release-0.6-immutable-staging-acceptance"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -864251,6 +864262,73 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/critical-coverage-gate",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "3e1da373a440ab2e1e97c955ea761b3ffd44e808a8b09c52f8e010981234b443"
+    },
+    "release-0.6-immutable-staging-acceptance": {
+      "batch": "release-0.6-immutable-staging-acceptance",
+      "base_commit": "6e0e67f93e31962aa978ee187a77eb21eca15f3f",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.01",
+        "06-security-testing-observability.md#T-06.12.03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_queue.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "a6cdeec31c742291f4eadedf2e64557a3ffa40c08ff30d92ce7c5c67e8b19d7f"
+        },
+        {
+          "path": "deploy/staging/notify-release.py",
+          "sha256": "c3c1c6983777d6395cb8ba03fe96aaf9739ea3d6d1ac6abc92239cb9df9ebf46"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "0faf9e68f6e51e54eabd7965cf5fb60aca76476f3750215149a071c9ca23ddd3"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "7654ae7dcc02d9502fb3704f8571df9c46b1d3256472ee47597ba68df53361da"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "fd6b1c97cc5b548ab1c4bed61686d74e36a227822ddf3d7048e4cc811a821cc7"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "643aafb3cabd196826b24d24bb5106d24cd852ac1651a246c5814f9b0d071f47"
+        },
+        {
+          "path": "kanban/WORKFLOW.md",
+          "sha256": "37b50b9e6dda85071fa55389c65480d4951437ece6bd3e210cec715a5424dbe9"
+        }
+      ],
+      "checks": [
+        "Queue admission and the direct deployment entry point verify the immutable SHA on origin/main and require an accepted milestone and recorded gates in the board at that SHA. Mutable checkout acceptance cannot authorize a pushed in-progress candidate.",
+        "Two regression cases reproduced the prior queue gap. The same validator accepted the immutable v0.5.0 release dae51e34 and rejected ordinary main commit e8a7cd99 without enqueueing or deploying.",
+        "All 15 queue tests, 15 notifier tests and three rollback tests passed, including accepted admission, refusal before Docker and SSH, preflight and announcement ordering, immutable screenshot grouping, exact live identity and rollback failure handling. Shell syntax, Markdown formatting and diff checks passed.",
+        "The notifier test fixture was already missing the content-addressed Docker image ID readback. The fixture now supplies distinct image IDs and retains the existing success, preflight failure and release failure assertions.",
+        "Hosted CI and the detached deployment remain independent under the approved direct-main workflow. No staging or Telegram delivery was attempted in this batch."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/staging-queue-acceptance",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "40ba8d655b17155663479cc8e46138d59243590fbe3a3aab5abd1d2e35688347"
     }
   },
   "historical_improvements": [

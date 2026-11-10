@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T04:57:28+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T05:02:51+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1118 | Accepted with unchanged source bindings. |
-| verify | 197 | Existing work may be complete; inspect evidence before building. |
-| partial | 45 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 196 | Existing work may be complete; inspect evidence before building. |
+| partial | 46 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -56,7 +56,7 @@ All four services have a safe browse → intake → review → payment where app
 | `release-readiness#R-01.02` | done | Recorded batch work | Inspect and repair customer wallet history ownership |
 | `release-readiness#R-01.03` | done | Recorded batch work | Finish the already validated consultation history changes |
 | `release-readiness#R-01.04` | done | Recorded batch work | Verify four complete customer and staff intake journeys |
-| `release-readiness#R-01.05` | done | Inventory needed | Group release notes and screenshots into at most two Telegram posts |
+| `release-readiness#R-01.05` | done | Recorded batch work | Group release notes and screenshots into at most two Telegram posts |
 | `02-auth-users-admin.md#T-01.01.01` | done | Earlier acceptance_verified | Register route and shared auth layout |
 | `02-auth-users-admin.md#T-01.01.02` | done | Earlier acceptance_verified | Unified username field (email or mobile) |
 | `02-auth-users-admin.md#T-01.01.03` | done | Earlier acceptance_verified | Password field with visibility toggle and strength meter |
@@ -1038,7 +1038,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.03.03` | done | Earlier deferred | Implement OpenAPI generation and drift check |
 | `01-platform-infrastructure.md#T-05.03.04` | blocked | Earlier deferred | Configure security scans in PR gate |
 | `01-platform-infrastructure.md#T-05.03.05` | done | Earlier deferred | Implement coverage threshold enforcement |
-| `01-platform-infrastructure.md#T-05.04.01` | verify | Earlier deferred | Create staging gate CI workflow |
+| `01-platform-infrastructure.md#T-05.04.01` | partial | Earlier deferred | Create staging gate CI workflow |
 | `01-platform-infrastructure.md#T-05.04.02` | verify | Earlier deferred | Create production promotion workflow with canary/gradual rollout |
 | `01-platform-infrastructure.md#T-05.04.03` | verify | Earlier deferred | Implement post-deploy smoke tests and SLO comparison |
 | `01-platform-infrastructure.md#T-05.04.04` | partial | Earlier deferred | Create runbooks for rollback scenarios |

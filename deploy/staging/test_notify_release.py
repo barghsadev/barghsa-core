@@ -226,7 +226,9 @@ args=sys.argv[1:]
 with pathlib.Path(os.environ['CALL_LOG']).open('a') as log: log.write(name+' '+ ' '.join(args)+'\\n')
 if name=='git' and args==['rev-parse','HEAD']: print('a'*40)
 elif name=='git' and args==['rev-parse','--short=12','HEAD']: print('a'*12)
+elif name=='python3' and args[:2]==['deploy/staging/release-queue.py','check-release']: sys.exit(int(os.environ.get('FAIL_ACCEPTANCE','0')))
 elif name=='python3' and '--check' in args: sys.exit(int(os.environ.get('FAIL_PREFLIGHT','0')))
+elif name=='docker' and args[:2]==['image','inspect']: print('sha256:'+('b'*64 if args[-1].startswith('barghsa-app:') else 'c'*64))
 elif name=='ssh' and args[-1]=='gzip -d | docker load': sys.stdin.buffer.read()
 elif name=='ssh' and 'grep -E' in args[-1]: print('BARGHSA_POSTGRES_IMAGE=barghsa-postgres:vps-existing\\nBARGHSA_CLAMAV_IMAGE=barghsa-clamav:vps-existing')
 elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-release '): sys.exit(int(os.environ.get('FAIL_RELEASE','0')))
@@ -235,7 +237,7 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
             file = bins / name
             file.write_text(stub.replace("#!/usr/bin/env python3", f"#!{sys.executable}"))
             file.chmod(0o700)
-        for failure in ["FAIL_PREFLIGHT", "FAIL_RELEASE", None]:
+        for failure in ["FAIL_ACCEPTANCE", "FAIL_PREFLIGHT", "FAIL_RELEASE", None]:
             with self.subTest(failure=failure):
                 log.unlink(missing_ok=True)
                 env = {**os.environ, "PATH": str(bins) + os.pathsep + os.environ["PATH"], "CALL_LOG": str(log)}
@@ -244,9 +246,16 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                 result = subprocess.run(["bash", str(staging / "deploy.sh")], env=env, capture_output=True, text=True)
                 calls = log.read_text().splitlines()
                 sends = [line for line in calls if line.startswith('python3 deploy/staging/notify-release.py') and '--check' not in line]
+                acceptance = 'python3 deploy/staging/release-queue.py check-release --commit ' + 'a'*40
+                preflight = 'python3 deploy/staging/notify-release.py --check --commit ' + 'a'*40
+                self.assertIn(acceptance, calls)
                 self.assertEqual(len(sends), 0 if failure else 1)
                 self.assertEqual(result.returncode, 1 if failure else 0, result.stderr)
-                if failure == "FAIL_PREFLIGHT":
+                if failure == "FAIL_ACCEPTANCE":
+                    self.assertNotIn(preflight, calls)
+                else:
+                    self.assertLess(calls.index(acceptance), calls.index(preflight))
+                if failure in {"FAIL_ACCEPTANCE", "FAIL_PREFLIGHT"}:
                     self.assertFalse(any(line.startswith('docker ') or line.startswith('ssh ') for line in calls))
                 else:
                     self.assertTrue(any('--build-arg BARGHSA_RELEASE_SHA=' + 'a'*40 in line for line in calls))

@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import time
 import unittest
@@ -51,9 +52,23 @@ with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as lo
         patch.dict(os.environ, {"QUEUE_CAPTURE": str(self.capture)}).start()
         patch.object(queue.os, "nice").start()
 
-    def publish(self, version):
+    def write_ledger(self, version, status, with_gate_evidence=True):
+        ledger = self.repo / "kanban/board.json"
+        ledger.parent.mkdir(exist_ok=True)
+        ledger.write_text(json.dumps({"schema_version": 1, "releases": [{
+            "version": version,
+            "status": status,
+            "gates": ["Fixture acceptance gate"],
+            "acceptance": {
+                "accepted_at": "2026-11-10T04:00:00Z",
+                "gates": {"fixture": "Verified fixture"} if with_gate_evidence else {},
+            } if status == "accepted" else None,
+        }]}))
+
+    def publish(self, version, status="accepted", with_gate_evidence=True):
         (self.repo / "package.json").write_text(json.dumps({"version": version}))
-        queue.command(self.repo, "git", "add", ".gitignore", "package.json", "deploy")
+        self.write_ledger(version, status, with_gate_evidence)
+        queue.command(self.repo, "git", "add", ".gitignore", "package.json", "deploy", "kanban/board.json")
         queue.command(self.repo, "git", "commit", "-m", "fixture release", capture=True)
         queue.command(self.repo, "git", "push", "origin", "main", capture=True)
         return queue.command(self.repo, "git", "rev-parse", "HEAD", capture=True)
@@ -74,6 +89,30 @@ with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as lo
         self.assertEqual(stored.read_bytes(), before)
         with self.assertRaisesRegex(ValueError, "immutable"):
             queue.enqueue(self.repo, self.state, self.commit, [self.image])
+
+    def test_pushed_unaccepted_release_cannot_use_working_tree_acceptance(self):
+        commit = self.publish("0.1.4", "in_progress")
+        self.write_ledger("0.1.4", "accepted")
+        with self.assertRaisesRegex(ValueError, "accepted milestone"):
+            queue.enqueue(self.repo, self.state, commit, [])
+        self.assertEqual(queue.jobs(self.state), [])
+
+    def test_acceptance_without_gate_evidence_cannot_create_a_job(self):
+        commit = self.publish("0.1.4", with_gate_evidence=False)
+        with self.assertRaisesRegex(ValueError, "gate evidence"):
+            queue.enqueue(self.repo, self.state, commit, [])
+        self.assertEqual(queue.jobs(self.state), [])
+
+    def test_deployment_check_uses_pushed_acceptance_without_creating_a_job(self):
+        pending = self.publish("0.1.4", "in_progress")
+        args = [sys.executable, queue.__file__, "--state-dir", str(self.state),
+                "check-release", "--repo", str(self.repo), "--commit"]
+        rejected = subprocess.run([*args, pending], capture_output=True, text=True)
+        self.assertEqual(rejected.returncode, 1)
+        self.assertIn("accepted milestone", rejected.stderr)
+        accepted = subprocess.run([*args, self.commit], capture_output=True, text=True)
+        self.assertEqual(accepted.returncode, 0, accepted.stderr)
+        self.assertFalse(self.state.exists())
 
     def test_more_than_one_album_is_rejected_before_a_job_is_created(self):
         images = []

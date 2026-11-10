@@ -42,7 +42,7 @@ def jobs(state):
                   key=lambda job: job["created_ns"])
 
 
-def enqueue(repo, state, commit, screenshots):
+def check_release(repo, commit):
     if not re.fullmatch(r"[a-f0-9]{40}", commit):
         raise ValueError("Use the exact 40-character pushed commit")
     repo = Path(command(repo, "git", "rev-parse", "--show-toplevel", capture=True))
@@ -51,6 +51,23 @@ def enqueue(repo, state, commit, screenshots):
     version = json.loads(command(repo, "git", "show", f"{commit}:package.json", capture=True))["version"]
     if not isinstance(version, str) or not re.fullmatch(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)", version):
         raise ValueError("Release must have a standard MAJOR.MINOR.PATCH version")
+    ledger = json.loads(command(repo, "git", "show", f"{commit}:kanban/board.json", capture=True))
+    if (not isinstance(ledger, dict) or ledger.get("schema_version") != 1
+            or not isinstance(ledger.get("releases"), list)):
+        raise ValueError("Invalid release ledger in the pushed commit")
+    releases = [record for record in ledger["releases"]
+                if isinstance(record, dict) and record.get("version") == version]
+    if len(releases) != 1 or releases[0].get("status") != "accepted":
+        raise ValueError("The pushed commit must record an accepted milestone for this version")
+    acceptance = releases[0].get("acceptance")
+    gates = acceptance.get("gates") if isinstance(acceptance, dict) else None
+    if not isinstance(gates, dict) or not gates or not all(gates.values()):
+        raise ValueError("The accepted milestone must include gate evidence")
+    return repo, version
+
+
+def enqueue(repo, state, commit, screenshots):
+    repo, version = check_release(repo, commit)
     images = {}
     for path in screenshots:
         data = Path(path).read_bytes()
@@ -190,12 +207,18 @@ def main():
     add.add_argument("--repo", type=Path, default=Path.cwd())
     add.add_argument("--commit", required=True)
     add.add_argument("--screenshot", action="append", default=[])
+    check = actions.add_parser("check-release")
+    check.add_argument("--repo", type=Path, default=Path.cwd())
+    check.add_argument("--commit", required=True)
     actions.add_parser("work")
     actions.add_parser("status")
     retry = actions.add_parser("retry")
     retry.add_argument("--commit", required=True)
     args = parser.parse_args()
     state = args.state_dir.expanduser().resolve()
+    if args.action == "check-release":
+        check_release(args.repo, args.commit)
+        return 0
     if args.action == "work":
         return work(state)
     if args.action == "status":

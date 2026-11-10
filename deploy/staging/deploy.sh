@@ -9,6 +9,7 @@ if [[ -n $(git status --porcelain) ]]; then
   exit 1
 fi
 commit="$(git rev-parse HEAD)"
+python3 deploy/staging/release-queue.py check-release --commit "$commit"
 # Validate notes and Telegram channel before spending time building images.
 python3 deploy/staging/notify-release.py --check --commit "$commit"
 
