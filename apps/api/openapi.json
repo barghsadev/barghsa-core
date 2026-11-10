@@ -4242,6 +4242,153 @@
         ]
       }
     },
+    "/api/admin/config/security-rate-limits": {
+      "get": {
+        "operationId": "SecurityRateLimitConfigController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Read action rate limits and emergency rules",
+        "tags": [
+          "Admin · Security"
+        ]
+      },
+      "put": {
+        "operationId": "SecurityRateLimitConfigController_update",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "emergency": {
+                    "oneOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "operation": {
+                            "enum": [
+                              "keep"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "operation"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "operation": {
+                            "enum": [
+                              "clear"
+                            ],
+                            "type": "string"
+                          },
+                          "reason": {
+                            "maxLength": 300,
+                            "minLength": 10,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "operation",
+                          "reason"
+                        ],
+                        "type": "object"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "limit": {
+                            "maximum": 50,
+                            "minimum": 1,
+                            "type": "integer"
+                          },
+                          "minutes": {
+                            "maximum": 1440,
+                            "minimum": 5,
+                            "type": "integer"
+                          },
+                          "operation": {
+                            "enum": [
+                              "set"
+                            ],
+                            "type": "string"
+                          },
+                          "reason": {
+                            "maxLength": 300,
+                            "minLength": 10,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "operation",
+                          "limit",
+                          "minutes",
+                          "reason"
+                        ],
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "expectedVersion": {
+                    "maximum": 2147483646,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "limit": {
+                    "maximum": 50,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "policy": {
+                    "enum": [
+                      "otpDestinationHour",
+                      "otpDestinationDay",
+                      "otpNetwork",
+                      "otpResend",
+                      "otpVerify",
+                      "login",
+                      "passwordReset",
+                      "orderSubmission",
+                      "wallet",
+                      "fileUpload",
+                      "aiQuestion",
+                      "aiTest"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "policy",
+                  "limit",
+                  "expectedVersion",
+                  "emergency"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Set a versioned action rate limit or temporary emergency rule",
+        "tags": [
+          "Admin · Security"
+        ]
+      }
+    },
     "/api/admin/config/service-response-targets": {
       "get": {
         "operationId": "AdminController_getServiceResponseTargets",
@@ -26195,9 +26342,6 @@
           "400": {
             "description": "Invalid username or TOS not accepted"
           },
-          "409": {
-            "description": "Username already taken"
-          },
           "422": {
             "description": "Weak password"
           },
@@ -26288,6 +26432,9 @@
           },
           "401": {
             "description": "Invalid, expired, or max attempts exceeded"
+          },
+          "409": {
+            "description": "Challenge consumed or contact already registered after proof"
           },
           "429": {
             "description": "Rate limited"

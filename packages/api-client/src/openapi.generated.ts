@@ -875,6 +875,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/config/security-rate-limits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read action rate limits and emergency rules */
+        get: operations["SecurityRateLimitConfigController_get"];
+        /** Set a versioned action rate limit or temporary emergency rule */
+        put: operations["SecurityRateLimitConfigController_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/config/service-response-targets": {
         parameters: {
             query?: never;
@@ -13282,6 +13300,63 @@ export interface operations {
             };
         };
     };
+    SecurityRateLimitConfigController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SecurityRateLimitConfigController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    emergency: {
+                        /** @enum {string} */
+                        operation: "keep";
+                    } | {
+                        /** @enum {string} */
+                        operation: "clear";
+                        reason: string;
+                    } | {
+                        limit: number;
+                        minutes: number;
+                        /** @enum {string} */
+                        operation: "set";
+                        reason: string;
+                    };
+                    expectedVersion: number;
+                    limit: number;
+                    /** @enum {string} */
+                    policy: "otpDestinationHour" | "otpDestinationDay" | "otpNetwork" | "otpResend" | "otpVerify" | "login" | "passwordReset" | "orderSubmission" | "wallet" | "fileUpload" | "aiQuestion" | "aiTest";
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AdminController_getServiceResponseTargets: {
         parameters: {
             query?: never;
@@ -24317,13 +24392,6 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Username already taken */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
             /** @description Weak password */
             422: {
                 headers: {
@@ -24398,6 +24466,13 @@ export interface operations {
             };
             /** @description Invalid, expired, or max attempts exceeded */
             401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Challenge consumed or contact already registered after proof */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };
