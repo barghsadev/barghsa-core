@@ -123,6 +123,13 @@ timestamp within five minutes. Each provider keeps its own signature format
 and receipt ledger. Verify duplicates at the ledger and check that concurrent
 retries preserve one payment or one email suppression outcome.
 
+The Resend ledger retains the verified JSON event in PostgreSQL. Payment
+callbacks retain the validated payment fields. The webhook handlers return
+acknowledgements. Staff delivery history checks the current capability and
+session and reads only the delivery projection, including a fixed bounce
+diagnostic. Keep the event records behind the private database connection
+and use the authorized application projections for routine investigation.
+
 SMS.ir v1 publishes an authenticated delivery report by message ID. Its public
 specification has no signed delivery callback declaration. A status report
 proves provider feedback for that message and must stay separate from the

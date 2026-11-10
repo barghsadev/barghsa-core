@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T05:30:53+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T05:33:41+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1122 | Accepted with unchanged source bindings. |
-| verify | 191 | Existing work may be complete; inspect evidence before building. |
-| partial | 47 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 1123 | Accepted with unchanged source bindings. |
+| verify | 188 | Existing work may be complete; inspect evidence before building. |
+| partial | 49 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1211,9 +1211,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.06.02.02` | done | Recorded batch work | Build payment provider callback adapter: verify provider signature, merchant context, server-side status check; browser redirect ignored |
 | `06-security-testing-observability.md#T-06.06.02.03` | blocked | Recorded batch work | Build SMS provider callback adapter: verify authenticity, replay-safe delivery status |
 | `06-security-testing-observability.md#T-06.06.02.04` | partial | Recorded batch work | Build storage provider callback: verify signature, replay-safe, idempotent status update |
-| `06-security-testing-observability.md#T-06.06.02.05` | verify | Inventory needed | Implement webhook idempotency: store webhook event hash + processed flag; reject duplicates |
-| `06-security-testing-observability.md#T-06.06.02.06` | verify | Inventory needed | Ensure raw provider events stored securely (encrypted or access-controlled) when permitted by policy |
-| `06-security-testing-observability.md#T-06.06.02.07` | verify | Inventory needed | Write tests: valid callback, expired timestamp, replayed event, wrong signature, missing signature, duplicate delivery |
+| `06-security-testing-observability.md#T-06.06.02.05` | partial | Recorded batch work | Implement webhook idempotency: store webhook event hash + processed flag; reject duplicates |
+| `06-security-testing-observability.md#T-06.06.02.06` | done | Recorded batch work | Ensure raw provider events stored securely (encrypted or access-controlled) when permitted by policy |
+| `06-security-testing-observability.md#T-06.06.02.07` | partial | Recorded batch work | Write tests: valid callback, expired timestamp, replayed event, wrong signature, missing signature, duplicate delivery |
 | `06-security-testing-observability.md#T-06.07.01.01` | verify | Inventory needed | Implement secrets resolution abstraction: env vars, AWS Secrets Manager / HashiCorp Vault / encrypted config file |
 | `06-security-testing-observability.md#T-06.07.01.02` | verify | Inventory needed | Ensure secrets are encrypted at rest and masked in every API response and admin UI display |
 | `06-security-testing-observability.md#T-06.07.01.03` | verify | Inventory needed | Exclude secrets from logs, analytics, error tracking, telemetry, and support exports |

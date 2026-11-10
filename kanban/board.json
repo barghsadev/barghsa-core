@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T05:30:53+00:00",
-  "source_commit": "1e30cec9bd91ae85f07bc55f1b0bd3091e7a3a7f",
+  "updated": "2026-11-10T05:33:41+00:00",
+  "source_commit": "076ac89547db252030bcafd07fe3b0f105af0477",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -484018,7 +484018,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -484058,7 +484059,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
+              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -484151,7 +484152,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -484207,7 +484209,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
+              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -487665,7 +487667,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-react-output-safety-and-receipt-urls",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -487793,7 +487796,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
+              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -488102,7 +488105,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -488162,7 +488166,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
+              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -488204,7 +488208,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -488253,7 +488258,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
+              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -488408,18 +488413,21 @@
         "story": "06-security-testing-observability.md#spec-24c716b06081"
       },
       "requirement": "| T-06.06.02.05 | Implement webhook idempotency: store webhook event hash + processed flag; reject duplicates | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Record a verified payload hash and explicit processing semantics for the final callback contracts. Resend commits one complete event per token. Payment uses a persisted claim and outcome; a late paid event for the same order can legitimately reopen an unpaid claim.",
+        "Exercise exact-source native proof after the SMS and storage contract decision. Preserve legacy receipt and retry behavior."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
+        ],
         "current_acceptance": null
       }
     },
@@ -488434,19 +488442,108 @@
         "story": "06-security-testing-observability.md#spec-24c716b06081"
       },
       "requirement": "| T-06.06.02.06 | Ensure raw provider events stored securely (encrypted or access-controlled) when permitted by policy | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "076ac89547db252030bcafd07fe3b0f105af0477",
+          "checks": [
+            "The private event tables retain verified Resend JSON and validated payment fields without signing secrets. Webhook responses return acknowledgements. Current staff capability and session are required for the restricted history projection, which maps the callback to coarse delivery status and a fixed bounce diagnostic. Staging DB is on the private Compose network; the production template requires certificate validation for the external PostgreSQL connection. Production topology rehearsal remains separate.",
+            "All 50 exact-source signature, replay, callback controller and payment service unit cases passed. Successful hosted job 129636126527 passed 53 native cases for the unchanged wallet and Resend receipt, deduplication, authority, history and unmatched callback logic. The later shared signature helper was exercised by the 50 current unit cases. The same candidate does not supply a live provider receipt."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/common/webhook-signature.ts",
+              "sha256": "f43879da2b0812b203aef3da87a55f9351caa7fa90034d4cf959dfc331eb0369"
+            },
+            {
+              "path": "apps/api/src/email-webhook/email-webhook-http.integration.test.ts",
+              "sha256": "c9e968e54aec808e1a066741a4b11cd0d7806507638d45c4a26a43c1379a0213"
+            },
+            {
+              "path": "apps/api/src/email-webhook/email-webhook.controller.ts",
+              "sha256": "40d8f1dff24f8003ec4a5fc60bf141357ed0c259fb9f452b9c0ff3271b3cb46d"
+            },
+            {
+              "path": "apps/api/src/email-webhook/email-webhook.service.ts",
+              "sha256": "8888c2dad4c23ad4c40bc4edf02701f66a3db6a71bb56ae584c1f55ce0b949f5"
+            },
+            {
+              "path": "apps/api/src/email-webhook/svix-verifier.test.ts",
+              "sha256": "370134a511d301e701f5006c7f27db057ec658045f7a638d6ab9727e0ddf51d4"
+            },
+            {
+              "path": "apps/api/src/email-webhook/svix-verifier.ts",
+              "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
+            },
+            {
+              "path": "apps/api/src/notifications/notifications.service.ts",
+              "sha256": "09960a7fc5e377d35fdfd2dbda50ea7c8e287ec04f6a462c5a2f12eb5b19413b"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.controller.test.ts",
+              "sha256": "ba912491867d307e113f9525614249daaac6531e22d500fccec10a735071bbfb"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.controller.ts",
+              "sha256": "86bcd985f89f752ac881e69f93e9c359233cf93e8ad8cad2e385b5ac7da5245f"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+              "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
+              "sha256": "461d26d584bb628fb4d61abf67de432bebf58f1f1dac07288a2d193b795ff492"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+              "sha256": "7607f7044224fdc8410a1cd368131198f0cf42986e4ac94de1babbd78951aa30"
+            },
+            {
+              "path": "apps/api/src/wallet/online-topup-unmatched.integration.test.ts",
+              "sha256": "8dce1c1d0d401c6fd1e47625dd7a3e7d7f4d52ef2a2a76349fd73ae76faad6ad"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
+              "sha256": "874713c339f14fd3aeb1abc502f041095124288f74b5ecf6f75190b760424fca"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-callback-verifier.ts",
+              "sha256": "6cdddee3c957fc42103ce61bae48abd4f79c7852f6478649c7ecc0790c177315"
+            },
+            {
+              "path": "deploy/production/compose.yml",
+              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
+            },
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+            },
+            {
+              "path": "packages/db/src/schema/email-webhook-events.ts",
+              "sha256": "52c3c1f665239c8f19c18c6c0fec75da4944cd844cfc944156a5909e650380e6"
+            },
+            {
+              "path": "packages/db/src/schema/wallet-topup-callback-events.ts",
+              "sha256": "eccbb0abf32364161e81e6e95dcc081903ac63fa3a0607607444cecac803c8a6"
+            }
+          ]
+        }
       }
     },
     {
@@ -488460,18 +488557,21 @@
         "story": "06-security-testing-observability.md#spec-24c716b06081"
       },
       "requirement": "| T-06.06.02.07 | Write tests: valid callback, expired timestamp, replayed event, wrong signature, missing signature, duplicate delivery | M |\n\n---",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Complete valid, expiry, wrong/missing proof, replay and duplicate tests for the approved SMS and storage contracts.",
+        "The payment and Resend cases already have verifier and durable native evidence. Obtain actual staging provider receipts separately."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
+        ],
         "current_acceptance": null
       }
     },
@@ -490075,7 +490175,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -490083,7 +490184,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
+              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
             },
             {
               "path": "docs/threat-model.md",
@@ -490224,7 +490325,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -490232,7 +490334,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
+              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -490339,7 +490441,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -490347,7 +490450,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
+              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -490402,7 +490505,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -490418,7 +490522,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
+              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
             }
           ],
           "checks": [
@@ -490479,7 +490583,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -490539,7 +490644,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
+              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -493469,7 +493574,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -493485,7 +493591,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
+              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
             }
           ],
           "checks": [
@@ -493538,7 +493644,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-provider-webhook-storage-and-replay-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -493546,7 +493653,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "02a4151ea6a8792f36b90aee652379753a7c2886081725eeb703dc4439ee2682"
+              "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -866172,6 +866279,109 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/affected-workspace-tests",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "d44100d81d89121756ccab5c86d4e2fa100b3c57926754cc9a21cf1ea9d2a800"
+    },
+    "release-0.6-provider-webhook-storage-and-replay-evidence": {
+      "batch": "release-0.6-provider-webhook-storage-and-replay-evidence",
+      "base_commit": "076ac89547db252030bcafd07fe3b0f105af0477",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.02.05",
+        "06-security-testing-observability.md#T-06.06.02.06",
+        "06-security-testing-observability.md#T-06.06.02.07"
+      ],
+      "changed_paths": [
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/common/webhook-signature.ts",
+          "sha256": "f43879da2b0812b203aef3da87a55f9351caa7fa90034d4cf959dfc331eb0369"
+        },
+        {
+          "path": "apps/api/src/email-webhook/email-webhook-http.integration.test.ts",
+          "sha256": "c9e968e54aec808e1a066741a4b11cd0d7806507638d45c4a26a43c1379a0213"
+        },
+        {
+          "path": "apps/api/src/email-webhook/email-webhook.controller.ts",
+          "sha256": "40d8f1dff24f8003ec4a5fc60bf141357ed0c259fb9f452b9c0ff3271b3cb46d"
+        },
+        {
+          "path": "apps/api/src/email-webhook/email-webhook.service.ts",
+          "sha256": "8888c2dad4c23ad4c40bc4edf02701f66a3db6a71bb56ae584c1f55ce0b949f5"
+        },
+        {
+          "path": "apps/api/src/email-webhook/svix-verifier.test.ts",
+          "sha256": "370134a511d301e701f5006c7f27db057ec658045f7a638d6ab9727e0ddf51d4"
+        },
+        {
+          "path": "apps/api/src/email-webhook/svix-verifier.ts",
+          "sha256": "4cc98dc224bbecacff711c1aea80955df5162e6f01929d6bb9114555fffc65a8"
+        },
+        {
+          "path": "apps/api/src/notifications/notifications.service.ts",
+          "sha256": "09960a7fc5e377d35fdfd2dbda50ea7c8e287ec04f6a462c5a2f12eb5b19413b"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.controller.test.ts",
+          "sha256": "ba912491867d307e113f9525614249daaac6531e22d500fccec10a735071bbfb"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.controller.ts",
+          "sha256": "86bcd985f89f752ac881e69f93e9c359233cf93e8ad8cad2e385b5ac7da5245f"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
+          "sha256": "e93f7f13f67b5c64ec13604af9d421413dc5c9bb219f02276ad93b5729d81453"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.test.ts",
+          "sha256": "461d26d584bb628fb4d61abf67de432bebf58f1f1dac07288a2d193b795ff492"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "7607f7044224fdc8410a1cd368131198f0cf42986e4ac94de1babbd78951aa30"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-unmatched.integration.test.ts",
+          "sha256": "8dce1c1d0d401c6fd1e47625dd7a3e7d7f4d52ef2a2a76349fd73ae76faad6ad"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-callback-verifier.test.ts",
+          "sha256": "874713c339f14fd3aeb1abc502f041095124288f74b5ecf6f75190b760424fca"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-callback-verifier.ts",
+          "sha256": "6cdddee3c957fc42103ce61bae48abd4f79c7852f6478649c7ecc0790c177315"
+        },
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "16e3790edf59987ad851b84f7a4926f8ea6645714db050d42d6e2deeee2e21f0"
+        },
+        {
+          "path": "packages/db/src/schema/email-webhook-events.ts",
+          "sha256": "52c3c1f665239c8f19c18c6c0fec75da4944cd844cfc944156a5909e650380e6"
+        },
+        {
+          "path": "packages/db/src/schema/wallet-topup-callback-events.ts",
+          "sha256": "eccbb0abf32364161e81e6e95dcc081903ac63fa3a0607607444cecac803c8a6"
+        }
+      ],
+      "checks": [
+        "The existing Resend event insertion, provider attribution and recipient suppression commit together. A successful ledger row already denotes completed application. Its unique event token rejects replay without a duplicate side effect. The payment ledger uses a unique provider event ID and processing/outcome state, binds duplicates to the original wallet and order, and preserves legitimate status advancement.",
+        "The private event tables retain verified Resend JSON and validated payment fields without signing secrets. Webhook responses return acknowledgements. Current staff capability and session are required for the restricted history projection, which maps the callback to coarse delivery status and a fixed bounce diagnostic. Staging DB is on the private Compose network; the production template requires certificate validation for the external PostgreSQL connection. Production topology rehearsal remains separate.",
+        "All 50 exact-source signature, replay, callback controller and payment service unit cases passed. Successful hosted job 129636126527 passed 53 native cases for the unchanged wallet and Resend receipt, deduplication, authority, history and unmatched callback logic. The later shared signature helper was exercised by the 50 current unit cases. The same candidate does not supply a live provider receipt.",
+        "Literal persisted payload-hash evidence and the final approved SMS and storage contracts remain open. Preserve legacy payment claims and same-intent paid-after-unpaid recovery."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webhook-acceptance",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "919c572a666544c19e8c92e988236fe8cd389b0c22728d74f7e5ad82522a8631"
     }
   },
   "historical_improvements": [
