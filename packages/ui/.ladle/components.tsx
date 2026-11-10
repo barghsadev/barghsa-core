@@ -4,6 +4,8 @@ import { DirectionProvider } from '../src/direction-provider';
 import { StoryLocale, StoryTheme } from '../stories/story-context';
 import './styles.css';
 
+const focusNavigation = { en: 'Continue keyboard navigation', fa: 'ادامه پیمایش با صفحه‌کلید' };
+
 export const Provider: GlobalProvider = ({ children, globalState }) => {
   const rtl = globalState.rtl;
   const dark = globalState.theme === 'dark';
@@ -14,7 +16,10 @@ export const Provider: GlobalProvider = ({ children, globalState }) => {
     document.body.style.fontFamily = 'var(--font-sans)';
   }, [rtl, dark]);
   return (
-    <DirectionProvider direction={rtl ? 'rtl' : 'ltr'}>
+    <DirectionProvider
+      direction={rtl ? 'rtl' : 'ltr'}
+      focusGuardLabel={focusNavigation[rtl ? 'fa' : 'en']}
+    >
       <StoryTheme.Provider value={dark ? 'dark' : 'light'}>
         <StoryLocale.Provider value={rtl ? 'fa' : 'en'}>
           <main

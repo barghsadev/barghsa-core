@@ -8,6 +8,8 @@ Direct pushes to `main` require **Verify monorepo integrity** on the exact candi
 
 Nightly jobs are separate from the integrity check. The release workflow in `kanban/WORKFLOW.md` governs when to enqueue staging after the verified release push.
 
+The web suite pins Playwright 1.65.0 and uses the browser revisions it installs. This release restores WebKit mouse movement deltas used by the NumberField scrub test. Run the web suite with the same Node.js 24 version as CI when reproducing hosted results. [Playwright WebKit fix](https://github.com/microsoft/playwright/issues/43417).
+
 Use the [service extraction review](../adr/003-modular-monolith-rationale.md#extraction-review-before-pushing-to-main)
 for changes that move a module into a separate service. Record its evidence
 with the reviewed batch before the direct push to `main`.

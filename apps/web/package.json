@@ -40,7 +40,7 @@
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
     "@barghsa/tsconfig": "workspace:*",
-    "@playwright/test": "1.62.1",
+    "@playwright/test": "1.65.0",
     "@tailwindcss/vite": "4.3.0",
     "@tanstack/react-query-devtools": "5.104.1",
     "@tanstack/router-devtools": "^1.114.0",

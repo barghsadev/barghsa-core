@@ -445,6 +445,12 @@ for (const fa of [false, true])
       await date.press('Enter');
       const popup = page.locator('[data-slot="popover-content"]').filter({ visible: true });
       await expect(popup.getByRole('grid')).toBeVisible();
+      const focusGuards = page.locator('[data-base-ui-focus-guard][role="button"]');
+      for (const guard of await focusGuards.all()) {
+        await expect(guard).toHaveAccessibleName(
+          fa ? 'ادامه پیمایش با صفحه‌کلید' : 'Continue keyboard navigation'
+        );
+      }
       await accessible(page);
       await popup.locator('button[data-day]:not([disabled])').nth(10).press('Enter');
       await expect(popup).toBeHidden();

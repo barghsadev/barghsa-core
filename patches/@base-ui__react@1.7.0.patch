@@ -1,0 +1,147 @@
+diff --git a/direction-provider/DirectionProvider.d.mts b/direction-provider/DirectionProvider.d.mts
+index 4e0dad4f359a89098cd2fe8a0b8765617eeaa271..e4f6df5cbb00935e94859bb2cc837ac044cbffd9 100644
+--- a/direction-provider/DirectionProvider.d.mts
++++ b/direction-provider/DirectionProvider.d.mts
+@@ -14,6 +14,8 @@ export interface DirectionProviderProps {
+    * @default 'ltr'
+    */
+   direction?: TextDirection | undefined;
++  /** Accessible name for the Safari VoiceOver focus sentinel. */
++  focusGuardLabel?: string | undefined;
+ }
+ export declare namespace DirectionProvider {
+   type State = DirectionProviderState;
+diff --git a/direction-provider/DirectionProvider.d.ts b/direction-provider/DirectionProvider.d.ts
+index 6a1ec35a5cbb57c79cf3bdcea81e0f7b9777dd40..cfa323474d320d25bdc91e327045d7c1f64a205a 100644
+--- a/direction-provider/DirectionProvider.d.ts
++++ b/direction-provider/DirectionProvider.d.ts
+@@ -14,6 +14,8 @@ export interface DirectionProviderProps {
+    * @default 'ltr'
+    */
+   direction?: TextDirection | undefined;
++  /** Accessible name for the Safari VoiceOver focus sentinel. */
++  focusGuardLabel?: string | undefined;
+ }
+ export declare namespace DirectionProvider {
+   type State = DirectionProviderState;
+diff --git a/direction-provider/DirectionProvider.js b/direction-provider/DirectionProvider.js
+index 2f80e18a854cc317c77da6b26db0ef4118fa6e65..dec6c93cdf99d3767eaab04b7fa38f27c8357cff 100644
+--- a/direction-provider/DirectionProvider.js
++++ b/direction-provider/DirectionProvider.js
+@@ -16,11 +16,13 @@ var _jsxRuntime = require("react/jsx-runtime");
+  */
+ const DirectionProvider = exports.DirectionProvider = function DirectionProvider(props) {
+   const {
+-    direction = 'ltr'
++    direction = 'ltr',
++    focusGuardLabel
+   } = props;
+   const contextValue = React.useMemo(() => ({
+-    direction
+-  }), [direction]);
++    direction,
++    focusGuardLabel
++  }), [direction, focusGuardLabel]);
+   return /*#__PURE__*/(0, _jsxRuntime.jsx)(_DirectionContext.DirectionContext.Provider, {
+     value: contextValue,
+     children: props.children
+diff --git a/direction-provider/DirectionProvider.mjs b/direction-provider/DirectionProvider.mjs
+index a6d4b58406e53cf64e11a1117eeb2dcc8707455c..fee9e4e319fbdc6c6110d17aec86682259a2d71c 100644
+--- a/direction-provider/DirectionProvider.mjs
++++ b/direction-provider/DirectionProvider.mjs
+@@ -11,11 +11,13 @@ import { DirectionContext } from "../internals/direction-context/DirectionContex
+ import { jsx as _jsx } from "react/jsx-runtime";
+ export const DirectionProvider = function DirectionProvider(props) {
+   const {
+-    direction = 'ltr'
++    direction = 'ltr',
++    focusGuardLabel
+   } = props;
+   const contextValue = React.useMemo(() => ({
+-    direction
+-  }), [direction]);
++    direction,
++    focusGuardLabel
++  }), [direction, focusGuardLabel]);
+   return /*#__PURE__*/_jsx(DirectionContext.Provider, {
+     value: contextValue,
+     children: props.children
+diff --git a/internals/direction-context/DirectionContext.d.mts b/internals/direction-context/DirectionContext.d.mts
+index 9022d58eae3e92ce99ca9895e9809dd87aa80385..68d04d35c91d2b4a27de836d5290b09591ba6dda 100644
+--- a/internals/direction-context/DirectionContext.d.mts
++++ b/internals/direction-context/DirectionContext.d.mts
+@@ -2,6 +2,7 @@ import * as React from 'react';
+ export type TextDirection = 'ltr' | 'rtl';
+ export type DirectionContext = {
+   direction: TextDirection;
++  focusGuardLabel?: string | undefined;
+ };
+ export declare const DirectionContext: React.Context<DirectionContext | undefined>;
+ export declare function useDirection(): TextDirection;
+\ No newline at end of file
+diff --git a/internals/direction-context/DirectionContext.d.ts b/internals/direction-context/DirectionContext.d.ts
+index 9022d58eae3e92ce99ca9895e9809dd87aa80385..68d04d35c91d2b4a27de836d5290b09591ba6dda 100644
+--- a/internals/direction-context/DirectionContext.d.ts
++++ b/internals/direction-context/DirectionContext.d.ts
+@@ -2,6 +2,7 @@ import * as React from 'react';
+ export type TextDirection = 'ltr' | 'rtl';
+ export type DirectionContext = {
+   direction: TextDirection;
++  focusGuardLabel?: string | undefined;
+ };
+ export declare const DirectionContext: React.Context<DirectionContext | undefined>;
+ export declare function useDirection(): TextDirection;
+\ No newline at end of file
+diff --git a/utils/FocusGuard.js b/utils/FocusGuard.js
+index 1927d40379f7083ef761b7eab5fb8184ce10f398..f40b1d7e0cf87c5b4d86a314801a10305f55895d 100644
+--- a/utils/FocusGuard.js
++++ b/utils/FocusGuard.js
+@@ -11,10 +11,13 @@ var _useIsoLayoutEffect = require("@base-ui/utils/useIsoLayoutEffect");
+ var _platform = require("@base-ui/utils/platform");
+ var _visuallyHidden = require("@base-ui/utils/visuallyHidden");
+ var _jsxRuntime = require("react/jsx-runtime");
++var _DirectionContext = require("../internals/direction-context/DirectionContext");
++
+ /**
+  * @internal
+  */
+ const FocusGuard = exports.FocusGuard = /*#__PURE__*/React.forwardRef(function FocusGuard(props, ref) {
++  const focusGuardLabel = React.useContext(_DirectionContext.DirectionContext)?.focusGuardLabel;
+   const [role, setRole] = React.useState();
+   (0, _useIsoLayoutEffect.useIsoLayoutEffect)(() => {
+     // Unlike NVDA and JAWS, VoiceOver's virtual cursor triggers `onFocus` as
+@@ -35,6 +38,7 @@ const FocusGuard = exports.FocusGuard = /*#__PURE__*/React.forwardRef(function F
+     ref: ref,
+     style: _visuallyHidden.visuallyHidden,
+     "aria-hidden": role ? undefined : true,
++    "aria-label": props["aria-label"] ?? (role ? focusGuardLabel : undefined),
+     ...restProps,
+     "data-base-ui-focus-guard": ""
+   });
+diff --git a/utils/FocusGuard.mjs b/utils/FocusGuard.mjs
+index 9e45e5858600ef6c25bd1c887f438cac09ec222d..ec153a674f555997dbde73ef433652aa76668432 100644
+--- a/utils/FocusGuard.mjs
++++ b/utils/FocusGuard.mjs
+@@ -5,11 +5,14 @@ import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+ import { platform } from '@base-ui/utils/platform';
+ import { visuallyHidden } from '@base-ui/utils/visuallyHidden';
+ 
++import { DirectionContext } from "../internals/direction-context/DirectionContext.mjs";
++
+ /**
+  * @internal
+  */
+ import { jsx as _jsx } from "react/jsx-runtime";
+ export const FocusGuard = /*#__PURE__*/React.forwardRef(function FocusGuard(props, ref) {
++  const focusGuardLabel = React.useContext(DirectionContext)?.focusGuardLabel;
+   const [role, setRole] = React.useState();
+   useIsoLayoutEffect(() => {
+     // Unlike NVDA and JAWS, VoiceOver's virtual cursor triggers `onFocus` as
+@@ -30,6 +33,7 @@ export const FocusGuard = /*#__PURE__*/React.forwardRef(function FocusGuard(prop
+     ref: ref,
+     style: visuallyHidden,
+     "aria-hidden": role ? undefined : true,
++    "aria-label": props["aria-label"] ?? (role ? focusGuardLabel : undefined),
+     ...restProps,
+     "data-base-ui-focus-guard": ""
+   });

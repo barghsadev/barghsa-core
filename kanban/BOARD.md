@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T09:58:38+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T10:14:09+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -1304,7 +1304,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.03.15` | verify | Inventory needed | Ensure E2E never calls production payment, SMS, email, storage, bill-data, or AI providers |
 | `06-security-testing-observability.md#T-06.10.03.16` | verify | Inventory needed | Ensure every E2E test runs with Persian (fa) locale as default, verifying RTL layout and Jalali calendar |
 | `06-security-testing-observability.md#T-06.10.03.17` | verify | Inventory needed | Add dedicated English/LTR smoke tests and Gregorian calendar boundary tests |
-| `06-security-testing-observability.md#T-06.11.01.01` | verify | Inventory needed | Integrate `@axe-core/playwright` into E2E pipeline; run on all critical pages |
+| `06-security-testing-observability.md#T-06.11.01.01` | verify | Recorded batch work | Integrate `@axe-core/playwright` into E2E pipeline; run on all critical pages |
 | `06-security-testing-observability.md#T-06.11.01.02` | verify | Inventory needed | Create accessibility test suite covering: keyboard navigation, focus visibility, contrast, labels, ARIA roles, error announcements, reduced motion |
 | `06-security-testing-observability.md#T-06.11.01.03` | done | Recorded batch work | Add CI gate: axe violations block PR; track severity |
 | `06-security-testing-observability.md#T-06.11.01.04` | done | Recorded batch work | Document manual testing checklist for screen readers (NVDA/JAWS, VoiceOver) and keyboard-only |
