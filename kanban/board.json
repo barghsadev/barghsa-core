@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T06:34:41+00:00",
-  "source_commit": "8ac1c7d8f390f1ba741c21a7ea84c627bd956310",
+  "updated": "2026-11-10T06:37:11+00:00",
+  "source_commit": "cf2b5bc51ac89f5aef697183365965aa79af62e4",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -28297,7 +28297,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-latest-strict-license-review-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -28453,7 +28454,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "a00456f52f852ae69799b4dc2d36b82e672001c8c05dafdf86cc514340dad8b1"
+              "sha256": "949964011eb461ee934756225097459e3fd3cbf67375384dfb8b6cea39a2b84e"
             }
           ],
           "checks": [
@@ -490987,7 +490988,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record owner or legal dispositions for the exact 170 package/scope/license rows reproduced by the strict fa7d7416 gate. Verify package-specific notices, corresponding source and replacement rights where applicable.",
+        "Record owner or legal dispositions for the exact 170 package/scope/license rows reproduced by strict bf48f69f run 42751525133 job 129616022358. Verify package-specific notices, corresponding source and replacement rights where applicable.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
@@ -491003,7 +491004,8 @@
           "release-0.6-staging-postgres-monitoring-readback",
           "release-0.6-package-metadata-review",
           "release-0.6-current-license-inventory-readback",
-          "release-0.6-strict-license-gate-readback"
+          "release-0.6-strict-license-gate-readback",
+          "release-0.6-latest-strict-license-review-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -869875,6 +869877,38 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/provider-adapter-unit-evidence",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "5b67374d6920c094b57ad2eaf87901c6aa405b1d561479151b4ea7eba1d4cdcd"
+    },
+    "release-0.6-latest-strict-license-review-evidence": {
+      "batch": "release-0.6-latest-strict-license-review-evidence",
+      "base_commit": "cf2b5bc51ac89f5aef697183365965aa79af62e4",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.02.06"
+      ],
+      "changed_paths": [
+        "docs/security/release-license-review.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
+        },
+        {
+          "path": "deploy/licenses/release-approvals.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "949964011eb461ee934756225097459e3fd3cbf67375384dfb8b6cea39a2b84e"
+        }
+      ],
+      "checks": [
+        "GitHub full candidate run 42751525133 job 129616022358 built and scanned four images for bf48f69f, then failed at the strict shipped-component license check.",
+        "The two exact strict inventories match all 594 package URLs, image/distribution scopes, reported license lists and dispositions. The latest candidate has 424 allowed entries, 170 requiring package-specific review, and no bundled GeoLite2 package.",
+        "The review packet links the latest immutable receipt and inventory digest. The approval ledger is empty. The strict gate remains in force and no package exceptions have been approved by this batch."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/full-candidate-42751525133-image-gate",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "bb2e6288ff48835e54f42b51e13cded0e937d4f1de8a04807f87721f34ef5caa"
     }
   },
   "historical_improvements": [
