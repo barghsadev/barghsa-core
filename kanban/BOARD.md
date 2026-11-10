@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T12:31:51+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T12:36:45+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -1269,7 +1269,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.09.03.06` | done | Recorded batch work | Write RTL tests for electricity order wizards: simple order, advanced order, green rule disclosure, price review |
 | `06-security-testing-observability.md#T-06.09.03.07` | done | Recorded batch work | Write RTL tests for wallet/invoice/payment pages: balance display, top-up, invoice payment, refund view |
 | `06-security-testing-observability.md#T-06.09.03.08` | verify | Inventory needed | Write RTL tests for admin pages: configuration, role management, product/settings CRUD |
-| `06-security-testing-observability.md#T-06.09.03.09` | verify | Inventory needed | Ensure every critical form preserves valid input after server validation/provider error |
+| `06-security-testing-observability.md#T-06.09.03.09` | verify | Recorded batch work | Ensure every critical form preserves valid input after server validation/provider error |
 | `06-security-testing-observability.md#T-06.09.03.10` | verify | Inventory needed | Write RTL tests for permission-dependent UI: elements hidden/disabled per role |
 | `06-security-testing-observability.md#T-06.10.01.01` | partial | Recorded batch work | Set up test PostgreSQL instance in CI and local dev (Docker Compose service) |
 | `06-security-testing-observability.md#T-06.10.01.02` | done | Recorded batch work | Configure NestJS testing module: bootstrap real app with test DB, apply migrations before each suite |
@@ -1305,7 +1305,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.10.03.16` | done | Recorded batch work | Ensure every E2E test runs with Persian (fa) locale as default, verifying RTL layout and Jalali calendar |
 | `06-security-testing-observability.md#T-06.10.03.17` | done | Recorded batch work | Add dedicated English/LTR smoke tests and Gregorian calendar boundary tests |
 | `06-security-testing-observability.md#T-06.11.01.01` | verify | Recorded batch work | Integrate `@axe-core/playwright` into E2E pipeline; run on all critical pages |
-| `06-security-testing-observability.md#T-06.11.01.02` | verify | Inventory needed | Create accessibility test suite covering: keyboard navigation, focus visibility, contrast, labels, ARIA roles, error announcements, reduced motion |
+| `06-security-testing-observability.md#T-06.11.01.02` | verify | Recorded batch work | Create accessibility test suite covering: keyboard navigation, focus visibility, contrast, labels, ARIA roles, error announcements, reduced motion |
 | `06-security-testing-observability.md#T-06.11.01.03` | done | Recorded batch work | Add CI gate: axe violations block PR; track severity |
 | `06-security-testing-observability.md#T-06.11.01.04` | done | Recorded batch work | Document manual testing checklist for screen readers (NVDA/JAWS, VoiceOver) and keyboard-only |
 | `06-security-testing-observability.md#T-06.11.02.01` | done | Recorded batch work | Integrate OWASP ZAP for authenticated API scanning in staging environment |

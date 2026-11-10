@@ -9,8 +9,6 @@ import {
 import { withCsrf } from '../lib/csrf.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
-import { sendToast } from '../lib/toast-api.js';
-import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useState, useEffect, useRef, useCallback, type FormEvent } from 'react';
 import { LoadingStatus, Alert, Button } from '@barghsa/ui';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
@@ -247,10 +245,7 @@ export default function DeliveryWindowConfigPanel({
         } catch {
           if (current(version, epoch)) {
             setError(label('saveFailed'));
-            if (unknown) {
-              markUnconfirmed();
-              sendToast('warning', confirmationText('unconfirmed', uiLocale));
-            } else sendToast('error', label('saveFailed'));
+            if (unknown) markUnconfirmed();
           }
         } finally {
           if (write.current === controller) write.current = null;

@@ -4,6 +4,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import Panel from './DeliveryWindowConfigPanel.js';
 import type { TeamAction } from './TeamActionDialog.js';
+import * as toastApi from '../lib/toast-api.js';
 interface Command {
   action: TeamAction;
   onClose: () => void;
@@ -47,6 +48,7 @@ afterEach(async () => {
   await act(async () => root.unmount());
   host.remove();
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 const field = (name: string) => host.querySelector<HTMLInputElement>(`#delivery-window-${name}`)!;
 async function mount(onSessionEnded = () => {}) {
@@ -114,6 +116,7 @@ it('retains raw edits through failed reads and unchanged retry, then requires re
   expect(field('end').value).toBe('22:00');
 });
 it('maps only owned field errors while retaining edits and refusing arbitrary server names', async () => {
+  const sendToast = vi.spyOn(toastApi, 'sendToast');
   await mount();
   await fill('start', '10:00');
   writeStatus = 400;
@@ -125,13 +128,16 @@ it('maps only owned field errors while retaining edits and refusing arbitrary se
   await submit();
   await vi.waitFor(() => expect(host.textContent).toContain('Failed to save'));
   expect(host.textContent).not.toContain('secretToken');
+  expect(sendToast).not.toHaveBeenCalled();
 });
 it('freezes a mismatched receipt until an authoritative refresh and explicit reset', async () => {
+  const sendToast = vi.spyOn(toastApi, 'sendToast');
   await mount();
   await fill('start', '10:00');
   receipt = { ...initial, startHour: 11 };
   await submit();
   await vi.waitFor(() => expect(host.textContent).toContain('could not be verified'));
+  expect(sendToast).not.toHaveBeenCalled();
   expect(field('start').value).toBe('10:00');
   const reset = [...host.querySelectorAll<HTMLButtonElement>('button')].find(
     (b) => b.textContent?.trim() === 'Reset to saved values'

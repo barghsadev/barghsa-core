@@ -96,7 +96,7 @@ Terms draft saves, publication and discard use the same response deadline. An un
 
 Notification template saves, publication, withdrawal, deletion and test sends use the same deadline, including commands confirmed by password. An unconfirmed command blocks further template writes until a fresh catalogue read succeeds. A draft also needs an explicit reset. Refreshing retires the old publication review and sends no command. An unconfirmed test asks staff to check the destination before sending again.
 
-Delivery-window saves keep the minute-precision draft after an unknown reply. Reset requires a successful settings read started after recovery became necessary. A refresh during an outstanding write cannot satisfy that requirement. Dead-letter actions use the same response deadline and send uncertain results to the existing review without replaying the action.
+Delivery-window saves keep the minute-precision draft after an unknown reply. The panel announces save failures inline and keeps the notification editor controls available. Reset requires a successful settings read started after recovery became necessary. A refresh during an outstanding write cannot satisfy that requirement. Dead-letter actions use the same response deadline and send uncertain results to the existing review without replaying the action.
 
 Single and bulk failed-job retries and resolutions use the same deadline. After an unknown reply, the existing outcome review reads each selected job by ID. Returning from that review clears the selection and requires a fresh queue before another command.
 

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T12:31:51+00:00",
-  "source_commit": "bc8a9a12ae784cd7da4d8f66af06cbeda3c44a22",
+  "updated": "2026-11-10T12:36:45+00:00",
+  "source_commit": "9968937827483c3710afc4c85a90c5c25a4bc8a1",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -40764,7 +40764,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-simple-electricity-wallet-funding-browser-journey"
+          "release-0.6-simple-electricity-wallet-funding-browser-journey",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -40824,7 +40825,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -69040,7 +69041,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "accepted-native-brand-theme-application",
@@ -69104,7 +69106,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/NotificationBell.tsx",
@@ -82269,7 +82271,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -82317,7 +82320,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/lib/catalogue-form-schemas.ts",
@@ -82704,7 +82707,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -82752,7 +82756,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/lib/catalogue-form-schemas.ts",
@@ -83161,7 +83165,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -83209,7 +83214,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/lib/catalogue-form-schemas.ts",
@@ -96186,7 +96191,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -96234,7 +96240,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/lib/catalogue-form-schemas.ts",
@@ -497714,14 +497720,20 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Delivery-window and notification-editor input retention, recovery and no-repeat-write behavior passed locally. Reconcile the other critical form requirements before closing this cross-cutting criterion."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "apps/web/src/components/delivery-window-forms.test.tsx",
+          "docs/design/notification-recovery.md"
+        ],
+        "batches": [
+          "release-0.6-delivery-window-feedback-overlay"
+        ],
         "current_acceptance": null
       }
     },
@@ -500579,14 +500591,20 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "The notification editor and delivery window passed localized control labels, focus and inline feedback in six browser cases. Complete the other accessibility dimensions and exact hosted candidate checks separately."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "apps/web/src/components/delivery-window-forms.test.tsx",
+          "docs/design/notification-recovery.md"
+        ],
+        "batches": [
+          "release-0.6-delivery-window-feedback-overlay"
+        ],
         "current_acceptance": null
       }
     },
@@ -523071,7 +523089,8 @@
           "release-0.6-mobile-request-and-owned-read-browser-replay",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-solar-request-touch-target",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -523135,7 +523154,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/GiftProfilePicker.tsx",
@@ -524847,7 +524866,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -524947,7 +524967,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
@@ -528949,7 +528969,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -529365,7 +529386,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -529819,7 +529840,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -529919,7 +529941,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentsWorkspace.tsx",
@@ -550035,7 +550057,8 @@
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -551343,7 +551366,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -552446,7 +552469,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-saving-paid-fulfillment-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -552514,7 +552538,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
@@ -580869,7 +580893,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -581217,7 +581242,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -582771,7 +582796,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583119,7 +583145,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -584674,7 +584700,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585022,7 +585049,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -586546,7 +586573,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -586894,7 +586922,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -588444,7 +588472,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -588792,7 +588821,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -590351,7 +590380,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590699,7 +590729,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -592231,7 +592261,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592579,7 +592610,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -594075,7 +594106,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -594423,7 +594455,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -595919,7 +595951,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -596267,7 +596300,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -597764,7 +597797,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -598112,7 +598146,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -599608,7 +599642,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -599956,7 +599991,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -601447,7 +601482,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -601575,7 +601611,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -601775,7 +601811,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -602475,7 +602511,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -603384,7 +603420,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -603512,7 +603549,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -603712,7 +603749,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -604412,7 +604449,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -605360,7 +605397,8 @@
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -606200,7 +606238,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -606664,7 +606702,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -608124,7 +608162,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -608274,7 +608312,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -608414,7 +608453,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -608614,7 +608653,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -609322,7 +609361,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -610224,7 +610263,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -610352,7 +610392,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -610552,7 +610592,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -611252,7 +611292,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -612161,7 +612201,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -612289,7 +612330,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -612489,7 +612530,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -613189,7 +613230,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -614098,7 +614139,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -614226,7 +614268,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -614426,7 +614468,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -615126,7 +615168,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -616035,7 +616077,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -616163,7 +616206,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -616363,7 +616406,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -617063,7 +617106,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -617972,7 +618015,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -618100,7 +618144,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -618300,7 +618344,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -619000,7 +619044,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -619909,7 +619953,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -620037,7 +620082,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -620237,7 +620282,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -620937,7 +620982,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -621846,7 +621891,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -621974,7 +622020,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -622174,7 +622220,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -622874,7 +622920,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -623783,7 +623829,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -623911,7 +623958,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -624111,7 +624158,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -624811,7 +624858,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -625720,7 +625767,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -625848,7 +625896,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -626048,7 +626096,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -626748,7 +626796,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -627657,7 +627705,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -627785,7 +627834,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -627985,7 +628034,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -628685,7 +628734,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -629564,7 +629613,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -629980,7 +630030,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -630352,7 +630402,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -630480,7 +630531,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -630680,7 +630731,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -631380,7 +631431,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -632289,7 +632340,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -632417,7 +632469,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -632617,7 +632669,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -633317,7 +633369,7 @@
             },
             {
               "path": "docs/design/notification-recovery.md",
-              "sha256": "852ab910a6c0229f13d046d957304101500af17ec390da977e8b6480389c6793"
+              "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -635658,7 +635710,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -636006,7 +636059,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -637498,7 +637551,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -637846,7 +637900,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -639338,7 +639392,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -639686,7 +639741,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -641178,7 +641233,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -641526,7 +641582,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -643018,7 +643074,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -643366,7 +643423,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -644858,7 +644915,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -645206,7 +645264,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -646698,7 +646756,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -647046,7 +647105,7 @@
             },
             {
               "path": "apps/web/src/components/delivery-window-forms.test.tsx",
-              "sha256": "883a629b0e8a9012e10a795704edb00ac7febfbceb05da5950ea5ed9739faafd"
+              "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
             },
             {
               "path": "apps/web/src/components/document-admin-query.test.tsx",
@@ -762637,7 +762696,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -765268,7 +765327,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -766653,7 +766713,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -769178,7 +769238,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -769461,7 +769522,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DocumentDetail.tsx",
@@ -770919,7 +770980,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-solar-request-touch-target",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ]
       }
     },
@@ -771159,7 +771221,7 @@
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
-              "sha256": "3beb9b40c9772511d7f1a2c266a64869b5bfb52985fd02ab1fd357395466db06"
+              "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
             },
             {
               "path": "apps/web/src/components/DirectionAware.tsx",
@@ -773075,7 +773137,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-solar-request-touch-target",
           "release-0.6-registration-and-onboarding-browser-journeys",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-delivery-window-feedback-overlay"
         ]
       }
     },
@@ -773180,7 +773243,7 @@
       "launch_required": true,
       "remaining": [
         "Reconcile every epic-01 and epic-06 criterion with current source and operational evidence. Apply the approved direct-main workflow while preserving all production gates.",
-        "Finish the full exact candidate browser matrix, source coverage and receipt review. The simple and advanced electricity, saving, consultation and solar journeys have local browser receipts. The actual scheduled matrix reported all shards and failed correctly. Residual fixes and exact candidate evidence remain open. Local Firefox wallet accessibility crashes at the native content process, and the notification editor had mixed local results. Verify both with the exact hosted Linux browser matrix.",
+        "Finish the full exact candidate browser matrix, source coverage and receipt review. The simple and advanced electricity, saving, consultation and solar journeys have local browser receipts. The actual scheduled matrix reported all shards and failed correctly. Residual fixes and exact candidate evidence remain open. Local Firefox wallet accessibility crashes at the native content process, and needs the exact hosted Linux browser matrix. The delivery-window toast overlay is repaired and the notification editor passed all six focused browser cases. Verify the repair on the exact matrix.",
         "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
@@ -773317,7 +773380,8 @@
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-credential-storage-and-projection-review"
+          "release-0.6-credential-storage-and-projection-review",
+          "release-0.6-delivery-window-feedback-overlay"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -882839,6 +882903,58 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/credential-storage-projections",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "e812fdd19816a610ee2b46c515af8cb4e87a04a53046622bf61efa8c4ec4ae3c"
+    },
+    "release-0.6-delivery-window-feedback-overlay": {
+      "batch": "release-0.6-delivery-window-feedback-overlay",
+      "base_commit": "9968937827483c3710afc4c85a90c5c25a4bc8a1",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.03.09",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+        "apps/web/src/components/delivery-window-forms.test.tsx",
+        "docs/design/notification-recovery.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "4c0ff43927e7639d7c505ef51fc0e4195ff6201a39b7551665b3849c32fba513"
+        },
+        {
+          "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "sha256": "172d1bb58b39d4db431ccd177445d632ea99637659887f6f285c7665dc3b7b17"
+        },
+        {
+          "path": "apps/web/src/components/delivery-window-forms.test.tsx",
+          "sha256": "35c449440b5704278b3b9d129e2054a6eb4ffc0e54f9fa21c2b3f0631c5c450c"
+        },
+        {
+          "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
+          "sha256": "f8d0028d9f945610a09833c38104a22ea0f5cce85b8b723b0ff0ee739002d206"
+        },
+        {
+          "path": "apps/web/src/pages/content-catalogue-recovery.test.tsx",
+          "sha256": "ecf31ec5ce780ad26316d163efbbf9c5d571c705e35e51fb55f27216ba71652b"
+        },
+        {
+          "path": "apps/web/src/pages/notification-forms.test.tsx",
+          "sha256": "fd9d523258748005538f07f5d06a3859259e8ba66c6dbe1629679a506932d0e0"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "f868072bb3f31d1856c074caaa83e05a0051f91a9ccdf5ce1a637529ad0df2ce"
+        }
+      ],
+      "checks": [
+        "The previous Firefox trace showed the animated delivery-window warning covering New Template after the scroll and click. The panel now uses its existing localized inline failure and uncertainty alerts, preserving authoritative refresh, explicit reset, request ownership and the no-replay rule.",
+        "Both existing unit cases with the added no-toast assertions failed on the old component for the observed toast calls. All ten delivery-window component cases and 42 related template and catalogue cases passed on the fixed source.",
+        "The six unchanged notification-editor browser cases passed with zero retries across Firefox, Mobile Chrome and Mobile Safari in English and Persian. The web production build, all 102 route and interaction gzip budgets, type checking, lint, formatting and diff checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/delivery-window-feedback-overlay",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "b3c3e55e80b720cfb7f8ea08fd0262e8c636649d2af01e68b6bcfa0bbec97dba"
     }
   },
   "historical_improvements": [
