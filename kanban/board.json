@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T09:34:16+00:00",
-  "source_commit": "2ab79fcca576bcf65a0af97991afd58dfd73c434",
+  "updated": "2026-11-10T09:37:31+00:00",
+  "source_commit": "7bb80d201151f194dd7735b5ce1a2430ac80da57",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -495716,19 +495716,81 @@
         "story": "06-security-testing-observability.md#spec-f7421d6dc1ea"
       },
       "requirement": "| T-06.09.03.05 | Write RTL tests for dashboard: profile display, verification warning, agent invitation | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-dashboard-testing-library"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-dashboard-workspace-testing-library",
+          "reviewed_sha": "7bb80d201151f194dd7735b5ce1a2430ac80da57",
+          "checks": [
+            "React Testing Library mounts the production dashboard page and its verification and invitation surfaces under the accepted authenticated workspace providers with explicit API contract fixtures.",
+            "The integrated case displays the current profile heading, accessible verification warning and pending agent invitation with the correct company, role, inviter and action. Dismissing the warning preserves the dashboard and invitation. The displayed invitation excludes the private staff identifier.",
+            "The invitation API case passed before four suites were unable to load because the system temporary volume was full. The RAM-backed retry produced 30 passing sibling cases. The new integrated case was then corrected to query the actual invitation sentence inside its named region, and passed on its own. Together the completed checks cover 32 cases across five files. Web typecheck, focused lint, formatting and diff checks passed."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/web/src/components/InvitationBanner.test.tsx",
+              "sha256": "cc7c55ce6b1a7dc87757e54879254907d29ec360c2337aca81d918d5712b2c91"
+            },
+            {
+              "path": "apps/web/src/components/InvitationBanner.tsx",
+              "sha256": "1ad609e0914b939fd6b6eeb4145e5e22661f119856dde50a27c95e045bcdcf6a"
+            },
+            {
+              "path": "apps/web/src/components/InvitationCards.tsx",
+              "sha256": "eb27efbdccc6b4b18a31a79f10fb998cfbfe1207826b60e6d164cf865a4c5eaa"
+            },
+            {
+              "path": "apps/web/src/components/VerificationBanner.tsx",
+              "sha256": "7b138e9426501850edcaaaeecb9a17fd198d88d1280e65da906b0de67fb684f6"
+            },
+            {
+              "path": "apps/web/src/components/root-profile-query.test.tsx",
+              "sha256": "5339b11d7f0fd0513daf391727489851ae104133e06e539c0f835fdf01d32c34"
+            },
+            {
+              "path": "apps/web/src/lib/invitation-api.test.ts",
+              "sha256": "dbc7edd5fac488496337e179dc36344b2080c14d775574e2dd3546f68416fed6"
+            },
+            {
+              "path": "apps/web/src/lib/invitation-api.ts",
+              "sha256": "5eaa5871b1fe418ca7b350a65875147fcf4441bae87ac145a89a7bdba36af5dc"
+            },
+            {
+              "path": "apps/web/src/pages/DashboardLayout.tsx",
+              "sha256": "cbb24c5f5126fd85e70449cb7bc78cd1b8197a1cde7730ccb568594ad3efe946"
+            },
+            {
+              "path": "apps/web/src/pages/DashboardPage.test.tsx",
+              "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
+            },
+            {
+              "path": "apps/web/src/pages/DashboardPage.tsx",
+              "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
+            },
+            {
+              "path": "apps/web/src/pages/dashboard-workspace.test.tsx",
+              "sha256": "d4681767eb45cf8bf231650694ceab863147432843c9a3fa64e2d2d8f29c186a"
+            },
+            {
+              "path": "apps/web/src/routes/__root.tsx",
+              "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+            },
+            {
+              "path": "apps/web/src/test/render-workspace.tsx",
+              "sha256": "70a97ccc8b1102b62ca6a8335c5afb6724c0c3cd2dda94cefc7fd72c88ff957d"
+            }
+          ]
+        }
       }
     },
     {
@@ -876276,6 +876338,78 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/onboarding-form-testing-library",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "59f621660859d0bbe090dc539d7571126960d5af63c97d0d73d290c83496ae79"
+    },
+    "release-0.6-dashboard-testing-library": {
+      "batch": "release-0.6-dashboard-testing-library",
+      "base_commit": "7bb80d201151f194dd7735b5ce1a2430ac80da57",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.03.05"
+      ],
+      "changed_paths": [
+        "apps/web/src/pages/dashboard-workspace.test.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/InvitationBanner.test.tsx",
+          "sha256": "cc7c55ce6b1a7dc87757e54879254907d29ec360c2337aca81d918d5712b2c91"
+        },
+        {
+          "path": "apps/web/src/components/InvitationBanner.tsx",
+          "sha256": "1ad609e0914b939fd6b6eeb4145e5e22661f119856dde50a27c95e045bcdcf6a"
+        },
+        {
+          "path": "apps/web/src/components/InvitationCards.tsx",
+          "sha256": "eb27efbdccc6b4b18a31a79f10fb998cfbfe1207826b60e6d164cf865a4c5eaa"
+        },
+        {
+          "path": "apps/web/src/components/VerificationBanner.tsx",
+          "sha256": "7b138e9426501850edcaaaeecb9a17fd198d88d1280e65da906b0de67fb684f6"
+        },
+        {
+          "path": "apps/web/src/components/root-profile-query.test.tsx",
+          "sha256": "5339b11d7f0fd0513daf391727489851ae104133e06e539c0f835fdf01d32c34"
+        },
+        {
+          "path": "apps/web/src/lib/invitation-api.test.ts",
+          "sha256": "dbc7edd5fac488496337e179dc36344b2080c14d775574e2dd3546f68416fed6"
+        },
+        {
+          "path": "apps/web/src/lib/invitation-api.ts",
+          "sha256": "5eaa5871b1fe418ca7b350a65875147fcf4441bae87ac145a89a7bdba36af5dc"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardLayout.tsx",
+          "sha256": "cbb24c5f5126fd85e70449cb7bc78cd1b8197a1cde7730ccb568594ad3efe946"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.test.tsx",
+          "sha256": "c7c549a8a5d706b9416b2fa721c80336c26801caeb066df28626b1365f10c353"
+        },
+        {
+          "path": "apps/web/src/pages/DashboardPage.tsx",
+          "sha256": "9fce1bccd220e80488996cce47a0c7fa642d26049fba5444201e2efb9765dd41"
+        },
+        {
+          "path": "apps/web/src/pages/dashboard-workspace.test.tsx",
+          "sha256": "d4681767eb45cf8bf231650694ceab863147432843c9a3fa64e2d2d8f29c186a"
+        },
+        {
+          "path": "apps/web/src/routes/__root.tsx",
+          "sha256": "f5e249bab84b99172466b34ce8e37fa3dee0f7663c1a6f6c972246395da34f8b"
+        },
+        {
+          "path": "apps/web/src/test/render-workspace.tsx",
+          "sha256": "70a97ccc8b1102b62ca6a8335c5afb6724c0c3cd2dda94cefc7fd72c88ff957d"
+        }
+      ],
+      "checks": [
+        "React Testing Library mounts the production dashboard page and its verification and invitation surfaces under the accepted authenticated workspace providers with explicit API contract fixtures.",
+        "The integrated case displays the current profile heading, accessible verification warning and pending agent invitation with the correct company, role, inviter and action. Dismissing the warning preserves the dashboard and invitation. The displayed invitation excludes the private staff identifier.",
+        "The invitation API case passed before four suites were unable to load because the system temporary volume was full. The RAM-backed retry produced 30 passing sibling cases. The new integrated case was then corrected to query the actual invitation sentence inside its named region, and passed on its own. Together the completed checks cover 32 cases across five files. Web typecheck, focused lint, formatting and diff checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/dashboard-testing-library",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "3b01557b973ca3e49313419a2da34e6246b9b4dfb1d8eaafaaf7c39192fb7247"
     }
   },
   "historical_improvements": [

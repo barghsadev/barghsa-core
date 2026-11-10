@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T09:34:16+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T09:37:31+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1155 | Accepted with unchanged source bindings. |
-| verify | 153 | Existing work may be complete; inspect evidence before building. |
+| done | 1156 | Accepted with unchanged source bindings. |
+| verify | 152 | Existing work may be complete; inspect evidence before building. |
 | partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1265,7 +1265,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.09.03.02` | done | Recorded batch work | Write RTL tests for registration form: validation, OTP flow, error states, RTL layout |
 | `06-security-testing-observability.md#T-06.09.03.03` | done | Recorded batch work | Write RTL tests for login form: validation, error states, MFA step-up, RTL/LTR |
 | `06-security-testing-observability.md#T-06.09.03.04` | done | Recorded batch work | Write RTL tests for onboarding/profile forms: INDIVIDUAL and LEGAL flows, field validation, address selection |
-| `06-security-testing-observability.md#T-06.09.03.05` | verify | Inventory needed | Write RTL tests for dashboard: profile display, verification warning, agent invitation |
+| `06-security-testing-observability.md#T-06.09.03.05` | done | Recorded batch work | Write RTL tests for dashboard: profile display, verification warning, agent invitation |
 | `06-security-testing-observability.md#T-06.09.03.06` | done | Recorded batch work | Write RTL tests for electricity order wizards: simple order, advanced order, green rule disclosure, price review |
 | `06-security-testing-observability.md#T-06.09.03.07` | done | Recorded batch work | Write RTL tests for wallet/invoice/payment pages: balance display, top-up, invoice payment, refund view |
 | `06-security-testing-observability.md#T-06.09.03.08` | verify | Inventory needed | Write RTL tests for admin pages: configuration, role management, product/settings CRUD |
