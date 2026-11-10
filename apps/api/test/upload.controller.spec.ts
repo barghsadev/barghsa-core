@@ -626,7 +626,7 @@ describe('UploadController', () => {
         key: 'uploads/document/some-uuid.pdf',
         status: 'recorded',
       });
-      expect(mockImmutableService.createRecord).toHaveBeenCalledWith(
+      expect(reservation.complete).toHaveBeenCalledWith(
         expect.objectContaining({
           storageKey: 'uploads/document/some-uuid.pdf',
           fileSize: 18,
@@ -636,7 +636,8 @@ describe('UploadController', () => {
             purpose: 'bank_receipt',
             profileId: 'aaaaaaaa-aaaa-7aaa-8aaa-aaaaaaaaaaaa',
           }),
-        })
+        }),
+        undefined
       );
     });
 
@@ -655,8 +656,9 @@ describe('UploadController', () => {
         req
       );
 
-      expect(mockImmutableService.createRecord).toHaveBeenCalledWith(
-        expect.objectContaining({ fileSize: 18 })
+      expect(reservation.complete).toHaveBeenCalledWith(
+        expect.objectContaining({ fileSize: 18 }),
+        undefined
       );
     });
 

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T04:42:16+00:00",
-  "source_commit": "6757a7dc07f908b726fd33adcdca07d038f2e2a3",
+  "updated": "2026-11-10T04:43:41+00:00",
+  "source_commit": "37e37c7f0440d832a8f2951cd1749aa04896257d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -18483,10 +18483,12 @@
         "story": "01-platform-infrastructure.md#spec-5a483d9327c7"
       },
       "requirement": "- **T-07.05.01:** Enforce “no external call inside a database transaction”\n  - **Notes:** Add a Semgrep/custom static-analysis rule for Drizzle transaction callbacks and provider/network calls. Add representative positive/negative fixtures, run it in the PR gate, and document the persist-intent → commit → call asynchronously → apply idempotent result pattern.\n  - **Dependencies:** T-05.03.04\n  - **Complexity:** M",
-      "status": "done",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [],
+      "remaining": [
+        "The mandatory Semgrep guard and fixtures passed for Drizzle callbacks. Raw PostgreSQL multipart completion and abort still hold row locks during S3 calls. Persist a durable operation claim before provider I/O and prove safe retry and concurrent completion, abort and cleanup."
+      ],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -18516,7 +18518,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-transaction-provider-static-guard"
+          "release-0.6-transaction-provider-static-guard",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -453016,7 +453019,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453056,7 +453060,7 @@
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
-              "sha256": "be2677c8813eec84ecb57ce569ea62e756dd8782355d067e7cb73b84978c9524"
+              "sha256": "2090f6816dd6ad70e8b34f08f2d8979a827cf08c1ba50f5caedc56d1cf49af2e"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -453522,7 +453526,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453562,7 +453567,7 @@
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
-              "sha256": "be2677c8813eec84ecb57ce569ea62e756dd8782355d067e7cb73b84978c9524"
+              "sha256": "2090f6816dd6ad70e8b34f08f2d8979a827cf08c1ba50f5caedc56d1cf49af2e"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -454321,7 +454326,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -454361,7 +454367,7 @@
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
-              "sha256": "be2677c8813eec84ecb57ce569ea62e756dd8782355d067e7cb73b84978c9524"
+              "sha256": "2090f6816dd6ad70e8b34f08f2d8979a827cf08c1ba50f5caedc56d1cf49af2e"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -454823,7 +454829,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -454907,7 +454914,7 @@
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
-              "sha256": "be2677c8813eec84ecb57ce569ea62e756dd8782355d067e7cb73b84978c9524"
+              "sha256": "2090f6816dd6ad70e8b34f08f2d8979a827cf08c1ba50f5caedc56d1cf49af2e"
             },
             {
               "path": "apps/web/e2e/contract-pdf-scanning.spec.ts",
@@ -455667,7 +455674,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455707,7 +455715,7 @@
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
-              "sha256": "be2677c8813eec84ecb57ce569ea62e756dd8782355d067e7cb73b84978c9524"
+              "sha256": "2090f6816dd6ad70e8b34f08f2d8979a827cf08c1ba50f5caedc56d1cf49af2e"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -456167,7 +456175,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -456207,7 +456216,7 @@
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
-              "sha256": "be2677c8813eec84ecb57ce569ea62e756dd8782355d067e7cb73b84978c9524"
+              "sha256": "2090f6816dd6ad70e8b34f08f2d8979a827cf08c1ba50f5caedc56d1cf49af2e"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -456691,7 +456700,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -456731,7 +456741,7 @@
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
-              "sha256": "be2677c8813eec84ecb57ce569ea62e756dd8782355d067e7cb73b84978c9524"
+              "sha256": "2090f6816dd6ad70e8b34f08f2d8979a827cf08c1ba50f5caedc56d1cf49af2e"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -457215,7 +457225,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -457255,7 +457266,7 @@
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
-              "sha256": "be2677c8813eec84ecb57ce569ea62e756dd8782355d067e7cb73b84978c9524"
+              "sha256": "2090f6816dd6ad70e8b34f08f2d8979a827cf08c1ba50f5caedc56d1cf49af2e"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -457739,7 +457750,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -457779,7 +457791,7 @@
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
-              "sha256": "be2677c8813eec84ecb57ce569ea62e756dd8782355d067e7cb73b84978c9524"
+              "sha256": "2090f6816dd6ad70e8b34f08f2d8979a827cf08c1ba50f5caedc56d1cf49af2e"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -458262,7 +458274,8 @@
           "release-0.6-document-template-malware-gate",
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458302,7 +458315,7 @@
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
-              "sha256": "be2677c8813eec84ecb57ce569ea62e756dd8782355d067e7cb73b84978c9524"
+              "sha256": "2090f6816dd6ad70e8b34f08f2d8979a827cf08c1ba50f5caedc56d1cf49af2e"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -486318,7 +486331,8 @@
         "batches": [
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "current_acceptance": null
       }
@@ -750740,7 +750754,7 @@
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
-              "sha256": "be2677c8813eec84ecb57ce569ea62e756dd8782355d067e7cb73b84978c9524"
+              "sha256": "2090f6816dd6ad70e8b34f08f2d8979a827cf08c1ba50f5caedc56d1cf49af2e"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -753595,7 +753609,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -754728,7 +754743,7 @@
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
-              "sha256": "be2677c8813eec84ecb57ce569ea62e756dd8782355d067e7cb73b84978c9524"
+              "sha256": "2090f6816dd6ad70e8b34f08f2d8979a827cf08c1ba50f5caedc56d1cf49af2e"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -757469,7 +757484,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -761443,21 +761459,10 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile every epic-01 and epic-06 criterion with the existing code and current operational evidence.",
-        "Retire obsolete PR-only requirements under the approved direct-main workflow, without weakening production checks.",
-        "Run authenticated ZAP probes against the exact accepted v0.6.0 staging candidate and disposition any findings. The v0.5.0 receipt verifies the deployed staging integration only.",
-        "Earlier full workflow 42709841616 at fa7d7416 failed production browser checks with 70 unexpected cases across 14 suites, 2835 expected, 2 skipped and zero flakes. Browser coverage mapping refused the incomplete run. Six representative form-accessibility cases reproduced on the newer built source. Diagnose the affected fixtures and application behavior and obtain the complete passing final candidate browser gate.",
-        "The first failed-browser cohort now has targeted Chromium and mobile Safari evidence for Terms detail focus, address dialog and late city results, branding labels and tab navigation, verification mode and wallet limit recovery. Remaining failing cohorts and the complete candidate matrix still need disposition and a passing receipt.",
-        "Protected preflight 42742923993 failed three OTP cases at 0d12a1df after strict validation rejected obsolete caller fields. Updated assertions prove the invalid requests cannot reach resend or consume the contact challenge, and the valid requests preserve route purpose and concurrent single use. The exact cumulative hosted preflight remains required.",
-        "Eight targeted Chromium and mobile Safari cases verify address deletion recovery, focus and profile-scoped creation in English and Persian. The remaining production browser cohorts and final matrix still require a passing receipt.",
-        "The session revocation and trusted-device denial cohort passed, with all related device and location browser cases passing in both locales and browser projects. The full browser gate remains open.",
-        "The contract-limit, invoice due-period and VAT recovery cohort passed all 28 targeted cases in Chromium and mobile Safari. The full production browser gate remains open.",
-        "Sixteen targeted preference recovery and verification contrast cases passed in both languages and browser projects. Remaining cohorts and the full release browser matrix still require their own receipts.",
-        "Twelve targeted notification editor, delivery-window, history and test receipt cases passed in English and Persian across Chromium and mobile Safari. Remaining cohorts and the exact production browser gate still require their own receipts.",
-        "The electricity catalogue and order confirmation cohort passed twelve cases across Chromium and mobile Safari. The remaining electricity draft, finance history and staff browser cases still require verification.",
-        "Rejected electricity contracts remain readable and document mutations stay unavailable. Four linked-intake browser cases passed. Preflight 42747135644 failed five receipt tests because mock record responses lacked the Fetch clone method. All 96 affected page and shared caller tests pass locally. The exact cumulative preflight and remaining release browser cases are still required.",
-        "Four guarded draft cases and twelve related customer financial-history and contract activation cases passed in Chromium and mobile Safari. The remaining staff, document and inbox cases still require verification, followed by the full candidate gate.",
-        "The remaining previously failing agent editor, document review, team activity and inbox cases passed all twenty English/Persian Chromium and mobile Safari variants. The full candidate browser matrix, combined coverage and live gates still require receipts."
+        "Reconcile every epic-01 and epic-06 criterion with current source and operational evidence. Apply the approved direct-main workflow while preserving all production gates.",
+        "The initial production browser run had 70 unexpected cases. All affected cohorts now have targeted Chromium and mobile Safari evidence. Finish the full candidate matrix, source coverage and receipt review.",
+        "Protected preflight 42752579875 failed two upload reservation mock expectations. The updated expectations retain uploader, purpose, trusted size and exact optional scan-job arguments. All 97 affected local tests passed. Verify the cumulative exact-SHA hosted checks.",
+        "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
       "depends_on": [],
@@ -761564,7 +761569,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-customer-draft-and-contract-history-browser",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-upload-preflight-reservation-assertions"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -863631,6 +863637,49 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/bill-provider-transport",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "b1d92225cf95cf12a43d69b3f6b9d6517399cc8f1e919f58621e6af45eb2887b"
+    },
+    "release-0.6-upload-preflight-reservation-assertions": {
+      "batch": "release-0.6-upload-preflight-reservation-assertions",
+      "base_commit": "37e37c7f0440d832a8f2951cd1749aa04896257d",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.01.01",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/test/upload.controller.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+          "sha256": "00b721e83787fbce88f994f0c25d22651d1b3f59c0981340e75f5c437caac88a"
+        },
+        {
+          "path": "apps/api/src/upload/multipart-http.integration.test.ts",
+          "sha256": "0ee98fc4cf227e14756ddae7f3625ef888af7631412c26c4a35ae66ec3d817e6"
+        },
+        {
+          "path": "apps/api/src/upload/upload-reservations.ts",
+          "sha256": "258da4b64f3a10d90fc8e1bcfb24bcc52f6e192487ad88be72e28a9b94cc012b"
+        },
+        {
+          "path": "apps/api/src/upload/upload.service.ts",
+          "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+        },
+        {
+          "path": "apps/api/test/upload.controller.spec.ts",
+          "sha256": "2090f6816dd6ad70e8b34f08f2d8979a827cf08c1ba50f5caedc56d1cf49af2e"
+        }
+      ],
+      "checks": [
+        "Protected preflight 42752579875 failed two upload controller expectations. The local baseline reproduced the same two failures. The mocked function is completeUpload(options, scanJobId), with undefined in the fixture without a scanner.",
+        "Both tests now assert the exact optional scan-job argument alongside the existing storage identity, owner, purpose and trusted size assertions. All 97 related upload, access, content policy and invoice receipt tests passed. Lint, formatting and diff checks passed.",
+        "The upload source review also found multipart completion and abort still hold raw PostgreSQL row locks during S3 calls. The pinned Semgrep rule covers Drizzle transaction callbacks. Raw multipart operations need a durable ownership claim, provider I/O after commit and idempotent finalization.",
+        "Scanner configuration, current vendor signatures and real clean, EICAR, unavailable and retry receipts remain required. No application scanner or authorization behavior changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/preflight-42752579875",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "2c0cb1a018e25846e22e77d8c9b6f117966d18d7a6b644ff80210d1b3e812e1d"
     }
   },
   "historical_improvements": [
