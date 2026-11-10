@@ -7,6 +7,16 @@ previous commit on the pushed ref. The checker records the merge base and commit
 JSON artifact. Test failures remain failures even when the coverage artifact passes. Ordinary
 affected-test runs report their scope separately.
 
+Ordinary pushes run the Vitest suites for changed workspace packages and their
+dependents. The package graph includes callers that import built workspace
+outputs or exercise them through a spawned process. A push without an available
+base runs all workspace tests.
+
+Use Vitest's `it.each` for financial examples with distinct inputs and expected
+amounts. Use fake timers for clock-sensitive cases and fixed or scripted values
+at the UUID and randomness boundaries. The worker's deterministic provider
+fakes exercise retry and idempotency behavior without credentials.
+
 Changed application and package source is grouped by package and criticality.
 General changed executable lines require 80% line and 75% branch coverage. Modified
 critical files require 90% line and 85% branch coverage across the whole file.

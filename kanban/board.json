@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T05:25:56+00:00",
-  "source_commit": "f924f47edf0b1e803c153fbaa1704bde53bf7e41",
+  "updated": "2026-11-10T05:30:53+00:00",
+  "source_commit": "1e30cec9bd91ae85f07bc55f1b0bd3091e7a3a7f",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -4051,7 +4051,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4079,7 +4080,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             }
           ],
           "checks": [
@@ -4443,7 +4444,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4459,7 +4461,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4646,7 +4648,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -4670,7 +4673,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             }
           ],
           "checks": [
@@ -4955,7 +4958,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -4963,7 +4967,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".size-limit.json",
@@ -5175,7 +5179,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-critical-file-coverage-and-openapi"
+          "release-0.6-critical-file-coverage-and-openapi",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5215,7 +5220,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5291,7 +5296,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-critical-file-coverage-and-openapi"
+          "release-0.6-critical-file-coverage-and-openapi",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5331,7 +5337,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5694,7 +5700,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-critical-file-coverage-and-openapi"
+          "release-0.6-critical-file-coverage-and-openapi",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5734,7 +5741,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -8489,7 +8496,8 @@
         ],
         "batches": [
           "release-0.6-database-migration-baseline-and-upgrade",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "current-migration-source-and-native-postgresql-receipts",
@@ -8509,7 +8517,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             }
           ],
           "checks": [
@@ -13284,7 +13292,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13292,7 +13301,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "docs/development/ci.md",
@@ -13367,7 +13376,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13375,7 +13385,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -13464,7 +13474,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13472,7 +13483,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "package.json",
@@ -13677,7 +13688,8 @@
         "batches": [
           "release-0.6-current-ci-definition-contract-and-coverage-controls",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-critical-file-coverage-and-openapi"
+          "release-0.6-critical-file-coverage-and-openapi",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13685,11 +13697,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "docs/changed-coverage.md",
-              "sha256": "458c4823aa6fca855097afca9f854579c099e2d2dc72d7ad72a1a3a8cdce7284"
+              "sha256": "83f335d8ec10412de614fcdd983b13e9704163521a4654002331a09c3a7e294c"
             },
             {
               "path": "scripts/check-changed-coverage.py",
@@ -17730,7 +17742,8 @@
         "batches": [
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -17742,7 +17755,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "docs/development/ci.md",
@@ -17822,7 +17835,8 @@
         "batches": [
           "release-0.6-workspace-editor-and-formatter",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -17838,7 +17852,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".prettierignore",
@@ -17906,7 +17920,8 @@
         "batches": [
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -17923,7 +17938,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".husky/commit-msg",
@@ -18628,7 +18643,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -18642,7 +18658,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".prettierignore",
@@ -448180,7 +448196,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448188,7 +448205,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -448594,7 +448611,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448602,7 +448620,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -449152,7 +449170,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "status": "done",
@@ -449160,7 +449179,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -449537,7 +449556,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "status": "done",
@@ -449545,7 +449565,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -449922,7 +449942,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "status": "done",
@@ -449930,7 +449951,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -482431,7 +482452,8 @@
           "release-0.6-container-runtime-hardening",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -482439,7 +482461,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "Dockerfile.web",
@@ -482639,7 +482661,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staging-pilot-proxy-log-redaction",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -482683,7 +482706,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -482739,7 +482762,8 @@
           "release-0.6-container-runtime-hardening",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -482747,7 +482771,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "Dockerfile.web",
@@ -483047,7 +483071,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-staging-pilot-proxy-log-redaction",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -483075,7 +483100,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             }
           ],
           "checks": [
@@ -485176,7 +485201,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-transaction-provider-static-guard"
+          "release-0.6-transaction-provider-static-guard",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -485184,7 +485210,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -488587,7 +488613,8 @@
           "release-0.6-diagnostic-history-public-digest",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -488599,7 +488626,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".gitignore",
@@ -488674,7 +488701,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-verified-auth-specification-digest",
           "release-0.6-diagnostic-history-public-digest",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -488686,7 +488714,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".gitignore",
@@ -488815,7 +488843,8 @@
           "release-0.6-nightly-advisory-and-schema-gate",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -488823,7 +488852,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -488928,7 +488957,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-transaction-provider-static-guard"
+          "release-0.6-transaction-provider-static-guard",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -488936,7 +488966,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -488999,7 +489029,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -489007,7 +489038,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "Dockerfile.base",
@@ -489079,7 +489110,8 @@
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-verified-auth-specification-digest",
           "release-0.6-diagnostic-history-public-digest",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -489091,7 +489123,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".gitignore",
@@ -489204,7 +489236,8 @@
           "release-0.6-production-quarantine-guard",
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -489216,7 +489249,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -489757,7 +489790,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -489781,7 +489815,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -490799,7 +490833,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-critical-file-coverage-and-openapi"
+          "release-0.6-critical-file-coverage-and-openapi",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -490859,7 +490894,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -490886,19 +490921,60 @@
         "story": "06-security-testing-observability.md#spec-dd69de0e23f0"
       },
       "requirement": "| T-06.09.01.02 | Implement test utilities: controllable clock, fixed UUIDs, deterministic random, fake provider factories | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-test-fixtures-and-affected-dependents"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "1e30cec9bd91ae85f07bc55f1b0bd3091e7a3a7f",
+          "checks": [
+            "The existing fixed-clock, fixed UUID and controlled crypto fixtures exercise bill-provider windows, invoice creation and staff temporary passwords. The deterministic SMTP, Resend and SMS.ir adapters preserve scripted errors and accepted receipts on replay.",
+            "The reviewed API unit suites passed 68 cases and worker fixture suites passed 34 cases."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.test.ts",
+              "sha256": "729f164473ece24ca2472514b76558e4538d8d85bbc58486bbcee3a006aab7cc"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
+              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+            },
+            {
+              "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+              "sha256": "4df5792995db7317d892eadc39f5c197fb84a1983ef2044cf45e3803ef4f3fc4"
+            },
+            {
+              "path": "apps/worker/src/notifications/delivery-window.test.ts",
+              "sha256": "54c15f7977f37308f99b34a89e8801cef223747103716a9ebdfc0064d70a7fec"
+            },
+            {
+              "path": "apps/worker/src/notifications/testing/provider-fakes.test.ts",
+              "sha256": "71efa640bd6e4b96385d584104c17ccc8db551c7862fff67ddd158a1a2d44a28"
+            },
+            {
+              "path": "apps/worker/src/notifications/testing/provider-fakes.ts",
+              "sha256": "10f050dda2a0d3636f282c0badba0c2549bdfa46e0c12c8fbb017f1f208549a0"
+            },
+            {
+              "path": "docs/changed-coverage.md",
+              "sha256": "83f335d8ec10412de614fcdd983b13e9704163521a4654002331a09c3a7e294c"
+            }
+          ]
+        }
       }
     },
     {
@@ -490912,19 +490988,56 @@
         "story": "06-security-testing-observability.md#spec-dd69de0e23f0"
       },
       "requirement": "| T-06.09.01.03 | Implement table-driven test helper for financial examples (inputs → expected outputs) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-test-fixtures-and-affected-dependents"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "1e30cec9bd91ae85f07bc55f1b0bd3091e7a3a7f",
+          "checks": [
+            "Vitest it.each runs named financial examples directly from rows of inputs and expected outcomes. The native VAT table checks both sides of the product-rate window with exact rates and authority source, while refund rows retain the failure and replay assertions.",
+            "The exact successful hosted job 129636126527 passed 11 native VAT cases and 23 external refund cases. The native spec and refund service sources were unchanged through the reviewed base. The local electricity pricing, price adjustment and invoice fixture checks passed within the 68 API cases."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.test.ts",
+              "sha256": "62984bf2de49eb93d523da2628e9d407a3e70c67ea27401618f2df5a5e3f8108"
+            },
+            {
+              "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+              "sha256": "4df5792995db7317d892eadc39f5c197fb84a1983ef2044cf45e3803ef4f3fc4"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+              "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "debe727fbe8223327b753f6d41f248d8e2081e8e033468429bdb9eb67ab90449"
+            },
+            {
+              "path": "docs/changed-coverage.md",
+              "sha256": "83f335d8ec10412de614fcdd983b13e9704163521a4654002331a09c3a7e294c"
+            }
+          ]
+        }
       }
     },
     {
@@ -490938,18 +491051,21 @@
         "story": "06-security-testing-observability.md#spec-dd69de0e23f0"
       },
       "requirement": "| T-06.09.01.04 | Add `vitest --related` for affected-only test runs in CI | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify an exact hosted push with the package-graph dependent selector and keep the full release workflow distinct.",
+        "Reconcile the specification command with package-level selection that includes production build and subprocess consumers."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-test-fixtures-and-affected-dependents"
+        ],
         "current_acceptance": null
       }
     },
@@ -493579,7 +493695,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-transaction-provider-static-guard"
+          "release-0.6-transaction-provider-static-guard",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -493587,7 +493704,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -493645,7 +493762,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-transaction-provider-static-guard"
+          "release-0.6-transaction-provider-static-guard",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -493653,7 +493771,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -494019,7 +494137,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-critical-file-coverage-and-openapi"
+          "release-0.6-critical-file-coverage-and-openapi",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -494032,7 +494151,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -494052,7 +494171,7 @@
             },
             {
               "path": "docs/changed-coverage.md",
-              "sha256": "458c4823aa6fca855097afca9f854579c099e2d2dc72d7ad72a1a3a8cdce7284"
+              "sha256": "83f335d8ec10412de614fcdd983b13e9704163521a4654002331a09c3a7e294c"
             },
             {
               "path": "packages/db/vitest.config.ts",
@@ -494107,7 +494226,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-critical-file-coverage-and-openapi"
+          "release-0.6-critical-file-coverage-and-openapi",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -494119,7 +494239,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -494139,7 +494259,7 @@
             },
             {
               "path": "docs/changed-coverage.md",
-              "sha256": "458c4823aa6fca855097afca9f854579c099e2d2dc72d7ad72a1a3a8cdce7284"
+              "sha256": "83f335d8ec10412de614fcdd983b13e9704163521a4654002331a09c3a7e294c"
             },
             {
               "path": "packages/db/vitest.config.ts",
@@ -494194,7 +494314,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-critical-file-coverage-and-openapi"
+          "release-0.6-critical-file-coverage-and-openapi",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -494208,7 +494329,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -494228,7 +494349,7 @@
             },
             {
               "path": "docs/changed-coverage.md",
-              "sha256": "458c4823aa6fca855097afca9f854579c099e2d2dc72d7ad72a1a3a8cdce7284"
+              "sha256": "83f335d8ec10412de614fcdd983b13e9704163521a4654002331a09c3a7e294c"
             },
             {
               "path": "packages/db/vitest.config.ts",
@@ -494283,7 +494404,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-critical-file-coverage-and-openapi"
+          "release-0.6-critical-file-coverage-and-openapi",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -494294,7 +494416,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -494314,7 +494436,7 @@
             },
             {
               "path": "docs/changed-coverage.md",
-              "sha256": "458c4823aa6fca855097afca9f854579c099e2d2dc72d7ad72a1a3a8cdce7284"
+              "sha256": "83f335d8ec10412de614fcdd983b13e9704163521a4654002331a09c3a7e294c"
             },
             {
               "path": "packages/db/vitest.config.ts",
@@ -494447,7 +494569,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-critical-file-coverage-and-openapi"
+          "release-0.6-critical-file-coverage-and-openapi",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "reconciled-existing",
@@ -494458,7 +494581,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "apps/api/openapi.json",
@@ -545065,7 +545188,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545073,7 +545197,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".size-limit.json",
@@ -545922,7 +546046,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545930,7 +546055,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".size-limit.json",
@@ -547304,7 +547429,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -547312,7 +547438,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".size-limit.json",
@@ -548112,7 +548238,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-isolated-compose-test-postgres"
+          "release-0.6-isolated-compose-test-postgres",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -548128,7 +548255,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -751146,7 +751273,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "apps/api/openapi.json",
@@ -755108,7 +755235,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -755161,7 +755289,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": "apps/api/openapi.json",
@@ -758989,7 +759117,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -760749,7 +760878,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "66b315261e112f4769ba306a760ff07f2843427c0955f80850118f47fb5dceec"
+              "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
             },
             {
               "path": ".size-limit.json",
@@ -762861,7 +762990,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-critical-file-coverage-and-openapi",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-test-fixtures-and-affected-dependents"
         ]
       }
     },
@@ -865955,6 +866085,93 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/api-identity-logs",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "47814a4aad362d55e7cdd8283582c7ca7e2ea72e0450624b9c7ae43c9d18ab11"
+    },
+    "release-0.6-test-fixtures-and-affected-dependents": {
+      "batch": "release-0.6-test-fixtures-and-affected-dependents",
+      "base_commit": "1e30cec9bd91ae85f07bc55f1b0bd3091e7a3a7f",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.09.01.04"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml",
+        "docs/changed-coverage.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "0cf3429f25a2afe8af1b9cac40c0fb197d9f8f7cbfdc074afae23227d9aad539"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.test.ts",
+          "sha256": "729f164473ece24ca2472514b76558e4538d8d85bbc58486bbcee3a006aab7cc"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
+          "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+          "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-price-adjustment.calculation.test.ts",
+          "sha256": "62984bf2de49eb93d523da2628e9d407a3e70c67ea27401618f2df5a5e3f8108"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
+          "sha256": "4df5792995db7317d892eadc39f5c197fb84a1983ef2044cf45e3803ef4f3fc4"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.integration.test.ts",
+          "sha256": "ef28851a2ebfe422bf4480b4cf95760f57e8266512e2507a4e7fdc1a347d2f70"
+        },
+        {
+          "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+          "sha256": "debe727fbe8223327b753f6d41f248d8e2081e8e033468429bdb9eb67ab90449"
+        },
+        {
+          "path": "apps/worker/src/notifications/delivery-window.test.ts",
+          "sha256": "54c15f7977f37308f99b34a89e8801cef223747103716a9ebdfc0064d70a7fec"
+        },
+        {
+          "path": "apps/worker/src/notifications/testing/provider-fakes.test.ts",
+          "sha256": "71efa640bd6e4b96385d584104c17ccc8db551c7862fff67ddd158a1a2d44a28"
+        },
+        {
+          "path": "apps/worker/src/notifications/testing/provider-fakes.ts",
+          "sha256": "10f050dda2a0d3636f282c0badba0c2549bdfa46e0c12c8fbb017f1f208549a0"
+        },
+        {
+          "path": "docs/changed-coverage.md",
+          "sha256": "83f335d8ec10412de614fcdd983b13e9704163521a4654002331a09c3a7e294c"
+        },
+        {
+          "path": "package.json",
+          "sha256": "520f7e66b45453c029fd754855856e5814186ae04f372876d0dd4d51335a9c06"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "acc5f4df899fea132ed03121d10e205838e901ab9d31cfec30ab08129e1b3ba8"
+        },
+        {
+          "path": "turbo.json",
+          "sha256": "9ccc230bf843adbb00f82183e5294607402abc9bffa324e30ffa21f65c6cd97c"
+        }
+      ],
+      "checks": [
+        "The existing fixed-clock, fixed UUID and controlled crypto fixtures exercise bill-provider windows, invoice creation and staff temporary passwords. The deterministic SMTP, Resend and SMS.ir adapters preserve scripted errors and accepted receipts on replay.",
+        "The reviewed API unit suites passed 68 cases and worker fixture suites passed 34 cases.",
+        "Vitest it.each runs named financial examples directly from rows of inputs and expected outcomes. The native VAT table checks both sides of the product-rate window with exact rates and authority source, while refund rows retain the failure and replay assertions.",
+        "The exact successful hosted job 129636126527 passed 11 native VAT cases and 23 external refund cases. The native spec and refund service sources were unchanged through the reviewed base. The local electricity pricing, price adjustment and invoice fixture checks passed within the 68 API cases.",
+        "A known shared-only errors change selected only shared tests before this fix. Turbo 2.10.11 dependent selection includes shared, API, database, web and worker test tasks for that same commit range.",
+        "The actual workflow shell selected the dependent filter with a valid push base, all workspace test packages for the null base, the existing affected PR filter, and the unchanged full release coverage command for manual dispatch. actionlint, formatting and diff checks passed.",
+        "Hosted verification of the changed workflow is pending. The package graph retains built-module and subprocess callers that a Vitest source-only selection can miss."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/affected-workspace-tests",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "d44100d81d89121756ccab5c86d4e2fa100b3c57926754cc9a21cf1ea9d2a800"
     }
   },
   "historical_improvements": [

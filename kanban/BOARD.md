@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T05:25:56+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T05:30:53+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1120 | Accepted with unchanged source bindings. |
-| verify | 194 | Existing work may be complete; inspect evidence before building. |
-| partial | 46 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 1122 | Accepted with unchanged source bindings. |
+| verify | 191 | Existing work may be complete; inspect evidence before building. |
+| partial | 47 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1251,9 +1251,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.08.03.04` | partial | Recorded batch work | Set up security event channel separate from ordinary error queues (e.g. dedicated Slack/alert channel) |
 | `06-security-testing-observability.md#T-06.08.03.05` | done | Recorded batch work | Define post-incident review process: timeline, root cause, corrective actions, documentation update |
 | `06-security-testing-observability.md#T-06.09.01.01` | done | Recorded batch work | Configure Vitest across all packages with shared config, coverage thresholds, and reporter |
-| `06-security-testing-observability.md#T-06.09.01.02` | verify | Inventory needed | Implement test utilities: controllable clock, fixed UUIDs, deterministic random, fake provider factories |
-| `06-security-testing-observability.md#T-06.09.01.03` | verify | Inventory needed | Implement table-driven test helper for financial examples (inputs → expected outputs) |
-| `06-security-testing-observability.md#T-06.09.01.04` | verify | Inventory needed | Add `vitest --related` for affected-only test runs in CI |
+| `06-security-testing-observability.md#T-06.09.01.02` | done | Recorded batch work | Implement test utilities: controllable clock, fixed UUIDs, deterministic random, fake provider factories |
+| `06-security-testing-observability.md#T-06.09.01.03` | done | Recorded batch work | Implement table-driven test helper for financial examples (inputs → expected outputs) |
+| `06-security-testing-observability.md#T-06.09.01.04` | partial | Recorded batch work | Add `vitest --related` for affected-only test runs in CI |
 | `06-security-testing-observability.md#T-06.09.02.01` | verify | Inventory needed | Author unit tests for all state machines: Orders, Contracts, Invoices, Payments, Refunds, Documents, Wallet transactions, Invitations, Verification cases |
 | `06-security-testing-observability.md#T-06.09.02.02` | done | Recorded batch work | Author unit tests for pricing engine: VAT calculation, discounts, rounding (half-up to IRR), electricity composition rules, Jalali period calculations |
 | `06-security-testing-observability.md#T-06.09.02.03` | verify | Inventory needed | Author unit tests for authorization policy: role permissions, capability checks, profile-scoped access, BOLA denial |
