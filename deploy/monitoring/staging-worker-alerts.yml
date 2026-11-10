@@ -7,4 +7,5 @@ groups:
         labels:
           severity: critical
         annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
           summary: Background worker cannot be scraped

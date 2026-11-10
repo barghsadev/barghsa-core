@@ -29,6 +29,12 @@ An alert priority selects the first response. The operator who confirms impact a
 - Platform and providers. [Bad deployment and rollback](../runbooks/bad-deployment.md). [Redis loss](../runbooks/redis-loss.md). [Notification outage](../runbooks/notification-outage.md). [AI provider outage](../runbooks/ai-provider-outage.md).
 - Security. [Security incident runbook](../runbooks/security-incident.md). [Credential compromise](../runbooks/credential-compromise.md).
 
+## Quarterly runbook review
+
+Operations leads the review in the first working week of each calendar quarter, with Finance, Security and the database operator reviewing their procedures. Check the severity, owner, escalation contact, steps and recovery checks against the current environment. Open each alert's `runbook_url` with an operator account and confirm that it leads to the procedure for that signal. Record the review and any follow-up in the existing operations issue tracker. [Application alert rules](../../deploy/monitoring/notification-alerts.yml). [Staging worker alert rule](../../deploy/monitoring/staging-worker-alerts.yml). [Prometheus alert annotations](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/#defining-alerting-rules).
+
+The repository review on November 10, 2026 checked the payment, refund, database, storage, notification, credential, deployment and AI procedures against the current rule definitions. The next review is due in the first working week of January 2027.
+
 ## Security incidents
 
 Restrict evidence access to the incident team. Record who collected each artifact and when. Preserve scoped audit events, sanitized logs, build and configuration identities, and the hashes of preserved artifacts. Keep credentials and customer data in protected storage. Coordinate isolation with security so evidence collection cannot prolong active compromise.

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T08:52:59+00:00",
-  "source_commit": "f457724f453c69e34cb751eca5f97f9f7e5cb438",
+  "updated": "2026-11-10T08:58:33+00:00",
+  "source_commit": "004d94efb958918d4d1c69f061a7b34dc4677929",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -18176,7 +18176,8 @@
         "batches": [
           "release-0.6-incident-response-and-runbooks",
           "release-0.6-incident-runbook-criteria",
-          "release-0.6-security-incident-and-review-prerequisites"
+          "release-0.6-security-incident-and-review-prerequisites",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -18184,7 +18185,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
+              "sha256": "6ae99b299a8485f7497f7114723ccd9bbc2a4b829168eb3b613e7b8343178ffe"
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
@@ -18484,7 +18485,8 @@
           "release-0.6-incident-response-and-runbooks",
           "release-0.6-incident-runbook-criteria",
           "release-0.6-security-incident-and-review-prerequisites",
-          "release-0.6-latency-rehearsal-budgets"
+          "release-0.6-latency-rehearsal-budgets",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -18492,7 +18494,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
+              "sha256": "6ae99b299a8485f7497f7114723ccd9bbc2a4b829168eb3b613e7b8343178ffe"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -74476,7 +74478,8 @@
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-provider-timeout-and-redis-recovery",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -75312,11 +75315,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -79569,7 +79572,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-provider-egress-regressions"
+          "release-0.6-provider-egress-regressions",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -79589,11 +79593,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -88097,7 +88101,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -88281,11 +88286,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -89067,7 +89072,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -89251,11 +89257,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -90037,7 +90043,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -90221,11 +90228,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -91008,7 +91015,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -91192,11 +91200,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -91978,7 +91986,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -92162,11 +92171,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -92951,7 +92960,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -93075,11 +93085,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -93708,7 +93718,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -93856,11 +93867,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -94364,7 +94375,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -94548,11 +94560,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -95203,7 +95215,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-timeout-and-redis-recovery",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -95323,11 +95336,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -108315,7 +108328,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -108563,11 +108577,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             }
           ],
           "checks": [
@@ -447128,7 +447142,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-timeout-and-redis-recovery",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -447248,11 +447263,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -447596,7 +447611,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-timeout-and-redis-recovery",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -447716,11 +447732,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -448063,7 +448079,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-timeout-and-redis-recovery",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -448183,11 +448200,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -448532,7 +448549,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-timeout-and-redis-recovery",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448652,11 +448670,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -449089,7 +449107,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-timeout-and-redis-recovery",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -449237,11 +449256,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "packages/db/drizzle/0035_create_sms_provider_configs.sql",
@@ -450076,7 +450095,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-diagnostic-privacy",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-provider-timeout-and-redis-recovery"
+          "release-0.6-provider-timeout-and-redis-recovery",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -450304,7 +450324,7 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -462946,7 +462966,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463194,11 +463215,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             }
           ],
           "checks": [
@@ -463447,7 +463468,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -463695,11 +463717,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             }
           ],
           "checks": [
@@ -463950,7 +463972,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464198,11 +464221,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             }
           ],
           "checks": [
@@ -464451,7 +464474,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464699,11 +464723,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             }
           ],
           "checks": [
@@ -493366,7 +493390,8 @@
           "docs/operations/incident-response.md"
         ],
         "batches": [
-          "release-0.6-security-incident-and-review-prerequisites"
+          "release-0.6-security-incident-and-review-prerequisites",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "reviewed-security-incident-runbook",
@@ -493374,7 +493399,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
+              "sha256": "6ae99b299a8485f7497f7114723ccd9bbc2a4b829168eb3b613e7b8343178ffe"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -493561,7 +493586,8 @@
           "docs/operations/incident-response.md"
         ],
         "batches": [
-          "release-0.6-security-incident-and-review-prerequisites"
+          "release-0.6-security-incident-and-review-prerequisites",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "reviewed-security-incident-runbook",
@@ -493569,7 +493595,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
+              "sha256": "6ae99b299a8485f7497f7114723ccd9bbc2a4b829168eb3b613e7b8343178ffe"
             },
             {
               "path": "docs/runbooks/security-incident.md",
@@ -498029,7 +498055,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-reconciliation-failure-injection"
+          "release-0.6-reconciliation-failure-injection",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-reconciliation-recovery-tests",
@@ -498099,11 +498126,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "packages/db/src/schema/reconciliation-exceptions.ts",
@@ -500144,7 +500171,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -500172,11 +500200,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "docs/operations/refund-monitoring.md",
@@ -500833,7 +500861,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-external-provider-metrics-reconciliation",
-          "release-0.6-latency-rehearsal-budgets"
+          "release-0.6-latency-rehearsal-budgets",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -500849,7 +500878,7 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -500995,7 +501024,8 @@
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-outbox-worker-processing-metrics",
-          "release-0.6-external-provider-metrics-reconciliation"
+          "release-0.6-external-provider-metrics-reconciliation",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -501011,7 +501041,7 @@
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
-              "sha256": "f80c5b2811eb67b6e10fe3413ce9d7fb1fc8ed305e44ce2889a7212eb113c2f5"
+              "sha256": "c7b738195c243c38b78866489e61163a85172c9101d75c72014731ad3d5cb19e"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -501084,18 +501114,21 @@
         "story": "06-security-testing-observability.md#spec-e681e92bce32"
       },
       "requirement": "| T-06.15.01.08 | Every alert links to its dashboard and runbook | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Attach and verify an operator-accessible dashboard for every configured alert group, including finance, AI and worker health. The repository currently contains the notifications and outbox dashboard.",
+        "Verify runbook and dashboard links from actual deployed operator-facing alert receipts. All 13 configured rules now carry source-bound runbook URLs and the rule fixture passed."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-alert-runbook-references-and-review"
+        ],
         "current_acceptance": null
       }
     },
@@ -501297,7 +501330,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-refund-overdue-alert-and-native-worker",
@@ -501321,11 +501355,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -501418,7 +501452,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -501446,11 +501481,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "docs/operations/refund-monitoring.md",
@@ -501546,7 +501581,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-backlog-metrics-alert-rules-and-receipts",
@@ -501570,11 +501606,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -501652,7 +501688,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-profile-payment-refund-admission"
+          "release-0.6-profile-payment-refund-admission",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "verified-payment-idempotency-conflict-p1",
@@ -501696,11 +501733,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "docs/operations/staging-payment-sandbox.md",
@@ -501772,7 +501809,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-runtime-failure-log-redaction",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -501812,11 +501850,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "docs/operations/staging-payment-sandbox.md",
@@ -502372,7 +502410,8 @@
         ],
         "batches": [
           "release-0.6-incident-runbook-criteria",
-          "release-0.6-security-incident-and-review-prerequisites"
+          "release-0.6-security-incident-and-review-prerequisites",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -502384,7 +502423,7 @@
             },
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
+              "sha256": "6ae99b299a8485f7497f7114723ccd9bbc2a4b829168eb3b613e7b8343178ffe"
             }
           ],
           "checks": [
@@ -502419,7 +502458,8 @@
         ],
         "batches": [
           "release-0.6-incident-runbook-criteria",
-          "release-0.6-security-incident-and-review-prerequisites"
+          "release-0.6-security-incident-and-review-prerequisites",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -502431,7 +502471,7 @@
             },
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
+              "sha256": "6ae99b299a8485f7497f7114723ccd9bbc2a4b829168eb3b613e7b8343178ffe"
             }
           ],
           "checks": [
@@ -502467,7 +502507,8 @@
         ],
         "batches": [
           "release-0.6-incident-runbook-criteria",
-          "release-0.6-security-incident-and-review-prerequisites"
+          "release-0.6-security-incident-and-review-prerequisites",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -502483,7 +502524,7 @@
             },
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
+              "sha256": "6ae99b299a8485f7497f7114723ccd9bbc2a4b829168eb3b613e7b8343178ffe"
             }
           ],
           "checks": [
@@ -502518,7 +502559,8 @@
         ],
         "batches": [
           "release-0.6-incident-runbook-criteria",
-          "release-0.6-security-incident-and-review-prerequisites"
+          "release-0.6-security-incident-and-review-prerequisites",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -502530,7 +502572,7 @@
             },
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
+              "sha256": "6ae99b299a8485f7497f7114723ccd9bbc2a4b829168eb3b613e7b8343178ffe"
             }
           ],
           "checks": [
@@ -502565,7 +502607,8 @@
         ],
         "batches": [
           "release-0.6-incident-runbook-criteria",
-          "release-0.6-security-incident-and-review-prerequisites"
+          "release-0.6-security-incident-and-review-prerequisites",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -502577,7 +502620,7 @@
             },
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
+              "sha256": "6ae99b299a8485f7497f7114723ccd9bbc2a4b829168eb3b613e7b8343178ffe"
             }
           ],
           "checks": [
@@ -502612,7 +502655,8 @@
         ],
         "batches": [
           "release-0.6-incident-runbook-criteria",
-          "release-0.6-security-incident-and-review-prerequisites"
+          "release-0.6-security-incident-and-review-prerequisites",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -502624,7 +502668,7 @@
             },
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
+              "sha256": "6ae99b299a8485f7497f7114723ccd9bbc2a4b829168eb3b613e7b8343178ffe"
             }
           ],
           "checks": [
@@ -502660,7 +502704,8 @@
         "batches": [
           "release-0.6-staging-image-rollback",
           "release-0.6-incident-runbook-criteria",
-          "release-0.6-security-incident-and-review-prerequisites"
+          "release-0.6-security-incident-and-review-prerequisites",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -502672,7 +502717,7 @@
             },
             {
               "path": "docs/operations/incident-response.md",
-              "sha256": "8fa9107314b529741fadebcfc701c4323ae7fd0d34cb05617cdfe4b9fc62d0a1"
+              "sha256": "6ae99b299a8485f7497f7114723ccd9bbc2a4b829168eb3b613e7b8343178ffe"
             }
           ],
           "checks": [
@@ -502694,19 +502739,86 @@
         "story": "06-security-testing-observability.md#spec-b335ba1cbf53"
       },
       "requirement": "| T-06.17.01.08 | Store runbooks in `docs/runbooks/` with alert links; review quarterly | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-alert-runbook-references-and-review"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-quarterly-incident-runbook-review",
+          "reviewed_sha": "004d94efb958918d4d1c69f061a7b34dc4677929",
+          "checks": [
+            "The November 10 repository review checked runbook severity, assigned service owners, response, escalation and recovery verification. The incident guide now assigns the first working week of each quarter for review and records the next review due in January 2027.",
+            "All 13 configured alerts have a specific runbook_url annotation. An authenticated read of remote main confirmed the four referenced runbook files. Structural review verified 73 repository links and 19 exact runbook assertions. Removing only the added annotation keys produces the same rules and fixture assertions as the previous source.",
+            "Promtool on the existing pinned image accepted both exact rule files and passed the entire existing rule fixture. Input hashes were read back in the disposable container. Formatting and diff checks passed.",
+            "The repository and rule-link review is complete. The dashboard criterion remains open for usable per-alert dashboard targets and deployed operator-facing receipt checks. No live monitoring update or external notification was sent in this batch."
+          ],
+          "source_evidence": [
+            {
+              "path": "deploy/monitoring/notification-alerts.test.yml",
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
+            },
+            {
+              "path": "deploy/monitoring/notification-alerts.yml",
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
+            },
+            {
+              "path": "deploy/monitoring/staging-prometheus.yml",
+              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+            },
+            {
+              "path": "deploy/monitoring/staging-worker-alerts.yml",
+              "sha256": "c7b738195c243c38b78866489e61163a85172c9101d75c72014731ad3d5cb19e"
+            },
+            {
+              "path": "docs/operations/incident-response.md",
+              "sha256": "6ae99b299a8485f7497f7114723ccd9bbc2a4b829168eb3b613e7b8343178ffe"
+            },
+            {
+              "path": "docs/runbooks/ai-provider-outage.md",
+              "sha256": "1850add8f2109e4f27c2c238f7dd97ed9daaafc8812e07b7cf82bfca10c104fa"
+            },
+            {
+              "path": "docs/runbooks/bad-deployment.md",
+              "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+            },
+            {
+              "path": "docs/runbooks/credential-compromise.md",
+              "sha256": "7ec48a447595fd62046804e970a0272ce6510fcf29796b6253a987a63f096056"
+            },
+            {
+              "path": "docs/runbooks/database-failover.md",
+              "sha256": "96a04793edb15a9f7cb5fa6519c7d2da5827f7e72918cac172b6882816e6bb4f"
+            },
+            {
+              "path": "docs/runbooks/database-restore.md",
+              "sha256": "f98b041a7ec71d27be5b0bb9cc59e41cb33039f9f6343536962cb62a1efea494"
+            },
+            {
+              "path": "docs/runbooks/notification-outage.md",
+              "sha256": "6fea6084ab62bb9f939b56a1b8c3b8d0a33af8e2542532054b2b292938c45b9b"
+            },
+            {
+              "path": "docs/runbooks/payment-wallet-mismatch.md",
+              "sha256": "3d93ef1f083cf42d39853ad94c565d4ea0b1c8ecce85e3106b74b10dc6a37aa6"
+            },
+            {
+              "path": "docs/runbooks/refund-backlog.md",
+              "sha256": "a5d219b41a21ad89796e76b46c140db1ebfd520c1e315de17a27d45e039aea3e"
+            },
+            {
+              "path": "docs/runbooks/storage-outage.md",
+              "sha256": "17d1fc6fc38f41034e6d63d1567d14ce4f07d8242fe8b38cb94ac92a125db17f"
+            }
+          ]
+        }
       }
     },
     {
@@ -757942,11 +758054,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "deploy/staging/README.md",
@@ -759776,7 +759888,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-provider-timeout-and-redis-recovery",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -761937,11 +762050,11 @@
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
-              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+              "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
-              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
             },
             {
               "path": "deploy/staging/README.md",
@@ -763677,7 +763790,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-provider-timeout-and-redis-recovery",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-alert-runbook-references-and-review"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -874271,6 +874385,87 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/profile-export-concurrency",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "0d89e2caeb2f5f2ba2ba13dbe9db4f23b60fa431a82c8ee1cca74c52ea6975cd"
+    },
+    "release-0.6-alert-runbook-references-and-review": {
+      "batch": "release-0.6-alert-runbook-references-and-review",
+      "base_commit": "004d94efb958918d4d1c69f061a7b34dc4677929",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.17.01.08",
+        "06-security-testing-observability.md#T-06.15.01.08"
+      ],
+      "changed_paths": [
+        "deploy/monitoring/notification-alerts.test.yml",
+        "deploy/monitoring/notification-alerts.yml",
+        "deploy/monitoring/staging-worker-alerts.yml",
+        "docs/operations/incident-response.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/notification-alerts.test.yml",
+          "sha256": "ea982f604d1533b362e182647711dad4d96cac016a48c7e1ef33b1fca3068a4d"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.yml",
+          "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+        },
+        {
+          "path": "deploy/monitoring/staging-worker-alerts.yml",
+          "sha256": "c7b738195c243c38b78866489e61163a85172c9101d75c72014731ad3d5cb19e"
+        },
+        {
+          "path": "docs/operations/incident-response.md",
+          "sha256": "6ae99b299a8485f7497f7114723ccd9bbc2a4b829168eb3b613e7b8343178ffe"
+        },
+        {
+          "path": "docs/runbooks/ai-provider-outage.md",
+          "sha256": "1850add8f2109e4f27c2c238f7dd97ed9daaafc8812e07b7cf82bfca10c104fa"
+        },
+        {
+          "path": "docs/runbooks/bad-deployment.md",
+          "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+        },
+        {
+          "path": "docs/runbooks/credential-compromise.md",
+          "sha256": "7ec48a447595fd62046804e970a0272ce6510fcf29796b6253a987a63f096056"
+        },
+        {
+          "path": "docs/runbooks/database-failover.md",
+          "sha256": "96a04793edb15a9f7cb5fa6519c7d2da5827f7e72918cac172b6882816e6bb4f"
+        },
+        {
+          "path": "docs/runbooks/database-restore.md",
+          "sha256": "f98b041a7ec71d27be5b0bb9cc59e41cb33039f9f6343536962cb62a1efea494"
+        },
+        {
+          "path": "docs/runbooks/notification-outage.md",
+          "sha256": "6fea6084ab62bb9f939b56a1b8c3b8d0a33af8e2542532054b2b292938c45b9b"
+        },
+        {
+          "path": "docs/runbooks/payment-wallet-mismatch.md",
+          "sha256": "3d93ef1f083cf42d39853ad94c565d4ea0b1c8ecce85e3106b74b10dc6a37aa6"
+        },
+        {
+          "path": "docs/runbooks/refund-backlog.md",
+          "sha256": "a5d219b41a21ad89796e76b46c140db1ebfd520c1e315de17a27d45e039aea3e"
+        },
+        {
+          "path": "docs/runbooks/storage-outage.md",
+          "sha256": "17d1fc6fc38f41034e6d63d1567d14ce4f07d8242fe8b38cb94ac92a125db17f"
+        }
+      ],
+      "checks": [
+        "The November 10 repository review checked runbook severity, assigned service owners, response, escalation and recovery verification. The incident guide now assigns the first working week of each quarter for review and records the next review due in January 2027.",
+        "All 13 configured alerts have a specific runbook_url annotation. An authenticated read of remote main confirmed the four referenced runbook files. Structural review verified 73 repository links and 19 exact runbook assertions. Removing only the added annotation keys produces the same rules and fixture assertions as the previous source.",
+        "Promtool on the existing pinned image accepted both exact rule files and passed the entire existing rule fixture. Input hashes were read back in the disposable container. Formatting and diff checks passed.",
+        "The repository and rule-link review is complete. The dashboard criterion remains open for usable per-alert dashboard targets and deployed operator-facing receipt checks. No live monitoring update or external notification was sent in this batch."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/alert-runbook-links",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "7f3afb42518feeb7a774071cb6a24bfa8387f4706b2d07b64d2a7dc94b3e561c"
     }
   },
   "historical_improvements": [

@@ -6,6 +6,7 @@ groups:
         labels:
           severity: warning
         annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
           summary: Email provider circuit is open
           description: 'Provider {{ $labels.provider_id }} stopped sending after repeated transient failures. Inspect provider health and delivery history; recovery permits one probe after 60 seconds.'
       - alert: SmsProviderLowCredit
@@ -14,6 +15,7 @@ groups:
           severity: warning
           priority: P2
         annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
           summary: SMS provider credit is low
           description: 'Provider {{ $labels.provider_id }} is below its configured credit threshold. Review the observed balance and replenish credit in /admin/sms-providers.'
       - alert: SmsProviderDegraded
@@ -21,6 +23,7 @@ groups:
         labels:
           severity: warning
         annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
           summary: SMS provider circuit is open
           description: 'Provider {{ $labels.provider_id }} stopped sending after provider failures. Inspect its configuration, health and delivery history; a configuration pause requires a tested replacement.'
       - alert: NotificationDeadLettersPending
@@ -29,6 +32,7 @@ groups:
         labels:
           severity: warning
         annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
           summary: Notification failures need triage
           description: '{{ $value }} notification deliveries remain open in the dead-letter queue. Inspect attempt history at /admin/failed-notifications before retrying.'
       - alert: NotificationDeadLettersAccumulating
@@ -37,6 +41,7 @@ groups:
         labels:
           severity: critical
         annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
           summary: Notification failures are accumulating
           description: '{{ $value }} notification deliveries remain open in the dead-letter queue. Check provider health, worker errors and delivery history. Do not bulk retry before the cause is fixed.'
       - alert: NotificationOutboxBacklog
@@ -45,6 +50,7 @@ groups:
           severity: warning
           priority: P2
         annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
           summary: Eligible notification outbox backlog exceeds five minutes
       - alert: NotificationOutboxBacklogCritical
         expr: max without (instance, pod) (notifications_eligible_outbox_age_seconds) > 900
@@ -52,6 +58,7 @@ groups:
           severity: critical
           priority: P1
         annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
           summary: Eligible notification outbox backlog exceeds fifteen minutes
   - name: barghsa-refund-obligations
     rules:
@@ -61,6 +68,7 @@ groups:
           severity: warning
           priority: P2
         annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/refund-backlog.md
           summary: At least one mandatory refund has remained outstanding for more than one hour
       - alert: WalletReconciliationCritical
         expr: max without (instance, pod) (reconciliation_wallets_critical_drift) > 0
@@ -68,6 +76,7 @@ groups:
           severity: critical
           priority: P1
         annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/payment-wallet-mismatch.md
           summary: Current wallet balance differs from its ledger at or above the critical threshold
       - alert: PaymentCallbackAnomaly
         expr: |
@@ -78,6 +87,7 @@ groups:
           severity: critical
           priority: P1
         annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/payment-wallet-mismatch.md
           summary: A payment callback had an invalid signature, stale timestamp or replayed event ID
       - alert: PaymentIdempotencyConflict
         expr: |
@@ -88,6 +98,7 @@ groups:
           severity: critical
           priority: P1
         annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/payment-wallet-mismatch.md
           summary: A payment idempotency key was used with conflicting payment data
   - name: barghsa-ai-models
     rules:
@@ -97,5 +108,6 @@ groups:
         labels:
           severity: warning
         annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/ai-provider-outage.md
           summary: AI model circuit is open
           description: 'Model {{ $labels.model_id }} is temporarily unavailable after repeated provider failures. Review the model in admin; a short recovery probe is allowed after cooldown.'
