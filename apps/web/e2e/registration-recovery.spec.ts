@@ -1,4 +1,5 @@
 import { registrationFormText } from '@barghsa/i18n/registration-forms';
+import { t } from '@barghsa/i18n/auth';
 import { mockPublicAuthCsrf } from './public-auth-fixture';
 import { test, expect } from './coverage-fixture';
 
@@ -34,6 +35,59 @@ async function prepareFreshRegistration(page: import('@playwright/test').Page) {
 }
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`registration offers sign-in and recovery only after contact proof (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((lang) => localStorage.setItem('barghsa.locale', lang), locale);
+    await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
+    await mockPublicAuthCsrf(page);
+    const attempts: string[] = [];
+    await page.route('**/api/auth/register/verify', (route) => {
+      const { challengeId: id, otp } = route.request().postDataJSON();
+      expect(id).toBe(challengeId);
+      attempts.push(otp);
+      const valid = otp === '654321';
+      return route.fulfill({
+        status: valid ? 409 : 401,
+        json: {
+          error: {
+            code: !valid
+              ? 'AUTH:OTP:INVALID'
+              : attempts.length === 2
+                ? 'AUTH:REGISTER:USERNAME_TAKEN'
+                : 'AUTH:OTP:ALREADY_CONSUMED',
+          },
+        },
+      });
+    });
+    await page.goto(`/register/verify?challengeId=${challengeId}&destination=test%40example.test`);
+    const title = page.getByRole('heading', {
+      name: t('auth.register.error.usernameTaken', locale),
+      exact: true,
+    });
+    const digits = page.locator('input[inputmode="numeric"]');
+    for (let i = 0; i < 6; i++) await digits.nth(i).fill(String(i + 1));
+    await expect(
+      page.getByText(t('auth.otp.error.invalid', locale), { exact: true })
+    ).toBeVisible();
+    await expect(title).toHaveCount(0);
+    for (let i = 0; i < 6; i++) await digits.nth(i).fill(String(6 - i));
+    await expect(title).toBeFocused();
+    await expect(digits).toHaveCount(0);
+    await expect(
+      page.getByRole('link', { name: t('auth.register.loginLinkLabel', locale), exact: true })
+    ).toHaveAttribute('href', '/login');
+    await expect(
+      page.getByRole('link', { name: t('auth.register.forgotPasswordLink', locale), exact: true })
+    ).toHaveAttribute('href', '/forgot-password');
+    await page.reload();
+    for (let i = 0; i < 6; i++) await digits.nth(i).fill(String(6 - i));
+    await expect(
+      page.getByText(t('auth.otp.error.alreadyConsumed', locale), { exact: true })
+    ).toBeVisible();
+    await expect(title).toHaveCount(0);
+    expect(attempts).toEqual(['123456', '654321', '654321']);
+  });
   test(`registration rejects incomplete session and requires a fresh challenge (${locale})`, async ({
     page,
   }) => {

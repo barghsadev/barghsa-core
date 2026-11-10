@@ -118,7 +118,6 @@ export class AuthController {
     },
   })
   @ApiResponse({ status: 400, description: 'Invalid username or TOS not accepted' })
-  @ApiResponse({ status: 409, description: 'Username already taken' })
   @ApiResponse({ status: 422, description: 'Weak password' })
   @ApiResponse({ status: 429, description: 'Rate limited' })
   async register(
@@ -631,6 +630,10 @@ export class AuthController {
     description: 'OTP verified. User created and session established.',
   })
   @ApiResponse({ status: 401, description: 'Invalid, expired, or max attempts exceeded' })
+  @ApiResponse({
+    status: 409,
+    description: 'Challenge consumed or contact already registered after proof',
+  })
   @ApiResponse({ status: 429, description: 'Rate limited' })
   async verifyOtp(
     @Body() rawBody: unknown,

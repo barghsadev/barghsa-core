@@ -24,7 +24,6 @@ import { toast } from '../../lib/toast-api.js';
 const RegistrationTermsDialog = lazy(() => import('../../components/RegistrationTermsDialog.js'));
 export const Route = createFileRoute('/register/')({ component: RegisterPage });
 const ERROR_CODE_I18N_MAP: Record<string, string> = {
-  'AUTH:REGISTER:USERNAME_TAKEN': 'auth.register.error.usernameTaken',
   'AUTH:REGISTER:INVALID_USERNAME': 'auth.register.error.invalidUsername',
   'AUTH:REGISTER:WEAK_PASSWORD': 'auth.register.error.weakPassword',
   'AUTH:REGISTER:TOS_NOT_ACCEPTED': 'auth.register.error.tosNotAccepted',

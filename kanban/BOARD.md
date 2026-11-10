@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T16:04:44+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T16:17:28+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1185 | Accepted with unchanged source bindings. |
+| done | 1187 | Accepted with unchanged source bindings. |
 | verify | 122 | Existing work may be complete; inspect evidence before building. |
-| partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 51 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -39,13 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify the exact v0.6 browser and rate-limit receipts, and close public registration account disclosure before release.
+Verify the exact hosted v0.6 browser receipts and reconcile remaining outbound transport and operational criteria.
 
 - `01-platform-infrastructure.md#T-01.04.04`: Configure Playwright for E2E testing
 - `01-platform-infrastructure.md#T-01.04.06`: Configure flaky-test quarantine process
 - `01-platform-infrastructure.md#T-05.05.01`: Create nightly CI schedule
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
-- `06-security-testing-observability.md#T-06.01.02.06`: Ensure all OTP responses are generic ("If valid, an OTP was sent") — never reveal account existence
 
 ## v0.2.0: Complete customer journeys
 
@@ -1097,7 +1096,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.01.02.03` | done | Recorded batch work | Implement attempt counter (max 5 per challenge → auto-invalidate) |
 | `06-security-testing-observability.md#T-06.01.02.04` | done | Recorded batch work | Implement TTL expiry (configurable: default 5 min) with cleanup job |
 | `06-security-testing-observability.md#T-06.01.02.05` | done | Recorded batch work | Implement rate limiting: 1 OTP per destination per 60s, 5/hour, 10/day; IP + device aggregates |
-| `06-security-testing-observability.md#T-06.01.02.06` | partial | Recorded batch work | Ensure all OTP responses are generic ("If valid, an OTP was sent") — never reveal account existence |
+| `06-security-testing-observability.md#T-06.01.02.06` | done | Recorded batch work | Ensure all OTP responses are generic ("If valid, an OTP was sent") — never reveal account existence |
 | `06-security-testing-observability.md#T-06.01.02.07` | done | Recorded batch work | Invalidate OTP after: successful verification, replacement request, expiry, or account compromise |
 | `06-security-testing-observability.md#T-06.01.02.08` | done | Recorded batch work | Print OTP to console in DEV environment only; never in production logs |
 | `06-security-testing-observability.md#T-06.01.02.09` | done | Recorded batch work | Write integration tests: OTP create, verify, consume, expire, exceed attempts, rate limit |
@@ -1199,7 +1198,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.05.02.08` | done | Recorded batch work | Configure AI limits: per-user requests, concurrency, token, cost budgets; stricter for tool-enabled actions |
 | `06-security-testing-observability.md#T-06.05.02.09` | done | Recorded batch work | Admin UI: view/edit limits within safe min/max bounds; versioned configuration |
 | `06-security-testing-observability.md#T-06.05.02.10` | done | Recorded batch work | Emergency rule engine: security can set temporary rules with owner, expiry, reason, audit record |
-| `06-security-testing-observability.md#T-06.05.02.11` | partial | Recorded batch work | Write tests: each action limit enforced correctly, admin tuning, emergency override |
+| `06-security-testing-observability.md#T-06.05.02.11` | done | Recorded batch work | Write tests: each action limit enforced correctly, admin tuning, emergency override |
 | `06-security-testing-observability.md#T-06.06.01.01` | partial | Recorded batch work | Implement upload validation pipeline: extension allowlist → MIME detection → size check → malware scan → store |
 | `06-security-testing-observability.md#T-06.06.01.02` | done | Recorded batch work | Build extension+MIME allowlist configurable by category (docs, images, video) with admin limits |
 | `06-security-testing-observability.md#T-06.06.01.03` | done | Recorded batch work | Generate random object keys (UUID); never use original filenames in storage path |

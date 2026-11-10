@@ -30,15 +30,20 @@ function OtpVerifyPage() {
   const model = useRegistrationNativeForm('verify', `verify|${challengeId}`, locale),
     form = model.form;
   const otpRef = useRef<OtpInputHandle>(null),
+    existingAccountHeading = useRef<HTMLHeadingElement>(null),
     rejectedCodeFocus = useRef<string | null>(null),
     expiryRedirect = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [error, setError] = useState<string | null>(null),
+    [registeredChallenge, setRegisteredChallenge] = useState<string | null>(null),
     [resendUntil, setResendUntil] = useState(() => Date.now() + 60_000),
     [attemptUntil, setAttemptUntil] = useState(0),
     [now, setNow] = useState(Date.now),
     [resending, setResending] = useState(false);
   const cooldown = Math.max(0, Math.ceil((resendUntil - now) / 1000)),
     attemptCooldown = Math.max(0, Math.ceil((attemptUntil - now) / 1000));
+  useEffect(() => {
+    if (registeredChallenge === challengeId) existingAccountHeading.current?.focus();
+  }, [challengeId, registeredChallenge]);
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
@@ -103,8 +108,14 @@ function OtpVerifyPage() {
               'AUTH:OTP:INVALID': 'auth.otp.error.invalid',
               'AUTH:OTP:EXPIRED': 'auth.otp.error.expired',
               'AUTH:OTP:MAX_ATTEMPTS': 'auth.otp.error.maxAttempts',
-              'AUTH:OTP:CONSUMED': 'auth.otp.error.consumed',
+              'AUTH:OTP:ALREADY_CONSUMED': 'auth.otp.error.alreadyConsumed',
             };
+          if (response.status === 409 && code === 'AUTH:REGISTER:USERNAME_TAKEN') {
+            form.reset(emptyRegistration);
+            otpRef.current?.reset();
+            setRegisteredChallenge(challengeId);
+            return;
+          }
           setError(
             rateLimitMessage(response, locale, numbers.numberStyle) ??
               t(keys[code ?? ''] ?? 'auth.otp.error.generic', locale)
@@ -197,6 +208,28 @@ function OtpVerifyPage() {
       },
       undefined,
       false
+    );
+  }
+  if (registeredChallenge === challengeId) {
+    return (
+      <AuthLayout locale={locale}>
+        <div className="space-y-4 text-center" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+          <h1 ref={existingAccountHeading} tabIndex={-1} className="text-xl font-semibold">
+            {t('auth.register.error.usernameTaken', locale)}
+          </h1>
+          <div className="flex flex-col items-center gap-2">
+            <Link to="/login" className="touch-action text-primary underline underline-offset-4">
+              {t('auth.register.loginLinkLabel', locale)}
+            </Link>
+            <Link
+              to="/forgot-password"
+              className="touch-action text-primary underline underline-offset-4"
+            >
+              {t('auth.register.forgotPasswordLink', locale)}
+            </Link>
+          </div>
+        </div>
+      </AuthLayout>
     );
   }
   return (

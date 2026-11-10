@@ -124,20 +124,6 @@ export class AuthService {
          ORDER BY created_at DESC,challenge_id FOR UPDATE`,
         [input.username, input.tosVersionId]
       );
-      const existing = await client.query(
-        'SELECT 1 FROM account_login_identifiers WHERE destination=$1',
-        [input.username]
-      );
-      if (existing.rows.length) {
-        throw new HttpException(
-          {
-            statusCode: ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.httpStatus,
-            error: ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.code,
-          },
-          ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.httpStatus
-        );
-      }
-
       // Verify the salted password hash to compare complete requests without
       // persisting a fast password fingerprint or a second copy of the secret.
       for (const candidate of pending.rows) {
@@ -1051,17 +1037,50 @@ export class AuthService {
         throw new HttpException({ statusCode: 409, error: ErrorCodes.AUTH_OTP_CONSUMED.code }, 409);
       }
 
-      // Create user record
-      await client.query(
-        `INSERT INTO users (user_id, username, password_hash, locale,
+      // Both primary usernames and verified aliases share a unique login namespace.
+      // Keep the verified challenge consumed if an existing owner wins the insert.
+      await client.query('SAVEPOINT registration_account');
+      try {
+        await client.query(
+          `INSERT INTO users (user_id, username, password_hash, locale,
                             last_accepted_tos_version, created_at, updated_at,
                             email, mobile, notification_preferences)
          VALUES ($1, $2, $3, $4, $5, $6, $6,
                  CASE WHEN $2 LIKE '%@%' THEN $2 ELSE NULL END,
                  CASE WHEN $2 LIKE '%@%' THEN NULL ELSE $2 END,
                  CASE WHEN $2 LIKE '%@%' THEN 'IN_APP,EMAIL' ELSE 'IN_APP,SMS' END)`,
-        [userId, row.destination, row.password_hash, 'fa', row.tos_version_id, now]
-      );
+          [userId, row.destination, row.password_hash, 'fa', row.tos_version_id, now]
+        );
+      } catch (error) {
+        if (
+          typeof error !== 'object' ||
+          error === null ||
+          !('code' in error) ||
+          error.code !== '23505'
+        )
+          throw error;
+        await client.query('ROLLBACK TO SAVEPOINT registration_account');
+        const existing = await client.query<{ valid: boolean }>(
+          `SELECT c.expires_at>clock_timestamp() AS valid FROM otp_challenges c
+           JOIN account_login_identifiers i ON i.destination=c.destination
+           WHERE c.challenge_id=$1`,
+          [challengeId]
+        );
+        const proof = existing.rows[0];
+        if (!proof) throw error;
+        if (!proof.valid) {
+          throw new HttpException(
+            { statusCode: 401, error: ErrorCodes.AUTH_OTP_EXPIRED.code },
+            401
+          );
+        }
+        await client.query('COMMIT');
+        throw new HttpException(
+          { statusCode: 409, error: ErrorCodes.AUTH_REGISTER_USERNAME_TAKEN.code },
+          409
+        );
+      }
+      await client.query('RELEASE SAVEPOINT registration_account');
 
       // Pending invitations are discoverable by the verified username after
       // registration. Only the invitation acceptance endpoint grants membership.

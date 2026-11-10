@@ -1,6 +1,7 @@
 import { fetchWithPreauth } from '../test/public-auth.js';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { decryptAuthDelivery } from '@barghsa/shared/auth-delivery';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -44,6 +45,80 @@ async function sendCount(destination: string) {
       `otp:dest:${destination}:60s`,
     ])
   ).rows[0].count;
+}
+
+for (const occupied of ['existing@example.test', 'verified-alias@example.test']) {
+  it(`hides an occupied registration destination until its code is proved (${occupied})`, async () => {
+    vi.stubEnv('AUTH_DELIVERY_ENCRYPTION_KEY', 'http-fixture-delivery-key-only');
+    await http.pool.query(`INSERT INTO users(user_id,username,email,password_hash)
+      VALUES('existing-owner','existing@example.test','verified-alias@example.test','existing-hash')`);
+    await http.pool
+      .query(`INSERT INTO account_login_identifiers(destination,user_id,kind,verified_at)
+      VALUES('verified-alias@example.test','existing-owner','email',clock_timestamp())`);
+    const [newContact, existingContact] = await Promise.all([
+      register('new-contact@example.test'),
+      register(occupied),
+    ]);
+    for (const { response, body } of [newContact, existingContact]) {
+      expect(response.status, JSON.stringify(body)).toBe(200);
+      expect(body.challengeId).toBeTruthy();
+      expect(Object.keys(body)).toEqual(['challengeId']);
+    }
+    const { challengeId } = existingContact.body;
+    const delivery = (
+      await http.pool.query(
+        'SELECT id,encrypted_payload FROM auth_delivery_outbox WHERE challenge_id=$1',
+        [challengeId]
+      )
+    ).rows[0]!;
+    const payload = decryptAuthDelivery(delivery.id, delivery.encrypted_payload);
+    expect(payload).toMatchObject({
+      destination: occupied,
+      code: expect.stringMatching(/^\d{6}$/),
+    });
+    if (
+      !payload ||
+      typeof payload !== 'object' ||
+      !('code' in payload) ||
+      typeof payload.code !== 'string'
+    )
+      throw new Error('Invalid fixture delivery');
+    const code = payload.code;
+    const verify = (otp: string) =>
+      fetchWithPreauth(`${http.base}/api/auth/register/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ challengeId, otp }),
+        signal: AbortSignal.timeout(5000),
+      });
+    const invalid = await verify(code === '111111' ? '222222' : '111111');
+    expect(invalid.status).toBe(401);
+    expect(await invalid.json()).toMatchObject({ error: { code: 'AUTH:OTP:INVALID' } });
+    const confirmed = await verify(code);
+    expect(confirmed.status, await confirmed.clone().text()).toBe(409);
+    expect(await confirmed.json()).toMatchObject({
+      error: { code: 'AUTH:REGISTER:USERNAME_TAKEN' },
+    });
+    expect(
+      confirmed.headers.getSetCookie().some((cookie) => /^barghsa_(session|refresh)=/.test(cookie))
+    ).toBe(false);
+    const replay = await verify(code);
+    expect(replay.status).toBe(409);
+    expect(await replay.json()).toMatchObject({ error: { code: 'AUTH:OTP:ALREADY_CONSUMED' } });
+    expect((await http.pool.query('SELECT user_id,password_hash FROM users')).rows).toEqual([
+      { user_id: 'existing-owner', password_hash: 'existing-hash' },
+    ]);
+    expect((await http.pool.query('SELECT session_id FROM sessions')).rows).toEqual([]);
+    expect((await http.pool.query('SELECT user_id FROM tos_acceptances')).rows).toEqual([]);
+    expect(
+      (
+        await http.pool.query(
+          'SELECT consumed_at,attempts_remaining FROM otp_challenges WHERE challenge_id=$1',
+          [challengeId]
+        )
+      ).rows[0]
+    ).toMatchObject({ consumed_at: expect.any(Date), attempts_remaining: 0 });
+  }, 15000);
 }
 
 for (const poolMax of [4, 1]) {

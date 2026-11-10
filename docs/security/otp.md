@@ -8,6 +8,10 @@ Retain challenge and delivery metadata for receipt correlation and linked accoun
 
 The console can show a code only when `NODE_ENV=development` and `OTP_CONSOLE=true`. The diagnostic uses the challenge reference. Application logs for issuance and resend use challenge and correlation references.
 
+## Public registration privacy
+
+Registration starts use the same challenge response and rate-limited delivery path for new and occupied contacts. Primary usernames and verified secondary contacts share the database's unique login namespace. A valid registration code can reveal that the destination is already registered. This consumes the challenge and offers sign-in and password recovery. It creates no new account, session, or terms acceptance and leaves the existing account untouched.
+
 ## Staff invitations
 
 A staff invitation email includes a link with a public invitation reference and a separate one-time activation code. The reference is the SHA-256 digest of the random code. The activation form submits the code in the JSON body with the matching reference. The existing 24-hour expiry, rate limit and atomic single-use activation apply.
