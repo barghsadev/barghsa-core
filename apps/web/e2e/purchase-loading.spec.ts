@@ -124,9 +124,9 @@ for (const locale of ['en', 'fa'] as const) {
         expect(await header.boundingBox()).toEqual(before);
         const blocks = pending.locator('[data-slot="skeleton"]');
         await expect(blocks).toHaveCount(3);
-        expect(
-          await blocks.first().evaluate((e) => getComputedStyle(e, '::after').animationName)
-        ).toBe('none');
+        await expect
+          .poll(() => blocks.first().evaluate((e) => getComputedStyle(e, '::after').animationName))
+          .toBe('none');
         release();
         await expect(page).toHaveURL(new RegExp(path + '$'));
         await expect(main.getByRole('heading').first()).toBeVisible();

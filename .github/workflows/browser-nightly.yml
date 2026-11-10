@@ -86,7 +86,18 @@ jobs:
       - name: Build component stories for Playwright
         run: pnpm --filter @barghsa/ui stories:build
       - name: Install browser runtimes
+        if: matrix.browser != 'firefox'
         run: pnpm --filter @barghsa/web exec playwright install --with-deps "${{ matrix.browser }}"
+      - name: Install pinned Firefox runtime
+        if: matrix.browser == 'firefox'
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/barghsa-firefox
+        run: |
+          # Firefox 1572 crashes during axe analysis. Revision 1575 passes the same cases.
+          pnpm dlx playwright@1.66.0-alpha-2026-11-10 install --with-deps firefox
+          firefox="$PLAYWRIGHT_BROWSERS_PATH/firefox-1575/firefox/firefox"
+          test -x "$firefox"
+          printf 'PLAYWRIGHT_BROWSERS_PATH=%s\nBARGHSA_FIREFOX_EXECUTABLE=%s\n' "$PLAYWRIGHT_BROWSERS_PATH" "$firefox" >> "$GITHUB_ENV"
       - name: Verify browser selection and result handling
         run: |
           node --test scripts/browser-projects.test.mjs

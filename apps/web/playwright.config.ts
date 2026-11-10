@@ -21,6 +21,7 @@ import { defineConfig, devices } from '@playwright/test';
 const EXTERNAL_URL = process.env['PLAYWRIGHT_BASE_URL'];
 const LOCAL_URL = `http://localhost:${process.env['WEB_PORT'] || 3000}`;
 const resolvedBaseURL = EXTERNAL_URL ?? LOCAL_URL;
+const firefoxExecutable = process.env['BARGHSA_FIREFOX_EXECUTABLE'];
 
 export default defineConfig({
   testDir: './e2e',
@@ -51,7 +52,10 @@ export default defineConfig({
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: {
+        ...devices['Desktop Firefox'],
+        ...(firefoxExecutable ? { launchOptions: { executablePath: firefoxExecutable } } : {}),
+      },
     },
     {
       name: 'webkit',
