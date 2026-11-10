@@ -1,5 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { tWalletLimit } from '@barghsa/i18n/wallet-limit';
 
 for (const locale of ['en', 'fa'] as const) {
   const labels =
@@ -47,27 +49,59 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/wallet-receipts');
     const panel = page.getByTestId('wallet-top-up-limit-panel');
     const input = panel.getByTestId('wallet-top-up-limit-input');
-    await input.fill(locale === 'fa' ? '۵۰۰۰۰۰۰۰۰' : '500000000');
-    await panel.getByTestId('wallet-top-up-limit-save').click();
+    const draft = locale === 'fa' ? '۵۰۰۰۰۰۰۰۰' : '500000000';
+    const save = panel.getByTestId('wallet-top-up-limit-save');
+    const reload = panel.getByRole('button', { name: labels.reload, exact: true });
+    const reloadUnchangedLimit = async () => {
+      await expect(save).toBeDisabled();
+      const [response] = await Promise.all([
+        page.waitForResponse(
+          (response) =>
+            response.url().endsWith('/api/admin/config/wallet-top-up-limit') &&
+            response.request().method() === 'GET'
+        ),
+        reload.click(),
+      ]);
+      expect(response.ok()).toBe(true);
+      expect(await response.json()).toEqual({ limitIrR: 2000000000, version: 0 });
+      await expect(save).toBeEnabled();
+      await expect(input).toHaveValue(draft);
+    };
+    await input.fill(draft);
+    await save.click();
     let dialog = page.getByRole('dialog');
     await dialog.getByRole('button', { name: labels.cancel, exact: true }).click();
     expect(attempts).toEqual([]);
-    await panel.getByTestId('wallet-top-up-limit-save').click();
+    await save.click();
     dialog = page.getByRole('dialog');
     await dialog.getByRole('button', { name: labels.confirm, exact: true }).click();
     await dialog.getByLabel(labels.password, { exact: true }).fill('Test-password');
     await dialog.getByRole('button', { name: labels.confirm, exact: true }).click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(
+      dialog.getByRole('alert').filter({
+        hasText: confirmationText('unconfirmed', locale),
+      })
+    ).toBeVisible();
+    await expect(
+      dialog.getByRole('alert').filter({
+        hasText: tWalletLimit('admin.walletLimit.unverified', locale),
+      })
+    ).toBeVisible();
     expect(value.limitIrR).toBe(2000000000);
+    await expect(dialog.getByRole('button', { name: labels.confirm, exact: true })).toBeDisabled();
+    await dialog.getByRole('button', { name: labels.cancel, exact: true }).click();
+    await reloadUnchangedLimit();
     fail = false;
     mismatch = true;
+    await save.click();
+    dialog = page.getByRole('dialog');
     await dialog.getByRole('button', { name: labels.confirm, exact: true }).click();
     await expect(dialog.getByRole('button', { name: labels.confirm, exact: true })).toBeDisabled();
     await expect(panel.getByText(labels.saved, { exact: true })).toHaveCount(0);
     await dialog.getByRole('button', { name: labels.cancel, exact: true }).click();
-    await panel.getByRole('button', { name: labels.reload, exact: true }).click();
+    await reloadUnchangedLimit();
     mismatch = false;
-    await panel.getByTestId('wallet-top-up-limit-save').click();
+    await save.click();
     dialog = page.getByRole('dialog');
     await dialog.getByRole('button', { name: labels.confirm, exact: true }).click();
     await expect(dialog).toHaveCount(0);
@@ -75,22 +109,29 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(panel.getByText(labels.saved, { exact: true })).toBeVisible();
     await input.fill('600000000');
     conflict = true;
-    await panel.getByTestId('wallet-top-up-limit-save').click();
+    await save.click();
     await page
       .getByRole('dialog')
       .getByRole('button', { name: labels.confirm, exact: true })
       .click();
-    await expect(page.getByRole('dialog').getByRole('alert')).toBeVisible();
+    await expect(
+      page
+        .getByRole('dialog')
+        .getByRole('alert')
+        .filter({
+          hasText: tWalletLimit('admin.walletLimit.conflict', locale),
+        })
+    ).toBeVisible();
     await page
       .getByRole('dialog')
       .getByRole('button', { name: labels.cancel, exact: true })
       .click();
     value = { limitIrR: 75000, version: 3 };
-    await panel.getByRole('button', { name: labels.reload, exact: true }).click();
+    await reload.click();
     await expect(input).toHaveValue('75000');
     conflict = false;
     await input.fill('90000');
-    await panel.getByTestId('wallet-top-up-limit-save').click();
+    await save.click();
     await page
       .getByRole('dialog')
       .getByRole('button', { name: labels.confirm, exact: true })

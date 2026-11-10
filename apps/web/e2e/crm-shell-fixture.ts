@@ -15,6 +15,9 @@ export async function crmShell(page: Page, locale: string = 'en') {
       },
     })
   );
+  await page.route('**/api/profiles', (route) =>
+    route.fulfill({ json: { profiles: [], activeProfileId: null, hasDefault: false } })
+  );
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );

@@ -1,5 +1,10 @@
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
+import { DEFAULT_VERIFICATION_POLICY } from '@barghsa/shared/verification';
+import { brandingText } from '@barghsa/i18n/branding';
+import { t as settingsText } from '@barghsa/i18n/admin-ui';
+import { verificationConfigText } from '@barghsa/i18n/verification-config';
+import { publishedBrand } from '../src/test/branding-settings-fixtures';
 import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { fullNavigation } from './navigation-fixture';
 import { settingsProfileFixture, settingsProfileId } from './settings-profile-fixture';
@@ -138,27 +143,20 @@ async function tosShell(page: Page, locale = 'en') {
     route.fulfill({ status: 404, json: {} })
   );
 }
-async function profileSettingsShell(page: Page, locale = 'en', profileType = 'INDIVIDUAL') {
-  await shell(page, locale);
-  await page.route('**/api/profiles', (route) =>
-    route.fulfill({
-      json: {
-        profiles: [
-          settingsProfileFixture({
-            id: settingsProfileId,
-            profileType,
-            status: 'ACTIVE',
-            title: 'Profile',
-          }),
-        ],
-        activeProfileId: settingsProfileId,
-        hasDefault: true,
-      },
-    })
-  );
+async function profileSettingsShell(
+  page: Page,
+  locale = 'en',
+  profileType: 'INDIVIDUAL' | 'LEGAL' = 'INDIVIDUAL'
+) {
+  await shell(page, locale, settingsProfileId, profileType);
 }
 
-async function shell(page: Page, locale = 'en', profileId = 'profile-one') {
+async function shell(
+  page: Page,
+  locale = 'en',
+  profileId = 'profile-one',
+  profileType: 'INDIVIDUAL' | 'LEGAL' = 'LEGAL'
+) {
   await page.addInitScript((value) => {
     localStorage.setItem('barghsa.locale', value);
     if (document.documentElement) document.documentElement.lang = value;
@@ -173,7 +171,7 @@ async function shell(page: Page, locale = 'en', profileId = 'profile-one') {
         userId: 'viewer',
         isStaff: false,
         requiresTosAcceptance: false,
-        navigation: { ...fullNavigation('customer', 'LEGAL'), profileId },
+        navigation: { ...fullNavigation('customer', profileType), profileId },
       },
     })
   );
@@ -199,13 +197,12 @@ async function shell(page: Page, locale = 'en', profileId = 'profile-one') {
     route.fulfill({
       json: {
         profiles: [
-          {
+          settingsProfileFixture({
             id: profileId,
-            profileType: 'LEGAL',
+            profileType,
             status: 'ACTIVE',
             title: 'Profile',
-            isDefault: true,
-          },
+          }),
         ],
         activeProfileId: profileId,
         hasDefault: true,
@@ -244,8 +241,8 @@ async function orderAddressShell(page: Page, locale: string) {
 
 for (const locale of ['en', 'fa']) {
   test(`address dialog labels, focus trap and Escape (${locale})`, async ({ page }) => {
-    await shell(page, locale);
-    await page.route('**/api/profiles/profile-one/addresses', (route) =>
+    await shell(page, locale, settingsProfileId);
+    await page.route(`**/api/profiles/${settingsProfileId}/addresses`, (route) =>
       route.fulfill({ json: { addresses: [] } })
     );
     await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
@@ -332,90 +329,89 @@ test('TOS detail has a name, contains keyboard focus and restores its trigger', 
 });
 
 test('branding controls have distinct labels and color IDs', async ({ page }) => {
-  await shell(page);
-  await page.route('**/api/admin/branding/config', (route) =>
-    route.fulfill({
-      json: {
-        id: 'branding-one',
-        createdBy: 'system',
-        createdAt: '2026-09-01T00:00:00Z',
-        updatedAt: '2026-09-01T00:00:00Z',
-        version: 1,
-        status: 'active',
-        config: {
-          appTitle: 'Barghsa',
-          slogan: '',
-          primaryColor: '#2563eb',
-          secondaryColor: '#64748b',
-          accentColor: '#f59e0b',
-          logoUrl: null,
-          faviconUrl: null,
-          darkMode: false,
-        },
-      },
-    })
-  );
+  await crmShell(page);
+  const brand = { ...publishedBrand, config: { ...publishedBrand.config, appTitle: 'Barghsa' } };
+  await page.route('**/api/admin/branding/config', (route) => route.fulfill({ json: brand }));
+  await page.route('**/api/admin/branding/configs', (route) => route.fulfill({ json: [brand] }));
   await page.goto('/admin/branding');
-  await expect(page.getByRole('textbox', { name: 'App Title', exact: true })).toHaveValue(
-    'Barghsa'
-  );
+  await expect(
+    page.getByRole('textbox', { name: brandingText('appTitle', 'en'), exact: true })
+  ).toHaveValue('Barghsa');
+  await expect(
+    page.getByRole('textbox', { name: brandingText('appTitleFa', 'en'), exact: true })
+  ).toHaveValue(brand.config.appTitleFa);
   for (const control of await page.locator('main input').all()) {
     await expect(control).toHaveAccessibleName(/.+/);
   }
   const ids = await page
     .locator('input[type=color]')
     .evaluateAll((nodes) => nodes.map((node) => node.id));
-  expect(ids).toHaveLength(3);
-  expect(new Set(ids).size).toBe(3);
-  const toggle = page.getByRole('checkbox', { name: 'Dark mode' });
-  await toggle.focus();
-  await page.keyboard.press('Space');
-  await expect(toggle).toBeChecked();
+  expect(ids).toHaveLength(8);
+  expect(ids.every((id) => id.length > 0)).toBe(true);
+  expect(new Set(ids).size).toBe(8);
+  await page
+    .getByRole('button', { name: settingsText('admin.settings.edit', 'en'), exact: true })
+    .click();
+  const theme = page.getByRole('combobox', { name: brandingText('themePolicy', 'en') });
+  await expect(theme).toBeEnabled();
+  await expect(theme).toHaveValue('light');
+  const numberStyle = page.getByRole('combobox', { name: brandingText('numberStyle', 'en') });
+  await numberStyle.press('Shift+Tab');
+  await expect(theme).toBeFocused();
+  await theme.selectOption('dark');
+  await expect(theme).toHaveValue('dark');
 });
 
 for (const locale of ['en', 'fa']) {
   test(`province changes clear the selected city and ignore late results (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
-    await page.route('**/api/profiles/profile-one/addresses', (route) =>
+    const provinceOne = '01900000-0000-7000-8000-000000000011';
+    const provinceTwo = '01900000-0000-7000-8000-000000000012';
+    const cityOne = '01900000-0000-7000-8000-000000000013';
+    const cityTwo = '01900000-0000-7000-8000-000000000014';
+    await shell(page, locale, settingsProfileId);
+    await page.route(`**/api/profiles/${settingsProfileId}/addresses`, (route) =>
       route.fulfill({
         json: {
-          addresses: [
-            {
-              id: 'saved',
-              provinceId: 'province-one',
-              cityId: 'city-one',
-              fullAddress: 'Stored street',
-              provinceNameFa: 'استان ذخیره‌شده',
-              provinceNameEn: 'Saved Province',
-              cityNameFa: 'شهر ذخیره‌شده',
-              cityNameEn: 'Saved City',
-              postalCode: '1234567890',
-              mainAddress: true,
-            },
-          ],
+          addresses: settingsProfileFixture({
+            id: settingsProfileId,
+            addresses: [
+              {
+                id: '01900000-0000-7000-8000-000000000015',
+                provinceId: provinceOne,
+                cityId: cityOne,
+                fullAddress: 'Stored street',
+                provinceNameFa: 'استان ذخیره‌شده',
+                provinceNameEn: 'Saved Province',
+                cityNameFa: 'شهر ذخیره‌شده',
+                cityNameEn: 'Saved City',
+                postalCode: '1234567890',
+                mainAddress: true,
+              },
+            ],
+          }).addresses,
         },
       })
     );
     await page.route('**/api/geography/provinces', (route) =>
       route.fulfill({
         json: [
-          { id: 'province-one', nameFa: 'یک', nameEn: 'One' },
-          { id: 'province-two', nameFa: 'دو', nameEn: 'Two' },
+          { id: provinceOne, nameFa: 'یک', nameEn: 'One' },
+          { id: provinceTwo, nameFa: 'دو', nameEn: 'Two' },
         ],
       })
     );
     let fail = false;
-    await page.route('**/api/geography/provinces/province-one/cities', (route) =>
+    await page.route(`**/api/geography/provinces/${provinceOne}/cities`, (route) =>
       route.fulfill(
         fail
           ? { status: 503, json: {} }
           : {
               json: [
                 {
-                  id: 'city-one',
-                  provinceId: 'province-one',
+                  id: cityOne,
+                  provinceId: provinceOne,
                   nameFa: 'شهر یک',
                   nameEn: 'City One',
                 },
@@ -424,7 +420,7 @@ for (const locale of ['en', 'fa']) {
       )
     );
     let delayed: import('@playwright/test').Route | undefined;
-    await page.route('**/api/geography/provinces/province-two/cities', (route) => {
+    await page.route(`**/api/geography/provinces/${provinceTwo}/cities`, (route) => {
       delayed = route;
     });
     await page.goto('/settings/addresses');
@@ -439,15 +435,15 @@ for (const locale of ['en', 'fa']) {
     const dialog = page.getByRole('dialog');
     const province = dialog.getByRole('combobox').nth(0);
     const city = dialog.getByRole('combobox').nth(1);
-    await province.selectOption('province-one');
+    await province.selectOption(provinceOne);
     await expect(city).toBeEnabled();
-    await city.selectOption('city-one');
-    await province.selectOption('province-two');
+    await city.selectOption(cityOne);
+    await province.selectOption(provinceTwo);
     await expect(city).toHaveValue('');
     await expect(city).toBeDisabled();
     await expect.poll(() => !!delayed).toBe(true);
     fail = true;
-    await province.selectOption('province-one');
+    await province.selectOption(provinceOne);
     await expect(dialog.getByRole('alert')).toContainText(
       locale === 'fa' ? 'بارگذاری شهرها با خطا مواجه شد' : 'Failed to load cities'
     );
@@ -456,18 +452,16 @@ for (const locale of ['en', 'fa']) {
       .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again' })
       .click();
     await expect(city).toBeEnabled();
-    await city.selectOption('city-one');
+    await city.selectOption(cityOne);
     // The earlier request may already have been cancelled by AbortController.
     await delayed!
       .fulfill({
-        json: [
-          { id: 'city-two', provinceId: 'province-two', nameFa: 'شهر دو', nameEn: 'City Two' },
-        ],
+        json: [{ id: cityTwo, provinceId: provinceTwo, nameFa: 'شهر دو', nameEn: 'City Two' }],
       })
       .catch(() => {});
-    await expect(city).toHaveValue('city-one');
+    await expect(city).toHaveValue(cityOne);
     await expect(city.getByRole('option')).toHaveCount(2);
-    await expect(province).toHaveValue('province-one');
+    await expect(province).toHaveValue(provinceOne);
   });
 }
 
@@ -2039,7 +2033,13 @@ for (const locale of ['en', 'fa']) {
   test(`verification settings require a valid read and keep automatic verification unavailable (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
+    await crmShell(page, locale);
+    await page.route('**/api/admin/config/otp', (route) =>
+      route.fulfill({ json: { ttlSeconds: 300, version: 0 } })
+    );
+    await page.route('**/api/admin/config/profile-verification-policy', (route) =>
+      route.fulfill({ json: { active: DEFAULT_VERIFICATION_POLICY, draft: null, version: 0 } })
+    );
     let reads = 0;
     let writes = 0;
     const mode = locale === 'en' ? 'API' : 'DISABLED';
@@ -2073,13 +2073,20 @@ for (const locale of ['en', 'fa']) {
       return route.fulfill({ json: { mode, draft, version } });
     });
     await page.goto('/admin/verification');
-    const save = page.getByRole('button', {
+    const copy = (key: Parameters<typeof verificationConfigText>[0]) =>
+      verificationConfigText(key, locale === 'fa' ? 'fa' : 'en');
+    const form = page.getByRole('form', { name: copy('title'), exact: true });
+    const save = form.getByRole('button', {
       name: locale === 'fa' ? 'ذخیره پیش‌نویس' : 'Save draft',
       exact: true,
     });
-    await expect(page.getByRole('alert')).toBeVisible();
+    const alert = (key: Parameters<typeof verificationConfigText>[0]) =>
+      page.getByRole('alert').filter({ hasText: copy(key) });
+    const saved = page.getByRole('status').filter({ hasText: copy('saved') });
+    const reset = page.getByRole('button', { name: copy('resetSaved'), exact: true });
+    await expect(alert('loadFailed')).toBeVisible();
     await expect(save).toBeDisabled();
-    for (const radio of await page.getByRole('radio').all()) await expect(radio).toBeDisabled();
+    for (const radio of await form.getByRole('radio').all()) await expect(radio).toBeDisabled();
     await page
       .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
       .click();
@@ -2094,17 +2101,20 @@ for (const locale of ['en', 'fa']) {
     await expect.poll(() => writes).toBe(1);
     await expect(manual).toBeDisabled();
     finish!();
-    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(alert('saveFailed')).toBeVisible();
     await expect(manual).toBeChecked();
-    await expect(save).toBeEnabled();
+    await expect(save).toBeDisabled();
+    await reset.click();
+    await manual.check();
     await save.click();
     await expect.poll(() => writes).toBe(2);
-    await expect(page.getByRole('alert')).toBeVisible();
-    await expect(page.locator('main[data-area=admin]').getByRole('status')).toHaveCount(0);
+    await expect(alert('unverified')).toBeVisible();
+    await expect(saved).toHaveCount(0);
+    await expect(save).toBeDisabled();
+    await reset.click();
+    await manual.check();
     await save.click();
-    await expect(page.locator('main[data-area=admin]').getByRole('status')).toContainText(
-      locale === 'fa' ? 'پیش‌نویس ذخیره شد' : 'Draft saved'
-    );
+    await expect(saved).toBeVisible();
     await expect(save).toBeDisabled();
     await page.reload();
     await expect(manual).toBeChecked();

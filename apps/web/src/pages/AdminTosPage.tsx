@@ -140,6 +140,7 @@ export default function AdminTosPage() {
   const [publishing, setPublishing] = useState(false);
 
   // Version detail view state (T-09.03.02)
+  const viewTrigger = useRef<HTMLButtonElement>(null);
   const [viewVersion, setViewVersion] = useState<TosVersion | null>(null);
   const [detailLocale, setDetailLocale] = useState<'fa' | 'en'>('fa');
 
@@ -337,8 +338,9 @@ export default function AdminTosPage() {
     setShowEditor(true);
   }
 
-  function openView(v: TosVersion) {
+  function openView(v: TosVersion, trigger: HTMLButtonElement) {
     if (!historyReady || loading || scope.denied) return;
+    viewTrigger.current = trigger;
     setViewVersion(v);
     setDetailLocale(locale);
   }
@@ -986,7 +988,11 @@ export default function AdminTosPage() {
                 >
                   <DialogContent
                     showCloseButton={false}
-                    finalFocus={() => refreshButton.current}
+                    finalFocus={() =>
+                      viewTrigger.current?.isConnected && !viewTrigger.current.disabled
+                        ? viewTrigger.current
+                        : refreshButton.current
+                    }
                     dir={locale === 'fa' ? 'rtl' : 'ltr'}
                     className="bg-card text-card-foreground rounded-lg shadow-xl sm:max-w-3xl w-full max-h-[85vh] flex flex-col p-0 gap-0"
                   >
@@ -1164,7 +1170,7 @@ export default function AdminTosPage() {
                 renderActions={(v) => (
                   <div className="flex flex-wrap gap-2">
                     <Button
-                      onClick={() => openView(v)}
+                      onClick={(event) => openView(v, event.currentTarget)}
                       variant="outline"
                       className="text-foreground hover:underline"
                     >

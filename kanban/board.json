@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T02:38:31+00:00",
-  "source_commit": "0d12a1df5dd145ccdafd55051b2cc1b02838eff9",
+  "updated": "2026-11-10T02:52:10+00:00",
+  "source_commit": "1e7193352fb3930470616e54ec31a9c307ff4c7c",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -26992,7 +26992,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -27048,7 +27049,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/session-cookies.spec.ts",
@@ -27679,7 +27680,8 @@
           "release-0.6-authentication-and-crm-diagnostic-privacy",
           "release-0.6-current-license-inventory-readback",
           "release-0.6-strict-license-gate-readback",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -27739,7 +27741,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security.tsx",
@@ -29356,7 +29358,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -29620,7 +29623,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/trusted-devices.spec.ts",
@@ -35041,7 +35044,8 @@
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35093,7 +35097,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -35937,7 +35941,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35957,7 +35962,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -36201,7 +36206,8 @@
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-required-input-semantics",
           "release-0.5-geography-retry-feedback",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -36225,7 +36231,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -37653,7 +37659,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-acceptance",
           "release-0.5-route-census-closure",
-          "release-0.5-native-staff-touch-and-electricity-recovery"
+          "release-0.5-native-staff-touch-and-electricity-recovery",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -37673,7 +37680,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -37892,7 +37899,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-reject-unknown-auth-command-fields"
+          "release-0.6-reject-unknown-auth-command-fields",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -37916,7 +37924,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -38490,7 +38498,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -38506,7 +38515,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -39781,7 +39790,8 @@
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-assistant-display-maintenance-fixture",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -39805,7 +39815,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -39961,7 +39971,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -47243,7 +47253,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -47283,7 +47294,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -47654,7 +47665,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-gates",
-          "release-0.5-native-staff-control-targets"
+          "release-0.5-native-staff-control-targets",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -47686,7 +47698,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -48020,7 +48032,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -48080,7 +48093,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -48872,7 +48885,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -48948,7 +48962,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -50165,7 +50179,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -50205,7 +50220,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -51332,7 +51347,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -51384,7 +51400,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -67780,7 +67796,8 @@
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-capability-and-assistant-maintenance",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "accepted-native-brand-theme-application",
@@ -67948,7 +67965,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -68544,7 +68561,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -68668,7 +68686,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -68720,7 +68738,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -69217,7 +69235,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -69341,7 +69360,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -69393,7 +69412,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -69890,7 +69909,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70014,7 +70034,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -70066,7 +70086,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -70562,7 +70582,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70686,7 +70707,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -70738,7 +70759,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -71272,7 +71293,8 @@
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-packaged-production-seed",
-          "release-0.6-security-http-regressions-and-provider-tester-wiring"
+          "release-0.6-security-http-regressions-and-provider-tester-wiring",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -71328,7 +71350,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -80818,7 +80840,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -80854,11 +80877,11 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -81239,7 +81262,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -81275,11 +81299,11 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -81682,7 +81706,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -81718,11 +81743,11 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -82175,7 +82200,8 @@
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-packaged-production-seed",
-          "release-0.6-security-http-regressions-and-provider-tester-wiring"
+          "release-0.6-security-http-regressions-and-provider-tester-wiring",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -82231,7 +82257,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -82763,7 +82789,8 @@
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-packaged-production-seed",
-          "release-0.6-security-http-regressions-and-provider-tester-wiring"
+          "release-0.6-security-http-regressions-and-provider-tester-wiring",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -82819,7 +82846,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -83518,7 +83545,8 @@
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-packaged-production-seed",
-          "release-0.6-security-http-regressions-and-provider-tester-wiring"
+          "release-0.6-security-http-regressions-and-provider-tester-wiring",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -83574,7 +83602,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -84103,7 +84131,8 @@
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-packaged-production-seed",
-          "release-0.6-security-http-regressions-and-provider-tester-wiring"
+          "release-0.6-security-http-regressions-and-provider-tester-wiring",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -84159,7 +84188,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -84691,7 +84720,8 @@
           "release-0.5-action-contrast",
           "release-0.5-conditional-heading-acceptance",
           "release-0.6-packaged-production-seed",
-          "release-0.6-security-http-regressions-and-provider-tester-wiring"
+          "release-0.6-security-http-regressions-and-provider-tester-wiring",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -84747,7 +84777,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -92516,7 +92546,8 @@
           "release-0.6-external-provider-metrics-reconciliation",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "status": "done",
@@ -92624,7 +92655,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
@@ -94530,7 +94561,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -94566,11 +94598,11 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -510794,7 +510826,8 @@
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -511146,7 +511179,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -512120,7 +512153,8 @@
           "release-0.5-staff-lists-and-receipts",
           "release-0.5-responsive-and-rtl",
           "release-0.5-mobile-lists-and-touch",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -512128,7 +512162,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -513965,7 +513999,8 @@
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -514325,7 +514360,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -514868,7 +514903,8 @@
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -515228,7 +515264,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -515712,7 +515748,8 @@
           "release-0.6-web-fixture-typecheck-and-license-readback",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -516072,7 +516109,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -516606,7 +516643,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -516914,7 +516952,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -518843,7 +518881,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -518923,7 +518962,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -519409,7 +519448,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -519489,7 +519529,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -519975,7 +520015,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -520055,7 +520096,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -520541,7 +520582,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -520621,7 +520663,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -521107,7 +521149,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -521187,7 +521230,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -521673,7 +521716,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -521753,7 +521797,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -522239,7 +522283,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -522319,7 +522364,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -522805,7 +522850,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -522885,7 +522931,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -523371,7 +523417,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -523451,7 +523498,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -523937,7 +523984,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524017,7 +524065,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -524503,7 +524551,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524583,7 +524632,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -525069,7 +525118,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -525149,7 +525199,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -525635,7 +525685,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -525715,7 +525766,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -526201,7 +526252,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526281,7 +526333,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -531750,7 +531802,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -532022,7 +532075,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -532389,7 +532442,8 @@
           "release-0.5-popup-touch-targets",
           "release-0.5-signature-target-and-fields",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -532709,7 +532763,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -537335,7 +537389,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -537467,7 +537522,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -537559,7 +537614,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -538483,7 +538538,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -538867,7 +538922,8 @@
           "release-0.6-container-runtime-hardening",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -538903,7 +538959,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -538923,7 +538979,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -540334,7 +540390,8 @@
           "release-0.6-container-runtime-hardening",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540370,7 +540427,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -540390,7 +540447,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -540875,7 +540932,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -541003,7 +541061,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -541721,7 +541779,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -541849,7 +541908,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -542541,7 +542600,8 @@
           "release-0.6-container-runtime-hardening",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542577,7 +542637,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -542597,7 +542657,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -543082,7 +543142,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543210,7 +543271,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -544011,7 +544072,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -544071,7 +544133,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -544941,7 +545003,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545001,7 +545064,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -545871,7 +545934,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545931,7 +545995,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -546801,7 +546865,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546861,7 +546926,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -547731,7 +547796,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -547791,7 +547857,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -548661,7 +548727,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548721,7 +548788,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -549591,7 +549658,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549651,7 +549719,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -550521,7 +550589,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550581,7 +550650,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -551451,7 +551520,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -551511,7 +551581,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -552381,7 +552451,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552441,7 +552512,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -553311,7 +553382,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553371,7 +553443,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -554241,7 +554313,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554301,7 +554374,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -555171,7 +555244,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555231,7 +555305,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -556101,7 +556175,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556161,7 +556236,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -557031,7 +557106,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557091,7 +557167,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -557961,7 +558037,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558021,7 +558098,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -558891,7 +558968,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558951,7 +559029,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -559821,7 +559899,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559881,7 +559960,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -560751,7 +560830,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560811,7 +560891,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -561681,7 +561761,8 @@
           "release-0.6-shared-username-normalization",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561741,7 +561822,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -567631,7 +567712,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567655,7 +567737,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -568171,7 +568253,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -569518,7 +569600,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569542,7 +569625,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -570058,7 +570141,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -571406,7 +571489,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -571430,7 +571514,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -571946,7 +572030,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -573263,7 +573347,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -573287,7 +573372,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -573803,7 +573888,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -575146,7 +575231,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -575170,7 +575256,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -575686,7 +575772,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -577038,7 +577124,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577062,7 +577149,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -577578,7 +577665,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -578903,7 +578990,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -578927,7 +579015,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -579443,7 +579531,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -580732,7 +580820,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -580756,7 +580845,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -581272,7 +581361,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -582561,7 +582650,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582585,7 +582675,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -583101,7 +583191,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -584391,7 +584481,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -584415,7 +584506,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -584931,7 +585022,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -586220,7 +586311,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -586244,7 +586336,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -586760,7 +586852,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -588048,7 +588140,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -588092,7 +588185,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -589974,7 +590067,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590018,7 +590112,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -591918,7 +592012,8 @@
           "release-0.6-assistant-display-maintenance-fixture",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592098,7 +592193,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
@@ -592226,7 +592321,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -594034,7 +594129,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -594821,7 +594916,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -594865,7 +594961,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -596747,7 +596843,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -596791,7 +596888,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -598673,7 +598770,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -598717,7 +598815,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -600599,7 +600697,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -600643,7 +600742,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -602525,7 +602624,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -602569,7 +602669,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -604451,7 +604551,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -604495,7 +604596,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -606377,7 +606478,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -606421,7 +606523,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -608303,7 +608405,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -608347,7 +608450,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -610229,7 +610332,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -610273,7 +610377,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -612155,7 +612259,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -612199,7 +612304,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -614081,7 +614186,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -614125,7 +614231,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -615976,7 +616082,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-browser-font-notices",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-app-builds-and-asset-budgets"
+          "release-0.6-app-builds-and-asset-budgets",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -616284,7 +616391,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -616753,7 +616860,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -616797,7 +616905,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -618679,7 +618787,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -618723,7 +618832,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -620697,7 +620806,8 @@
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-shared-package-and-password-policy",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
@@ -620712,7 +620822,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/deadline-forms.spec.ts",
@@ -621272,7 +621382,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -622017,7 +622127,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -622041,7 +622152,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -622557,7 +622668,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -623842,7 +623953,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -623866,7 +623978,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -624382,7 +624494,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -625667,7 +625779,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -625691,7 +625804,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -626207,7 +626320,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -627492,7 +627605,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -627516,7 +627630,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -628032,7 +628146,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -629317,7 +629431,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -629341,7 +629456,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -629857,7 +629972,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -631142,7 +631257,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -631166,7 +631282,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -631682,7 +631798,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -632967,7 +633083,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -632991,7 +633108,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -633507,7 +633624,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -661568,7 +661685,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -661592,7 +661710,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -661948,7 +662066,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -662710,7 +662828,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -662734,7 +662853,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -663090,7 +663209,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -663852,7 +663971,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -663876,7 +663996,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -664232,7 +664352,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -664997,7 +665117,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -665021,7 +665142,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -665377,7 +665498,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -666142,7 +666263,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -666166,7 +666288,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -666522,7 +666644,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -667314,7 +667436,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -667338,7 +667461,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -667694,7 +667817,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -668455,7 +668578,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -668479,7 +668603,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -668835,7 +668959,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -669596,7 +669720,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -669620,7 +669745,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -669976,7 +670101,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -670738,7 +670863,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -670762,7 +670888,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -671118,7 +671244,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -671898,7 +672024,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -671922,7 +672049,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -672278,7 +672405,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -673041,7 +673168,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -673065,7 +673193,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -673421,7 +673549,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -674179,7 +674307,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -674299,7 +674428,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
@@ -675023,7 +675152,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -675143,7 +675273,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
@@ -675875,7 +676005,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -675995,7 +676126,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
@@ -676711,7 +676842,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -676831,7 +676963,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
@@ -677546,7 +677678,8 @@
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -677666,7 +677799,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
@@ -705248,7 +705381,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -705272,7 +705406,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -705628,7 +705762,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -706388,7 +706522,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -706412,7 +706547,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -706768,7 +706903,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -707528,7 +707663,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -707552,7 +707688,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -707908,7 +708044,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -708668,7 +708804,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -708692,7 +708829,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -709048,7 +709185,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -713333,7 +713470,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -713405,7 +713543,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -714182,7 +714320,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -714254,7 +714393,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -715033,7 +715172,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -715105,7 +715245,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -715882,7 +716022,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -715954,7 +716095,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -716731,7 +716872,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -716803,7 +716945,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -717584,7 +717726,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -717656,7 +717799,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -718437,7 +718580,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -718509,7 +718653,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -719286,7 +719430,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -719358,7 +719503,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -720135,7 +720280,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -720207,7 +720353,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -720985,7 +721131,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -721057,7 +721204,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -721840,7 +721987,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -721912,7 +722060,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -722674,7 +722822,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-denial-audit-on-agent-remove-replay"
+          "release-0.6-verify-denial-audit-on-agent-remove-replay",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -722810,7 +722959,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -723319,7 +723468,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-denial-audit-on-agent-remove-replay"
+          "release-0.6-verify-denial-audit-on-agent-remove-replay",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -723455,7 +723605,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -723964,7 +724114,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-denial-audit-on-agent-remove-replay"
+          "release-0.6-verify-denial-audit-on-agent-remove-replay",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -724100,7 +724251,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -724610,7 +724761,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-denial-audit-on-agent-remove-replay"
+          "release-0.6-verify-denial-audit-on-agent-remove-replay",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -724746,7 +724898,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -725255,7 +725407,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-denial-audit-on-agent-remove-replay"
+          "release-0.6-verify-denial-audit-on-agent-remove-replay",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -725391,7 +725544,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -725900,7 +726053,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-denial-audit-on-agent-remove-replay"
+          "release-0.6-verify-denial-audit-on-agent-remove-replay",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -726036,7 +726190,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -726545,7 +726699,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-denial-audit-on-agent-remove-replay"
+          "release-0.6-verify-denial-audit-on-agent-remove-replay",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -726681,7 +726836,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -727191,7 +727346,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-denial-audit-on-agent-remove-replay"
+          "release-0.6-verify-denial-audit-on-agent-remove-replay",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -727327,7 +727483,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -727836,7 +727992,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-denial-audit-on-agent-remove-replay"
+          "release-0.6-verify-denial-audit-on-agent-remove-replay",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -727972,7 +728129,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -728481,7 +728638,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-denial-audit-on-agent-remove-replay"
+          "release-0.6-verify-denial-audit-on-agent-remove-replay",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -728617,7 +728775,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -730438,7 +730596,8 @@
           "release-0.5-shared-component-closure",
           "release-0.5-forms-confirmation-journey",
           "release-0.5-query-and-command-completion",
-          "release-0.5-staff-lists-and-receipts"
+          "release-0.5-staff-lists-and-receipts",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "accepted-admin-staff-geography-terms-ui",
@@ -730446,7 +730605,7 @@
           "source_evidence": [
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/TosRichText.tsx",
@@ -731064,7 +731223,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-native-staff-control-targets",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -731076,7 +731236,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
@@ -731316,7 +731476,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-route-census-closure",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -731328,7 +731489,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/vat-forms.spec.ts",
@@ -731549,7 +731710,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-final-ui-evidence",
           "release-0.5-route-census-closure",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -731561,7 +731723,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
@@ -747297,7 +747459,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
@@ -747341,7 +747503,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -750085,7 +750247,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -751270,7 +751433,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
@@ -751314,7 +751477,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "730c6612b4e2b39f02356a9e0ac54cb2f497ca48e675b71a8df2559a455878e5"
+              "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -753944,7 +754107,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -754143,7 +754307,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "75220994273506dcf679ab9ad38e6540f53d16825d6d9ec5c89012b84704cc53"
+              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
             },
             {
               "path": "apps/web/e2e/deadline-forms.spec.ts",
@@ -754807,7 +754971,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -755672,7 +755836,8 @@
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-browser-focus-and-recovery"
         ]
       }
     },
@@ -756708,7 +756873,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "9fa3b92e4c16bb32e971b5bed80c5107a29180acf6d7cee6c1c5338c495b40a7"
+              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -757804,7 +757969,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ]
       }
     },
@@ -757910,7 +758076,8 @@
         "Reconcile every epic-01 and epic-06 criterion with the existing code and current operational evidence.",
         "Retire obsolete PR-only requirements under the approved direct-main workflow, without weakening production checks.",
         "Run authenticated ZAP probes against the exact accepted v0.6.0 staging candidate and disposition any findings. The v0.5.0 receipt verifies the deployed staging integration only.",
-        "Earlier full workflow 42709841616 at fa7d7416 failed production browser checks with 70 unexpected cases across 14 suites, 2835 expected, 2 skipped and zero flakes. Browser coverage mapping refused the incomplete run. Six representative form-accessibility cases reproduced on the newer built source. Diagnose the affected fixtures and application behavior and obtain the complete passing final candidate browser gate."
+        "Earlier full workflow 42709841616 at fa7d7416 failed production browser checks with 70 unexpected cases across 14 suites, 2835 expected, 2 skipped and zero flakes. Browser coverage mapping refused the incomplete run. Six representative form-accessibility cases reproduced on the newer built source. Diagnose the affected fixtures and application behavior and obtain the complete passing final candidate browser gate.",
+        "The first failed-browser cohort now has targeted Chromium and mobile Safari evidence for Terms detail focus, address dialog and late city results, branding labels and tab navigation, verification mode and wallet limit recovery. Remaining failing cohorts and the complete candidate matrix still need disposition and a passing receipt."
       ],
       "owner": null,
       "depends_on": [],
@@ -758006,7 +758173,8 @@
           "release-0.6-ai-inference-metrics",
           "release-0.6-external-provider-metrics-reconciliation",
           "release-0.6-backend-test-fixture-reconciliation",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-focus-and-recovery"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -858419,6 +858587,55 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/direct-upload-scans",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "570a28f114c4bc74d9b56d8153f59641ca3508dac437d0ccc817d7e14bce253a"
+    },
+    "release-0.6-browser-focus-and-recovery": {
+      "batch": "release-0.6-browser-focus-and-recovery",
+      "base_commit": "1e7193352fb3930470616e54ec31a9c307ff4c7c",
+      "task_keys": [
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/crm-shell-fixture.ts",
+        "apps/web/e2e/form-accessibility.spec.ts",
+        "apps/web/e2e/wallet-limit.spec.ts",
+        "apps/web/src/pages/AdminTosPage.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "1bd3ea85071e197316a456b1250d915172611a33b268a30555229afaddc9e661"
+        },
+        {
+          "path": "apps/web/e2e/wallet-limit.spec.ts",
+          "sha256": "6c7496c2f5ee5b238875e714bd7e6f6e2f95df7e6e8db963ce205dbc830c8671"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Restored Terms detail keyboard focus to the invoking version button, with Refresh as fallback when the trigger is unavailable.",
+        "Aligned staff and customer browser fixtures with current API data. The suite asserts valid address identity, stale city response rejection, distinct branding labels and IDs, keyboard focus, and scoped verification error and receipt states.",
+        "The wallet browser tests keep exact attempted amounts and versions, confirm stale versions cannot write, require a new read after each ambiguous response, and verify the retained amount and later versioned recovery.",
+        "24 targeted cases passed across Chromium and mobile Safari. Results are drawn from the individually passing cases on the same web and auth builds. The final affected branding and wallet run passed 6 of 6. Its prior local run stopped because of ENOSPC; the successful run placed Playwright artifacts on a separate scratch volume.",
+        "The same web and auth assets passed all 102 route budgets. Web type checking, affected ESLint, Prettier, and diff checks passed. The original full hosted browser failure remains recorded and the release gate remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-recovery-volume",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "8691231a47225987e87af398841b4608aba1cd1b59f9a236c79b42fb286355f7"
     }
   },
   "historical_improvements": [
