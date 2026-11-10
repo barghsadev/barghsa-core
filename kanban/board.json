@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T06:45:31+00:00",
-  "source_commit": "a8fda345e4d528a9aa46f3afcecc6bed4479c116",
+  "updated": "2026-11-10T06:49:47+00:00",
+  "source_commit": "5cdc3780be779414822d3659f9566d9e22a05e37",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -11696,7 +11696,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -11728,7 +11729,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/web/src/components/FileUpload.test.tsx",
@@ -108860,7 +108861,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -109012,7 +109014,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -112036,7 +112038,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -112204,7 +112207,7 @@
             },
             {
               "path": "apps/api/src/upload/file-policy.test.ts",
-              "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+              "sha256": "149719cca9cad6648ff0aeab8407399b6db227fb7d990b486fa17a1642d7d9d6"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
@@ -112224,7 +112227,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
@@ -112765,7 +112768,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -112933,7 +112937,7 @@
             },
             {
               "path": "apps/api/src/upload/file-policy.test.ts",
-              "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+              "sha256": "149719cca9cad6648ff0aeab8407399b6db227fb7d990b486fa17a1642d7d9d6"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
@@ -112953,7 +112957,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
@@ -115360,7 +115364,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -115528,7 +115533,7 @@
             },
             {
               "path": "apps/api/src/upload/file-policy.test.ts",
-              "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+              "sha256": "149719cca9cad6648ff0aeab8407399b6db227fb7d990b486fa17a1642d7d9d6"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
@@ -115548,7 +115553,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
@@ -451791,7 +451796,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451827,7 +451833,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -452078,7 +452084,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -452114,7 +452121,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -454598,7 +454605,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -454678,7 +454686,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -455107,7 +455115,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455187,7 +455196,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -455909,7 +455918,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -455989,7 +455999,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -456414,7 +456424,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -456494,7 +456505,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
@@ -457261,7 +457272,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457341,7 +457353,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -457764,7 +457776,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -457844,7 +457857,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -458291,7 +458304,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -458371,7 +458385,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -458818,7 +458832,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -458898,7 +458913,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -459345,7 +459360,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -459425,7 +459441,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -459871,7 +459887,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-worker-and-pool-lifecycle-logs",
-          "release-0.6-signed-callback-payload-digests"
+          "release-0.6-signed-callback-payload-digests",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -459951,7 +459968,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -460690,7 +460707,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460734,7 +460752,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -461046,7 +461064,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461090,7 +461109,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -461404,7 +461423,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -461448,7 +461468,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -461787,7 +461807,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461831,7 +461852,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -462143,7 +462164,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462187,7 +462209,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -464505,7 +464527,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -464657,7 +464680,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -464970,7 +464993,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -465122,7 +465146,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -465437,7 +465461,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -465589,7 +465614,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -465903,7 +465928,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "status": "done",
@@ -466055,7 +466081,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -485531,7 +485557,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -485571,7 +485598,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -485671,7 +485698,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -485727,7 +485755,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -486173,7 +486201,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -486263,7 +486292,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             }
           ]
         }
@@ -486290,7 +486319,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -486380,7 +486410,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             }
           ]
         }
@@ -486407,7 +486437,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -486497,7 +486528,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             }
           ]
         }
@@ -486568,7 +486599,8 @@
         ],
         "batches": [
           "release-0.6-reject-unknown-auth-command-fields",
-          "release-0.6-provider-command-unknown-fields"
+          "release-0.6-provider-command-unknown-fields",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-auth-command-scope",
@@ -489099,18 +489131,21 @@
         "story": "06-security-testing-observability.md#spec-07c59e0b9397"
       },
       "requirement": "| T-06.05.02.07 | Configure file upload limits: 20 per profile/minute; concurrent upload, size, storage quotas | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Set and verify a concurrency limit and aggregate storage quota covering live provisional, sealed and legacy profile-bound uploads. Preserve retained contractual and financial bytes and legitimate internal generation.",
+        "Verify the new 20-per-minute policy with the compiled HTTP routes and real PostgreSQL, including canonical profile scope, independent actors/profiles, 429 and unchanged existing upload cases."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-upload-profile-request-admission"
+        ],
         "current_acceptance": null
       }
     },
@@ -489348,7 +489383,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -489396,7 +489432,7 @@
             },
             {
               "path": "apps/api/src/upload/file-policy.test.ts",
-              "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+              "sha256": "149719cca9cad6648ff0aeab8407399b6db227fb7d990b486fa17a1642d7d9d6"
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
@@ -489420,7 +489456,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "packages/shared/src/admin/upload-policies.ts",
@@ -489473,7 +489509,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-upload-key-and-scanner-tests",
@@ -489493,7 +489530,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -489646,7 +489683,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -489774,7 +489812,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -489832,7 +489870,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-document-template-malware-gate",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -489880,7 +489919,7 @@
             },
             {
               "path": "apps/api/src/upload/file-policy.test.ts",
-              "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+              "sha256": "149719cca9cad6648ff0aeab8407399b6db227fb7d990b486fa17a1642d7d9d6"
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
@@ -489904,7 +489943,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "packages/shared/src/admin/upload-policies.ts",
@@ -489962,7 +490001,8 @@
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-upload-key-and-scanner-tests",
@@ -489998,7 +490038,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
@@ -490092,7 +490132,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -490140,7 +490181,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/worker/src/knowledge-bases/extraction.test.ts",
@@ -490152,7 +490193,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -490201,7 +490242,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -490250,7 +490292,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -490453,7 +490495,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -490533,7 +490576,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -492191,7 +492234,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -492199,7 +492243,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             },
             {
               "path": "docs/threat-model.md",
@@ -492347,7 +492391,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -492355,7 +492400,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -492469,7 +492514,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -492477,7 +492523,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -492539,7 +492585,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -492555,7 +492602,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             }
           ],
           "checks": [
@@ -492623,7 +492670,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -492683,7 +492731,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -496045,7 +496093,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -496061,7 +496110,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             }
           ],
           "checks": [
@@ -496121,7 +496170,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-provider-diagnostic-privacy",
-          "release-0.6-dual-approval-and-emergency-evidence"
+          "release-0.6-dual-approval-and-emergency-evidence",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -496129,7 +496179,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+              "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -496173,7 +496223,7 @@
             },
             {
               "path": "apps/api/src/upload/file-policy.test.ts",
-              "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+              "sha256": "149719cca9cad6648ff0aeab8407399b6db227fb7d990b486fa17a1642d7d9d6"
             },
             {
               "path": "packages/shared/src/notifications/navigation.ts",
@@ -754998,7 +755048,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
@@ -757907,7 +757957,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-ai-quotas-and-budget-evidence",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-upload-profile-request-admission"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -759004,7 +759055,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "24d0248c181a77fbff564349fdd10ea567eaf090582e65982208a037cb319bd8"
+              "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
             },
             {
               "path": "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
@@ -761799,7 +761850,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-ai-quotas-and-budget-evidence",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-upload-profile-request-admission"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -870724,6 +870776,71 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/sensitive-audit-evidence",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "55fd4220379569959e1bad2a8fcda11f6ad7fccf00d404d95a2e8a3a12411b61"
+    },
+    "release-0.6-upload-profile-request-admission": {
+      "batch": "release-0.6-upload-profile-request-admission",
+      "base_commit": "5cdc3780be779414822d3659f9566d9e22a05e37",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.05.02.07",
+        "06-security-testing-observability.md#T-06.04.01.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/upload/file-policy.test.ts",
+        "apps/api/src/upload/upload-admission.test.ts",
+        "apps/api/src/upload/upload.service.ts",
+        "apps/api/src/upload/upload.types.ts",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.module.ts",
+          "sha256": "f7f7e76e72c95c9ddfae75843c5bc0e15a7120f555636a21e23207dcdc7296fb"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.service.ts",
+          "sha256": "861c1345d3eddd60e47a2082b79328ef1759e3d49f5f8a7e7d2e430e6cafae65"
+        },
+        {
+          "path": "apps/api/src/upload/file-policy.test.ts",
+          "sha256": "149719cca9cad6648ff0aeab8407399b6db227fb7d990b486fa17a1642d7d9d6"
+        },
+        {
+          "path": "apps/api/src/upload/upload-access.ts",
+          "sha256": "b5e0108f2b1a94c6337445b771d87ae88e82b03a58c3900cda9345d8785f2c5e"
+        },
+        {
+          "path": "apps/api/src/upload/upload-admission.test.ts",
+          "sha256": "f8790aa253b5b1e0b7c4f5cee04337bc87f00beccf5c75fdde891a4efdaf0800"
+        },
+        {
+          "path": "apps/api/src/upload/upload-reservations.ts",
+          "sha256": "258da4b64f3a10d90fc8e1bcfb24bcc52f6e192487ad88be72e28a9b94cc012b"
+        },
+        {
+          "path": "apps/api/src/upload/upload.service.ts",
+          "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
+        },
+        {
+          "path": "apps/api/src/upload/upload.types.ts",
+          "sha256": "37a4925b17b2b2a1445e62eae8b60f70f078a63825f80df191cdaa11f63c4290"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "42fbe68908d88877a80081dc439a0d2c0022cbf7e4f9463caaf902a202f83a5d"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
+          "sha256": "2bc415b8fc2d7d5e5f73ef9702c1ab0889da624a7754eaf781068bdfe3ad1857"
+        }
+      ],
+      "checks": [
+        "Three baseline cases showed direct and multipart reservations lacked the domain quota, unknown nested upload metadata was silently ignored, and an exhausted quota did not prevent storage operations.",
+        "The shared client reservation path checks scope and file policy, then charges 20 requests per minute through the existing PostgreSQL security limiter. Canonical UUID spelling selects the same profile bucket across users and transports; unscoped uploads select the authenticated account. The quota is checked before a provisional record or provider call. Server-generated contract uploads retain their separate internal path.",
+        "Unknown nested upload metadata fails strict parsing. Existing fields, upload ownership, category policy, sealed-byte verification and direct/multipart provider boundaries are preserved. The 51 targeted admission, policy, authority and MIME cases passed, along with API typecheck, ESLint, Prettier and diff checks."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/upload-profile-admission",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "25d12480e01df1ab7040466e98bb404b95e6993f7acc1545560ff93e6a6ab85d"
     }
   },
   "historical_improvements": [

@@ -32,6 +32,11 @@ commands validate the configuration and each template mapping against their
 supported fields. Stored provider configuration continues to use its existing
 read parser.
 
+Direct and multipart upload reservations share a PostgreSQL limit of 20 per
+authorized profile per minute. Account-only uploads use the same limit keyed
+to the signed-in account. The API checks scope, metadata and the current file
+policy before charging the quota or creating a reservation.
+
 The compiled HTTP subset runs the application with disposable databases. It
 exercises session and origin controls, forwarded-address limits, direct UUID
 substitution, the SMTP connection guard, and payment-return navigation.

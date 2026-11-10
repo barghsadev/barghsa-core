@@ -40,7 +40,7 @@ export const PresignedUrlRequestSchema = z
      * Optional metadata for business-record association.
      */
     metadata: z
-      .object({
+      .strictObject({
         recordType: z.string().max(64).optional(),
         recordId: z.string().max(64).optional(),
         description: z.string().max(512).optional(),

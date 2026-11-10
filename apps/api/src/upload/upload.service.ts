@@ -16,10 +16,12 @@ import {
 } from './upload-reservations.js';
 import { randomUUID } from 'node:crypto';
 import { getDbPool } from '@barghsa/db';
+import { rateLimitKey } from '@barghsa/shared/rate-limit';
 import type { PoolClient } from 'pg';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { renderPdfFirstPage } from '../documents/document-preview.js';
 import { ProfilesService } from '../profiles/profiles.service.js';
+import { RateLimitService } from '../rate-limit/rate-limit.service.js';
 import { requireUploadContext } from './upload-access.js';
 import { detectDocumentContentType } from './document-content-type.js';
 import type { MultipartPart, StorageProvider } from '@barghsa/shared/storage';
@@ -72,7 +74,8 @@ export class UploadService {
     private readonly immutableStorageService: ImmutableStorageRecordService | null,
     @Inject(UploadPolicyResolver)
     private readonly policyResolver: UploadPolicyResolver,
-    @Inject(ProfilesService) private readonly profilesService: ProfilesService
+    @Inject(ProfilesService) private readonly profilesService: ProfilesService,
+    @Inject(RateLimitService) private readonly rateLimits: RateLimitService
   ) {}
 
   /** Public constraints only; this read neither reserves a file nor grants record access. */
@@ -221,6 +224,11 @@ export class UploadService {
         policySource: policy.source,
       });
     }
+
+    const quotaKey = req.profileId
+      ? rateLimitKey('upload:profile', req.profileId.toLowerCase())
+      : rateLimitKey('upload:user', actor.session.userId);
+    await this.rateLimits.enforceSecurityRateLimit(quotaKey, 20, 60_000);
 
     // Generate a unique key. The (already validated) category is bound
     // into the key — `uploads/<category>/<uuid><ext>` — so the verify
