@@ -20,6 +20,12 @@ The amendment is immutable JSON tied to the original contract version. Customer 
 
 An increase activates only after customer consent, full adjustment-invoice payment and its effective date. The optional staff payment override is deferred. Keep full-payment enforcement. Decreases use the approved price-adjustment and refund workflow rather than a negative invoice.
 
+## v0.6.0 submission receipts
+
+New electricity, saving, solar and consultation submissions share a rolling quota of five per profile per minute. The shared PostgreSQL lock serializes submissions by different agents of the same profile. An authorized replay returns its stored receipt before the new-submission quota applies.
+
+Electricity replays check current order-management authority against the profile on the stored order. A caller who loses access receives the usual opaque 404, including when they supply a different profile in the retry. The receipt remains tied to its original quote, contract and invoice.
+
 ## Profile archival and retained records
 
 Launch supports guarded soft archival only. It performs no physical purge and makes no retention-compliance claim. Existing business-obligation, balance, ownership, current-permission, step-up and audit guards remain required.

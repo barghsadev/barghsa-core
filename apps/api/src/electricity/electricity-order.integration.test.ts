@@ -210,6 +210,56 @@ async function correctionSnapshot(orderId: string, contractId: string) {
   ).rows[0];
 }
 
+it('requires current profile authority before replaying an electricity submission receipt', async () => {
+  await http.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES('manager','manager@electricity.test','test-only')"
+  );
+  await http.pool.query(
+    "INSERT INTO profile_agents(profile_id,user_id,role) VALUES($1,'manager','Manager')",
+    [input.profileId]
+  );
+  const startManagerSession = async () => {
+    const sessionId = randomUUID();
+    const csrf = randomUUID();
+    await http.pool.query(
+      "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline) VALUES($1,'manager',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')",
+      [sessionId, csrf, randomUUID()]
+    );
+    headers = { ...headers, Cookie: `barghsa_session=${sessionId}`, 'X-CSRF-Token': csrf };
+  };
+  await startManagerSession();
+  await refreshQuote();
+  const receipt = await submittedOrder();
+  const before = await correctionSnapshot(receipt.orderId, receipt.contractId);
+  const replay = await post('orders/simple', input);
+  expect(replay.status).toBe(201);
+  expect(await replay.json()).toEqual(receipt);
+  expect((await post('orders/simple', { ...input, totalKwh: '11' })).status).toBe(409);
+
+  await http.pool.query("DELETE FROM profile_agents WHERE profile_id=$1 AND user_id='manager'", [
+    input.profileId,
+  ]);
+  await http.pool.query("UPDATE sessions SET revoked_at=NOW() WHERE user_id='manager'");
+  await startManagerSession();
+  const otherProfile = (
+    await http.pool.query<{ id: string }>(
+      "INSERT INTO profiles(user_id,profile_type,status) VALUES('manager','LEGAL','ACTIVE') RETURNING id"
+    )
+  ).rows[0]!.id;
+  for (const payload of [input, { ...input, profileId: otherProfile }]) {
+    const denied = await post('orders/simple', payload);
+    expect(denied.status).toBe(404);
+    const body = await denied.json();
+    expect(body).toMatchObject({ error: { code: 'NOT_FOUND:RESOURCE' } });
+    expect(JSON.stringify(body)).not.toContain(receipt.orderId);
+  }
+  expect(await correctionSnapshot(receipt.orderId, receipt.contractId)).toEqual(before);
+  expect(
+    (await http.pool.query('SELECT count(*)::int AS count FROM electricity_order_submissions'))
+      .rows[0].count
+  ).toBe(1);
+});
+
 it('projects correction form feedback without mutations and preserves exact staff/address receipts', async () => {
   const order = await submittedOrder();
   const versionId = (

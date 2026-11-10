@@ -1586,12 +1586,17 @@ export class ElectricityOrderService {
       await this.orders.lockOrderActor(client, actor);
       const requestHash = hashRequest(input);
       const previous = (
-        await client.query<{ request_hash: string; response: unknown }>(
-          'SELECT request_hash,response FROM electricity_order_submissions WHERE user_id=$1 AND idempotency_key=$2',
+        await client.query<{ request_hash: string; response: unknown; profile_id: string }>(
+          `SELECT s.request_hash,s.response,e.profile_id
+           FROM electricity_order_submissions s JOIN electricity_orders e ON e.id=s.order_id
+           WHERE s.user_id=$1 AND s.idempotency_key=$2`,
           [actor.userId, input.idempotencyKey]
         )
       ).rows[0];
       if (previous) {
+        // The receipt belongs to the stored order profile, even if the retry supplies another ID.
+        if (!(await this.orders.mayManageOrders(client, actor.userId, previous.profile_id)))
+          throw new NotFoundException('Profile not found');
         if (previous.request_hash !== requestHash)
           throw new ConflictException('Idempotency key was used for different order data');
         await requireCurrentSession(client, actor);
