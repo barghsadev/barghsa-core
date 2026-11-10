@@ -1,0 +1,17 @@
+[Unit]
+Description=Barghsa staging private ClamAV signature tunnel
+Wants=network-online.target
+After=network-online.target docker.service
+Requires=docker.service
+
+[Service]
+EnvironmentFile=/etc/barghsa/staging/clamav-mirror/tunnel.env
+ExecStart=/usr/local/sbin/barghsa-staging-clamav-tunnel
+Restart=on-failure
+RestartSec=15
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

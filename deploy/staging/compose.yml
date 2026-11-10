@@ -64,8 +64,16 @@ services:
   clamav:
     image: ${BARGHSA_CLAMAV_IMAGE:?Set the released ClamAV image}
     pull_policy: never
+    environment:
+      FRESHCLAM_CHECKS: ${BARGHSA_CLAMAV_FRESHCLAM_CHECKS:-1}
     volumes:
       - clamavdata:/var/lib/clamav
+      - type: bind
+        source: ${BARGHSA_CLAMAV_FRESHCLAM_CONFIG:-./freshclam.conf}
+        target: /etc/clamav/freshclam.conf
+        read_only: true
+        bind:
+          create_host_path: false
     healthcheck:
       test: [CMD, /usr/local/bin/barghsa-clamav-healthcheck]
       interval: 30s

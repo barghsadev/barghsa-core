@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T13:23:35+00:00",
-  "source_commit": "b9df179c8226d3f71353f0c48f75189cee948ad0",
+  "updated": "2026-11-10T13:42:08+00:00",
+  "source_commit": "2e2fc8c700db1050ced40ae8f7b4e009a4a9215a",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -969,6 +969,12 @@
       "date": "2026-11-09",
       "decision": "Remove bundled GeoLite2; display unavailable. Retain signed-in session history, authentication, device trust and revocation. No remote IP lookup. Reintroduction requires approved maintained offline data and verified update and retirement.",
       "documentation": "docs/security/session-location.md"
+    },
+    "v06_staging_clamav_mirror": {
+      "status": "approved",
+      "date": "2026-11-10",
+      "decision": "Use the owner-designated EU host for a private official ClamAV mirror. Staging reads it through a restricted SSH tunnel. Keep the scanner's verified daily database separate from application releases and preserve the previous scanner and signature backup during rollout.",
+      "documentation": "docs/operations/clamav-signatures.md"
     }
   },
   "specification_sources": {
@@ -9443,7 +9449,8 @@
         ],
         "batches": [
           "release-0.6-shipped-component-license-gate",
-          "release-0.6-packaged-production-seed"
+          "release-0.6-packaged-production-seed",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "current-application-image-healthchecks",
@@ -9475,12 +9482,13 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             }
           ],
           "checks": [
             "Exact prior hosted image metadata contains native 30s interval, 10s timeout, 40s startup and three retries for app/worker and web. The shared app image selects readiness from the actual API or worker process command.",
-            "The web image recipe only adds build-time license inventory and its private copy. The Docker health instruction, runtime entry points and all probe implementations retain their prior bytes."
+            "The web image recipe only adds build-time license inventory and its private copy. The Docker health instruction, runtime entry points and all probe implementations retain their prior bytes.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ]
         }
       }
@@ -18589,14 +18597,16 @@
           "release-0.6-bill-provider-network-boundaries",
           "release-0.6-immutable-staging-acceptance",
           "release-0.6-production-notes-and-provider-inventory",
-          "release-0.6-first-launch-promotion-check"
+          "release-0.6-first-launch-promotion-check",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
           "reviewed_sha": "6596c5b0b75ecaed68d53058b8fcec80c9951d77",
           "checks": [
             "The guide covers prerequisites, environment references, isolated pilot and staging deployment, commercial topology, upgrades, rollback, service configuration and monitoring.",
-            "Verified all 27 Compose interpolation names and 86 explicit runtime environment variable reads are covered by the guide or its annotated environment reference. Checked local links, anchors, shell syntax and formatting. This is guide evidence, with live topology and deployment gates tracked separately."
+            "Verified all 27 Compose interpolation names and 86 explicit runtime environment variable reads are covered by the guide or its annotated environment reference. Checked local links, anchors, shell syntax and formatting. This is guide evidence, with live topology and deployment gates tracked separately.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "source_evidence": [
             {
@@ -18621,7 +18631,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -111508,7 +111518,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -111884,7 +111895,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -112129,7 +112140,8 @@
             "Renewed the shared release-version browser binding after preserving the historical milestone check in the root-version suite. All 25 focused release and smoke cases passed across the five browser projects.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta."
+            "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -393838,7 +393850,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-video-upload-policy-ceiling"
+          "release-0.6-video-upload-policy-ceiling",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -393938,7 +393951,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -394247,7 +394260,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-documents-comments",
           "limitations": [
@@ -394829,7 +394843,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-video-upload-policy-ceiling"
+          "release-0.6-video-upload-policy-ceiling",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -394929,7 +394944,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -395238,7 +395253,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-documents-comments",
           "limitations": [
@@ -395819,7 +395835,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-video-upload-policy-ceiling"
+          "release-0.6-video-upload-policy-ceiling",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -395919,7 +395936,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -396228,7 +396245,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-documents-comments",
           "limitations": [
@@ -472357,7 +472375,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "status": "done",
@@ -472589,7 +472608,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -472706,7 +472725,8 @@
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [],
           "operational_limits": [
@@ -472945,7 +472965,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "status": "done",
@@ -473177,7 +473198,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -473294,7 +473315,8 @@
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [],
           "operational_limits": [
@@ -473531,7 +473553,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "status": "done",
@@ -473763,7 +473786,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -473880,7 +473903,8 @@
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [],
           "operational_limits": [
@@ -474117,7 +474141,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -474349,7 +474374,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -474482,7 +474507,8 @@
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [],
           "operational_limits": [
@@ -475202,7 +475228,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "status": "done",
@@ -475434,7 +475461,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -475551,7 +475578,8 @@
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [],
           "operational_limits": [
@@ -475835,7 +475863,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -476211,7 +476240,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -476472,7 +476501,8 @@
             "Renewed the shared release-version browser binding after preserving the historical milestone check in the root-version suite. All 25 focused release and smoke cases passed across the five browser projects.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
-            "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta."
+            "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [
             "Provision protected CUSTOMER_TELEGRAM credentials after identifying the existing ngrok webhook owner/secret location (already asked once); hand off the callback without disturbing unrelated integration. At the accepted staging release, verify actual customer/profile linking, private Telegram reply/root version, exact provider message receipts and live slot/authority isolation. Local implementation and 127 related cases are accepted; live operations are not certified."
@@ -477006,7 +477036,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "status": "done",
@@ -477238,7 +477269,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -477355,7 +477386,8 @@
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [],
           "operational_limits": [
@@ -477591,7 +477623,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "status": "done",
@@ -477823,7 +477856,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -477940,7 +477973,8 @@
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [],
           "operational_limits": [
@@ -478177,7 +478211,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "status": "done",
@@ -478409,7 +478444,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -478526,7 +478561,8 @@
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [],
           "operational_limits": [
@@ -478764,7 +478800,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -478996,7 +479033,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -479129,7 +479166,8 @@
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [],
           "operational_limits": [
@@ -479373,7 +479411,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "status": "done",
@@ -479605,7 +479644,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -479722,7 +479761,8 @@
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [],
           "operational_limits": [
@@ -479958,7 +479998,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-encryption-key-overlap-and-versioned-envelopes"
+          "release-0.6-encryption-key-overlap-and-versioned-envelopes",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "status": "done",
@@ -480190,7 +480231,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -480307,7 +480348,8 @@
             "Isolated real Compose project rejected an unhealthy candidate, executed the exact release.sh error trap, restored the previous API, worker, AI and web image IDs healthy, and preserved the failure exit status. No live change. Both rollback tests passed.",
             "The exact smoke code validated live staging HTTPS liveness/readiness bodies and rejected wrong-route HTML, empty JSON, unavailable PostgreSQL, and HTTP failure in controlled probes. Both unchanged rollback tests passed.",
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
-            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts."
+            "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [],
           "operational_limits": [
@@ -482127,7 +482169,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -482143,7 +482186,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "docs/security/password-hashing.md",
@@ -482163,7 +482206,8 @@
             }
           ],
           "checks": [
-            "A reusable synthetic benchmark ran in the isolated Node 24.22.2 Linux x64 staging app image under the API memory limit. Default verification was 365 ms p95, upper-bound verification was 663 ms p95. Four-way wall time was 391 ms versus 767 ms, and peak RSS was 183484 KiB versus 315000 KiB. Exact production load calibration remains separate."
+            "A reusable synthetic benchmark ran in the isolated Node 24.22.2 Linux x64 staging app image under the API memory limit. Default verification was 365 ms p95, upper-bound verification was 663 ms p95. Four-way wall time was 391 ms versus 767 ms, and peak RSS was 183484 KiB versus 315000 KiB. Exact production load calibration remains separate.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ]
         }
       }
@@ -482198,7 +482242,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -482230,7 +482275,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "docs/security/password-hashing.md",
@@ -482258,7 +482303,8 @@
             }
           ],
           "checks": [
-            "Three environment overrides validate the allowed integer ranges at policy load. Ten option cases cover unchanged defaults, permitted stronger settings and invalid bounds. New hashes preserve the baseline minimum, algorithm, version and output size. Neither live configuration nor any coverage/performance gate changed."
+            "Three environment overrides validate the allowed integer ranges at policy load. Ten option cases cover unchanged defaults, permitted stronger settings and invalid bounds. New hashes preserve the baseline minimum, algorithm, version and output size. Neither live configuration nor any coverage/performance gate changed.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ]
         }
       }
@@ -486032,7 +486078,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -486064,7 +486111,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -486080,7 +486127,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ]
         }
       }
@@ -486110,7 +486158,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-container-runtime-hardening",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -486130,7 +486179,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -486139,7 +486188,8 @@
           ],
           "checks": [
             "Report-Only is the default. Explicit enforce selects the same nonce policy, and an invalid mode refuses startup.",
-            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ]
         }
       }
@@ -486348,7 +486398,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -486380,7 +486431,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -486396,7 +486447,8 @@
             "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ]
         }
       }
@@ -486543,7 +486595,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-staging-pilot-proxy-log-redaction",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -486563,7 +486616,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -486596,7 +486649,8 @@
           ],
           "checks": [
             "Web and staged proxy source emit nosniff, referrer and permissions headers; normal API and error paths verified on isolated TLS. The live API change awaits the accepted staging release.",
-            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json"
+            "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ]
         }
       }
@@ -492426,7 +492480,7 @@
       "launch_required": true,
       "remaining": [
         "The code gates cover immutable business documents, owner-scoped direct uploads and multipart template versions. New and retained template bytes are screened before extraction and publishing. The isolated native checks use controlled socket responses. The sealed worker now covers the full 100 MiB ceiling with a locally verified byte-integrity boundary. The video request and picker now also honor the full existing policy.",
-        "Verify the protected live scanner configuration and clean/EICAR, unavailable and retry receipts on the exact candidate. The isolated official feed recheck returned HTTP 403 with a new cooldown until November 11 at 13:22:17 UTC. Provide a reachable approved mirror or restore vendor access."
+        "The EU mirror and current signed daily 28179 are verified, including native clean/EICAR and full 100 MiB isolated receipts. Activate the reviewed scanner image and recurring private feed on the exact candidate, and verify application clean/EICAR, unavailable and retry receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -492450,7 +492504,8 @@
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-video-upload-policy-ceiling",
-          "release-0.6-official-clamav-feed-recheck"
+          "release-0.6-official-clamav-feed-recheck",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": null
       }
@@ -492706,7 +492761,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": null
       },
@@ -493097,7 +493153,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-sealed-document-stream-scan"
+          "release-0.6-sealed-document-stream-scan",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": null
       },
@@ -493525,14 +493582,16 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-worker-structured-credential-redaction"
+          "release-0.6-worker-structured-credential-redaction",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
           "reviewed_sha": "076ac89547db252030bcafd07fe3b0f105af0477",
           "checks": [
             "The private event tables retain verified Resend JSON and validated payment fields without signing secrets. Webhook responses return acknowledgements. Current staff capability and session are required for the restricted history projection, which maps the callback to coarse delivery status and a fixed bounce diagnostic. Staging DB is on the private Compose network; the production template requires certificate validation for the external PostgreSQL connection. Production topology rehearsal remains separate.",
-            "All 50 exact-source signature, replay, callback controller and payment service unit cases passed. Successful hosted job 129636126527 passed 53 native cases for the unchanged wallet and Resend receipt, deduplication, authority, history and unmatched callback logic. The later shared signature helper was exercised by the 50 current unit cases. The same candidate does not supply a live provider receipt."
+            "All 50 exact-source signature, replay, callback controller and payment service unit cases passed. Successful hosted job 129636126527 passed 53 native cases for the unchanged wallet and Resend receipt, deduplication, authority, history and unmatched callback logic. The later shared signature helper was exercised by the 50 current unit cases. The same candidate does not supply a live provider receipt.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "source_evidence": [
             {
@@ -493601,7 +493660,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -494817,7 +494876,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-container-runtime-hardening",
-          "release-0.6-runtime-node-options"
+          "release-0.6-runtime-node-options",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "source-bound-node-options-and-isolated-runtime",
@@ -494837,7 +494897,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -494859,7 +494919,8 @@
           "checks": [
             "The staged and production Node configurations retain their heap limits and set --no-deprecation. The local Node control suppressed a deprecation warning and emitted an ordinary warning. Both production Compose forms reject inspector and insecure-parser flags from protected environment files.",
             "A disposable private Linux network reused the previously verified app, web and PostgreSQL content. The app and web image variants applied only the exact ENV instructions from the changed Dockerfiles. Native packaged migration, non-root/read-only readiness, shared API/worker image, inspector denial, strict HTTP parsing, dependency loss and recovery, clean SIGTERM, and test-resource cleanup all passed.",
-            "The probe verifies this runtime configuration delta. The derived images were not deployed or distributed. Candidate registry digests and exact staging and production-equivalent evidence are separate gates."
+            "The probe verifies this runtime configuration delta. The derived images were not deployed or distributed. Candidate registry digests and exact staging and production-equivalent evidence are separate gates.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ]
         }
       }
@@ -495199,7 +495260,8 @@
           "docs/threat-model.md"
         ],
         "batches": [
-          "release-0.6-source-grounded-threat-model-and-review"
+          "release-0.6-source-grounded-threat-model-and-review",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -495207,7 +495269,7 @@
           "source_evidence": [
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "docs/threat-model.md",
@@ -495216,7 +495278,8 @@
           ],
           "checks": [
             "The repository threat model covers the four launch services, account access, financial and contract state, uploads, provider integrations, assistant inference, recovery and the source-to-deployment path.",
-            "Checked the reference staging topology and documented the conditional production assumptions. The model claims neither deployment approval nor completion of live security gates."
+            "Checked the reference staging topology and documented the conditional production assumptions. The model claims neither deployment approval nor completion of live security gates.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ]
         }
       },
@@ -495253,7 +495316,8 @@
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-high-risk-staff-step-up",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
-          "release-0.6-reusable-profile-and-staff-capability-scope"
+          "release-0.6-reusable-profile-and-staff-capability-scope",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -495261,7 +495325,7 @@
           "source_evidence": [
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "docs/security/authorization.md",
@@ -495274,7 +495338,8 @@
           ],
           "checks": [
             "The model records seven trust boundaries with channels, data and controls. It distinguishes customer, staff, admin, external callers and providers and maps protected assets and entry points.",
-            "Validated 46 repository links and a 19-edge Mermaid source diagram, including independent CI and deployment edges from the same source repository."
+            "Validated 46 repository links and a 19-edge Mermaid source diagram, including independent CI and deployment edges from the same source repository.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ]
         }
       },
@@ -504053,7 +504118,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-database-protection-export-leases"
+          "release-0.6-database-protection-export-leases",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -504081,7 +504147,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -504094,7 +504160,8 @@
           ],
           "checks": [
             "Private staging API and worker both returned Prometheus samples. An isolated Prometheus loaded the new scrape stanzas and collected healthy pg_metrics_collection_success, pg_cache_hit_ratio and notifications_queue_depth. Public ingress returned 404 JSON for /api/metrics and the HTML app shell for /metrics.",
-            "Promtool validated the exact candidate configuration and both unchanged rule files. The new configuration still needs live operator readback after rollout. No live notification or alert delivery is claimed."
+            "Promtool validated the exact candidate configuration and both unchanged rule files. The new configuration still needs live operator readback after rollout. No live notification or alert delivery is claimed.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/private-api-monitoring-proof.json"
         }
@@ -764182,11 +764249,11 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "a6cdeec31c742291f4eadedf2e64557a3ffa40c08ff30d92ce7c5c67e8b19d7f"
+              "sha256": "41d61fff9de1062443d7e4a8b693a7d05ce11e393790d06e82a824482c2b25b5"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -765139,7 +765206,8 @@
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions."
+            "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [],
           "operational_limits": [
@@ -766017,7 +766085,8 @@
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-video-upload-policy-ceiling",
-          "release-0.6-browser-recovery-selection-and-overlay"
+          "release-0.6-browser-recovery-selection-and-overlay",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -768190,11 +768259,11 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+              "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "a6cdeec31c742291f4eadedf2e64557a3ffa40c08ff30d92ce7c5c67e8b19d7f"
+              "sha256": "41d61fff9de1062443d7e4a8b693a7d05ce11e393790d06e82a824482c2b25b5"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -769164,7 +769233,8 @@
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the compiled agent mutation proof after asserting the intentional append-only 404 authorization denial separately from all unchanged business rows and existing denials.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions."
+            "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
+            "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
           ],
           "limitations": [
             "Current staging is v0.3.0/2ac708c11225a1239156787cddfdd3ab094fb8f8, API/web/worker healthy and Redis/object storage readiness verified. After effective v0.4.0 criteria are accepted, deploy its immutable candidate and verify actual AI routing, slot isolation and notification/storage operations. Earlier v0.1.29/forced-TLS warning description is stale and does not dispatch a rebuild.",
@@ -769931,7 +770001,8 @@
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-video-upload-policy-ceiling",
-          "release-0.6-browser-recovery-selection-and-overlay"
+          "release-0.6-browser-recovery-selection-and-overlay",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -774129,10 +774200,10 @@
         "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO.",
         "Verify production-equivalent monitoring and quality schedules. The stage receiver has 16 private inbox delivery receipts including provider, dead-letter and SMS low-credit firing/recovery. All six external email legs were skipped because the channel was disabled. An authorized monitoring email recipient with an enabled verified channel and actual provider delivery receipt are still required.",
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
-        "Provide an authorized ClamAV signature feed and verify that the chosen staging scanner loads current vendor data, including clean and infected scan receipts. The isolated retry on November 10 returned HTTP 403 and a renewed cooldown through November 11 at 13:22:17 UTC. Await an approved mirror or restored vendor access.",
+        "The EU private feed, current signatures and live staging daemon clean/EICAR verdicts are verified. Verify current signed updates and application upload receipts on the final operational topology.",
         "Staging CSP report-only review found five cross-origin image reports and the live public branding response references the same barghsa.com favicon origin. Publish the preserved PNG as a sealed staging asset with authorized staff step-up, verify the byte-identical response and complete the full week of reviewed reports before enforcing CSP.",
         "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics.",
-        "The live scanner reported 50M INSTREAM and September 28 signatures. The isolated source-matching image verifies the 100M scanner setting. Still prove fresh signed data and the approved scanner rollout, preserving the previous volume for rollback."
+        "The active staging scanner retains its 50M image and now loads signed daily 28179 from the EU mirror. The isolated source-matching 100M image passed current clean/EICAR and full 100 MiB tests. Roll out the reviewed 100M scanner and recurring private feed while preserving rollback."
       ],
       "owner": null,
       "depends_on": [],
@@ -774155,7 +774226,8 @@
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-video-upload-policy-ceiling",
-          "release-0.6-official-clamav-feed-recheck"
+          "release-0.6-official-clamav-feed-recheck",
+          "release-0.6-private-clamav-signature-mirror"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -884327,6 +884399,100 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/official-clamav-feed-recheck",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "939a3f9dba431e96a3cefac8d1bb269882c8017af14b946411f006dae4a848fe"
+    },
+    "release-0.6-private-clamav-signature-mirror": {
+      "batch": "release-0.6-private-clamav-signature-mirror",
+      "base_commit": "2e2fc8c700db1050ced40ae8f7b4e009a4a9215a",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "03-core-business.md#T-03.10.02.01",
+        "03-core-business.md#T-03.10.02.02",
+        "03-core-business.md#T-03.10.02.03",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.01.01.02",
+        "06-security-testing-observability.md#T-06.01.01.03",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.02",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.01",
+        "06-security-testing-observability.md#T-06.06.01.01",
+        "06-security-testing-observability.md#T-06.06.01.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.06.02.06",
+        "06-security-testing-observability.md#T-06.07.03.01",
+        "06-security-testing-observability.md#T-06.08.01.01",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "deploy/staging/barghsa-clamav-mirror-tunnel.service",
+        "deploy/staging/clamav-mirror-tunnel.sh",
+        "deploy/staging/compose.yml",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/freshclam.conf",
+        "docs/operations/clamav-signatures.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "5accedbaa9b8dbd596fcc4324150399379017e5b395704ffdc368cd0743b2da2"
+        },
+        {
+          "path": "deploy/clamav/healthcheck.sh",
+          "sha256": "23bf1005115c965d5584ce4cd4aee7b7e645e0e71f334141109c5c8a00760229"
+        },
+        {
+          "path": "deploy/staging/barghsa-clamav-mirror-tunnel.service",
+          "sha256": "1290394f2022c9839fe3191df72e2f45b2e1e98fe9f08e16d7b907c1f11ff82d"
+        },
+        {
+          "path": "deploy/staging/clamav-mirror-tunnel.sh",
+          "sha256": "e0bc95b1c1d5c6904b8eb55e8dc242fee73bea5c07c3d92a13f852ef078468cc"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "68c8eaf793f576619350251bfec08e9008d7b85397535fae5c33f8039ea01b58"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "41d61fff9de1062443d7e4a8b693a7d05ce11e393790d06e82a824482c2b25b5"
+        },
+        {
+          "path": "deploy/staging/freshclam.conf",
+          "sha256": "0087fbc4606902d5c8f48eb9283f5f7493ee049347012c82b7e375eb4f3a210a"
+        },
+        {
+          "path": "docs/operations/clamav-signatures.md",
+          "sha256": "6da6a19188395057d152a9441a1063c2a1e5cba662ebe68078370cb2e2bcdd73"
+        }
+      ],
+      "checks": [
+        "The owner requested the EU private mirror after staging's direct CDN rejection. EU Ubuntu FreshClam 1.5.4 downloaded and tested official daily 28179 (November 10 06:26 UTC), main 63 and bytecode 339. The native EU updater is active and confirmed the same versions on its next check.",
+        "The EU mirror serves only range-capable CVD and CLD requests on loopback. The staging systemd SSH tunnel binds only the private Docker bridge gateway. The pinned, dedicated SSH identity rejected shell access, remote forwarding and another destination. A 512-byte range read returned 206. The server refused POST and unrelated paths.",
+        "Two native staging FreshClam runs via the private mirror upgraded 28177 to 28179 and read back all three current versions. Sigtool independently verified all three official CVDs. The exact isolated 100 MiB scanner image 9b03670406718952efd5f5451e327594ad4b30877091ea214e20a2029245ea0c returned clean, Eicar-Test-Signature FOUND and 100 MiB clean INSTREAM receipts with networking disabled.",
+        "A disposable normal-startup scanner on the staging Compose bridge fetched daily 28179 using the read-only protected config and native daemon. Initial notification preceded the ClamD socket, so the probe issued RELOAD after the DB test passed and then read loaded version 28179 and a healthy PING. Disposable test resources were removed.",
+        "The active staging scanner retained its image sha256:28dd474051a0a39d0df15c5441fcbe81bdbdb8c1843cdf8c281e5301f777c74b and existing volume. Its protected pre-refresh volume backup SHA256 is 72cce0ae520d4406b18b505e870d7d8ce29995d290bd812a2d3ae16242e31ea0. In-place FreshClam maintenance reloaded 28179 and active ClamD returned clean and EICAR verdicts. App liveness and exact v0.5.0 staging metadata stayed healthy.",
+        "ShellCheck, Bash parse, three staging release rollback tests and systemd unit verification passed. Docker Compose resolved both scanner config variants against staging's protected inputs. Semantic comparison found only the intended read-only scanner config mount and FreshClam check frequency changed. The deploy script copies the new default config with its existing static files."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/private-clamav-signature-mirror",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "6b14ecc91da3f3f14d884448693e08914befff427a12fac7716fd44a67109a63"
     }
   },
   "historical_improvements": [
