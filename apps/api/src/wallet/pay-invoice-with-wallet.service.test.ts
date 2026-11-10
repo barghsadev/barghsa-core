@@ -149,7 +149,7 @@ function paymentQueries(
   const idempotencyPersist = opts.idempotencyPersist ?? [{ id: 'idem-persist-1' }];
   mockQuery((sql) => {
     if (sql.includes('rate_limit_rolling')) {
-      return { rows: [{ count: opts.paymentCount ?? 1, reset_ms: '42000' }] };
+      return { rows: [{ count: opts.paymentCount ?? 1, reset_ms: '42000', limit_value: 10 }] };
     }
     if (sql.startsWith('SELECT id, archived FROM profiles')) {
       return { rows: [{ id: PROFILE_ID, archived: false }] };
@@ -446,13 +446,10 @@ describe('PayInvoiceWithWalletService (T-04.2.03.01 / T-04.2.03.02 / T-04.2.03.0
   it('rolls back a new wallet payment when the profile quota is exhausted', async () => {
     paymentQueries({ paymentCount: 11 });
     await expect(pay()).rejects.toMatchObject({ status: 429, response: { retryAfterMs: 42_000 } });
-    expect(mockClient.query).toHaveBeenCalledWith(expect.stringContaining('rate_limit_rolling'), [
-      true,
-      `wallet:payment:profile:${PROFILE_ID}`,
-      60_000,
-      10,
-      true,
-    ]);
+    expect(mockClient.query).toHaveBeenCalledWith(
+      expect.stringContaining('rate_limit_rolling(true, $3, $4, limit_value, true)'),
+      ['security_rate_limit:wallet', 10, `wallet:payment:profile:${PROFILE_ID}`, 60_000]
+    );
     expect(walletService.debit).not.toHaveBeenCalled();
     expect(invoiceStateMachine.transition).not.toHaveBeenCalled();
     expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');

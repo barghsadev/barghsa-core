@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { TicketReplySchema, ticketReplyApiSchema, ticketListQuery } from './ticket-input.js';
 import { parseTicketFormInput, optionalTicketCommandKey } from './ticket-form-input-fields.js';
 import {
@@ -102,7 +103,7 @@ export class TicketsController {
 
     const ticket = await this.ticketsService.createTicket(userId, body, req.session);
 
-    this.logger.log(`Ticket ${ticket.id} created for user ${userId}`);
+    this.logger.log(`Ticket ${ticket.id} created for user ${privateLogId('actor', userId)}`);
     return ticket;
   }
 

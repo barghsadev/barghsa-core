@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { HttpException, Logger } from '@nestjs/common';
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { AdminService as AdminServiceType } from './admin.service.js';
 import type { CreateStaffUserInput } from './admin.service.js';
 
@@ -231,6 +232,7 @@ describe('AdminService.createStaffUser (tempPassword)', () => {
 
 describe('AdminService.createStaffUser (link)', () => {
   it('queues staff activation without returning its secret', async () => {
+    vi.stubEnv('SESSION_SECRET', 'test-admin-log-key');
     const log = vi.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
     const { pool, mockConnect } = mockPool();
     const { client, mockClientQuery, mockRelease } = mockClient();
@@ -257,8 +259,10 @@ describe('AdminService.createStaffUser (link)', () => {
     expect(result).toHaveProperty('deliveryStatus', 'queued');
     expect(result.message).toContain('queued');
     expect(mockRelease).toHaveBeenCalled();
-    expect(log).toHaveBeenCalledWith(expect.stringContaining(result.userId));
-    expect(JSON.stringify(log.mock.calls)).not.toContain(result.username);
+    expect(log).toHaveBeenCalledWith(expect.stringContaining(privateLogId('actor', result.userId)));
+    const messages = JSON.stringify(log.mock.calls);
+    expect(messages).not.toContain(result.userId);
+    expect(messages).not.toContain(result.username);
   });
 
   it('creates a profile with INDIVIDUAL type and VERIFIED status', async () => {
@@ -901,6 +905,7 @@ describe('AdminService.listStaff', () => {
 
 describe('AdminService.disableStaff', () => {
   it('disables the account, revokes sessions/tokens, and records an audit entry', async () => {
+    vi.stubEnv('SESSION_SECRET', 'test-admin-log-key');
     const log = vi.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
     const { pool, mockConnect } = mockPool();
     const { client, mockClientQuery, mockRelease } = mockClient();
@@ -950,8 +955,10 @@ describe('AdminService.disableStaff', () => {
     expect(auditMetadata).toMatchObject({ actorUserId: 'u-admin' });
     expect(auditCall![1]![1]).toBe('u-target'); // audit_log.user_id = target
     expect(mockRelease).toHaveBeenCalled();
-    expect(log).toHaveBeenCalledWith(expect.stringContaining('u-target'));
-    expect(JSON.stringify(log.mock.calls)).not.toContain(result.username);
+    expect(log).toHaveBeenCalledWith(expect.stringContaining(privateLogId('actor', 'u-target')));
+    const messages = JSON.stringify(log.mock.calls);
+    expect(messages).not.toMatch(/u-target|u-admin/);
+    expect(messages).not.toContain(result.username);
   });
 
   it('rejects disabling your own account', async () => {

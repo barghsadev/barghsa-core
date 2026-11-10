@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import {
   OnboardingJourneysService,
@@ -265,7 +266,7 @@ export class OnboardingController {
     const profile = await this.profilesService.createProfile(req.session.userId, profileType);
 
     this.logger.log(
-      `Onboarding started for user ${req.session.userId}: profile ${profile.id} (${profileType})`
+      `Onboarding started for user ${privateLogId('actor', req.session.userId)}: profile ${privateLogId('profile', profile.id)} (${profileType})`
     );
 
     return {
@@ -330,7 +331,9 @@ export class OnboardingController {
       parsed.data
     );
 
-    this.logger.log(`Individual profile ${profileId} saved for user ${req.session.userId}`);
+    this.logger.log(
+      `Individual profile ${privateLogId('profile', profileId)} saved for user ${privateLogId('actor', req.session.userId)}`
+    );
 
     return {
       id: profile.id,
@@ -384,7 +387,9 @@ export class OnboardingController {
       body
     );
 
-    this.logger.log(`Legal profile ${profileId} saved for user ${req.session.userId}`);
+    this.logger.log(
+      `Legal profile ${privateLogId('profile', profileId)} saved for user ${privateLogId('actor', req.session.userId)}`
+    );
 
     return {
       id: profile.id,
@@ -435,7 +440,7 @@ export class OnboardingController {
     const profile = await this.profilesService.completeOnboarding(req.session.userId, profileId);
 
     this.logger.log(
-      `Onboarding completed for profile ${profileId} by user ${req.session.userId} (status=${profile.status})`
+      `Onboarding completed for profile ${privateLogId('profile', profileId)} by user ${privateLogId('actor', req.session.userId)} (status=${profile.status})`
     );
 
     return {

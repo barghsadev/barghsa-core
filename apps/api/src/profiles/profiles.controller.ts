@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import {
   Body,
@@ -131,7 +132,7 @@ export class ProfilesController {
     const result = await this.profilesService.getProfilesByUserId(userId);
 
     this.logger.debug(
-      `User ${userId}: ${result.profiles.length} profile(s), default=${result.hasDefault}`
+      `User ${privateLogId('actor', userId)}: ${result.profiles.length} profile(s), default=${result.hasDefault}`
     );
 
     return result;
@@ -177,7 +178,9 @@ export class ProfilesController {
     // Clear any existing default for this user, set this one as default.
     await this.profilesService.setDefaultProfile(userId, profileId);
 
-    this.logger.log(`User ${userId} switched active profile to ${profileId}`);
+    this.logger.log(
+      `User ${privateLogId('actor', userId)} switched active profile to ${privateLogId('profile', profileId)}`
+    );
     return { activeProfileId: profileId };
   }
 
@@ -229,7 +232,9 @@ export class ProfilesController {
     // Clear any existing default for this user, set this one as default
     await this.profilesService.setDefaultProfile(userId, profileId);
 
-    this.logger.log(`Profile ${profileId} set as default for user ${userId}`);
+    this.logger.log(
+      `Profile ${privateLogId('profile', profileId)} set as default for user ${privateLogId('actor', userId)}`
+    );
     return { message: 'Profile set as default.' };
   }
 
@@ -291,7 +296,7 @@ export class ProfilesController {
     const result = await this.profilesService.getVerificationStatus(userId);
 
     this.logger.debug(
-      `User ${userId}: verification status — verified=${result.isVerified}, required=${result.verificationRequired}, method=${result.verificationMethod}`
+      `User ${privateLogId('actor', userId)}: verification status — verified=${result.isVerified}, required=${result.verificationRequired}, method=${result.verificationMethod}`
     );
 
     return result;
@@ -489,7 +494,9 @@ export class ProfilesController {
     );
     const updated = await this.profilesService.updateProfile(req.session, profileId, parsed);
 
-    this.logger.log(`Profile ${profileId} updated for user ${userId}`);
+    this.logger.log(
+      `Profile ${privateLogId('profile', profileId)} updated for user ${privateLogId('actor', userId)}`
+    );
 
     return {
       id: updated.id,
@@ -572,7 +579,9 @@ export class ProfilesController {
     );
     const address = await this.profilesService.createAddress(req.session, profileId, parsed);
 
-    this.logger.log(`Address ${address.id} created for profile ${profileId} by user ${userId}`);
+    this.logger.log(
+      `Address ${address.id} created for profile ${privateLogId('profile', profileId)} by user ${privateLogId('actor', userId)}`
+    );
     return address;
   }
 
@@ -625,7 +634,9 @@ export class ProfilesController {
       parsed
     );
 
-    this.logger.log(`Address ${addressId} updated for profile ${profileId} by user ${userId}`);
+    this.logger.log(
+      `Address ${addressId} updated for profile ${privateLogId('profile', profileId)} by user ${privateLogId('actor', userId)}`
+    );
     return address;
   }
 
@@ -653,7 +664,9 @@ export class ProfilesController {
   ) {
     const userId = req.session.userId;
     await this.profilesService.deleteAddress(req.session, profileId, addressId);
-    this.logger.log(`Address ${addressId} deleted for profile ${profileId} by user ${userId}`);
+    this.logger.log(
+      `Address ${addressId} deleted for profile ${privateLogId('profile', profileId)} by user ${privateLogId('actor', userId)}`
+    );
     return { message: 'Address deleted successfully.' };
   }
 
@@ -678,7 +691,9 @@ export class ProfilesController {
   ) {
     const userId = req.session.userId;
     const address = await this.profilesService.setMainAddress(req.session, profileId, addressId);
-    this.logger.log(`Address ${addressId} set as main for profile ${profileId} by user ${userId}`);
+    this.logger.log(
+      `Address ${addressId} set as main for profile ${privateLogId('profile', profileId)} by user ${privateLogId('actor', userId)}`
+    );
     return address;
   }
 
@@ -734,7 +749,7 @@ export class ProfilesController {
     );
 
     this.logger.log(
-      `Ownership transfer ${result.id} initiated for profile ${profileId} by user ${userId}`
+      `Ownership transfer ${result.id} initiated for profile ${privateLogId('profile', profileId)} by user ${privateLogId('actor', userId)}`
     );
 
     return result;

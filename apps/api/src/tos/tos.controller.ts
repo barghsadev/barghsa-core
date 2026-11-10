@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import {
   Controller,
   Get,
@@ -192,7 +193,7 @@ export class TosController {
 
     await this.tosService.recordAcceptance(req.session, parsed.data.versionId, ip, userAgent);
 
-    this.logger.log(`TOS accepted by user ${req.session.userId}`);
+    this.logger.log(`TOS accepted by user ${privateLogId('actor', req.session.userId)}`);
 
     return {
       message: 'Terms of Service accepted successfully.',

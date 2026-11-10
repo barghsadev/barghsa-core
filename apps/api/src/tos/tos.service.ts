@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { createHash } from 'node:crypto';
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
@@ -238,11 +239,15 @@ export class TosService {
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
 
-      this.logger.log(`TOS acceptance recorded: user ${userId} accepted version ${versionId}`);
+      this.logger.log(
+        `TOS acceptance recorded: user ${privateLogId('actor', userId)} accepted version ${versionId}`
+      );
     } catch (err) {
       await client.query('ROLLBACK').catch(() => {});
       if (err instanceof HttpException) throw err;
-      this.logger.error(`Failed to record TOS acceptance for user ${userId}`);
+      this.logger.error(
+        `Failed to record TOS acceptance for user ${privateLogId('actor', userId)}`
+      );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
       client.release();

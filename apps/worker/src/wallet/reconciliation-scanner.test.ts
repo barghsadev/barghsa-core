@@ -1,5 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import type { Pool } from 'pg';
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import {
   WALLET_MISMATCH_EXCEPTION_TYPE,
   WALLET_RECONCILIATION_SOURCE,
@@ -14,6 +15,8 @@ import {
   WALLET_RECONCILIATION_JOB_TYPE,
   reconcileWalletBalances,
 } from './reconciliation-scanner.js';
+
+afterEach(() => vi.unstubAllEnvs());
 
 /**
  * Wallet reconciliation unit tests (S-04.2.01, T-04.2.01.08).
@@ -215,6 +218,7 @@ describe('reconcileWalletBalances (T-04.2.01.08)', () => {
   });
 
   it('isolates one wallet failure and continues the batch', async () => {
+    vi.stubEnv('SESSION_SECRET', 'test-wallet-log-key');
     const db = makeFakeDb((sql) => {
       if (sql.includes('FROM wallets w') && sql.includes('HAVING')) {
         return {
@@ -248,7 +252,12 @@ describe('reconcileWalletBalances (T-04.2.01.08)', () => {
     expect(result.scanned).toBe(2);
     expect(result.reported).toBe(1);
     expect(result.errors).toEqual([`Wallet reconciliation failed for ${WALLET_A}`]);
-    expect(options.logger.warn.mock.calls).toEqual([[result.errors[0]]]);
+    expect(options.logger.warn.mock.calls).toEqual([
+      [`Wallet reconciliation failed for ${privateLogId('profile', WALLET_A)}`],
+    ]);
+    expect(JSON.stringify(options.logger.warn.mock.calls)).not.toMatch(
+      new RegExp(`${WALLET_A}|private-payment-reference`)
+    );
     expect(db.calls.filter((call) => call.sql === 'ROLLBACK')).toHaveLength(1);
     expect(db.calls.filter((call) => call.sql === 'COMMIT')).toHaveLength(1);
     expect(db.calls.some((c) => c.sql.includes('INSERT INTO reconciliation_exceptions'))).toBe(

@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { z } from 'zod';
 import { validatePostalCode } from '@barghsa/shared/validation';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
@@ -80,7 +81,7 @@ export class OrdersController {
       req.ip ?? 'unknown'
     );
 
-    this.logger.log(`Order ${order.id} created for user ${userId}`);
+    this.logger.log(`Order ${order.id} created for user ${privateLogId('actor', userId)}`);
     return order;
   }
 

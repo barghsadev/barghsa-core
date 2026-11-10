@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import {
   notifySessionsRevoked,
   queueRefreshReuseWarning,
@@ -213,7 +214,7 @@ export class SessionService {
             'session_cap'
           );
         this.logger.warn(
-          `Session limit (${MAX_SESSIONS_PER_USER}) reached for user ${userId}; ` +
+          `Session limit (${MAX_SESSIONS_PER_USER}) reached for user ${privateLogId('actor', userId)}; ` +
             `revoked oldest active sessions to create a new one.`
         );
       }
@@ -262,14 +263,15 @@ export class SessionService {
       }
       if (!transactionClient) await client.query('COMMIT');
 
-      if (!transactionClient) this.logger.log(`Session created for user ${userId}`);
+      if (!transactionClient)
+        this.logger.log(`Session created for user ${privateLogId('actor', userId)}`);
 
       return { sessionId, csrfToken, refreshToken, expiresAt };
     } catch (err) {
       if (!transactionClient) await client.query('ROLLBACK').catch(() => {});
       if (err instanceof HttpException) throw err;
       this.logger.error(
-        `Failed to create session for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Failed to create session for user ${privateLogId('actor', userId)}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
@@ -532,7 +534,7 @@ export class SessionService {
       if (!transactionClient) await client.query('COMMIT');
 
       if (!transactionClient) {
-        this.logger.log(`Session rotated for user ${oldRow.user_id}`);
+        this.logger.log(`Session rotated for user ${privateLogId('actor', oldRow.user_id)}`);
       }
 
       return {
@@ -749,8 +751,8 @@ export class SessionService {
         await client.query('COMMIT');
 
         this.logger.warn(
-          `Refresh token reuse detected! Token family ${tokenRow.family_id} ` +
-            `for user ${tokenRow.user_id} revoked. Potential token theft.`
+          `Refresh token reuse detected! Token family ${privateLogId('token-family', tokenRow.family_id)} ` +
+            `for user ${privateLogId('actor', tokenRow.user_id)} revoked. Potential token theft.`
         );
 
         throw new UnauthorizedException({
@@ -1196,12 +1198,13 @@ export class SessionService {
 
       if (!transaction) await client.query('COMMIT');
 
-      if (!transaction) this.logger.log(`All sessions revoked for user ${userId}`);
+      if (!transaction)
+        this.logger.log(`All sessions revoked for user ${privateLogId('actor', userId)}`);
       return changedSessionCount;
     } catch {
       if (!transaction) await client.query('ROLLBACK').catch(() => {});
       this.logger.error(
-        `Failed to revoke all sessions for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Failed to revoke all sessions for user ${privateLogId('actor', userId)}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
@@ -1250,11 +1253,11 @@ export class SessionService {
       }
       await client.query('COMMIT');
 
-      this.logger.warn(`Token family revoked: ${familyId}`);
+      this.logger.warn(`Token family revoked: ${privateLogId('token-family', familyId)}`);
     } catch {
       await client.query('ROLLBACK').catch(() => {});
       this.logger.error(
-        `Failed to revoke token family ${familyId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Failed to revoke token family ${privateLogId('token-family', familyId)}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
@@ -1285,7 +1288,7 @@ export class SessionService {
       return await verify(userResult.rows[0].password_hash, password).catch(() => false);
     } catch {
       this.logger.error(
-        `Password verification failed for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Password verification failed for user ${privateLogId('actor', userId)}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       return false;
     }
@@ -1492,7 +1495,7 @@ export class SessionService {
       return result.rows;
     } catch (err) {
       this.logger.error(
-        `Failed to get sessions for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Failed to get sessions for user ${privateLogId('actor', userId)}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       throw err;
     }

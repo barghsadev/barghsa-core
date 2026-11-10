@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
@@ -470,7 +471,9 @@ export class FailedNotificationsService {
       await client.query('COMMIT');
       committed = true;
 
-      this.logger.log(`Dead-letter notification ${id} ${toStatus} by ${actorUserId}`);
+      this.logger.log(
+        `Dead-letter notification ${id} ${toStatus} by ${privateLogId('actor', actorUserId)}`
+      );
     } catch (error) {
       if (committed) throw error;
       await client.query('ROLLBACK').catch(() => {});

@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import {
   classifyNotificationType,
@@ -160,7 +161,9 @@ export class NotificationsService {
     if (delivery && !(inserted as { rows: { id: string }[] }).rows.some((row) => row.id === id))
       throw new Error('Mandatory inbox delivery was not stored');
 
-    this.logger.log(`Notification created: id=${id} type=${params.type} user=${params.userId}`);
+    this.logger.log(
+      `Notification created: id=${id} type=${params.type} user=${privateLogId('actor', params.userId)}`
+    );
 
     return {
       id,

@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -83,7 +84,7 @@ export class ReconciliationExceptionsController {
   private assertViewPermission(req: AuthenticatedRequest): void {
     if (!hasStaffPermission(req, 'admin:reconciliation:view')) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to view reconciliation exceptions`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to view reconciliation exceptions`
       );
       throw new HttpException(
         {
@@ -104,7 +105,7 @@ export class ReconciliationExceptionsController {
   private assertResolvePermission(req: AuthenticatedRequest): void {
     if (!hasStaffPermission(req, 'admin:reconciliation:resolve')) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to resolve a reconciliation exception`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to resolve a reconciliation exception`
       );
       throw new HttpException(
         {

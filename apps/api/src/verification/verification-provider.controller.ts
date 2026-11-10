@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -188,7 +189,9 @@ export class VerificationProviderController {
 
     await this.verificationProviderService.setProviderConfig(providerId, parsed.data);
 
-    this.logger.log(`Provider config updated: ${providerId} by ${req.session.userId}`);
+    this.logger.log(
+      `Provider config updated: ${providerId} by ${privateLogId('actor', req.session.userId)}`
+    );
 
     return { providerId, message: 'Configuration updated' };
   }
@@ -232,7 +235,9 @@ export class VerificationProviderController {
       );
     }
 
-    this.logger.log(`Circuit breaker reset for provider: ${providerId} by ${req.session.userId}`);
+    this.logger.log(
+      `Circuit breaker reset for provider: ${providerId} by ${privateLogId('actor', req.session.userId)}`
+    );
     return { providerId, message: 'Circuit breaker reset' };
   }
 
@@ -281,7 +286,7 @@ export class VerificationProviderController {
     }
 
     this.logger.log(
-      `Verification requested: provider=${parsed.data.providerId} by ${req.session.userId}`
+      `Verification requested: provider=${parsed.data.providerId} by ${privateLogId('actor', req.session.userId)}`
     );
 
     return this.verificationProviderService.verify(parsed.data.providerId, parsed.data.input);

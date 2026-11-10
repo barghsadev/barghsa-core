@@ -6,8 +6,9 @@ vi.mock('./staff-mutation-permission.js', () => ({ requireStaffMutationPermissio
 vi.mock('../session/session-step-up.js', () => ({
   requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
 }));
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { HttpException, Logger } from '@nestjs/common';
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { DualApprovalService as DualApprovalServiceType } from './dual-approval.service.js';
 import { toApprovalRequestDto } from './dual-approval.service.js';
 
@@ -49,6 +50,7 @@ beforeEach(() => {
   vi.resetModules();
   vi.restoreAllMocks();
 });
+afterEach(() => vi.unstubAllEnvs());
 
 /** Load DualApprovalService with a mocked @barghsa/db pool + mock notifications. */
 async function loadService() {
@@ -162,11 +164,13 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
       ],
     }); // getRequestDto
 
+    vi.stubEnv('SESSION_SECRET', 'test-approval-log-key');
     const log = vi.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
     const result = await service.createApprovalRequest(VALID_INPUT, actor('user-1'), '1.1.1.1');
     const messages = JSON.stringify(log.mock.calls);
     log.mockRestore();
-    expect(messages).toContain('created by user-1');
+    expect(messages).toContain(`created by ${privateLogId('actor', 'user-1')}`);
+    expect(messages).not.toContain('user-1');
     expect(messages).not.toContain('250000000');
 
     expect(result).toMatchObject({

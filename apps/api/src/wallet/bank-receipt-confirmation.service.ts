@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import { defaultInboxContent, defaultInboxLink } from '@barghsa/shared/notifications';
 import { InputFieldException } from '../common/input-field.exception.js';
@@ -630,7 +631,7 @@ export class BankReceiptConfirmationService {
         this.logger.log(
           invoiceId
             ? `Bank receipt ${pending.id} allocated to invoice ${invoiceId}`
-            : `Bank receipt top-up ${pending.id} credited as ${creditId} for wallet ${pending.walletId}`
+            : `Bank receipt top-up ${pending.id} credited as ${creditId} for wallet ${privateLogId('profile', pending.walletId)}`
         );
         return {
           ...(await this.toDto(updated, {
@@ -772,7 +773,7 @@ export class BankReceiptConfirmationService {
         await client.query('COMMIT');
 
         this.logger.log(
-          `Bank receipt top-up ${pending.id} rejected for wallet ${pending.walletId}`
+          `Bank receipt top-up ${pending.id} rejected for wallet ${privateLogId('profile', pending.walletId)}`
         );
         return this.toDto(updated, {
           auditId,

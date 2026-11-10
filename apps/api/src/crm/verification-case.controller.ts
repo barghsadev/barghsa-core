@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { z } from 'zod';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
@@ -178,7 +179,7 @@ export class VerificationCaseController {
     }
 
     this.logger.debug(
-      `Verification case created: id=${result.id}, profileId=${profileId}, actor=${req.session.userId}`
+      `Verification case created: id=${result.id}, profileId=${privateLogId('profile', profileId)}, actor=${privateLogId('actor', req.session.userId)}`
     );
     return result;
   }
@@ -486,7 +487,7 @@ export class VerificationCaseController {
     }
 
     this.logger.debug(
-      `Verification case ${caseId} reviewed: → ${dto.decision}, reviewer=${req.session.userId}`
+      `Verification case ${caseId} reviewed: → ${dto.decision}, reviewer=${privateLogId('actor', req.session.userId)}`
     );
 
     return result;

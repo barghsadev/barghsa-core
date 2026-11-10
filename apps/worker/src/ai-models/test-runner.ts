@@ -9,6 +9,7 @@ import {
 } from '@barghsa/shared/ai-models';
 import { resolveStaffPermissions } from '@barghsa/shared/admin';
 import { AiModelCircuitBreaker } from '@barghsa/shared/notification-delivery';
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { logDelivery } from '../delivery-log.js';
 
 interface Claim {
@@ -87,7 +88,17 @@ export async function runAiModelTest(
       createdAt: new Date(),
     };
     await recordAuthorizationDenial(pool, event).catch(() => {
-      console.error(JSON.stringify({ event: 'authorization.denial.persistence_failed', ...event }));
+      console.error(
+        JSON.stringify({
+          event: 'authorization.denial.persistence_failed',
+          actorRef: privateLogId('actor', event.actorId),
+          resource: event.resource,
+          action: event.action,
+          reason: event.reason,
+          correlationId: event.correlationId,
+          createdAt: event.createdAt,
+        })
+      );
     });
     return finish(null, 'AUTHZ:FORBIDDEN');
   }

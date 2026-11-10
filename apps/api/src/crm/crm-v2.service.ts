@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import {
   readVerificationPolicyConfig,
   lockVerificationPolicy,
@@ -286,7 +287,7 @@ export class CrmV2Service {
 
     const userRow = userResult.rows[0] as Record<string, unknown> | undefined;
     if (!userRow) {
-      this.logger.warn(`Profile ${profileId} has orphaned user_id ${String(profileRow.user_id)}`);
+      this.logger.warn(`Profile ${privateLogId('profile', profileId)} has no associated user`);
       return null;
     }
 
@@ -918,14 +919,14 @@ export class CrmV2Service {
       await client.query('COMMIT');
 
       this.logger.debug(
-        `Password change forced for user ${userId} by ${actorUserId} correlationId=${correlationId}`
+        `Password change forced for user ${privateLogId('actor', userId)} by ${privateLogId('actor', actorUserId)} correlationId=${correlationId}`
       );
 
       return { success: true, userId, reason };
     } catch (err) {
       await client.query('ROLLBACK');
       this.logger.error(
-        `Failed to force password change for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Failed to force password change for user ${privateLogId('actor', userId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       throw err;
     } finally {
@@ -1014,14 +1015,14 @@ export class CrmV2Service {
       await client.query('COMMIT');
 
       this.logger.debug(
-        `Sessions expired for user ${userId} by ${actorUserId} correlationId=${correlationId}`
+        `Sessions expired for user ${privateLogId('actor', userId)} by ${privateLogId('actor', actorUserId)} correlationId=${correlationId}`
       );
 
       return { success: true, userId, reason };
     } catch (err) {
       await client.query('ROLLBACK');
       this.logger.error(
-        `Failed to expire sessions for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Failed to expire sessions for user ${privateLogId('actor', userId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       throw err;
     } finally {
@@ -1259,7 +1260,7 @@ export class CrmV2Service {
       await client.query('COMMIT');
 
       this.logger.debug(
-        `Profile ${profileId} archived by ${actorUserId} correlationId=${correlationId}`
+        `Profile ${privateLogId('profile', profileId)} archived by ${privateLogId('actor', actorUserId)} correlationId=${correlationId}`
       );
 
       return {
@@ -1271,7 +1272,7 @@ export class CrmV2Service {
     } catch (err) {
       await client.query('ROLLBACK');
       this.logger.error(
-        `Failed to archive profile ${profileId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Failed to archive profile ${privateLogId('profile', profileId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       throw err;
     } finally {

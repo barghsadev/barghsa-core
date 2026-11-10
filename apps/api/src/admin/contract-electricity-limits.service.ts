@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
@@ -195,7 +196,7 @@ export class ContractElectricityLimitsService {
       await client.query('COMMIT');
 
       this.logger.log(
-        `Contract electricity limits updated by ${input.actor.userId} (version ${newVersion})`
+        `Contract electricity limits updated by ${privateLogId('actor', input.actor.userId)} (version ${newVersion})`
       );
       return config;
     } catch (error) {

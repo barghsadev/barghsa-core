@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import { reserveStorageCopy } from '../storage/reserve-storage-copy.js';
@@ -224,7 +225,7 @@ export class ContractTemplateService {
         },
       });
       this.logger.log(
-        `Contract template created: id=${id}, name=${name}, actor=${input.actor.userId}`
+        `Contract template created: id=${id}, actor=${privateLogId('actor', input.actor.userId)}`
       );
       return this.readDto(q, id);
     });
@@ -270,7 +271,9 @@ export class ContractTemplateService {
           ...(input.status !== undefined ? { status } : {}),
         },
       });
-      this.logger.log(`Contract template updated: id=${id}, actor=${input.actor.userId}`);
+      this.logger.log(
+        `Contract template updated: id=${id}, actor=${privateLogId('actor', input.actor.userId)}`
+      );
       return this.readDto(q, id);
     });
   }
@@ -398,7 +401,7 @@ export class ContractTemplateService {
         },
       });
       this.logger.log(
-        `Contract template v${versionNumber} uploaded: template=${id}, file=${name}, placeholders=${placeholders.length}`
+        `Contract template v${versionNumber} uploaded: template=${id}, placeholders=${placeholders.length}`
       );
       return {
         versionNumber,
@@ -465,7 +468,7 @@ export class ContractTemplateService {
         meta: { templateId: id, name: current.name },
       });
       this.logger.log(
-        `Contract template deleted: id=${id}, name=${current.name}, actor=${actorUserId}`
+        `Contract template deleted: id=${id}, actor=${privateLogId('actor', actorUserId)}`
       );
       return { deleted: true };
     });

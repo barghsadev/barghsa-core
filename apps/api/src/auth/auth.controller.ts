@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { createHash, randomUUID } from 'node:crypto';
 import {
@@ -254,7 +255,7 @@ export class AuthController {
         setCsrfCookie(res, result.csrfToken);
       }
 
-      this.logger.log(`Session established for user ${result.userId}`);
+      this.logger.log(`Session established for user ${privateLogId('actor', result.userId)}`);
       return {
         requiresOtp: false,
         ...(result.userId ? { userId: result.userId } : {}),
@@ -328,7 +329,9 @@ export class AuthController {
       setCsrfCookie(res, result.csrfToken);
     }
 
-    this.logger.log(`Session established for user ${result.userId} via login OTP`);
+    this.logger.log(
+      `Session established for user ${privateLogId('actor', result.userId)} via login OTP`
+    );
 
     return {
       userId: result.userId,
@@ -668,7 +671,7 @@ export class AuthController {
       setCsrfCookie(res, result.csrfToken);
     }
 
-    this.logger.log(`Session established for user ${result.userId}`);
+    this.logger.log(`Session established for user ${privateLogId('actor', result.userId)}`);
 
     return {
       userId: result.userId,
@@ -781,7 +784,7 @@ export class AuthController {
       setCsrfCookie(res, session.csrf_token);
     }
 
-    this.logger.log(`Session refreshed for user ${session.user_id}`);
+    this.logger.log(`Session refreshed for user ${privateLogId('actor', session.user_id)}`);
 
     return sessionAcknowledgement(sessionId, session.csrf_token ?? '', expiresAt.toISOString());
   }

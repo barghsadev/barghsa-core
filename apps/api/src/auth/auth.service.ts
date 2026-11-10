@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { notifyNewDeviceLogin } from './session-notifications.js';
 import { notifyPasswordChanged } from './password-notifications.js';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
@@ -285,7 +286,7 @@ export class AuthService {
       // a session, or an OTP challenge.
       if (userResult.rows[0].disabled_at) {
         this.logger.warn(
-          `Login blocked for disabled user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+          `Login blocked for disabled user ${privateLogId('actor', userId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
         );
         throw new HttpException(
           { statusCode: 403, error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code },
@@ -320,7 +321,7 @@ export class AuthService {
         }
 
         this.logger.log(
-          `Password change required for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+          `Password change required for user ${privateLogId('actor', userId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
         );
 
         return {
@@ -368,7 +369,7 @@ export class AuthService {
         );
 
         this.logger.log(
-          `Login OTP challenge created for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+          `Login OTP challenge created for user ${privateLogId('actor', userId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
         );
 
         return {
@@ -392,7 +393,7 @@ export class AuthService {
       });
 
       this.logger.log(
-        `User logged in: ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `User logged in: ${privateLogId('actor', userId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
 
       return {
@@ -483,7 +484,7 @@ export class AuthService {
       if (isSameAsCurrent) {
         await client.query('ROLLBACK');
         this.logger.warn(
-          `Password reuse (same as current) detected for user ${user.user_id} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+          `Password reuse (same as current) detected for user ${privateLogId('actor', user.user_id)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
         );
         throw new HttpException(
           { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
@@ -497,7 +498,7 @@ export class AuthService {
         if (isReused) {
           await client.query('ROLLBACK');
           this.logger.warn(
-            `Password reuse detected for user ${user.user_id} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+            `Password reuse detected for user ${privateLogId('actor', user.user_id)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
           );
           throw new HttpException(
             { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
@@ -572,7 +573,7 @@ export class AuthService {
       await client.query('COMMIT');
 
       this.logger.log(
-        `Password changed for user ${user.user_id} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Password changed for user ${privateLogId('actor', user.user_id)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
 
       return {
@@ -751,7 +752,9 @@ export class AuthService {
 
       // Check user_id
       if (!challengeRow.user_id) {
-        this.logger.error(`Login challenge ${challengeId} missing user_id`);
+        this.logger.error(
+          `Login challenge ${privateLogId('challenge', challengeId)} missing user_id`
+        );
         throw new HttpException(
           { statusCode: 500, error: ErrorCodes.INTERNAL_UNEXPECTED.code },
           500
@@ -767,7 +770,7 @@ export class AuthService {
       );
       if (challengeUserStatus.rows.length > 0 && challengeUserStatus.rows[0].disabled_at) {
         this.logger.warn(
-          `OTP login blocked for disabled user ${challengeRow.user_id} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+          `OTP login blocked for disabled user ${privateLogId('actor', challengeRow.user_id)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
         );
         throw new HttpException(
           { statusCode: 403, error: ErrorCodes.AUTH_ACCOUNT_DISABLED.code },
@@ -908,7 +911,7 @@ export class AuthService {
           .catch(() => {});
 
       this.logger.log(
-        `Login OTP verified for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Login OTP verified for user ${privateLogId('actor', userId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
 
       return {
@@ -922,7 +925,7 @@ export class AuthService {
       await client.query('ROLLBACK').catch(() => {});
       if (err instanceof HttpException) throw err;
       this.logger.error(
-        `Login OTP transaction failed for challenge ${challengeId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Login OTP transaction failed for challenge ${privateLogId('challenge', challengeId)}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.AUTH_LOGIN_FAILED.code }, 500);
     } finally {
@@ -996,7 +999,9 @@ export class AuthService {
 
       // Check password_hash was stored (should always be present for registration)
       if (!row.password_hash || !row.tos_version_id) {
-        this.logger.error(`Missing registration data for challenge ${challengeId}`);
+        this.logger.error(
+          `Missing registration data for challenge ${privateLogId('challenge', challengeId)}`
+        );
         throw new HttpException(
           {
             statusCode: ErrorCodes.AUTH_REGISTER_FAILED.httpStatus,
@@ -1167,7 +1172,7 @@ export class AuthService {
       await client.query('COMMIT');
 
       this.logger.log(
-        `User created: ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `User created: ${privateLogId('actor', userId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
 
       return {
@@ -1181,7 +1186,7 @@ export class AuthService {
       await client.query('ROLLBACK').catch(() => {});
       if (err instanceof HttpException) throw err;
       this.logger.error(
-        `Registration session creation failed for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Registration session creation failed for user ${privateLogId('actor', userId)}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       throw new HttpException(
         {
@@ -1384,7 +1389,7 @@ export class AuthService {
       if (isSameAsCurrent) {
         await client.query('ROLLBACK');
         this.logger.warn(
-          `Password reuse (same as current) detected for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+          `Password reuse (same as current) detected for user ${privateLogId('actor', userId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
         );
         throw new HttpException(
           { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
@@ -1398,7 +1403,7 @@ export class AuthService {
         if (isReused) {
           await client.query('ROLLBACK');
           this.logger.warn(
-            `Password reuse detected for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+            `Password reuse detected for user ${privateLogId('actor', userId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
           );
           throw new HttpException(
             { statusCode: 422, error: ErrorCodes.AUTH_LOGIN_PASSWORD_REUSED.code },
@@ -1458,7 +1463,7 @@ export class AuthService {
       await client.query('COMMIT');
 
       this.logger.log(
-        `Password reset for user ${userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Password reset for user ${privateLogId('actor', userId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
 
       return {
@@ -1672,7 +1677,7 @@ export class AuthService {
       // Verify the challenge was created for the new username (operation scoping)
       if (challengeDestination !== newUsername) {
         this.logger.warn(
-          `Username change rejected for challenge ${challengeId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+          `Username change rejected for challenge ${privateLogId('challenge', challengeId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
         );
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
@@ -1805,7 +1810,9 @@ export class AuthService {
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
 
-      this.logger.log(`Username changed for user ${userId} correlationId=${correlationId}`);
+      this.logger.log(
+        `Username changed for user ${privateLogId('actor', userId)} correlationId=${correlationId}`
+      );
 
       return { message: 'Username changed successfully.' };
     } catch (err) {
@@ -1819,7 +1826,7 @@ export class AuthService {
       }
       if (err instanceof HttpException) throw err;
       this.logger.error(
-        `Username change failed for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Username change failed for user ${privateLogId('actor', userId)}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {
@@ -1979,7 +1986,7 @@ export class AuthService {
       // Verify the challenge was created for the contact value (operation scoping)
       if (challengeDestination !== contactValue) {
         this.logger.warn(
-          `Add contact rejected for challenge ${challengeId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+          `Add contact rejected for challenge ${privateLogId('challenge', challengeId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
         );
         throw new HttpException(
           { statusCode: 400, error: ErrorCodes.AUTH_CHANGE_USERNAME_INVALID.code },
@@ -2057,7 +2064,7 @@ export class AuthService {
       await client.query('COMMIT');
 
       this.logger.log(
-        `Contact added for user ${userId} type=${contactType} correlationId=${correlationId}`
+        `Contact added for user ${privateLogId('actor', userId)} type=${contactType} correlationId=${correlationId}`
       );
 
       return { message: 'Contact added successfully.' };
@@ -2077,7 +2084,7 @@ export class AuthService {
         );
       if (err instanceof HttpException) throw err;
       this.logger.error(
-        `Add contact failed for user ${userId}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Add contact failed for user ${privateLogId('actor', userId)}: correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {

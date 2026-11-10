@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -189,7 +190,7 @@ export class ReminderOffsetToggleService {
 
       this.logger.log(
         `Reminder offset ${parsed.value.serviceType}/${parsed.value.offset} ` +
-          `set enabled=${parsed.value.enabled} by ${input.actorUserId}`
+          `set enabled=${parsed.value.enabled} by ${privateLogId('actor', input.actorUserId)}`
       );
 
       return mergeReminderOffsetToggles(

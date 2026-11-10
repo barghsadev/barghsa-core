@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -353,7 +354,7 @@ export class UploadPolicyService {
       this.logger.log(
         `Upload policy created: id=${id}, category=${input.category}, ` +
           `extensions=${extensions.join(',')}, maxSizeBytes=${input.maxSizeBytes}, ` +
-          `effectiveFrom=${effectiveFrom.toISOString()}, actor=${input.actorUserId}`
+          `effectiveFrom=${effectiveFrom.toISOString()}, actor=${privateLogId('actor', input.actorUserId)}`
       );
       return this.readPolicy(q, id);
     });
@@ -421,7 +422,7 @@ export class UploadPolicyService {
         },
       });
       this.logger.log(
-        `Upload policy ended: id=${input.id}, until=${effectiveUntil.toISOString()}, actor=${input.actorUserId}`
+        `Upload policy ended: id=${input.id}, until=${effectiveUntil.toISOString()}, actor=${privateLogId('actor', input.actorUserId)}`
       );
       return this.readPolicy(q, input.id);
     });

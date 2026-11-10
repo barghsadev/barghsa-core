@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { InputFieldException } from '../common/input-field.exception.js';
 /**
  * Staff dueAt override service (T-04.1.03.03).
@@ -266,7 +267,7 @@ export class DueAtOverrideService {
       await client.query('COMMIT');
 
       this.logger.log(
-        `Staff ${input.actorUserId} overrode dueAt on invoice ${input.invoiceId} → ${snapshot.dueAt}`
+        `Staff ${privateLogId('actor', input.actorUserId)} overrode dueAt on invoice ${input.invoiceId} → ${snapshot.dueAt}`
       );
 
       return toDto(

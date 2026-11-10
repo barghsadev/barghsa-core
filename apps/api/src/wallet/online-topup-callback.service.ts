@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { createHash } from 'node:crypto';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import {
@@ -415,7 +416,7 @@ export class OnlineTopUpCallbackService {
         await this.finalizeEvent(client, input.eventId, 'credited');
 
         this.logger.log(
-          `Online top-up ${pending.id} credited as ${credit.id} for wallet ${pending.walletId}`
+          `Online top-up ${pending.id} credited as ${credit.id} for wallet ${privateLogId('profile', pending.walletId)}`
         );
 
         return {

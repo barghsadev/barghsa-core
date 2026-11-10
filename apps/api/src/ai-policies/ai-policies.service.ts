@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -301,7 +302,7 @@ export class AiPoliciesService {
         client
       );
       this.logger.log(
-        `Policy created: id=${id}, type=${row.policy_type}, actor=${input.actorUserId}`
+        `Policy created: id=${id}, type=${row.policy_type}, actor=${privateLogId('actor', input.actorUserId)}`
       );
       return { ...this.toPolicyBase(row), groupCount: 0 };
     });
@@ -422,7 +423,9 @@ export class AiPoliciesService {
           client
         );
       }
-      this.logger.log(`Policy updated: id=${id}, actor=${input.actorUserId}`);
+      this.logger.log(
+        `Policy updated: id=${id}, actor=${privateLogId('actor', input.actorUserId)}`
+      );
       return { ...this.toPolicyBase(row), groupCount };
     });
   }
@@ -450,7 +453,7 @@ export class AiPoliciesService {
         },
         client
       );
-      this.logger.log(`Policy deleted: id=${id}, actor=${actorUserId}`);
+      this.logger.log(`Policy deleted: id=${id}, actor=${privateLogId('actor', actorUserId)}`);
     });
   }
 
@@ -529,7 +532,9 @@ export class AiPoliciesService {
         },
         client
       );
-      this.logger.log(`Policy group created: id=${id}, actor=${input.actorUserId}`);
+      this.logger.log(
+        `Policy group created: id=${id}, actor=${privateLogId('actor', input.actorUserId)}`
+      );
       return { ...this.toGroupBase(row), memberCount: 0 };
     });
   }
@@ -585,7 +590,9 @@ export class AiPoliciesService {
         },
         client
       );
-      this.logger.log(`Policy group updated: id=${id}, actor=${input.actorUserId}`);
+      this.logger.log(
+        `Policy group updated: id=${id}, actor=${privateLogId('actor', input.actorUserId)}`
+      );
       return { ...this.toGroupBase(row), memberCount };
     });
   }
@@ -613,7 +620,9 @@ export class AiPoliciesService {
         },
         client
       );
-      this.logger.log(`Policy group deleted: id=${id}, actor=${actorUserId}`);
+      this.logger.log(
+        `Policy group deleted: id=${id}, actor=${privateLogId('actor', actorUserId)}`
+      );
     });
   }
 
@@ -687,7 +696,7 @@ export class AiPoliciesService {
         );
       }
       this.logger.log(
-        `Policy ${inserted ? 'linked into' : priorityChanged ? 'priority updated in' : 'already in'} group: group=${input.groupId}, policy=${input.policyId}, actor=${input.actorUserId}`
+        `Policy ${inserted ? 'linked into' : priorityChanged ? 'priority updated in' : 'already in'} group: group=${input.groupId}, policy=${input.policyId}, actor=${privateLogId('actor', input.actorUserId)}`
       );
     });
   }
@@ -730,7 +739,7 @@ export class AiPoliciesService {
         client
       );
       this.logger.log(
-        `Policy removed from group: group=${groupId}, policy=${policyId}, actor=${actorUserId}`
+        `Policy removed from group: group=${groupId}, policy=${policyId}, actor=${privateLogId('actor', actorUserId)}`
       );
     });
   }

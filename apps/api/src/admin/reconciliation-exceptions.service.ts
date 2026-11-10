@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { Injectable, Logger, HttpException } from '@nestjs/common';
@@ -356,7 +357,9 @@ export class ReconciliationExceptionsService {
       await client.query('COMMIT');
       committed = true;
 
-      this.logger.log(`Reconciliation exception ${exceptionId} ${toStatus} by ${actorUserId}`);
+      this.logger.log(
+        `Reconciliation exception ${exceptionId} ${toStatus} by ${privateLogId('actor', actorUserId)}`
+      );
     } catch (error) {
       if (committed) throw error;
       await client.query('ROLLBACK').catch(() => {});

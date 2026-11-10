@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Body,
@@ -77,7 +78,9 @@ export class FailedJobsController {
    */
   private assertViewPermission(req: AuthenticatedRequest): void {
     if (!hasStaffPermission(req, 'admin:jobs:view')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to view background jobs`);
+      this.logger.warn(
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to view background jobs`
+      );
       throw new HttpException(
         {
           statusCode: 403,
@@ -96,7 +99,9 @@ export class FailedJobsController {
    */
   private assertRetryPermission(req: AuthenticatedRequest): void {
     if (!hasStaffPermission(req, 'admin:jobs:retry')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to mutate a background job`);
+      this.logger.warn(
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to mutate a background job`
+      );
       throw new HttpException(
         {
           statusCode: 403,

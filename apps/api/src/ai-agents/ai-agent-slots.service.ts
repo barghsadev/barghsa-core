@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -161,7 +162,7 @@ export class AgentSlotsService {
         agentIdAfter: input.agentId,
       });
       this.logger.log(
-        `Slot ${event}: slot=${input.slotKey}, agent=${input.agentId ?? '(none)'}, actor=${input.actorUserId}`
+        `Slot ${event}: slot=${input.slotKey}, agent=${input.agentId ?? '(none)'}, actor=${privateLogId('actor', input.actorUserId)}`
       );
 
       return this.assignedSlotDto(q, input.slotKey);

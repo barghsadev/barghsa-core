@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -375,7 +376,7 @@ export class AiAgentsService {
         ...(input.policyGroupIds !== undefined ? { policyGroupsLinked: policyGroupsAdded } : {}),
       });
       this.logger.log(
-        `Agent created: id=${id}, model=${row.model_id}, kbs=${kbAdded}, policies=${policyAdded}, actor=${input.actorUserId}`
+        `Agent created: id=${id}, model=${row.model_id}, kbs=${kbAdded}, policies=${policyAdded}, actor=${privateLogId('actor', input.actorUserId)}`
       );
       return {
         id: row.id,
@@ -554,7 +555,7 @@ export class AiAgentsService {
         });
       }
       this.logger.log(
-        `Agent updated: id=${id}, changed=[${changedFields.join(',')}${kbChanged ? ',kbs' : ''}${policyChanged ? ',policies' : ''}], actor=${input.actorUserId}`
+        `Agent updated: id=${id}, changed=[${changedFields.join(',')}${kbChanged ? ',kbs' : ''}${policyChanged ? ',policies' : ''}], actor=${privateLogId('actor', input.actorUserId)}`
       );
       return this.agentToDto({
         id,
@@ -601,7 +602,7 @@ export class AiAgentsService {
         targetId: existing.id,
         title: existing.title,
       });
-      this.logger.log(`Agent deleted: id=${id}, actor=${actorUserId}`);
+      this.logger.log(`Agent deleted: id=${id}, actor=${privateLogId('actor', actorUserId)}`);
     });
   }
 
@@ -646,7 +647,7 @@ export class AiAgentsService {
         });
       }
       this.logger.log(
-        `KB ${inserted ? 'linked to' : 'already linked to'} agent: agent=${input.agentId}, kb=${input.kbId}, actor=${input.actorUserId}`
+        `KB ${inserted ? 'linked to' : 'already linked to'} agent: agent=${input.agentId}, kb=${input.kbId}, actor=${privateLogId('actor', input.actorUserId)}`
       );
     });
   }
@@ -681,7 +682,9 @@ export class AiAgentsService {
         targetId: agentId,
         kbId,
       });
-      this.logger.log(`KB unlinked from agent: agent=${agentId}, kb=${kbId}, actor=${actorUserId}`);
+      this.logger.log(
+        `KB unlinked from agent: agent=${agentId}, kb=${kbId}, actor=${privateLogId('actor', actorUserId)}`
+      );
     });
   }
 
@@ -732,7 +735,7 @@ export class AiAgentsService {
         );
       }
       this.logger.log(
-        `Policy ${inserted ? 'linked to' : 'already linked to'} agent: agent=${input.agentId}, policy=${input.policyId}, actor=${input.actorUserId}`
+        `Policy ${inserted ? 'linked to' : 'already linked to'} agent: agent=${input.agentId}, policy=${input.policyId}, actor=${privateLogId('actor', input.actorUserId)}`
       );
     });
   }
@@ -768,7 +771,7 @@ export class AiAgentsService {
         policyId,
       });
       this.logger.log(
-        `Policy unlinked from agent: agent=${agentId}, policy=${policyId}, actor=${actorUserId}`
+        `Policy unlinked from agent: agent=${agentId}, policy=${policyId}, actor=${privateLogId('actor', actorUserId)}`
       );
     });
   }

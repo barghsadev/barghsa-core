@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import {
   Injectable,
   type CanActivate,
@@ -87,7 +88,9 @@ export class AgentRoleGuard implements CanActivate {
     const roles = await this.agentsService.getAgentRoles(profileId, userId);
 
     if (roles.length === 0) {
-      this.logger.warn(`AgentRoleGuard: user ${userId} is not an agent of profile ${profileId}`);
+      this.logger.warn(
+        `AgentRoleGuard: user ${privateLogId('actor', userId)} is not an agent of profile ${privateLogId('profile', profileId)}`
+      );
       throw new ForbiddenException({
         statusCode: 403,
         error: ErrorCodes.AUTHZ_INSUFFICIENT_ROLE.code,
@@ -97,8 +100,8 @@ export class AgentRoleGuard implements CanActivate {
     // Check if any of the user's roles grant the required permission
     if (!hasAnyRolePermission(roles, requiredPermission)) {
       this.logger.warn(
-        `AgentRoleGuard: user ${userId} role(s) [${roles.join(', ')}] ` +
-          `lack permission '${requiredPermission}' for profile ${profileId}`
+        `AgentRoleGuard: user ${privateLogId('actor', userId)} role(s) [${roles.join(', ')}] ` +
+          `lack permission '${requiredPermission}' for profile ${privateLogId('profile', profileId)}`
       );
       // Set the error code header for the frontend to read
       if (typeof response?.setHeader === 'function') {

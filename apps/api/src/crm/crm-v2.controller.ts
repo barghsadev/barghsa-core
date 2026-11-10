@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import {
   VERIFICATION_DOCUMENT_TYPES,
   type VerificationDocumentType,
@@ -149,7 +150,7 @@ export class CrmV2Controller {
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to access CRM profile detail`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to access CRM profile detail`
       );
       throw new HttpException(
         {
@@ -178,7 +179,7 @@ export class CrmV2Controller {
     }
 
     this.logger.debug(
-      `CRM profile detail: profileId=${profileId}, userId=${result.user.userId}, ` +
+      `CRM profile detail: profileId=${privateLogId('profile', profileId)}, userId=${privateLogId('actor', result.user.userId)}, ` +
         `status=${result.profile.status}, sessions=${result.sessions.count}`
     );
 
@@ -333,7 +334,7 @@ export class CrmV2Controller {
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to update CRM profile ${profileId}`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to update CRM profile ${privateLogId('profile', profileId)}`
       );
       throw new HttpException(
         {
@@ -504,7 +505,7 @@ export class CrmV2Controller {
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to verify profile ${profileId}`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to verify profile ${privateLogId('profile', profileId)}`
       );
       throw new HttpException(
         {
@@ -582,8 +583,8 @@ export class CrmV2Controller {
     }
 
     this.logger.debug(
-      `Verification changed: profileId=${profileId}, ${result.previousStatus} → ${result.newStatus}, ` +
-        `action=${dto.action}, actor=${req.session.userId}`
+      `Verification changed: profileId=${privateLogId('profile', profileId)}, ${result.previousStatus} → ${result.newStatus}, ` +
+        `action=${dto.action}, actor=${privateLogId('actor', req.session.userId)}`
     );
 
     return result;
@@ -629,7 +630,7 @@ export class CrmV2Controller {
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to force password change for user ${userId}`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to force password change for user ${privateLogId('actor', userId)}`
       );
       throw new HttpException(
         {
@@ -684,7 +685,9 @@ export class CrmV2Controller {
       );
     }
 
-    this.logger.debug(`Password change forced: userId=${userId}, actor=${req.session.userId}`);
+    this.logger.debug(
+      `Password change forced: userId=${privateLogId('actor', userId)}, actor=${privateLogId('actor', req.session.userId)}`
+    );
 
     return result;
   }
@@ -729,7 +732,7 @@ export class CrmV2Controller {
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to expire sessions for user ${userId}`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to expire sessions for user ${privateLogId('actor', userId)}`
       );
       throw new HttpException(
         {
@@ -784,7 +787,9 @@ export class CrmV2Controller {
       );
     }
 
-    this.logger.debug(`Sessions expired: userId=${userId}, actor=${req.session.userId}`);
+    this.logger.debug(
+      `Sessions expired: userId=${privateLogId('actor', userId)}, actor=${privateLogId('actor', req.session.userId)}`
+    );
 
     return result;
   }
@@ -837,7 +842,7 @@ export class CrmV2Controller {
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to delete profile ${profileId}`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to delete profile ${privateLogId('profile', profileId)}`
       );
       throw new HttpException(
         {
@@ -901,7 +906,9 @@ export class CrmV2Controller {
       );
     }
 
-    this.logger.debug(`Profile ${profileId} archived by ${req.session.userId}`);
+    this.logger.debug(
+      `Profile ${privateLogId('profile', profileId)} archived by ${privateLogId('actor', req.session.userId)}`
+    );
 
     return { success: true, profileId, archivedAt: result.archivedAt };
   }
@@ -953,7 +960,7 @@ export class CrmV2Controller {
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to access pending verification dashboard widget`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to access pending verification dashboard widget`
       );
       throw new HttpException(
         {

@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import {
   Injectable,
   CanActivate,
@@ -54,7 +55,7 @@ export class ProfileVerifiedGuard implements CanActivate {
 
     if (!canOrder) {
       this.logger.debug(
-        `ProfileVerifiedGuard: user ${userId} cannot place commercial order — profile not verified`
+        `ProfileVerifiedGuard: user ${privateLogId('actor', userId)} cannot place commercial order — profile not verified`
       );
       throw new ForbiddenException({
         statusCode: 403,

@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -394,7 +395,7 @@ export class VatConfigService {
       });
       this.logger.log(
         `VAT rate created: id=${id}, category=${input.category}, ` +
-          `rate=${input.rateBasisPoints}bps, effectiveFrom=${effectiveFrom.toISOString()}, actor=${input.actorUserId}`
+          `rate=${input.rateBasisPoints}bps, effectiveFrom=${effectiveFrom.toISOString()}, actor=${privateLogId('actor', input.actorUserId)}`
       );
       return this.readConfig(q, id);
     });
@@ -456,7 +457,7 @@ export class VatConfigService {
         },
       });
       this.logger.log(
-        `VAT rate ended: id=${input.id}, until=${effectiveUntil.toISOString()}, actor=${input.actorUserId}`
+        `VAT rate ended: id=${input.id}, until=${effectiveUntil.toISOString()}, actor=${privateLogId('actor', input.actorUserId)}`
       );
       return this.readConfig(q, input.id);
     });
@@ -568,7 +569,7 @@ export class VatConfigService {
       });
       this.logger.log(
         `VAT product override created: id=${id}, product=${input.productId}, ` +
-          `vatConfig=${input.vatConfigId}, actor=${input.actorUserId}`
+          `vatConfig=${input.vatConfigId}, actor=${privateLogId('actor', input.actorUserId)}`
       );
       return this.readOverride(q, id);
     });
@@ -628,7 +629,7 @@ export class VatConfigService {
         },
       });
       this.logger.log(
-        `VAT product override ended: id=${input.id}, until=${effectiveUntil.toISOString()}, actor=${input.actorUserId}`
+        `VAT product override ended: id=${input.id}, until=${effectiveUntil.toISOString()}, actor=${privateLogId('actor', input.actorUserId)}`
       );
       return this.readOverride(q, input.id);
     });

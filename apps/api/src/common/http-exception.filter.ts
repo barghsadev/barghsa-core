@@ -9,6 +9,7 @@ import {
 import { Request, Response } from 'express';
 import { ZodError } from 'zod';
 import { v7 as uuidv7 } from 'uuid';
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { DomainErrorCodes } from '@barghsa/shared/errors/domain';
 import { ErrorCodes, defaultErrorCode, errorCodeForHttpStatus } from '@barghsa/shared/errors';
 import type { ErrorCodeDef } from '@barghsa/shared/errors';
@@ -268,7 +269,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
       try {
         await this.recordDenial(event);
       } catch {
-        this.logger.error({ event: 'authorization.denial.persistence_failed', ...event });
+        this.logger.error({
+          event: 'authorization.denial.persistence_failed',
+          actorRef: privateLogId('actor', actorId),
+          resource,
+          action: request.method,
+          reason: errorCode,
+          correlationId,
+          createdAt: event.createdAt,
+        });
       }
     }
     response.status(httpStatus).json(body);

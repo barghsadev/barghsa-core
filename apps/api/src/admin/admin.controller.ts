@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { parseTemplateEventKey } from '@barghsa/shared/notifications';
 import { rejectContentFields } from './content-input-fields.js';
 import { assertStaffTeamFields, assertStaffRoutingFields } from './staff-team-fields.js';
@@ -446,7 +447,9 @@ export class AdminController {
     const isAdmin = hasStaffPermission(req, 'admin:users:create');
 
     if (!isAdmin) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to create a staff user`);
+      this.logger.warn(
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to create a staff user`
+      );
       throw new HttpException(
         {
           statusCode: 403,
@@ -489,8 +492,8 @@ export class AdminController {
     const result = await this.adminService.createStaffUser(parsed.data, req.session, ip);
 
     this.logger.log(
-      `Staff user created: userId=${result.userId}, ` +
-        `method=${result.activationMethod}, actor=${req.session.userId}`
+      `Staff user created: userId=${privateLogId('actor', result.userId)}, ` +
+        `method=${result.activationMethod}, actor=${privateLogId('actor', req.session.userId)}`
     );
 
     // Build response — include activation-specific fields
@@ -565,7 +568,7 @@ export class AdminController {
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to update roles for user ${userId}`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to update roles for user ${privateLogId('actor', userId)}`
       );
       throw new HttpException(
         {
@@ -606,8 +609,8 @@ export class AdminController {
     );
 
     this.logger.log(
-      `Roles updated for user ${userId}: [${result.previousRoleIds.join(',')}] → ` +
-        `[${result.roleIds.join(',')}], actor=${req.session.userId}`
+      `Roles updated for user ${privateLogId('actor', userId)}: [${result.previousRoleIds.join(',')}] → ` +
+        `[${result.roleIds.join(',')}], actor=${privateLogId('actor', req.session.userId)}`
     );
 
     return result;
@@ -647,7 +650,9 @@ export class AdminController {
     @Req() req: AuthenticatedRequest
   ): Promise<StaffListResult> {
     if (!hasStaffPermission(req, 'admin:staff:view')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list staff accounts`);
+      this.logger.warn(
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to list staff accounts`
+      );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403
@@ -704,7 +709,7 @@ export class AdminController {
 
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to disable staff user ${userId}`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to disable staff user ${privateLogId('actor', userId)}`
       );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -774,7 +779,7 @@ export class AdminController {
   ): Promise<StaffAuditResult> {
     if (!hasStaffPermission(req, 'admin:staff:view')) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to read the staff permission audit`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to read the staff permission audit`
       );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -812,7 +817,9 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async listRoles(@Req() req: AuthenticatedRequest): Promise<StaffRoleDto[]> {
     if (!hasStaffPermission(req, 'admin:roles:edit')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list staff roles`);
+      this.logger.warn(
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to list staff roles`
+      );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403
@@ -846,7 +853,7 @@ export class AdminController {
   ): Promise<EffectivePermissionsResult> {
     if (!hasStaffPermission(req, 'admin:roles:edit')) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to read effective permissions`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to read effective permissions`
       );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -884,7 +891,7 @@ export class AdminController {
     const isAdmin = hasStaffPermission(req, 'admin:config:read');
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to read profile verification mode`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to read profile verification mode`
       );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -937,7 +944,7 @@ export class AdminController {
     const isAdmin = hasStaffPermission(req, 'admin:config:write');
     if (!isAdmin) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to set profile verification mode`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to set profile verification mode`
       );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
@@ -972,7 +979,9 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async getActiveBrandConfig(@Req() req: AuthenticatedRequest): Promise<BrandConfigDto> {
     if (!hasStaffPermission(req, 'admin:branding:read')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read brand config`);
+      this.logger.warn(
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to read brand config`
+      );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403
@@ -997,7 +1006,9 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async listBrandConfigs(@Req() req: AuthenticatedRequest): Promise<BrandConfigDto[]> {
     if (!hasStaffPermission(req, 'admin:branding:read')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list brand configs`);
+      this.logger.warn(
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to list brand configs`
+      );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403
@@ -1070,7 +1081,9 @@ export class AdminController {
     @Req() req: AuthenticatedRequest
   ): Promise<BrandConfigDto> {
     if (!hasStaffPermission(req, 'admin:branding:edit')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to update brand config`);
+      this.logger.warn(
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to update brand config`
+      );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403
@@ -1132,7 +1145,9 @@ export class AdminController {
     @Body() body: unknown
   ): Promise<BrandConfigDto> {
     if (!hasStaffPermission(req, 'admin:branding:edit')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to activate brand config`);
+      this.logger.warn(
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to activate brand config`
+      );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403
@@ -1172,7 +1187,9 @@ export class AdminController {
   @ApiResponse({ status: 403, description: 'Admin role required' })
   async listTosVersions(@Req() req: AuthenticatedRequest) {
     if (!hasStaffPermission(req, 'admin:tos:edit')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to list TOS versions`);
+      this.logger.warn(
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to list TOS versions`
+      );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403
@@ -2031,7 +2048,9 @@ export class AdminController {
     @Query('offset') offset?: string
   ) {
     if (!hasStaffPermission(req, 'admin:jobs:view')) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to read delivery logs`);
+      this.logger.warn(
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to read delivery logs`
+      );
       throw new HttpException(
         { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
         403

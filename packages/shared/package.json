@@ -220,6 +220,16 @@
         "default": "./dist/cjs/password-hash.js"
       }
     },
+    "./log-privacy": {
+      "import": {
+        "types": "./dist/log-privacy.d.ts",
+        "default": "./dist/log-privacy.js"
+      },
+      "require": {
+        "types": "./dist/cjs/log-privacy.d.ts",
+        "default": "./dist/cjs/log-privacy.js"
+      }
+    },
     "./password-policy": {
       "import": {
         "types": "./dist/validation/password-policy.d.ts",

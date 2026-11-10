@@ -1,10 +1,12 @@
 import { randomUUID } from 'node:crypto';
-import { beforeEach, afterEach, expect, it } from 'vitest';
+import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { isConfigAuditPage } from '@barghsa/shared/admin';
+import { privateLogId } from '@barghsa/shared/log-privacy';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 beforeEach(async () => {
+  vi.stubEnv('SESSION_SECRET', 'http-fixture-log-key-only');
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   await http.pool.query('DELETE FROM brand_config');
   for (const actor of ['admin', 'reader', 'customer']) {
@@ -31,7 +33,11 @@ beforeEach(async () => {
   await http.pool.query("INSERT INTO user_roles(user_id,role_id) VALUES('reader','audit-reader')");
 }, 40000);
 afterEach(async () => {
-  await http?.close();
+  try {
+    await http?.close();
+  } finally {
+    vi.unstubAllEnvs();
+  }
 });
 function call(query: string, actor = 'admin') {
   return fetch(`${http.base}/api/admin/config/audit?${query}`, { headers: headers[actor]! });
@@ -199,6 +205,9 @@ it('keeps the public denial and writes a sanitized diagnostic if audit persisten
   expect(payload).toContain('AUTHZ:FORBIDDEN');
   expect(payload).not.toMatch(/unavailable_denials|persistence_failed|reader/);
   await expect.poll(() => http.logs()).toContain('authorization.denial.persistence_failed');
+  expect(http.logs()).toContain(privateLogId('actor', 'reader'));
+  expect(http.logs()).toContain(response.headers.get('x-correlation-id'));
+  expect(http.logs()).not.toMatch(/actorId: ['"]?reader\b|unavailable_denials/);
 });
 it('rechecks session expiry after the audit query waits for a database lock', async () => {
   const lock = await http.pool.connect();

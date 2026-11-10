@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { notifySessionsRevoked } from '../auth/session-notifications.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
@@ -477,7 +478,7 @@ export class AgentsService {
     }
 
     this.logger.log(
-      `Invitation ${invitationId} created for ${normalised} as ${role} in profile ${profileId} by user ${userId}`
+      `Invitation ${invitationId} created as ${role} in profile ${privateLogId('profile', profileId)} by user ${privateLogId('actor', userId)}`
     );
 
     return { id: invitationId };
@@ -1082,7 +1083,7 @@ export class AgentsService {
     }
 
     this.logger.log(
-      `Ownership transfer ${transferId} initiated for profile ${profileId} from user ${userId} to ${newOwnerUserId}`
+      `Ownership transfer ${transferId} initiated for profile ${privateLogId('profile', profileId)} from user ${privateLogId('actor', userId)} to ${privateLogId('actor', newOwnerUserId)}`
     );
 
     return { id: transferId };

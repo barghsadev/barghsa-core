@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import {
   readVerificationPolicyConfig,
   lockVerificationPolicy,
@@ -281,7 +282,9 @@ export class ProfilesService {
       );
 
       await client.query('COMMIT');
-      this.logger.debug(`Default profile set to ${profileId} for user ${userId}`);
+      this.logger.debug(
+        `Default profile set to ${privateLogId('profile', profileId)} for user ${privateLogId('actor', userId)}`
+      );
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {
         // Rollback failure is non-critical
@@ -494,7 +497,7 @@ export class ProfilesService {
 
       if (!transaction) await client.query('COMMIT');
       this.logger.log(
-        `Profile ${row.id} (${profileType}) created for user ${userId}${becomesDefault ? ' as default' : ''}`
+        `Profile ${privateLogId('profile', row.id)} (${profileType}) created for user ${privateLogId('actor', userId)}${becomesDefault ? ' as default' : ''}`
       );
       return row;
     } catch (error) {
@@ -649,7 +652,9 @@ export class ProfilesService {
       const updatedProfile = await this.getProfileById(profileId, client);
       await client.query('COMMIT');
 
-      this.logger.log(`Individual profile ${profileId} saved for user ${userId}`);
+      this.logger.log(
+        `Individual profile ${privateLogId('profile', profileId)} saved for user ${privateLogId('actor', userId)}`
+      );
 
       return updatedProfile ?? mapRow(profileResult.rows[0]);
     } catch (error) {
@@ -808,7 +813,9 @@ export class ProfilesService {
         : await work();
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      this.logger.log(`Address ${address.id} created for profile ${profileId}`);
+      this.logger.log(
+        `Address ${address.id} created for profile ${privateLogId('profile', profileId)}`
+      );
       return address;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -977,7 +984,9 @@ export class ProfilesService {
         : await work();
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      this.logger.log(`Address ${addressId} updated for profile ${profileId}`);
+      this.logger.log(
+        `Address ${addressId} updated for profile ${privateLogId('profile', profileId)}`
+      );
       return address;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -1072,7 +1081,9 @@ export class ProfilesService {
       client.release();
     }
 
-    this.logger.log(`Address ${addressId} deleted for profile ${profileId}`);
+    this.logger.log(
+      `Address ${addressId} deleted for profile ${privateLogId('profile', profileId)}`
+    );
   }
 
   /**
@@ -1149,7 +1160,9 @@ export class ProfilesService {
       );
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      this.logger.log(`Address ${addressId} set as main for profile ${profileId}`);
+      this.logger.log(
+        `Address ${addressId} set as main for profile ${privateLogId('profile', profileId)}`
+      );
       return mapAddressRow(result.rows[0]);
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -1677,7 +1690,7 @@ export class ProfilesService {
       await client.query('COMMIT');
 
       this.logger.log(
-        `Onboarding completed for profile ${profileId} (${targetStatus})${becomesDefault ? ' as default' : ''}`
+        `Onboarding completed for profile ${privateLogId('profile', profileId)} (${targetStatus})${becomesDefault ? ' as default' : ''}`
       );
 
       return updated ?? profile;

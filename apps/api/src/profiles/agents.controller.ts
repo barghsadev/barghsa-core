@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { z } from 'zod';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import {
@@ -87,7 +88,7 @@ export class AgentsController {
 
     const result = await this.agentsService.listAgents(profileId);
     this.logger.debug(
-      `User ${userId} listed agents for profile ${profileId}: ${result.agents.length} entries`
+      `User ${privateLogId('actor', userId)} listed agents for profile ${privateLogId('profile', profileId)}: ${result.agents.length} entries`
     );
     const roles = await this.agentsService.getAgentRoles(profileId, userId);
     return { ...result, canTransferOwnership: roles.includes('Owner') };
@@ -150,7 +151,9 @@ export class AgentsController {
       req.session,
       parsed.data.message
     );
-    this.logger.log(`Invitation ${result.id} created for profile ${profileId} by user ${userId}`);
+    this.logger.log(
+      `Invitation ${result.id} created for profile ${privateLogId('profile', profileId)} by user ${privateLogId('actor', userId)}`
+    );
     return result;
   }
 
@@ -179,7 +182,9 @@ export class AgentsController {
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
     await this.agentsService.withdrawInvitation(profileId, inviteId, req.session);
 
-    this.logger.log(`Invitation ${inviteId} withdrawn from profile ${profileId} by user ${userId}`);
+    this.logger.log(
+      `Invitation ${inviteId} withdrawn from profile ${privateLogId('profile', profileId)} by user ${privateLogId('actor', userId)}`
+    );
     return { id: inviteId, status: 'Withdrawn', message: 'Invitation withdrawn successfully.' };
   }
 

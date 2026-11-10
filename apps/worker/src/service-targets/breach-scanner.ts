@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { Pool, QueryResult } from 'pg';
 import { getDbPool } from '@barghsa/db';
 import {
@@ -423,7 +424,7 @@ export async function scanServiceBreaches(
               });
               if (!enqueueResult.inserted) {
                 logger.warn(
-                  `Outbox deduped breach alert for ${domain.serviceType} ${row.id} → ${profile.id ?? profile.userId} (unexpected for a fresh episode)`
+                  `Outbox deduped breach alert for ${domain.serviceType} ${row.id} → ${profile.id ? privateLogId('profile', profile.id) : privateLogId('actor', profile.userId)} (unexpected for a fresh episode)`
                 );
               }
             }

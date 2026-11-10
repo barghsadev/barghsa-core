@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Controller,
@@ -102,7 +103,7 @@ export class FailedNotificationsController {
   private assertViewPermission(req: AuthenticatedRequest): void {
     if (!hasStaffPermission(req, 'admin:jobs:view')) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to view dead-letter notifications`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to view dead-letter notifications`
       );
       throw new HttpException(
         {
@@ -118,7 +119,7 @@ export class FailedNotificationsController {
   private assertRetryPermission(req: AuthenticatedRequest): void {
     if (!hasStaffPermission(req, 'admin:jobs:retry')) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to mutate a dead-letter notification`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to mutate a dead-letter notification`
       );
       throw new HttpException(
         {

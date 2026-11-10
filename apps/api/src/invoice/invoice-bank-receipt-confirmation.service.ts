@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { receiptActivityActor } from '../finance/receipt-activity-actor.js';
 import { receiptStatusHistory, type ReceiptStatusHistoryEntry } from './receipt-status-history.js';
@@ -739,7 +740,7 @@ export class InvoiceBankReceiptConfirmationService {
           await requireSessionStepUp(client, actor);
           await client.query('COMMIT');
           this.logger.log(
-            `Invoice bank receipt ${receipt.id} parked for dual approval by ${input.actorUserId}`
+            `Invoice bank receipt ${receipt.id} parked for dual approval by ${privateLogId('actor', input.actorUserId)}`
           );
           return parked;
         }

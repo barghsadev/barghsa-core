@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { Pool, PoolClient } from 'pg';
 import { getDbPool } from '@barghsa/db';
 import {
@@ -428,7 +429,7 @@ async function escalateOne(
     });
     if (!enqueueResult.inserted) {
       logger.warn(
-        `Outbox deduped escalation for ${domain.serviceType} ${candidate.item_id} → ${profile.id ?? profile.userId} (unexpected for a fresh claim)`
+        `Outbox deduped escalation for ${domain.serviceType} ${candidate.item_id} → ${profile.id ? privateLogId('profile', profile.id) : privateLogId('actor', profile.userId)} (unexpected for a fresh claim)`
       );
     }
   }

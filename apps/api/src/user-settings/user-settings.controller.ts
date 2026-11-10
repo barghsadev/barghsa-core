@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import {
   Body,
   Controller,
@@ -300,7 +301,7 @@ export class UserSettingsController {
     }
 
     const timezone = result.rows[0].timezone as string;
-    this.logger.debug(`User ${userId}: timezone = ${timezone}`);
+    this.logger.debug(`User ${privateLogId('actor', userId)}: timezone = ${timezone}`);
     return { timezone };
   }
 

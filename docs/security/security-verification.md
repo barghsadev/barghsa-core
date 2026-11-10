@@ -44,6 +44,23 @@ event receipt has a 4 KiB cap. These limits apply to decoded bytes. An
 oversized or unreadable delivery receipt leaves the send outcome uncertain
 and subject to the existing reconciliation rules.
 
+## Operator log privacy
+
+API and worker diagnostics use keyed references for actor, profile, challenge
+and token-family identifiers. Each kind has its own namespace. The existing
+protected `SESSION_SECRET` keeps references consistent across processes in one
+deployment. Rotation changes the references. Missing keys or identifiers produce
+an `unavailable` marker. Continue to use the request correlation ID to trace a
+single operation across processes or across a key rotation.
+
+Restricted audit and job records retain the original identifiers needed for
+authorized review. Operator logs omit invitation destinations, gift-code values,
+object keys, staff-entered names and raw configuration values from the affected
+diagnostics. The existing local OTP console requires `NODE_ENV=development`
+and `OTP_CONSOLE=true`. Keep it disabled outside local development.
+
+## Additional boundary checks
+
 Direct and multipart upload reservations share a PostgreSQL limit of 20 per
 authorized profile per minute. Account-only uploads use the same limit keyed
 to the signed-in account. The API checks scope, metadata and the current file

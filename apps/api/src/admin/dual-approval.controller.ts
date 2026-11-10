@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
@@ -65,7 +66,7 @@ export class DualApprovalController {
   private assertFinancialEditPermission(req: AuthenticatedRequest): void {
     if (!hasStaffPermission(req, 'admin:financial:edit')) {
       this.logger.warn(
-        `Non-admin user ${req.session.userId} attempted to access the dual-approval surface`
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to access the dual-approval surface`
       );
       throw new HttpException(
         {

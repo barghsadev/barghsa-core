@@ -15,6 +15,7 @@
  * money-moving operations that call this service).
  */
 
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import {
   Injectable,
   InternalServerErrorException,
@@ -231,7 +232,9 @@ export class InvoiceStateMachineService {
 
       if (ownsClient) await client.query('COMMIT');
 
-      this.logger.log(`Invoice ${invoiceId} ${from} → ${to} (${label}) by ${opts.actorUserId}`);
+      this.logger.log(
+        `Invoice ${invoiceId} ${from} → ${to} (${label}) by ${privateLogId('actor', opts.actorUserId)}`
+      );
 
       return { invoiceId, fromState: from, toState: to, transition, auditId };
     } catch (error) {

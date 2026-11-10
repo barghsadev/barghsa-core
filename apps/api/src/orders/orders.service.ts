@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { verificationIsCurrent, type VerificationProfileType } from '@barghsa/shared/verification';
 import { lockVerificationPolicy } from '../admin/verification-policy-config.js';
 import { notifyElectricityStatus } from '../electricity/electricity-status-notifications.js';
@@ -502,7 +503,9 @@ export class OrdersService {
       );
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      this.logger.log(`Order ${finalOrder.id} created for user ${userId}, type=${dto.orderType}`);
+      this.logger.log(
+        `Order ${finalOrder.id} created for user ${privateLogId('actor', userId)}, type=${dto.orderType}`
+      );
       return finalOrder;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -658,7 +661,7 @@ export class OrdersService {
       );
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
-      this.logger.log(`Order ${order.id} cancelled for user ${userId}`);
+      this.logger.log(`Order ${order.id} cancelled for user ${privateLogId('actor', userId)}`);
       return order;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});

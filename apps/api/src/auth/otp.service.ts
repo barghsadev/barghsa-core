@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { randomInt, randomUUID, createHash, timingSafeEqual } from 'node:crypto';
@@ -168,7 +169,7 @@ export class OtpService {
       this.logger.debug(`[DEV] OTP for challenge ${challengeId}: ${otp}`);
     }
     this.logger.debug(
-      `OTP challenge created: challengeId=${challengeId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      `OTP challenge created: challengeId=${privateLogId('challenge', challengeId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
     );
 
     return { challengeId, destination };
@@ -277,7 +278,7 @@ export class OtpService {
       this.logger.debug(`[DEV] OTP for challenge ${challengeId}: ${otp}`);
     }
     this.logger.debug(
-      `OTP challenge created for user ${userId} challengeId=${challengeId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      `OTP challenge created for user ${privateLogId('actor', userId)} challengeId=${privateLogId('challenge', challengeId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
     );
 
     return { challengeId, destination };
@@ -365,7 +366,7 @@ export class OtpService {
       this.logger.debug(`[DEV] OTP for challenge ${challengeId}: ${otp}`);
     }
     this.logger.debug(
-      `OTP resent: challengeId=${challengeId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      `OTP resent: challengeId=${privateLogId('challenge', challengeId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
     );
 
     return { challengeId };
@@ -436,7 +437,7 @@ export class OtpService {
     }
 
     this.logger.debug(
-      `OTP verified for challenge ${challengeId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      `OTP verified for challenge ${privateLogId('challenge', challengeId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
     );
 
     return { verified: true, challengeId };

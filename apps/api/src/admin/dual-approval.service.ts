@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { lockDualApprovalThreshold } from './dual-approval-threshold-lock.js';
 import { InvoiceAdjustmentApprovalService } from '../invoice/invoice-adjustment-approval.service.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
@@ -215,7 +216,7 @@ export class DualApprovalService {
     }
 
     this.logger.log(
-      `Approval request ${id} created by ${initiatorUserId} (${normalized.actionType})`
+      `Approval request ${id} created by ${privateLogId('actor', initiatorUserId)} (${normalized.actionType})`
     );
 
     return this.getRequestDto(id);
@@ -407,7 +408,9 @@ export class DualApprovalService {
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
-      this.logger.log(`Approval request ${requestId} ${decision}d by ${reviewerUserId}`);
+      this.logger.log(
+        `Approval request ${requestId} ${decision}d by ${privateLogId('actor', reviewerUserId)}`
+      );
 
       // Re-read after commit so the DTO reflects the joined reviewer
       // identity (reviewer_id was NULL when the locked row was read).

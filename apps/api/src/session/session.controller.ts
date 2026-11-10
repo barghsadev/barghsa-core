@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import {
   Controller,
   Get,
@@ -210,7 +211,9 @@ export class SessionController {
       return { message: 'No other sessions to revoke.', revokedCount: 0 };
     }
 
-    this.logger.log(`All other sessions (${revokedCount}) revoked for user ${userId}`);
+    this.logger.log(
+      `All other sessions (${revokedCount}) revoked for user ${privateLogId('actor', userId)}`
+    );
 
     return {
       message: `All ${revokedCount} other session(s) revoked.`,

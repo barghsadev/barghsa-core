@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -508,7 +509,9 @@ export class KnowledgeBasesService {
         },
         client
       );
-      this.logger.log(`Knowledge base created: id=${id}, actor=${input.actorUserId}`);
+      this.logger.log(
+        `Knowledge base created: id=${id}, actor=${privateLogId('actor', input.actorUserId)}`
+      );
       return { ...this.kbToDto(row), documentCount: 0, groupCount: 0 };
     });
   }
@@ -633,7 +636,9 @@ export class KnowledgeBasesService {
         },
         client
       );
-      this.logger.log(`Knowledge base updated: id=${id}, actor=${input.actorUserId}`);
+      this.logger.log(
+        `Knowledge base updated: id=${id}, actor=${privateLogId('actor', input.actorUserId)}`
+      );
       return {
         ...this.kbToDto({ ...row, document_count: docs.length, group_count: groups.length }),
       };
@@ -663,7 +668,9 @@ export class KnowledgeBasesService {
         },
         client
       );
-      this.logger.log(`Knowledge base deleted: id=${id}, actor=${actorUserId}`);
+      this.logger.log(
+        `Knowledge base deleted: id=${id}, actor=${privateLogId('actor', actorUserId)}`
+      );
     });
   }
 
@@ -805,7 +812,7 @@ export class KnowledgeBasesService {
           client
         );
         this.logger.log(
-          `Document attached to KB: kb=${input.kbId}, key=${input.storageKey}, actor=${input.actorUserId}`
+          `Document attached to KB: kb=${input.kbId}, actor=${privateLogId('actor', input.actorUserId)}`
         );
         return this.docToDto(result.rows[0]);
       }
@@ -878,7 +885,7 @@ export class KnowledgeBasesService {
         client
       );
       this.logger.log(
-        `Document detached from KB: kb=${kbId}, key=${link.storage_key}, actor=${actorUserId}`
+        `Document detached from KB: kb=${kbId}, actor=${privateLogId('actor', actorUserId)}`
       );
     });
   }
@@ -951,7 +958,9 @@ export class KnowledgeBasesService {
         },
         client
       );
-      this.logger.log(`KB group created: id=${id}, actor=${input.actorUserId}`);
+      this.logger.log(
+        `KB group created: id=${id}, actor=${privateLogId('actor', input.actorUserId)}`
+      );
       return { ...this.groupToDto(row), memberCount: 0 };
     });
   }
@@ -999,7 +1008,9 @@ export class KnowledgeBasesService {
         },
         client
       );
-      this.logger.log(`KB group updated: id=${id}, actor=${input.actorUserId}`);
+      this.logger.log(
+        `KB group updated: id=${id}, actor=${privateLogId('actor', input.actorUserId)}`
+      );
       return { ...this.groupToDto(row), memberCount };
     });
   }
@@ -1027,7 +1038,7 @@ export class KnowledgeBasesService {
         },
         client
       );
-      this.logger.log(`KB group deleted: id=${id}, actor=${actorUserId}`);
+      this.logger.log(`KB group deleted: id=${id}, actor=${privateLogId('actor', actorUserId)}`);
     });
   }
 
@@ -1075,7 +1086,7 @@ export class KnowledgeBasesService {
         client
       );
       this.logger.log(
-        `KB linked into group: group=${input.groupId}, kb=${input.kbId}, actor=${input.actorUserId}`
+        `KB linked into group: group=${input.groupId}, kb=${input.kbId}, actor=${privateLogId('actor', input.actorUserId)}`
       );
     });
   }
@@ -1117,7 +1128,9 @@ export class KnowledgeBasesService {
         },
         client
       );
-      this.logger.log(`KB removed from group: group=${groupId}, kb=${kbId}, actor=${actorUserId}`);
+      this.logger.log(
+        `KB removed from group: group=${groupId}, kb=${kbId}, actor=${privateLogId('actor', actorUserId)}`
+      );
     });
   }
 

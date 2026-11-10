@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { invitationDecisionInput } from '@barghsa/shared/invitations';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import {
@@ -64,7 +65,9 @@ export class InvitationsController {
   async listPendingInvitations(@Req() req: AuthenticatedRequest) {
     const userId = req.session.userId;
     const result = await this.agentsService.listPendingInvitations(userId);
-    this.logger.debug(`User ${userId} has ${result.invitations.length} pending invitations`);
+    this.logger.debug(
+      `User ${privateLogId('actor', userId)} has ${result.invitations.length} pending invitations`
+    );
     return result;
   }
 
@@ -99,7 +102,7 @@ export class InvitationsController {
     setSessionCookie(res, rotated.sessionId, rotated.expiresAt);
     setRefreshCookie(res, rotated.refreshToken, rotated.expiresAt);
     setCsrfCookie(res, rotated.csrfToken);
-    this.logger.log(`Invitation ${inviteId} accepted by user ${userId}`);
+    this.logger.log(`Invitation ${inviteId} accepted by user ${privateLogId('actor', userId)}`);
     return { message: 'Invitation accepted successfully.', invitation: rotated.invitation };
   }
 
@@ -132,7 +135,7 @@ export class InvitationsController {
       req.session,
       proposal.data
     );
-    this.logger.log(`Invitation ${inviteId} declined by user ${userId}`);
+    this.logger.log(`Invitation ${inviteId} declined by user ${privateLogId('actor', userId)}`);
     return { message: 'Invitation declined successfully.', invitation };
   }
 }

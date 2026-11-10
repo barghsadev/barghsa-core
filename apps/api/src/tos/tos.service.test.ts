@@ -1,6 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { TosService } from './tos.service.js';
 import { HttpException, Logger } from '@nestjs/common';
+import { privateLogId } from '@barghsa/shared/log-privacy';
+
+afterEach(() => vi.unstubAllEnvs());
 
 // Shared mock pool
 const mockPool = {
@@ -190,6 +193,7 @@ describe('TosService', () => {
     });
 
     it('rolls back on a database error without exposing its contents', async () => {
+      vi.stubEnv('SESSION_SECRET', 'test-tos-log-key');
       mockClient.query
         .mockResolvedValueOnce({ rows: [] }) // BEGIN
         .mockRejectedValueOnce(new Error('User lock failed for private-identity-reference'));
@@ -201,7 +205,11 @@ describe('TosService', () => {
         expect(err).toBeInstanceOf(HttpException);
         expect(err.getStatus()).toBe(500);
         expect(err.getResponse()).toEqual({ statusCode: 500, error: 'INTERNAL:SERVER' });
-        expect(log.mock.calls).toEqual([[`Failed to record TOS acceptance for user ${userId}`]]);
+        expect(log.mock.calls).toEqual([
+          [`Failed to record TOS acceptance for user ${privateLogId('actor', userId)}`],
+        ]);
+        expect(JSON.stringify(log.mock.calls)).not.toContain(userId);
+        expect(JSON.stringify(log.mock.calls)).not.toContain('private-identity-reference');
         expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
         expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT');
         expect(mockClient.release).toHaveBeenCalled();

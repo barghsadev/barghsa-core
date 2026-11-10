@@ -7,7 +7,7 @@ vi.mock('./staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
 }));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { HttpException } from '@nestjs/common';
+import { HttpException, Logger } from '@nestjs/common';
 import type { GiftCodeService as ServiceType } from './gift-code.service.js';
 
 /**
@@ -541,6 +541,7 @@ describe('GiftCodeService (T-09.12.03)', () => {
 
   describe('redeem', () => {
     it('redeems a public fixed_irr code inside its own transaction', async () => {
+      const log = vi.spyOn(Logger.prototype, 'log').mockImplementation(() => {});
       const { pool, router } = makeDb();
       router.on('FOR UPDATE', () => ({ rows: [giftRow()] }));
       router.on('INSERT INTO gift_code_redemptions', () => ({
@@ -568,6 +569,10 @@ describe('GiftCodeService (T-09.12.03)', () => {
       expect(commit.length).toBe(1);
       // The stored code is normalized
       expect(router.queries('FOR UPDATE')[0]!.values[0]).toBe('SALE10');
+      expect(log).toHaveBeenCalledWith(
+        expect.stringContaining(`Gift code redeemed: id=${CODE_ID}`)
+      );
+      expect(JSON.stringify(log.mock.calls)).not.toMatch(/SALE10|prof-1/i);
     });
 
     it('caps a percentage discount at maxCapIrr', async () => {

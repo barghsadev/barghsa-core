@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { throwReceiptFieldErrors } from '../finance/receipt-input-fields.js';
 import type { AgentPermission } from '@barghsa/shared/agent-permissions';
 import {
@@ -136,7 +137,9 @@ export class WalletController {
   async getWallet(@Param('profileId') profileId: string, @Req() req: AuthenticatedRequest) {
     assertUuid(profileId, 'profileId');
     return withCustomerWalletAccess(req.session, profileId, 'wallet:view', async (client) => {
-      this.logger.debug(`Wallet inquiry: user=${req.session.userId} profile=${profileId}`);
+      this.logger.debug(
+        `Wallet inquiry: user=${privateLogId('actor', req.session.userId)} profile=${privateLogId('profile', profileId)}`
+      );
       const wallet = await this.walletService.getWallet(profileId, client);
       const limit = await this.walletService.resolveOnlineTopUpLimit();
       const limitFields =
@@ -169,7 +172,9 @@ export class WalletController {
     assertUuid(profileId, 'profileId');
     await this.assertProfileAccess(req, profileId, 'wallet:charge');
     return withCustomerWalletAccess(req.session, profileId, 'wallet:charge', async (client) => {
-      this.logger.debug(`Wallet creation: user=${req.session.userId} profile=${profileId}`);
+      this.logger.debug(
+        `Wallet creation: user=${privateLogId('actor', req.session.userId)} profile=${privateLogId('profile', profileId)}`
+      );
       const wallet = await this.walletService.createWallet(profileId, client);
       return {
         ok: true,
@@ -266,7 +271,7 @@ export class WalletController {
     });
 
     this.logger.log(
-      `Online top-up ${result.transactionId} initiated for profile ${profileId} by user ${req.session.userId}`
+      `Online top-up ${result.transactionId} initiated for profile ${privateLogId('profile', profileId)} by user ${privateLogId('actor', req.session.userId)}`
     );
 
     return {
@@ -350,7 +355,7 @@ export class WalletController {
     });
 
     this.logger.log(
-      `Bank receipt top-up ${result.transactionId} submitted for profile ${profileId} by user ${req.session.userId}`
+      `Bank receipt top-up ${result.transactionId} submitted for profile ${privateLogId('profile', profileId)} by user ${privateLogId('actor', req.session.userId)}`
     );
 
     const response: BankReceiptTopUpResponse = {

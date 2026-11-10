@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { lockWalletProfile, assertWalletProfileWritable } from './profile-lock.js';
 import { observePaymentKeyConflict } from '../metrics/payment-idempotency-metrics.js';
 import { enforceProfileFinancialRateLimit } from '../finance/profile-financial-rate-limit.js';
@@ -309,7 +310,7 @@ export class PayInvoiceWithWalletService {
       await this.persistCachedResult(client, key, invoice.id, result);
       if (!options.client) await client.query('COMMIT');
       this.logger.log(
-        `Invoice ${invoice.id} paid from wallet ${invoice.profile_id} debit=${debit.id}`
+        `Invoice ${invoice.id} paid from wallet ${privateLogId('profile', invoice.profile_id)} debit=${debit.id}`
       );
       return result;
     } catch (error) {

@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { PoolClient } from 'pg';
@@ -450,7 +451,9 @@ export class GiftCodeService {
           restoreAfterPayment: input.restoreAfterPayment ?? false,
         },
       });
-      this.logger.log(`Gift code created: id=${id}, code=${code}, actor=${input.actor.userId}`);
+      this.logger.log(
+        `Gift code created: id=${id}, actor=${privateLogId('actor', input.actor.userId)}`
+      );
       return this.readDto(q, id);
     });
   }
@@ -625,7 +628,9 @@ export class GiftCodeService {
             : {}),
         },
       });
-      this.logger.log(`Gift code updated: id=${id}, code=${code}, actor=${input.actor.userId}`);
+      this.logger.log(
+        `Gift code updated: id=${id}, actor=${privateLogId('actor', input.actor.userId)}`
+      );
       return this.readDto(q, id);
     });
   }
@@ -670,7 +675,7 @@ export class GiftCodeService {
         meta: { giftCodeId: id, code: current.code },
       });
       this.logger.log(
-        `Gift code ${status === 'active' ? 'activated' : 'deactivated'}: id=${id}, actor=${actorUserId}`
+        `Gift code ${status === 'active' ? 'activated' : 'deactivated'}: id=${id}, actor=${privateLogId('actor', actorUserId)}`
       );
       return this.readDto(q, id);
     });
@@ -899,8 +904,8 @@ export class GiftCodeService {
         },
       });
       this.logger.log(
-        `Gift code redeemed: code=${code}, order=${input.orderId}, ` +
-          `profile=${input.profileId}, discount=${discountAmount}`
+        `Gift code redeemed: id=${gift.id}, order=${input.orderId}, ` +
+          `profile=${privateLogId('profile', input.profileId)}`
       );
       return this.toRedemptionDto(inserted.rows[0] as RedemptionRow);
     };

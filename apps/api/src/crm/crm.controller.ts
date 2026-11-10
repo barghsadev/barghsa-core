@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import {
   Controller,
@@ -147,7 +148,9 @@ export class CrmController {
     const isAdmin = hasStaffPermission(req, 'crm:read');
 
     if (!isAdmin) {
-      this.logger.warn(`Non-admin user ${req.session.userId} attempted to access CRM`);
+      this.logger.warn(
+        `Non-admin user ${privateLogId('actor', req.session.userId)} attempted to access CRM`
+      );
       throw new HttpException(
         {
           statusCode: 403,

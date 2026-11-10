@@ -88,7 +88,7 @@ type ScriptOptions = {
 function scriptClient(opts: ScriptOptions = {}) {
   mockClient.query.mockImplementation(async (sql: string, params?: unknown[]) => {
     if (sql.includes('rate_limit_rolling')) {
-      return { rows: [{ count: opts.paymentCount ?? 1, reset_ms: '42000' }] };
+      return { rows: [{ count: opts.paymentCount ?? 1, reset_ms: '42000', limit_value: 10 }] };
     }
     if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
       return { rows: [] };
@@ -287,13 +287,10 @@ describe('InvoiceBankReceiptUploadService (T-04.3.01.02)', () => {
       status: 429,
       response: { retryAfterMs: 42_000 },
     });
-    expect(mockClient.query).toHaveBeenCalledWith(expect.stringContaining('rate_limit_rolling'), [
-      true,
-      `wallet:payment:profile:${PROFILE_ID}`,
-      60_000,
-      10,
-      true,
-    ]);
+    expect(mockClient.query).toHaveBeenCalledWith(
+      expect.stringContaining('rate_limit_rolling(true, $3, $4, limit_value, true)'),
+      ['security_rate_limit:wallet', 10, `wallet:payment:profile:${PROFILE_ID}`, 60_000]
+    );
     expect(storage.getObject).not.toHaveBeenCalled();
     expect(storage.putObject).not.toHaveBeenCalled();
     expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');

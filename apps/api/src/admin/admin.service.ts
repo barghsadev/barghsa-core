@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { lockVerificationPolicy } from './verification-policy-config.js';
 import { assertStaffTeamFields } from './staff-team-fields.js';
 import { lockDualApprovalThreshold } from './dual-approval-threshold-lock.js';
@@ -706,8 +707,8 @@ export class AdminService {
       await client.query('COMMIT');
 
       this.logger.log(
-        `Staff user created: userId=${userId}, ` +
-          `method=${input.activationMethod}, actor=${actorUserId}`
+        `Staff user created: userId=${privateLogId('actor', userId)}, ` +
+          `method=${input.activationMethod}, actor=${privateLogId('actor', actorUserId)}`
       );
 
       // ── 6. Return result ───────────────────────────────────────────
@@ -903,7 +904,7 @@ export class AdminService {
       await client.query('COMMIT');
 
       this.logger.log(
-        `Roles updated for user ${targetUserId}: [${previousRoleIds.join(',')}] → [${roleIds.join(',')}], actor=${actorUserId}`
+        `Roles updated for user ${privateLogId('actor', targetUserId)}: [${previousRoleIds.join(',')}] → [${roleIds.join(',')}], actor=${privateLogId('actor', actorUserId)}`
       );
 
       return {
@@ -916,7 +917,7 @@ export class AdminService {
         // Non-critical
       });
 
-      this.logger.error(`Failed to update roles for user ${targetUserId}`);
+      this.logger.error(`Failed to update roles for user ${privateLogId('actor', targetUserId)}`);
       if (error instanceof HttpException) throw error;
       throw new HttpException(
         { statusCode: 500, error: 'INTERNAL_SERVER', message: 'Failed to update staff roles' },
@@ -1171,7 +1172,7 @@ export class AdminService {
       await client.query('COMMIT');
 
       this.logger.log(
-        `Delivery window set to ${config.timezone} ${config.startHour}–${config.endHour} by ${actorUserId}`
+        `Delivery window set to ${config.timezone} ${config.startHour}–${config.endHour} by ${privateLogId('actor', actorUserId)}`
       );
       return config;
     } catch (error) {
@@ -1335,7 +1336,7 @@ export class AdminService {
       await client.query('COMMIT');
 
       this.logger.log(
-        `Dual-approval threshold set to IRR ${config.thresholdIrR} by ${actorUserId}`
+        `Dual-approval threshold set to IRR ${config.thresholdIrR} by ${privateLogId('actor', actorUserId)}`
       );
       return config;
     } catch (error) {
@@ -1380,7 +1381,7 @@ export class AdminService {
     const version = Number(result.rows[0]!.version);
     if (!isValidWalletTopUpLimit(persistedValue)) {
       this.logger.warn(
-        `Online wallet top-up limit config row for key ${WALLET_TOP_UP_LIMIT_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); configuration unavailable`
+        `Online wallet top-up limit config row for key ${WALLET_TOP_UP_LIMIT_CONFIG_KEY} is invalid; configuration unavailable`
       );
       throw new HttpException('Online wallet top-up limit configuration is unavailable', 503);
     }
@@ -1543,7 +1544,7 @@ export class AdminService {
       await this.configCache?.invalidate(WALLET_TOP_UP_LIMIT_CONFIG_KEY);
 
       this.logger.log(
-        `Online wallet top-up limit set to IRR ${config.limitIrR} (version ${newVersion}) by ${actorUserId}`
+        `Online wallet top-up limit set to IRR ${config.limitIrR} (version ${newVersion}) by ${privateLogId('actor', actorUserId)}`
       );
       return { ...config, version: newVersion };
     } catch (error) {
@@ -1881,7 +1882,9 @@ export class AdminService {
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
-      this.logger.log(`Mandatory green-electricity rules updated by ${actorUserId}`);
+      this.logger.log(
+        `Mandatory green-electricity rules updated by ${privateLogId('actor', actorUserId)}`
+      );
       return config;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -2088,7 +2091,7 @@ export class AdminService {
     });
     if (corrupt) {
       this.logger.warn(
-        `Service response targets config row for key ${SERVICE_RESPONSE_TARGETS_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving per-type normalized values (corrupt types disabled)`
+        `Service response targets config row for key ${SERVICE_RESPONSE_TARGETS_CONFIG_KEY} is invalid; serving per-type normalized values (corrupt types disabled)`
       );
     }
     return config;
@@ -2198,9 +2201,7 @@ export class AdminService {
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
-      this.logger.log(
-        `Service response targets set to ${JSON.stringify(config)} by ${actorUserId}`
-      );
+      this.logger.log(`Service response targets updated by ${privateLogId('actor', actorUserId)}`);
       return config;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -2249,7 +2250,7 @@ export class AdminService {
     });
     if (corrupt) {
       this.logger.warn(
-        `Escalation policy config row for key ${ESCALATION_POLICY_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving per-type normalized values (corrupt types/levels disabled)`
+        `Escalation policy config row for key ${ESCALATION_POLICY_CONFIG_KEY} is invalid; serving per-type normalized values (corrupt types/levels disabled)`
       );
     }
     return config;
@@ -2355,9 +2356,7 @@ export class AdminService {
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
-      this.logger.log(
-        `Service escalation policy set to ${JSON.stringify(config)} by ${actorUserId}`
-      );
+      this.logger.log(`Service escalation policy updated by ${privateLogId('actor', actorUserId)}`);
       return config;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -2414,7 +2413,7 @@ export class AdminService {
     });
     if (corrupt) {
       this.logger.warn(
-        `Staff assignment rules config row for key ${STAFF_ASSIGNMENT_RULES_CONFIG_KEY} is invalid (${JSON.stringify(persisted)}); serving per-type normalized values (corrupt work types fall back to manual assignment)`
+        `Staff assignment rules config row for key ${STAFF_ASSIGNMENT_RULES_CONFIG_KEY} is invalid; serving per-type normalized values (corrupt work types fall back to manual assignment)`
       );
     }
     return config;
@@ -2543,7 +2542,7 @@ export class AdminService {
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
-      this.logger.log(`Staff assignment rules set to ${JSON.stringify(config)} by ${actorUserId}`);
+      this.logger.log(`Staff assignment rules updated by ${privateLogId('actor', actorUserId)}`);
       return config;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -2721,7 +2720,7 @@ export class AdminService {
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
-      this.logger.log(`Staff team '${team.name}' (${teamId}) created by ${actorUserId}`);
+      this.logger.log(`Staff team ${teamId} created by ${privateLogId('actor', actorUserId)}`);
       return this.mapTeamRow(row, team.memberUserIds);
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -2910,7 +2909,7 @@ export class AdminService {
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
-      this.logger.log(`Staff team '${merged.name}' (${teamId}) updated by ${actorUserId}`);
+      this.logger.log(`Staff team ${teamId} updated by ${privateLogId('actor', actorUserId)}`);
       return this.mapTeamRow(row, merged.memberUserIds);
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -2987,7 +2986,7 @@ export class AdminService {
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
 
-      this.logger.log(`Staff team '${existing.name}' (${teamId}) deleted by ${actorUserId}`);
+      this.logger.log(`Staff team ${teamId} deleted by ${privateLogId('actor', actorUserId)}`);
       return { deleted: true };
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
@@ -3252,7 +3251,7 @@ export class AdminService {
         await requireStaffStepUp(client, input.actor);
         await client.query('COMMIT');
         this.logger.log(
-          `Staff user ${target.user_id} already disabled (idempotent no-op) by ${actorUserId}`
+          `Staff user ${privateLogId('actor', target.user_id)} already disabled (idempotent no-op) by ${privateLogId('actor', actorUserId)}`
         );
         return {
           userId: target.user_id,
@@ -3313,7 +3312,7 @@ export class AdminService {
       await client.query('COMMIT');
 
       this.logger.log(
-        `Staff user ${target.user_id} disabled by ${actorUserId}; all sessions revoked`
+        `Staff user ${privateLogId('actor', target.user_id)} disabled by ${privateLogId('actor', actorUserId)}; all sessions revoked`
       );
 
       return {
@@ -3327,7 +3326,7 @@ export class AdminService {
       await client.query('ROLLBACK').catch(() => {});
       if (err instanceof HttpException) throw err;
       this.logger.error(
-        `Failed to disable staff user ${input.userId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+        `Failed to disable staff user ${privateLogId('actor', input.userId)} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
       );
       throw new HttpException({ statusCode: 500, error: ErrorCodes.INTERNAL_SERVER.code }, 500);
     } finally {

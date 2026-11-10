@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { CatalogueListQuery } from '@barghsa/shared/catalogue-query';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { requireSessionStepUp } from '../session/session-step-up.js';
@@ -425,7 +426,7 @@ export class CatalogueProductsService {
         }
       );
       this.logger.log(
-        `Catalogue product created: id=${id}, type=${input.type}, actor=${input.actorUserId}`
+        `Catalogue product created: id=${id}, type=${input.type}, actor=${privateLogId('actor', input.actorUserId)}`
       );
 
       return this.readDetail(q, id);
@@ -638,7 +639,9 @@ export class CatalogueProductsService {
             : {}),
         }
       );
-      this.logger.log(`Catalogue product updated: id=${id}, actor=${input.actorUserId}`);
+      this.logger.log(
+        `Catalogue product updated: id=${id}, actor=${privateLogId('actor', input.actorUserId)}`
+      );
 
       return this.readDetail(q, id);
     });
@@ -711,7 +714,9 @@ export class CatalogueProductsService {
         statusBefore: current.status,
         statusAfter: 'archived',
       });
-      this.logger.log(`Catalogue product archived: id=${id}, actor=${actorUserId}`);
+      this.logger.log(
+        `Catalogue product archived: id=${id}, actor=${privateLogId('actor', actorUserId)}`
+      );
     });
   }
 
@@ -786,7 +791,7 @@ export class CatalogueProductsService {
       );
       this.logger.log(
         `Catalogue product price changed: id=${input.productId}, ` +
-          `price=${input.price}, effectiveFrom=${input.effectiveFrom}, actor=${input.actorUserId}`
+          `price=${input.price}, effectiveFrom=${input.effectiveFrom}, actor=${privateLogId('actor', input.actorUserId)}`
       );
 
       return this.readDetail(q, input.productId);

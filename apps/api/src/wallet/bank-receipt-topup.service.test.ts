@@ -90,7 +90,7 @@ type ScriptOptions = {
 function scriptClient(opts: ScriptOptions = {}) {
   mockClient.query.mockImplementation(async (sql: string, params: unknown[] = []) => {
     if (sql.includes('rate_limit_rolling')) {
-      return { rows: [{ count: opts.topUpCount ?? 1, reset_ms: '42000' }] };
+      return { rows: [{ count: opts.topUpCount ?? 1, reset_ms: '42000', limit_value: 10 }] };
     }
     if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
       return { rows: [] };
@@ -319,13 +319,10 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
       attachmentKey: sealedInvoiceBankReceiptAttachmentKey(ATTACHMENT),
     });
     expect(walletService.credit).not.toHaveBeenCalled();
-    expect(mockClient.query).toHaveBeenCalledWith(expect.stringContaining('rate_limit_rolling'), [
-      true,
-      `wallet:top-up:profile:${PROFILE_ID}`,
-      60_000,
-      10,
-      true,
-    ]);
+    expect(mockClient.query).toHaveBeenCalledWith(
+      expect.stringContaining('rate_limit_rolling(true, $3, $4, limit_value, true)'),
+      ['security_rate_limit:wallet', 10, `wallet:top-up:profile:${PROFILE_ID}`, 60_000]
+    );
     const insert = mockClient.query.mock.calls.find(([sql]) =>
       String(sql).includes('INSERT INTO wallet_transactions')
     );

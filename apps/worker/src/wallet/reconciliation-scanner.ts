@@ -1,5 +1,6 @@
 import type { Pool, PoolClient } from 'pg';
 import { getDbPool } from '@barghsa/db';
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import {
   WALLET_LEDGER_POSTED_STATE,
   WALLET_LEDGER_RESERVED_STATE,
@@ -200,7 +201,9 @@ export async function reconcileWalletBalances(
       await client.query('ROLLBACK').catch(() => {});
       const message = `Wallet reconciliation failed for ${candidate.profile_id}`;
       result.errors.push(message);
-      logger.warn(message);
+      logger.warn(
+        `Wallet reconciliation failed for ${privateLogId('profile', candidate.profile_id)}`
+      );
     } finally {
       client.release();
     }

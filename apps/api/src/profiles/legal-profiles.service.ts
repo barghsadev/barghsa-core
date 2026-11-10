@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
 import { z } from 'zod';
 import { requireAddressGeography } from './address-geography.js';
@@ -342,7 +343,9 @@ export class LegalProfilesService {
       const updatedProfile = await this.profilesService.getProfileById(profileId, client);
       await client.query('COMMIT');
 
-      this.logger.log(`Legal profile ${profileId} saved for user ${userId}`);
+      this.logger.log(
+        `Legal profile ${privateLogId('profile', profileId)} saved for user ${privateLogId('actor', userId)}`
+      );
 
       return updatedProfile ?? (mapLegalProfileRow(profileResult.rows[0]) as unknown as ProfileRow);
     } catch (error) {

@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { InputFieldException } from '../common/input-field.exception.js';
 import {
   sealBankReceiptAttachment,
@@ -287,7 +288,7 @@ export class BankReceiptTopUpService {
             }
           );
           this.logger.log(
-            `Bank receipt top-up ${pending.id} pending for wallet ${pending.walletId}`
+            `Bank receipt top-up ${pending.id} pending for wallet ${privateLogId('profile', pending.walletId)}`
           );
           return {
             transactionId: pending.id,

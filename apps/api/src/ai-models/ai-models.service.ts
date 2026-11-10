@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -292,7 +293,7 @@ export class AiModelsService {
         client
       );
       this.logger.log(
-        `AI model created: id=${id}, title=${input.title}, actor=${input.actorUserId}`
+        `AI model created: id=${id}, actor=${privateLogId('actor', input.actorUserId)}`
       );
       return this.toDto(row, client);
     });
@@ -397,7 +398,9 @@ export class AiModelsService {
         },
         client
       );
-      this.logger.log(`AI model updated: id=${id}, actor=${input.actorUserId}`);
+      this.logger.log(
+        `AI model updated: id=${id}, actor=${privateLogId('actor', input.actorUserId)}`
+      );
       return this.toDto(row, client);
     });
   }
@@ -451,7 +454,7 @@ export class AiModelsService {
       }
 
       await this.recordAudit(verifiedAt, 'ai_model_deleted', existing, actorUserId, ip, {}, client);
-      this.logger.log(`AI model deleted: id=${id}, actor=${actorUserId}`);
+      this.logger.log(`AI model deleted: id=${id}, actor=${privateLogId('actor', actorUserId)}`);
     });
   }
 

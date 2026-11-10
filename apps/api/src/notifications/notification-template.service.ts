@@ -1,3 +1,4 @@
+import { privateLogId } from '@barghsa/shared/log-privacy';
 import { InputFieldException } from '../common/input-field.exception.js';
 import {
   createEmailSender,
@@ -590,7 +591,9 @@ export class NotificationTemplateService {
       return { deliveryError, channel: tpl.channel };
     });
     if (outcome.deliveryError) throw outcome.deliveryError.cause;
-    this.logger.log(`Notification template test-sent: id=${id} by ${actor.userId}`);
+    this.logger.log(
+      `Notification template test-sent: id=${id} by ${privateLogId('actor', actor.userId)}`
+    );
     return { ok: true, destination: outcome.channel, lastTestStatus: 'delivered' };
   }
 
