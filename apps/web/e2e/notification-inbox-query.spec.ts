@@ -1,7 +1,7 @@
 import { test, expect, type Page } from './coverage-fixture';
 import type { Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { crmShell } from './crm-shell-fixture';
+import { crmShell, mockActiveCustomerProfile } from './crm-shell-fixture';
 import { t } from '@barghsa/i18n/app';
 import {
   notificationItem as item,
@@ -16,6 +16,7 @@ for (const context of ['customer', 'staff'] as const)
       page,
     }, info) => {
       await crmShell(page, locale);
+      if (context === 'customer') await mockActiveCustomerProfile(page);
       await page.route('**/api/auth/user', (r) =>
         r.fulfill({
           json: {

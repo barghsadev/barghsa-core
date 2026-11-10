@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T08:04:02+00:00",
-  "source_commit": "fedccbfdec9579be41f01a27dd5527c5dc1156ca",
+  "updated": "2026-11-10T08:11:32+00:00",
+  "source_commit": "a4d1aec0d9296a0b67d9709d92642fbde014f275",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5600,7 +5600,8 @@
           "release-0.6-nightly-real-admin-journeys",
           "release-0.6-nightly-hosted-portable-browser-captures",
           "release-0.6-nightly-documents-timeout-repeat",
-          "release-0.6-nightly-critical-browser-journeys"
+          "release-0.6-nightly-critical-browser-journeys",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": null
       }
@@ -40550,7 +40551,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -40730,7 +40732,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -48051,7 +48053,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -48091,7 +48094,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -48465,7 +48468,8 @@
           "release-0.5-native-staff-control-targets",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -48497,7 +48501,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -48835,7 +48839,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -48895,7 +48900,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -49696,7 +49701,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -49772,7 +49778,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -50998,7 +51004,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -51038,7 +51045,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -52174,7 +52181,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-crm-criterion-and-boundary-verification",
@@ -52226,7 +52234,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -68708,7 +68716,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "accepted-native-brand-theme-application",
@@ -68876,7 +68885,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -69483,7 +69492,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -69595,7 +69605,7 @@
             },
             {
               "path": "apps/web/e2e/admin-policy-tables.spec.ts",
-              "sha256": "572b0939f94e960cec41816300653abc939922b0305f60b9f5e26c376060035c"
+              "sha256": "caf5e493c42b420b3f236277677ae2d1df601f4f93146b08d6d34eaf2acea183"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -69659,7 +69669,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -70167,7 +70177,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70279,7 +70290,7 @@
             },
             {
               "path": "apps/web/e2e/admin-policy-tables.spec.ts",
-              "sha256": "572b0939f94e960cec41816300653abc939922b0305f60b9f5e26c376060035c"
+              "sha256": "caf5e493c42b420b3f236277677ae2d1df601f4f93146b08d6d34eaf2acea183"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -70343,7 +70354,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -70851,7 +70862,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70963,7 +70975,7 @@
             },
             {
               "path": "apps/web/e2e/admin-policy-tables.spec.ts",
-              "sha256": "572b0939f94e960cec41816300653abc939922b0305f60b9f5e26c376060035c"
+              "sha256": "caf5e493c42b420b3f236277677ae2d1df601f4f93146b08d6d34eaf2acea183"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -71027,7 +71039,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -71534,7 +71546,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -71646,7 +71659,7 @@
             },
             {
               "path": "apps/web/e2e/admin-policy-tables.spec.ts",
-              "sha256": "572b0939f94e960cec41816300653abc939922b0305f60b9f5e26c376060035c"
+              "sha256": "caf5e493c42b420b3f236277677ae2d1df601f4f93146b08d6d34eaf2acea183"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -71710,7 +71723,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/TosPreview.tsx",
@@ -72248,7 +72261,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -72304,7 +72318,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -79924,7 +79938,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -79956,11 +79971,11 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/notification-inbox-query.spec.ts",
-              "sha256": "42ee12a582f30bef39dfb1853bec9f94078a57d4cf518fcbf634927095754f6a"
+              "sha256": "8ef0d358cee471a756fb9f93e52a6e855b8d3bea24b3588fc511badcdb5fcc2a"
             },
             {
               "path": "apps/web/e2e/notification-numerals.spec.ts",
@@ -80398,7 +80413,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -80430,11 +80446,11 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/notification-inbox-query.spec.ts",
-              "sha256": "42ee12a582f30bef39dfb1853bec9f94078a57d4cf518fcbf634927095754f6a"
+              "sha256": "8ef0d358cee471a756fb9f93e52a6e855b8d3bea24b3588fc511badcdb5fcc2a"
             },
             {
               "path": "apps/web/e2e/notification-numerals.spec.ts",
@@ -80902,7 +80918,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -80934,11 +80951,11 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/notification-inbox-query.spec.ts",
-              "sha256": "42ee12a582f30bef39dfb1853bec9f94078a57d4cf518fcbf634927095754f6a"
+              "sha256": "8ef0d358cee471a756fb9f93e52a6e855b8d3bea24b3588fc511badcdb5fcc2a"
             },
             {
               "path": "apps/web/e2e/notification-numerals.spec.ts",
@@ -81385,7 +81402,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -81417,11 +81435,11 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/notification-inbox-query.spec.ts",
-              "sha256": "42ee12a582f30bef39dfb1853bec9f94078a57d4cf518fcbf634927095754f6a"
+              "sha256": "8ef0d358cee471a756fb9f93e52a6e855b8d3bea24b3588fc511badcdb5fcc2a"
             },
             {
               "path": "apps/web/e2e/notification-numerals.spec.ts",
@@ -81870,7 +81888,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -81906,7 +81925,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -82302,7 +82321,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -82338,7 +82358,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -82756,7 +82776,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -82792,7 +82813,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -83253,7 +83274,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -83309,7 +83331,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -83845,7 +83867,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -83901,7 +83924,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -84604,7 +84627,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -84660,7 +84684,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -85193,7 +85217,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -85249,7 +85274,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -85785,7 +85810,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -85841,7 +85867,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/email-provider-recovery.spec.ts",
@@ -93670,7 +93696,8 @@
           "release-0.6-worker-and-pool-lifecycle-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "done",
@@ -93778,7 +93805,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
@@ -95711,7 +95738,8 @@
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -95747,7 +95775,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -381385,7 +381413,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -381605,7 +381634,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
+              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -382688,7 +382717,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -382908,7 +382938,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
+              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -383991,7 +384021,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -384211,7 +384242,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
+              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -385294,7 +385325,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -385514,7 +385546,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
+              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -386598,7 +386630,8 @@
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -386818,7 +386851,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
+              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -518531,7 +518564,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -518883,7 +518917,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -519860,7 +519894,8 @@
           "release-0.5-responsive-and-rtl",
           "release-0.5-mobile-lists-and-touch",
           "release-0.5-essential-control-contrast",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -519868,7 +519903,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -521714,7 +521749,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -521754,7 +521790,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
@@ -522074,7 +522110,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -522622,7 +522658,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -522662,7 +522699,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
@@ -522982,7 +523019,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -523471,7 +523508,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -523511,7 +523549,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
@@ -523831,7 +523869,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -524370,7 +524408,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524398,7 +524437,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
@@ -524678,7 +524717,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -526617,7 +526656,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -526697,7 +526737,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -527189,7 +527229,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -527269,7 +527310,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -527761,7 +527802,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -527841,7 +527883,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -528333,7 +528375,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -528413,7 +528456,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -528905,7 +528948,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -528985,7 +529029,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -529477,7 +529521,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -529557,7 +529602,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -530049,7 +530094,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -530129,7 +530175,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -530621,7 +530667,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -530701,7 +530748,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -531193,7 +531240,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -531273,7 +531321,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -531765,7 +531813,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -531845,7 +531894,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -532337,7 +532386,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -532417,7 +532467,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -532909,7 +532959,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -532989,7 +533040,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -533481,7 +533532,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -533561,7 +533613,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -534053,7 +534105,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -534133,7 +534186,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/dashboard-fixture.ts",
@@ -539645,7 +539698,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539917,7 +539971,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -540288,7 +540342,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -540608,7 +540663,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -543910,7 +543965,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-accessibility-impact-and-manual-review",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543970,7 +544026,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -544363,7 +544419,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-accessibility-impact-and-manual-review",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -544423,7 +544480,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -545277,7 +545334,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-react-output-safety-and-receipt-urls",
           "release-0.6-accessibility-impact-and-manual-review",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -545337,7 +545395,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
+              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -545409,7 +545467,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -546425,7 +546483,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -546821,7 +546879,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-react-output-safety-and-receipt-urls",
           "release-0.6-accessibility-impact-and-manual-review",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -546857,7 +546916,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -547852,7 +547911,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-accessibility-impact-and-manual-review",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -547912,7 +547972,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -548310,7 +548370,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-react-output-safety-and-receipt-urls",
           "release-0.6-accessibility-impact-and-manual-review",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548346,7 +548407,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -550557,7 +550618,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-react-output-safety-and-receipt-urls",
           "release-0.6-accessibility-impact-and-manual-review",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550593,7 +550655,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/document-template-forms.spec.ts",
@@ -552051,7 +552113,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552111,7 +552174,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -552987,7 +553050,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553047,7 +553111,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -553923,7 +553987,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553983,7 +554048,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -554859,7 +554924,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554919,7 +554985,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -555795,7 +555861,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555855,7 +555922,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -556731,7 +556798,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556791,7 +556859,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -557667,7 +557735,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557727,7 +557796,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -558603,7 +558672,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558663,7 +558733,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -559539,7 +559609,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559599,7 +559670,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -560475,7 +560546,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560535,7 +560607,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -561411,7 +561483,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561471,7 +561544,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -562347,7 +562420,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -562407,7 +562481,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -563283,7 +563357,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -563343,7 +563418,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -564219,7 +564294,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -564279,7 +564355,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -565155,7 +565231,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565215,7 +565292,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -566091,7 +566168,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -566151,7 +566229,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -567027,7 +567105,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567087,7 +567166,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -567963,7 +568042,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -568023,7 +568103,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -568899,7 +568979,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -568959,7 +569040,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -569835,7 +569916,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569895,7 +569977,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -575838,7 +575920,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -575862,7 +575945,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -576378,7 +576461,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -577730,7 +577813,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577754,7 +577838,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -578270,7 +578354,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -579623,7 +579707,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -579647,7 +579732,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -580163,7 +580248,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -581485,7 +581570,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -581509,7 +581595,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -582025,7 +582111,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -583373,7 +583459,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583397,7 +583484,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -583913,7 +584000,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -585270,7 +585357,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -585294,7 +585382,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -585810,7 +585898,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -587140,7 +587228,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -587164,7 +587253,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -587680,7 +587769,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -588974,7 +589063,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -588998,7 +589088,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -589514,7 +589604,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -590808,7 +590898,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -590832,7 +590923,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -591348,7 +591439,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -592643,7 +592734,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592667,7 +592759,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -593183,7 +593275,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -594477,7 +594569,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -594501,7 +594594,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -595017,7 +595110,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -596310,7 +596403,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -596354,7 +596448,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -596362,7 +596456,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -598241,7 +598335,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -598285,7 +598380,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -598293,7 +598388,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -600198,7 +600293,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-critical-file-coverage-and-openapi",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -600270,7 +600366,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
+              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
             },
             {
               "path": "apps/web/e2e/catalogue-form-fixture.ts",
@@ -600378,7 +600474,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-cancellation-request.spec.ts",
@@ -600582,7 +600678,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/notification-panel-query.spec.ts",
@@ -602314,7 +602410,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -603106,7 +603202,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -603150,7 +603247,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -603158,7 +603255,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -605037,7 +605134,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -605081,7 +605179,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -605089,7 +605187,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -606968,7 +607066,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -607012,7 +607111,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -607020,7 +607119,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -608899,7 +608998,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -608943,7 +609043,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -608951,7 +609051,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -610830,7 +610930,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -610874,7 +610975,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -610882,7 +610983,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -612761,7 +612862,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -612805,7 +612907,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -612813,7 +612915,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -614692,7 +614794,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -614736,7 +614839,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -614744,7 +614847,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -616623,7 +616726,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -616667,7 +616771,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -616675,7 +616779,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -618554,7 +618658,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -618598,7 +618703,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -618606,7 +618711,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -620485,7 +620590,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -620529,7 +620635,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -620537,7 +620643,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -622416,7 +622522,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -622460,7 +622567,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -622468,7 +622575,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -624316,7 +624423,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -624344,7 +624452,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
@@ -624624,7 +624732,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/DashboardPage.tsx",
@@ -625098,7 +625206,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -625142,7 +625251,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -625150,7 +625259,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -627029,7 +627138,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -627073,7 +627183,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -627081,7 +627191,7 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/package.json",
@@ -629050,7 +629160,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
@@ -629065,7 +629176,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/deadline-forms.spec.ts",
@@ -629625,7 +629736,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -630377,7 +630488,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -630401,7 +630513,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -630917,7 +631029,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -632207,7 +632319,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -632231,7 +632344,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -632747,7 +632860,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -634037,7 +634150,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -634061,7 +634175,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -634577,7 +634691,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -635867,7 +635981,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -635891,7 +636006,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -636407,7 +636522,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -637697,7 +637812,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -637721,7 +637837,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -638237,7 +638353,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -639527,7 +639643,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -639551,7 +639668,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -640067,7 +640184,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -641357,7 +641474,8 @@
           "release-0.6-browser-electricity-review-reviewed",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -641381,7 +641499,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
@@ -641897,7 +642015,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -670093,7 +670211,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -670117,7 +670236,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -670473,7 +670592,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -671240,7 +671359,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -671264,7 +671384,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -671620,7 +671740,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -672387,7 +672507,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -672411,7 +672532,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -672767,7 +672888,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -673537,7 +673658,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -673561,7 +673683,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -673917,7 +674039,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -674687,7 +674809,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -674711,7 +674834,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -675067,7 +675190,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -675864,7 +675987,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -675888,7 +676012,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -676244,7 +676368,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -677010,7 +677134,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -677034,7 +677159,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -677390,7 +677515,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -678156,7 +678281,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -678180,7 +678306,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -678536,7 +678662,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -679303,7 +679429,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -679327,7 +679454,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -679683,7 +679810,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -680468,7 +680595,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -680492,7 +680620,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -680848,7 +680976,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -681616,7 +681744,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -681640,7 +681769,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -681996,7 +682125,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -682760,7 +682889,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -682880,7 +683010,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
@@ -683610,7 +683740,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -683730,7 +683861,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
@@ -684468,7 +684599,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -684588,7 +684720,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
@@ -685310,7 +685442,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -685430,7 +685563,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
@@ -686151,7 +686284,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -686271,7 +686405,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
@@ -713980,7 +714114,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -714004,7 +714139,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -714360,7 +714495,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -715125,7 +715260,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -715149,7 +715285,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -715505,7 +715641,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -716270,7 +716406,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -716294,7 +716431,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -716650,7 +716787,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -717415,7 +717552,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -717439,7 +717577,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/customer-history-filters.spec.ts",
@@ -717795,7 +717933,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -722113,7 +722251,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -722185,7 +722324,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -722965,7 +723104,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -723037,7 +723177,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -723819,7 +723959,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -723891,7 +724032,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -724671,7 +724812,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -724743,7 +724885,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -725523,7 +725665,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -725595,7 +725738,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -726379,7 +726522,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -726451,7 +726595,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -727235,7 +727379,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -727307,7 +727452,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -728087,7 +728232,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -728159,7 +728305,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -728939,7 +729085,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -729011,7 +729158,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -729792,7 +729939,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -729864,7 +730012,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -730650,7 +730798,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-and-fulfillment-status-journeys",
@@ -730722,7 +730871,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -731494,7 +731643,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
-          "release-0.6-business-state-machine-unit-evidence"
+          "release-0.6-business-state-machine-unit-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -731630,7 +731780,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -732149,7 +732299,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
-          "release-0.6-business-state-machine-unit-evidence"
+          "release-0.6-business-state-machine-unit-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -732285,7 +732436,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -732804,7 +732955,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
-          "release-0.6-business-state-machine-unit-evidence"
+          "release-0.6-business-state-machine-unit-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -732940,7 +733092,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -733460,7 +733612,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
-          "release-0.6-business-state-machine-unit-evidence"
+          "release-0.6-business-state-machine-unit-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -733596,7 +733749,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -734115,7 +734268,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
-          "release-0.6-business-state-machine-unit-evidence"
+          "release-0.6-business-state-machine-unit-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -734251,7 +734405,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -734770,7 +734924,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
-          "release-0.6-business-state-machine-unit-evidence"
+          "release-0.6-business-state-machine-unit-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -734906,7 +735061,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -735425,7 +735580,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
-          "release-0.6-business-state-machine-unit-evidence"
+          "release-0.6-business-state-machine-unit-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -735561,7 +735717,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -736081,7 +736237,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
-          "release-0.6-business-state-machine-unit-evidence"
+          "release-0.6-business-state-machine-unit-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -736217,7 +736374,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -736736,7 +736893,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
-          "release-0.6-business-state-machine-unit-evidence"
+          "release-0.6-business-state-machine-unit-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -736872,7 +737030,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -737391,7 +737549,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
-          "release-0.6-business-state-machine-unit-evidence"
+          "release-0.6-business-state-machine-unit-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -737527,7 +737686,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -739355,7 +739514,8 @@
           "release-0.5-forms-confirmation-journey",
           "release-0.5-query-and-command-completion",
           "release-0.5-staff-lists-and-receipts",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "accepted-admin-staff-geography-terms-ui",
@@ -739363,7 +739523,7 @@
           "source_evidence": [
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/TosRichText.tsx",
@@ -739985,7 +740145,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -739997,7 +740158,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
@@ -740241,7 +740402,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -740253,7 +740415,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/vat-forms.spec.ts",
@@ -740477,7 +740639,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -740489,7 +740652,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
@@ -752154,7 +752317,7 @@
             },
             {
               "path": "apps/web/e2e/cancellation-forms.spec.ts",
-              "sha256": "d1e90ded9abec9529f0b6836d7f0120a778d70429375260ed49da2fb03a7449e"
+              "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
             },
             {
               "path": "apps/web/e2e/contract-cancellation.spec.ts",
@@ -755153,7 +755316,8 @@
           "release-0.6-consultation-isolation-pagination-fixture",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-business-state-machine-unit-evidence",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ]
       }
     },
@@ -756333,7 +756497,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
@@ -756425,11 +756589,11 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/notification-inbox-query.spec.ts",
-              "sha256": "42ee12a582f30bef39dfb1853bec9f94078a57d4cf518fcbf634927095754f6a"
+              "sha256": "8ef0d358cee471a756fb9f93e52a6e855b8d3bea24b3588fc511badcdb5fcc2a"
             },
             {
               "path": "apps/web/e2e/notification-numerals.spec.ts",
@@ -759160,7 +759324,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -760345,7 +760510,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/delivery-provider-recovery.spec.ts",
@@ -760437,11 +760602,11 @@
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
-              "sha256": "7120dd69988871f50b5d4b0ae5b4a44483da4b10b7c0b5403df5bfabb2444265"
+              "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
             },
             {
               "path": "apps/web/e2e/notification-inbox-query.spec.ts",
-              "sha256": "42ee12a582f30bef39dfb1853bec9f94078a57d4cf518fcbf634927095754f6a"
+              "sha256": "8ef0d358cee471a756fb9f93e52a6e855b8d3bea24b3588fc511badcdb5fcc2a"
             },
             {
               "path": "apps/web/e2e/notification-numerals.spec.ts",
@@ -763058,7 +763223,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-business-state-machine-unit-evidence",
           "release-0.6-hosted-fixture-regression-corrections",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -763257,7 +763423,7 @@
             },
             {
               "path": "apps/web/e2e/crm-shell-fixture.ts",
-              "sha256": "707f36dbfe0166c634f1985178c2ed3c9a933ebc528faab44a46b92a876fd30c"
+              "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
             },
             {
               "path": "apps/web/e2e/deadline-forms.spec.ts",
@@ -763921,7 +764087,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -764790,7 +764956,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ]
       }
     },
@@ -765826,7 +765993,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminTosPage.tsx",
-              "sha256": "8e75eb2a4f299f5bf8ba5288fb557a71fbfef49e880b49899f75120c79880459"
+              "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
             },
             {
               "path": "apps/web/src/pages/AdminUploadPoliciesPage.tsx",
@@ -766934,7 +767101,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-accessibility-impact-and-manual-review",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ]
       }
     },
@@ -767149,7 +767317,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-staff-and-inbox-browser-verification",
-          "release-0.6-upload-preflight-reservation-assertions"
+          "release-0.6-upload-preflight-reservation-assertions",
+          "release-0.6-browser-rehearsal-targeted-corrections"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -873146,6 +873315,101 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/preflight-42777165000-and-mobile-performance",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "5a3a21bebfbb7362b32a07a9d6d295be93f326e6919941e344e857a156b7f158"
+    },
+    "release-0.6-browser-rehearsal-targeted-corrections": {
+      "batch": "release-0.6-browser-rehearsal-targeted-corrections",
+      "base_commit": "a4d1aec0d9296a0b67d9709d92642fbde014f275",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/admin-policy-tables.spec.ts",
+        "apps/web/e2e/cancellation-forms.spec.ts",
+        "apps/web/e2e/crm-shell-fixture.ts",
+        "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
+        "apps/web/e2e/notification-inbox-query.spec.ts",
+        "apps/web/src/pages/AdminTosPage.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+        },
+        {
+          "path": "apps/web/e2e/admin-policy-tables.spec.ts",
+          "sha256": "caf5e493c42b420b3f236277677ae2d1df601f4f93146b08d6d34eaf2acea183"
+        },
+        {
+          "path": "apps/web/e2e/cancellation-forms.spec.ts",
+          "sha256": "10244d02da9a165a01845447144f7c891c16821bc34f277e975fb0fcc9303d65"
+        },
+        {
+          "path": "apps/web/e2e/crm-shell-fixture.ts",
+          "sha256": "ef5bc7efc947cda6d5fb6819d0bff57e347ad86a34f5bb87e33c6d9f2841d6b3"
+        },
+        {
+          "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
+          "sha256": "644f79030cf2f435ec8f0d0d2321e57f1bf2c5dd3a5f9b86d1640f229cc8fce3"
+        },
+        {
+          "path": "apps/web/e2e/notification-inbox-query.spec.ts",
+          "sha256": "8ef0d358cee471a756fb9f93e52a6e855b8d3bea24b3588fc511badcdb5fcc2a"
+        },
+        {
+          "path": "apps/web/src/components/ContractCancellationPanel.test.tsx",
+          "sha256": "d37d557c3f539ca6b37aa48f8bd972521161862cd1c4a25f5c1e6f5ae1e0dfb3"
+        },
+        {
+          "path": "apps/web/src/components/ContractCancellationRequestPanel.test.tsx",
+          "sha256": "bb03bbe34660905721f1a339ee0f59db023be90ce37517ec57159d268fc6b1de"
+        },
+        {
+          "path": "apps/web/src/components/CustomerProfileWorkspace.tsx",
+          "sha256": "5a476bb6e3a0aad95526f86f07f53fec3cc27c293cf7afa321662a7c5f355f2a"
+        },
+        {
+          "path": "apps/web/src/components/contract-cancellation-query.test.tsx",
+          "sha256": "c5f4e87db6085d75994940642dabeb2b4914a9191ea52494d682752ef5b1e13e"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosDraft.test.tsx",
+          "sha256": "2ce0b1a456ac7b89968d923327a30ac698093bb575d38fab75483fab9555c698"
+        },
+        {
+          "path": "apps/web/src/pages/AdminTosPage.tsx",
+          "sha256": "fe11d13706e5bf83e68559f173dc9cbc12c551e44dfd236642523bef013b5eee"
+        },
+        {
+          "path": "apps/web/src/pages/notification-inbox-navigation.test.tsx",
+          "sha256": "b4c429eb7392378bad46bf331603265b629b95ef3a184b8a58350b412f53b95b"
+        },
+        {
+          "path": "apps/web/src/pages/notification-inbox-recovery.test.tsx",
+          "sha256": "f98fc658a1d9ed1453400eccf19d772ec98c56868290945e82da59ceab8aee07"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/data-table.tsx",
+          "sha256": "adfd706003f9852ea1dbeeb35db7212e72572b102ca8b29582ea20f5d70740b9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dialog.tsx",
+          "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Full hosted browser rehearsal 42751525133 ended with 2,891 passes, 14 failures, no flakes and two skips. It did not produce accepted combined source coverage. The 14 failed cases all reproduced locally against the exact unchanged failing sources before corrections.",
+        "The customer cancellation and notification fixtures now establish an active profile through the normal profile endpoints. Production onboarding and authority are unchanged. Terms history uses the original connected, visible and enabled trigger for focus restoration and the existing refresh control when the trigger is hidden. Browser assertions cover both focus destinations and retain the responsive dialogue, draft, no-write and accessibility checks.",
+        "All 14 formerly failing cases passed on the rebuilt production web bundle with retries disabled. Of the 20 sibling cases, 19 passed in the same run and the English inbox date-group case hit ENOSPC while writing a screenshot. After moving the output to available storage, the exact case passed on its own. Both responsive terms cases also passed in mobile Safari. No full-matrix or scheduled-run pass is claimed.",
+        "All 108 related web unit tests, web typecheck, scoped ESLint and Prettier, diff checks, the normal production build and 102 unchanged Size Limit budgets passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/full-browser-42751525133",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "8647eb94f99cb7daee73aa218dda5e4b1cfb8f7729ddfa466b40a167f40bb043"
     }
   },
   "historical_improvements": [

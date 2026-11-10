@@ -6,12 +6,13 @@ import { contractText } from '@barghsa/i18n/contracts';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { t } from '@barghsa/i18n/app';
 import { test, expect, type Page } from './coverage-fixture';
-import { crmShell } from './crm-shell-fixture';
+import { crmShell, mockActiveCustomerProfile } from './crm-shell-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 
 const id = '11111111-1111-4111-8111-111111111111';
 const versionId = '22222222-2222-4222-8222-222222222222';
+const profileId = '33333333-3333-4333-8333-333333333333';
 const firstInvoice = '44444444-4444-4444-8444-444444444444';
 const invoiceId = '55555555-5555-4555-8555-555555555555';
 const requestId = '66666666-6666-4666-8666-666666666666';
@@ -20,6 +21,7 @@ type Surface = 'customer' | 'rejection' | 'decision';
 async function fixture(page: Page, locale: 'en' | 'fa', dark: boolean, surface: Surface) {
   await crmShell(page, locale);
   const staff = surface !== 'customer';
+  if (!staff) await mockActiveCustomerProfile(page, profileId);
   await page.route('**/api/auth/user', (route) =>
     route.fulfill({
       json: {
@@ -97,7 +99,7 @@ async function fixture(page: Page, locale: 'en' | 'fa', dark: boolean, surface: 
     route.fulfill({
       json: {
         id,
-        profileId: '33333333-3333-4333-8333-333333333333',
+        profileId,
         serviceType,
         state: cancelled ? 'Cancelled' : 'Active',
         ...(staff

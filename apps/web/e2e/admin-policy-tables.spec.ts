@@ -86,7 +86,8 @@ for (const locale of ['en', 'fa'] as const) {
         published.publishedAt
       )
     );
-    await saved.getByRole('button', { name: text.view, exact: true }).focus();
+    const view = saved.getByRole('button', { name: text.view, exact: true });
+    await view.focus();
     await page.keyboard.press('Enter');
     const dialog = page.getByRole('dialog');
     await expect(dialog).toHaveCount(1);
@@ -97,8 +98,13 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog).toHaveCount(1);
     expect([reads, writes]).toEqual([1, 0]);
     await dialog.getByRole('button', { name: text.close, exact: true }).click();
-    await expect(page.getByRole('button', { name: text.refresh, exact: true })).toBeFocused();
+    await expect(view).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(dialog).toHaveCount(1);
     await page.setViewportSize({ width: 390, height: 844 });
+    await expect(view).not.toBeVisible();
+    await dialog.getByRole('button', { name: text.close, exact: true }).click();
+    await expect(page.getByRole('button', { name: text.refresh, exact: true })).toBeFocused();
     const cards = page.getByRole('list', { name: text.history, exact: true });
     await expect(cards.locator(':scope > li')).toHaveCount(2);
     await expect(page.getByRole('table', { name: text.history, exact: true })).not.toBeVisible();

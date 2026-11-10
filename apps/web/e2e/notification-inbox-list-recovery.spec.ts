@@ -1,5 +1,5 @@
 import { test, expect, type Route } from './coverage-fixture';
-import { crmShell } from './crm-shell-fixture';
+import { crmShell, mockActiveCustomerProfile } from './crm-shell-fixture';
 import { t } from '@barghsa/i18n/app';
 import AxeBuilder from '@axe-core/playwright';
 import {
@@ -80,6 +80,7 @@ for (const context of ['customer', 'staff'] as const)
         page,
       }) => {
         await crmShell(page, locale);
+        if (context === 'customer') await mockActiveCustomerProfile(page);
         await page.route('**/api/auth/user', (route) =>
           route.fulfill({
             json: {

@@ -989,7 +989,9 @@ export default function AdminTosPage() {
                   <DialogContent
                     showCloseButton={false}
                     finalFocus={() =>
-                      viewTrigger.current?.isConnected && !viewTrigger.current.disabled
+                      viewTrigger.current?.isConnected &&
+                      viewTrigger.current.getClientRects().length > 0 &&
+                      !viewTrigger.current.disabled
                         ? viewTrigger.current
                         : refreshButton.current
                     }
